@@ -1,0 +1,47 @@
+{
+  "version": "multi-act-seed",
+  "scenarios": [
+    {
+      "id": "co_parenting",
+      "title": "Co\u2011Parenting After Breakup",
+      "acts": [
+        {
+          "id": "a1",
+          "title": "The First Handover",
+          "steps": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+          ]
+        },
+        {
+          "id": "a2",
+          "title": "Scheduling & Boundaries",
+          "steps": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+          ]
+        },
+        {
+          "id": "a3",
+          "title": "Medical Decisions",
+          "steps": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+          ]
+        },
+        {
+          "id": "a4",
+          "title": "New Partners",
+          "steps": [
+            "Step 1",
+            "Step 2",
+            "Step 3"
+          ]
+        }
+      ]
+    }
+  ]
+}

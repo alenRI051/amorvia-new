@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Amorvia — Multi‑Act</title>
+  <link rel="manifest" href="./manifest.json"/>
+  <link rel="icon" href="./favicon.png" type="image/png"/>
+  <link rel="stylesheet" href="./css/styles.css"/>
+  <link rel="preload" as="image" href="./assets/backgrounds/room.svg">
+</head>
+<body>
+  <div class="app">
+    <header class="header"><h1>Amorvia — Multi‑Act (<span id='version'>loading…</span>)</h1></header>
+    <main class="main">
+      <aside class="card sidebar">
+        <input id="search" class="search" placeholder="Search scenarios…"/>
+        <div class="list"></div>
+      </aside>
+      <section class="card stage">
+        <div class="stage-toolbar">
+          <button class="button" id="prevBtn">Prev</button>
+          <button class="button" id="nextBtn">Next</button>
+          <label for="bgSelect">Background:</label>
+          <select id="bgSelect" class="select">
+            <option value="./assets/backgrounds/room.svg">Room</option>
+          </select>
+          <label for="leftSelect">Left:</label>
+          <select id="leftSelect" class="select">
+            <option value="./assets/characters/male_casual.svg">Male • Casual</option>
+            <option value="./assets/characters/spirit_calm.svg">Spirit • Calm</option>
+          </select>
+          <label for="rightSelect">Right:</label>
+          <select id="rightSelect" class="select">
+            <option value="./assets/characters/female_casual.svg">Female • Casual</option>
+            <option value="./assets/characters/spirit_angry.svg">Spirit • Angry</option>
+          </select>
+          <div style="margin-left:auto;font-weight:600" id="sceneTitle">Choose a scenario…</div>
+        </div>
+        <div class="stage-canvas" style="height:420px">
+          <div class="bg"></div>
+          <div class="character left" id="left"><img alt="Left Character"></div>
+          <div class="character right" id="right"><img alt="Right Character"></div>
+        </div>
+        <div class="panel"><span id="actBadge" class="badge">Act —</span> <strong id="actTitle">—</strong>
+          <div id="dialog" style="margin-top:8px">Pick a scenario to begin.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="./js/app.js"></script>
+</body>
+</html>
