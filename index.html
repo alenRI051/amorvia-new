@@ -3,59 +3,67 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Amorvia — Multi‑Act</title>
-  <meta name="description" content="Amorvia — an interactive relationship journey game.">
-  <link rel="manifest" href="./manifest.json"/>
-  <link rel="icon" href="./favicon.png" type="image/png"/>
-  <link rel="stylesheet" href="./css/styles.css"/>
+  <title>Amorvia — Relationship Game</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Amorvia — an educational relationship game with multi‑act scenarios to practice real-life conversations." />
+  <link rel="canonical" href="https://www.amorvia.eu/" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Amorvia — Relationship Game" />
+  <meta property="og:description" content="Play scenarios, learn, and grow through guided choices." />
+  <meta property="og:url" content="https://www.amorvia.eu/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://www.amorvia.eu/assets/og-image.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Amorvia — Relationship Game" />
+  <meta name="twitter:description" content="Play scenarios, learn, and grow through guided choices." />
+  <meta name="twitter:image" content="https://www.amorvia.eu/assets/og-image.png" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Amorvia",
+    "url": "https://www.amorvia.eu/",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web",
+    "description": "Interactive multi‑act scenarios for practicing relationship skills."
+  }
+  </script>
+
+  <!-- Performance -->
+  <link rel="preload" href="./assets/backgrounds/room.svg" as="image">
+  <link rel="preload" href="./css/styles.css" as="style">
+  <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-  <div class="app">
-    <header class="header"><h1>Amorvia — Multi‑Act <span style="opacity:.6;font-weight:500;">(seed)</span></h1></header>
-    <main class="main">
-      <aside class="card sidebar">
-        <input id="search" class="search" placeholder="Search scenarios…" aria-label="Search scenarios"/>
-        <div class="list" aria-label="Scenario list"></div>
-      </aside>
-      <section class="card stage">
-        <div class="stage-toolbar">
-          <button class="button" id="prevBtn" type="button">Prev</button>
-          <button class="button" id="nextBtn" type="button">Next</button>
+  <a href="#main" class="skip-link">Skip to content</a>
 
-          <label for="bgSelect">Background:</label>
-          <select id="bgSelect" class="select">
-            <option value="./assets/backgrounds/room.svg">Room</option>
-          </select>
+  <header role="banner" class="header">
+    <h1>Amorvia <span class="muted">— Multi‑Act</span></h1>
+  </header>
 
-          <label for="leftSelect">Left:</label>
-          <select id="leftSelect" class="select">
-            <option value="./assets/characters/male_casual.svg">Male • Casual</option>
-            <option value="./assets/characters/spirit_calm.svg">Spirit • Calm</option>
-          </select>
+  <main id="main" role="main" class="container">
+    <!-- Test stage -->
+    <div id="bg" class="bg" role="img" aria-label="Room background"></div>
+    <figure class="character left"><img alt="Left character" src="./assets/characters/male_casual.svg" width="200" height="300" loading="eager"></figure>
+    <figure class="character right"><img alt="Right character" src="./assets/characters/female_casual.svg" width="200" height="300" loading="eager"></figure>
 
-          <label for="rightSelect">Right:</label>
-          <select id="rightSelect" class="select">
-            <option value="./assets/characters/female_casual.svg">Female • Casual</option>
-            <option value="./assets/characters/spirit_angry.svg">Spirit • Angry</option>
-          </select>
+    <section aria-label="Controls" class="controls">
+      <button id="prevBtn" class="button" type="button" aria-label="Previous step">Prev</button>
+      <button id="nextBtn" class="button" type="button" aria-label="Next step">Next</button>
+    </section>
+  </main>
 
-          <div style="margin-left:auto;font-weight:600" id="sceneTitle" aria-live="polite">Choose a scenario…</div>
-        </div>
+  <footer role="contentinfo" class="footer">
+    <small>Health: <a href="./api/health" rel="nofollow">/api/health</a></small>
+  </footer>
 
-        <div class="stage-canvas">
-          <div class="bg" id="bg"></div>
-          <div class="character left"><img alt="Left Character"/></div>
-          <div class="character right"><img alt="Right Character"/></div>
-        </div>
-
-        <div class="panel">
-          <div class="row"><span class="badge" id="actBadge">Act —</span><strong id="actTitle">—</strong></div>
-          <div id="dialog" style="margin-top:8px">Pick a scenario to begin.</div>
-        </div>
-      </section>
-    </main>
-    <footer class="footer">/api/health should return JSON 200 OK on Vercel.</footer>
-  </div>
-  <script src="./js/app.js"></script>
+  <script defer src="./js/app.js"></script>
 </body>
 </html>
