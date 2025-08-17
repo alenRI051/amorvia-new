@@ -30,7 +30,7 @@
 
   <!-- Performance -->
   <link rel="preload" href="./css/styles.css" as="style">
-  <link rel="preload" href="./assets/backgrounds/room.svg" as="image">
+  <link rel="preload" href="./assets/backgrounds/room.webp" as="image" imagesrcset="./assets/backgrounds/room.webp">
   <link rel="stylesheet" href="./css/styles.css">
 
   <!-- Structured Data -->
@@ -49,10 +49,12 @@
   <style>
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:#0b1220;color:#e5e7eb}
     .container{min-height:60vh;padding:16px}
-    #bg{height:320px;background:#0b1220;border:1px solid #333;margin-bottom:12px}
+    #bg{height:320px;background:#0b1220;border:1px solid #333;margin-bottom:12px;position:relative;overflow:hidden}
     :focus-visible{outline:3px solid #2563eb;outline-offset:3px;border-radius:6px}
     .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip-link:focus{left:16px;top:16px;background:#fff;color:#0b1220;padding:8px 12px;border-radius:8px;z-index:9999}
+    .character{position:absolute;bottom:32px;width:200px}
+    .character.left{left:5%}.character.right{right:5%}
   </style>
 </head>
 <body>
@@ -63,19 +65,24 @@
 
   <main id="main" class="container" role="main">
     <div id="bg" role="img" aria-label="Background"></div>
+
     <div style="display:flex;gap:12px;margin:8px 0">
       <button id="prevBtn" class="button" type="button" aria-label="Previous step">Prev</button>
       <button id="nextBtn" class="button" type="button" aria-label="Next step">Next</button>
     </div>
 
-    <figure class="character left" style="position:absolute;bottom:32px;left:5%;width:200px">
+    <picture class="character left">
+      <source srcset="./assets/characters/male_casual.webp" type="image/webp">
       <img alt="Left character" src="./assets/characters/male_casual.svg" width="200" height="300" loading="eager">
-    </figure>
-    <figure class="character right" style="position:absolute;bottom:32px;right:5%;width:200px">
+    </picture>
+
+    <picture class="character right">
+      <source srcset="./assets/characters/female_casual.webp" type="image/webp">
       <img alt="Right character" src="./assets/characters/female_casual.svg" width="200" height="300" loading="eager">
-    </figure>
+    </picture>
   </main>
 
+  <!-- Module bootstrap defers heavy logic, paints shell fast -->
   <script type="module" src="./js/bootstrap.js"></script>
 </body>
 </html>

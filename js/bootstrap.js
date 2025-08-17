@@ -1,10 +1,20 @@
-// Tiny bootstrap to paint shell fast and defer heavy logic
+// Paint WebP background (fallback to SVG on error)
 const bg = document.getElementById('bg');
 if (bg) {
-  bg.style.backgroundImage = "url('./assets/backgrounds/room.svg')";
-  bg.style.backgroundSize = "cover";
-  bg.style.backgroundPosition = "center";
-  bg.style.backgroundRepeat = "no-repeat";
+  const test = new Image();
+  test.onload = () => {
+    bg.style.backgroundImage = "url('./assets/backgrounds/room.webp')";
+    bg.style.backgroundSize = "cover";
+    bg.style.backgroundPosition = "center";
+    bg.style.backgroundRepeat = "no-repeat";
+  };
+  test.onerror = () => {
+    bg.style.backgroundImage = "url('./assets/backgrounds/room.svg')";
+    bg.style.backgroundSize = "cover";
+    bg.style.backgroundPosition = "center";
+    bg.style.backgroundRepeat = "no-repeat";
+  };
+  test.src = './assets/backgrounds/room.webp';
 }
 
 const next = document.getElementById('nextBtn');
