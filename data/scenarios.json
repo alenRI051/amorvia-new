@@ -1,11 +1,25 @@
 {
   "scenarios": [
     {
+      "id": "scene-first-agreements",
+      "title": "Scene: First Agreements",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "**Mediation-first:** Seek a neutral mediator to draft a parenting plan.",
+            "**DIY plan:** Draft a plan and validate with a social worker.",
+            "**Lawyered:** Each side retains counsel for a formal agreement."
+          ]
+        }
+      ]
+    },
+    {
       "id": "co-parenting-with-bipolar-partner",
       "title": "Co-Parenting with Bipolar Partner",
       "acts": [
         {
-          "title": "Act 1 \u2014 First Exchange",
+          "title": "Act 1 — First Exchange",
           "steps": [
             "You arrive to pick up your child, but your ex seems upset.",
             "They start speaking in a confusing or emotional way.",
@@ -13,7 +27,7 @@
           ]
         },
         {
-          "title": "Act 2 \u2014 Escalation",
+          "title": "Act 2 — Escalation",
           "steps": [
             "The discussion grows tense, and your ex raises their voice.",
             "Your child notices the tension and becomes unsettled.",
@@ -21,7 +35,7 @@
           ]
         },
         {
-          "title": "Act 3 \u2014 Resolution",
+          "title": "Act 3 — Resolution",
           "steps": [
             "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
             "If you stayed calm, your child feels reassured.",
@@ -31,11 +45,39 @@
       ]
     },
     {
+      "id": "brzi-kontakti",
+      "title": "Brzi kontakti",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "**CZSS**: socskrb.hr",
+            "**Obiteljski sud / odvjetnici**: lokalni kontakti",
+            "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-new-introductions",
+      "title": "Scene: New Introductions",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "**Slow lane:** Wait 3–6 months and discuss expectations with your ex.",
+            "**Guided intro:** Short, neutral, child-focused activity first.",
+            "**Not yet:** Prioritize child's stability; revisit in Act 3."
+          ]
+        }
+      ]
+    },
+    {
       "id": "dating-after-breakup-with-child-involved",
       "title": "Dating After Breakup (With Child Involved)",
       "acts": [
         {
-          "title": "Act 1 \u2014 First Date",
+          "title": "Act 1 — First Date",
           "steps": [
             "You decide to meet someone new for coffee.",
             "Your child is staying with your ex.",
@@ -43,28 +85,84 @@
           ]
         },
         {
-          "title": "Act 2 \u2014 Introducing the Idea",
+          "title": "Act 2 — Introducing the Idea",
           "steps": [
             "A few weeks later, your child overhears you talking on the phone with the new person.",
-            "Your child asks: \u201cWho is that?\u201d",
+            "Your child asks: “Who is that?”",
             "Choices: be honest but gentle, change the subject, or dismiss it quickly."
           ]
         },
         {
-          "title": "Act 3 \u2014 First Reactions",
+          "title": "Act 3 — First Reactions",
           "steps": [
-            "Your ex finds out that you\u2019ve started dating.",
-            "They confront you \u2014 either calmly, defensively, or angrily.",
-            "You can choose to: reassure them that your child\u2019s needs come first, argue, or refuse to discuss."
+            "Your ex finds out that you’ve started dating.",
+            "They confront you — either calmly, defensively, or angrily.",
+            "You can choose to: reassure them that your child’s needs come first, argue, or refuse to discuss."
           ]
         },
         {
-          "title": "Act 4 \u2014 Resolution",
+          "title": "Act 4 — Resolution",
           "steps": [
             "Depending on your decisions:",
             "Positive path: Your ex accepts your right to move on, your child feels secure, and boundaries are set.",
             "Neutral path: Tensions remain but are manageable.",
             "Negative path: Conflict worsens, child feels caught in the middle, and co-parenting suffers."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-different-rules",
+      "title": "Scene: Different Rules",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "**Unified rules**: One list for the household, reviewed weekly.",
+            "**Zones of control**: Each parent leads in specific domains.",
+            "**Coach mode**: Agree on consistent consequences and rewards."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "to-do",
+      "title": "To Do",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "Images: next/image where applicable.",
+            "Color contrast ≥ 4.5:1.",
+            "Landmarks & labels for controls."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-de-escalation",
+      "title": "Scene: De-escalation",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "Use brief, concrete messages.",
+            "Avoid late-night heavy topics.",
+            "Confirm understanding in writing."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "title": "Direction",
+      "acts": [
+        {
+          "title": "Act 1",
+          "steps": [
+            "Non-human silhouettes with aura color shifts by mood.",
+            "Eye shape reflects emotional state.",
+            "Backgrounds: realistic interiors."
           ]
         }
       ]
