@@ -21,7 +21,15 @@ jobs:
         with:
           urls: |
             ${{ github.event.inputs.url || vars.LIGHTHOUSE_URL || 'https://amorvia-new.vercel.app/' }}
-          uploadArtifacts: true           # attach HTML/JSON reports
-          temporaryPublicStorage: true    # share links in run summary
+          uploadArtifacts: false            # disable built-in uploader
+          temporaryPublicStorage: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lhci-report                 # safe artifact name
+          path: .lighthouseci/**            # where the action writes reports
+          retention-days: 7
