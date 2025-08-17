@@ -24,4 +24,4 @@ jobs:
             ${{ github.event.inputs.url || vars.LIGHTHOUSE_URL || 'https://amorvia-new.vercel.app/' }}
           uploadArtifacts: true            # attach HTML/JSON reports to the run
           temporaryPublicStorage: true     # shareable links in run summary
-          configPath: ./.lighthouserc.json # optional, if present
+          
