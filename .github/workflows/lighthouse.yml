@@ -21,7 +21,7 @@ jobs:
         with:
           urls: |
             ${{ github.event.inputs.url || vars.LIGHTHOUSE_URL || 'https://amorvia-new.vercel.app/' }}
-          uploadArtifacts: false            # disable built-in uploader
+          uploadArtifacts: false
           temporaryPublicStorage: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,6 +30,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lhci-report                 # safe artifact name
-          path: .lighthouseci/**            # where the action writes reports
+          name: lhci-report
+          path: lhci_reports/**     # correct folder
           retention-days: 7
