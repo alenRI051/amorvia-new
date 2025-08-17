@@ -1,0 +1,54 @@
+name: lighthouse-on-push
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# Use your prod URL from a repo Variable if set, else default to your domain.
+env:
+  TARGET_URL: ${{ vars.LIGHTHOUSE_URL || 'https://www.amorvia.eu/' }}
+
+jobs:
+  wait-and-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Wait for Vercel to finish deploying & the URL to respond 200
+      - name: Wait for site to be up
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 20
+          retry_wait_seconds: 15
+          command: |
+            curl -sSfL "${TARGET_URL}" >/dev/null
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Lighthouse CLI
+        run: npm i -g lighthouse
+
+      - name: Run Lighthouse (HTML + JSON)
+        run: |
+          mkdir -p lhci_reports
+          lighthouse "${TARGET_URL}" \
+            --chrome-flags="--headless --no-sandbox" \
+            --output=html --output=json \
+            --output-path=./lhci_reports/report.html
+
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lhci-report
+          path: lhci_reports/**
+          retention-days: 7
