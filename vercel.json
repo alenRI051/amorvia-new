@@ -1,18 +1,17 @@
 {
   "version": 2,
-  "redirects": [
-    {
-      "source": "https://www.amorvia.eu/:path*",
-      "destination": "https://amorvia.eu/:path*",
-      "permanent": true
-    }
-  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
+    {
+      "source": "/manifest.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/manifest+json; charset=utf-8" }
+      ]
+    },
     {
       "source": "/(css|js|assets)/(.*)",
       "headers": [
