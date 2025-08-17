@@ -1,1 +1,1 @@
-module.exports=(req,res)=>res.status(200).json({status:"ok",app:"Amorvia",version:"multi-act",ts:new Date().toISOString()});
+module.exports=(req,res)=>res.status(200).json({status:"ok",app:"Amorvia",version:"multi-act"});

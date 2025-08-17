@@ -1,1 +1,26 @@
-:root{--bg:#0f172a}body{margin:0;font-family:Inter,Arial;background:var(--bg);color:#e5e7eb}
+
+:root{--bg:#0f172a;--ink:#0b1220}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:var(--bg);color:#e5e7eb}
+.app{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
+.header{display:flex;gap:12px;align-items:center;padding:16px;background:rgba(255,255,255,.06);backdrop-filter:blur(6px);position:sticky;top:0}
+.main{display:grid;grid-template-columns:320px 1fr;gap:16px;padding:16px}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+.card{background:#fff;color:var(--ink);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);overflow:hidden}
+.sidebar{padding:12px}
+.search{width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px}
+.list{margin-top:10px;display:grid;gap:8px;max-height:65vh;overflow:auto}
+.item{padding:10px;border:1px solid #eef2f7;border-radius:12px;background:#fbfdff;cursor:pointer}
+.stage{display:grid;grid-template-rows:auto 1fr auto;height:calc(100vh - 140px)}
+.stage-toolbar{display:flex;gap:10px;align-items:center;padding:10px 12px;background:#f6f7fb;border-bottom:1px solid #eef2f7;color:#0b1220}
+.stage-canvas{position:relative;overflow:hidden;background:#0b1220;height:420px}
+.bg{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat}
+.character{position:absolute;bottom:0;width:200px}
+.character.left{left:6%}.character.right{right:6%}
+.panel{padding:12px;border-top:1px solid #eef2f7;background:#fff}
+.badge{display:inline-block;background:#e8fff1;color:#175c36;border:1px solid #bce9cd;border-radius:999px;padding:4px 10px;font-size:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.button{padding:8px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer}
+.select{padding:8px 10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+#dialog{min-height:88px;line-height:1.4}
+.footer{padding:12px 16px;opacity:.8}

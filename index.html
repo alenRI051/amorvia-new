@@ -4,49 +4,57 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia — Multi‑Act</title>
+  <meta name="description" content="Amorvia — an interactive relationship journey game.">
   <link rel="manifest" href="./manifest.json"/>
   <link rel="icon" href="./favicon.png" type="image/png"/>
   <link rel="stylesheet" href="./css/styles.css"/>
-  <link rel="preload" as="image" href="./assets/backgrounds/room.svg">
 </head>
 <body>
   <div class="app">
-    <header class="header"><h1>Amorvia — Multi‑Act (<span id='version'>loading…</span>)</h1></header>
+    <header class="header"><h1>Amorvia — Multi‑Act <span style="opacity:.6;font-weight:500;">(seed)</span></h1></header>
     <main class="main">
       <aside class="card sidebar">
-        <input id="search" class="search" placeholder="Search scenarios…"/>
-        <div class="list"></div>
+        <input id="search" class="search" placeholder="Search scenarios…" aria-label="Search scenarios"/>
+        <div class="list" aria-label="Scenario list"></div>
       </aside>
       <section class="card stage">
         <div class="stage-toolbar">
-          <button class="button" id="prevBtn">Prev</button>
-          <button class="button" id="nextBtn">Next</button>
+          <button class="button" id="prevBtn" type="button">Prev</button>
+          <button class="button" id="nextBtn" type="button">Next</button>
+
           <label for="bgSelect">Background:</label>
           <select id="bgSelect" class="select">
             <option value="./assets/backgrounds/room.svg">Room</option>
           </select>
+
           <label for="leftSelect">Left:</label>
           <select id="leftSelect" class="select">
             <option value="./assets/characters/male_casual.svg">Male • Casual</option>
             <option value="./assets/characters/spirit_calm.svg">Spirit • Calm</option>
           </select>
+
           <label for="rightSelect">Right:</label>
           <select id="rightSelect" class="select">
             <option value="./assets/characters/female_casual.svg">Female • Casual</option>
             <option value="./assets/characters/spirit_angry.svg">Spirit • Angry</option>
           </select>
-          <div style="margin-left:auto;font-weight:600" id="sceneTitle">Choose a scenario…</div>
+
+          <div style="margin-left:auto;font-weight:600" id="sceneTitle" aria-live="polite">Choose a scenario…</div>
         </div>
-        <div class="stage-canvas" style="height:420px">
-          <div class="bg"></div>
-          <div class="character left" id="left"><img alt="Left Character"></div>
-          <div class="character right" id="right"><img alt="Right Character"></div>
+
+        <div class="stage-canvas">
+          <div class="bg" id="bg"></div>
+          <div class="character left"><img alt="Left Character"/></div>
+          <div class="character right"><img alt="Right Character"/></div>
         </div>
-        <div class="panel"><span id="actBadge" class="badge">Act —</span> <strong id="actTitle">—</strong>
+
+        <div class="panel">
+          <div class="row"><span class="badge" id="actBadge">Act —</span><strong id="actTitle">—</strong></div>
           <div id="dialog" style="margin-top:8px">Pick a scenario to begin.</div>
         </div>
       </section>
     </main>
+    <footer class="footer">/api/health should return JSON 200 OK on Vercel.</footer>
   </div>
   <script src="./js/app.js"></script>
 </body>
