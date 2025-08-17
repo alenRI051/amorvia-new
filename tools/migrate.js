@@ -1,5 +1,4 @@
-// Simple Markdown → scenarios.json migrator
-// Usage: node tools/migrate.js
+// Markdown → data/scenarios.json migrator
 const fs = require('fs');
 const path = require('path');
 
@@ -8,50 +7,26 @@ const OUTPUT_JSON = path.join(__dirname, '..', 'data', 'scenarios.json');
 
 function parseFile(md) {
   const lines = md.split(/\r?\n/);
-  let scenarioTitle = null;
+  let title = null;
   const acts = [];
-  let currentAct = null;
+  let current = null;
 
-  const pushAct = () => {
-    if (currentAct && currentAct.steps.length > 0) acts.push(currentAct);
-    currentAct = null;
-  };
+  const push = () => { if (current && current.steps.length) acts.push(current); current = null; };
 
-  for (let raw of lines) {
+  for (const raw of lines) {
     const line = raw.trim();
     if (!line) continue;
-
-    if (line.startsWith('# ')) {
-      // Scenario title
-      scenarioTitle = line.replace(/^#\s+/, '').trim();
-      continue;
-    }
-    if (line.startsWith('## ')) {
-      // New act
-      pushAct();
-      const title = line.replace(/^##\s+/, '').trim();
-      currentAct = { title: title || 'Act', steps: [] };
-      continue;
-    }
-    if (line.startsWith('- ')) {
-      // Step line
-      const step = line.replace(/^-+\s*/, '').trim();
-      if (!currentAct) {
-        // default Act 1 if user forgot header
-        currentAct = { title: 'Act 1', steps: [] };
-      }
-      if (step) currentAct.steps.push(step);
-      continue;
-    }
+    if (line.startsWith('# ')) { title = line.replace(/^#\s+/, '').trim(); continue; }
+    if (line.startsWith('## ')) { push(); current = { title: line.replace(/^##\s+/, '').trim() || 'Act', steps: [] }; continue; }
+    if (line.startsWith('- ')) { if (!current) current = { title: 'Act 1', steps: [] }; current.steps.push(line.replace(/^-+\s*/, '').trim()); continue; }
   }
-  pushAct();
-
-  if (!scenarioTitle) throw new Error('Missing "# Scenario Title" at top');
-  if (acts.length === 0) throw new Error('No acts/steps found — use "## Act ..." and list items "-" for steps');
+  push();
+  if (!title) throw new Error('Missing scenario title (# ...)');
+  if (!acts.length) throw new Error('No acts/steps found');
 
   return {
-    id: scenarioTitle.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
-    title: scenarioTitle,
+    id: title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
+    title,
     acts
   };
 }
@@ -59,27 +34,23 @@ function parseFile(md) {
 function main(){
   if (!fs.existsSync(CONTENT_DIR)) fs.mkdirSync(CONTENT_DIR, { recursive: true });
   const files = fs.readdirSync(CONTENT_DIR).filter(f => f.toLowerCase().endsWith('.md')).sort();
-  if (files.length === 0) {
-    console.log('No .md files found in tools/content. Place your scenarios there.');
-    process.exit(0);
-  }
+  if (!files.length) { console.log('No .md files in tools/content'); process.exit(0); }
+
   const scenarios = [];
   for (const f of files) {
-    const p = path.join(CONTENT_DIR, f);
-    const md = fs.readFileSync(p, 'utf8');
+    const md = fs.readFileSync(path.join(CONTENT_DIR, f), 'utf8');
     try {
       const s = parseFile(md);
       scenarios.push(s);
-      console.log('Parsed:', f, '→', s.title, `(${s.acts.length} acts)`);
+      console.log(`Parsed ${f} → ${s.title} (${s.acts.length} acts)`);
     } catch (e) {
-      console.error('Skipping', f, '—', e.message);
+      console.error(`Skipping ${f}: ${e.message}`);
     }
   }
   const out = { scenarios };
-  const outDir = path.dirname(OUTPUT_JSON);
-  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+  fs.mkdirSync(path.dirname(OUTPUT_JSON), { recursive: true });
   fs.writeFileSync(OUTPUT_JSON, JSON.stringify(out, null, 2), 'utf8');
-  console.log('\\nWrote', OUTPUT_JSON);
+  console.log('Wrote', OUTPUT_JSON);
 }
 
 main();

@@ -25,18 +25,13 @@ export function init(){
     bg: './assets/backgrounds/room.svg'
   };
 
-  // Initial characters
   if(leftImg) leftImg.src = state.left;
   if(rightImg) rightImg.src = state.right;
 
-  // Load scenarios JSON
   fetch('./data/scenarios.json', { cache: 'no-store' })
     .then(r => r.json())
-    .then(data => {
-      state.scenarios = data.scenarios || [];
-      renderList();
-    })
-    .catch(() => { list.innerHTML = '<em>Failed to load scenarios.</em>'; });
+    .then(data => { state.scenarios = data.scenarios || []; renderList(); })
+    .catch(() => { if(list) list.innerHTML = '<em>Failed to load scenarios.</em>'; });
 
   function renderList(){
     if(!list) return;
@@ -65,7 +60,6 @@ export function init(){
 
   function updateActUI(){
     const s = state.current; if(!s) return;
-    const act = s.acts?.[state.actIndex];
     if(actBadge) actBadge.textContent = `Act ${state.actIndex+1} / ${s.acts.length}`;
   }
 
@@ -78,6 +72,7 @@ export function init(){
     if(nextBtn){
       const lastInAct = state.stepIndex >= act.steps.length-1;
       nextBtn.textContent = lastInAct ? (state.actIndex < s.acts.length-1 ? 'Next Act' : 'Finish') : 'Next';
+      nextBtn.disabled = false;
     }
     if(prevBtn){
       prevBtn.disabled = (state.stepIndex===0 && state.actIndex===0);
@@ -100,7 +95,6 @@ export function init(){
 
   function prev(){
     const s = state.current; if(!s) return;
-    const act = s.acts[state.actIndex];
     if(state.stepIndex > 0){
       state.stepIndex--;
     } else if(state.actIndex > 0){
@@ -112,7 +106,6 @@ export function init(){
     renderStep();
   }
 
-  // Controls
   if(search) search.addEventListener('input', e => { state.filter = e.target.value; renderList(); });
   if(bgSel) bgSel.addEventListener('change', e => { state.bg = e.target.value; if(bgEl){ bgEl.style.backgroundImage = `url('${state.bg}')`; } });
   if(leftSel) leftSel.addEventListener('change', e => { state.left = e.target.value; if(leftImg) leftImg.src = state.left; });
@@ -120,6 +113,5 @@ export function init(){
   if(nextBtn) nextBtn.addEventListener('click', next);
   if(prevBtn) prevBtn.addEventListener('click', prev);
 
-  // Apply initial bg
   if(bgEl){ bgEl.style.backgroundImage = `url('${state.bg}')`; bgEl.style.backgroundSize='cover'; bgEl.style.backgroundPosition='center'; bgEl.style.backgroundRepeat='no-repeat'; }
 }

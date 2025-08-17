@@ -17,6 +17,6 @@
 
 ## Act 4 — Resolution
 - Depending on your decisions:
-  - **Positive path:** Your ex accepts your right to move on, your child feels secure, and boundaries are set.  
-  - **Neutral path:** Tensions remain but are manageable.  
-  - **Negative path:** Conflict worsens, child feels caught in the middle, and co-parenting suffers.  
+- Positive path: Your ex accepts your right to move on, your child feels secure, and boundaries are set.
+- Neutral path: Tensions remain but are manageable.
+- Negative path: Conflict worsens, child feels caught in the middle, and co-parenting suffers.

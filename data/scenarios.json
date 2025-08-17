@@ -1,63 +1,70 @@
 {
   "scenarios": [
     {
-      "id": "boundaries-talk",
-      "title": "Setting Boundaries After a Busy Week",
+      "id": "co-parenting-with-bipolar-partner",
+      "title": "Co-Parenting with Bipolar Partner",
       "acts": [
         {
-          "title": "Act 1 \u2014 Tension",
+          "title": "Act 1 \u2014 First Exchange",
           "steps": [
-            "You\u2019ve both had a long week. Messages were short and a bit snappy.",
-            "Partner: 'We need to talk tonight.'",
-            "You: 'I\u2019m exhausted, can we pick a calmer time?'"
+            "You arrive to pick up your child, but your ex seems upset.",
+            "They start speaking in a confusing or emotional way.",
+            "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
           ]
         },
         {
-          "title": "Act 2 \u2014 Reflection",
+          "title": "Act 2 \u2014 Escalation",
           "steps": [
-            "You suggest taking a short walk before talking.",
-            "Partner: 'Okay\u2026 I guess I could use some fresh air too.'"
+            "The discussion grows tense, and your ex raises their voice.",
+            "Your child notices the tension and becomes unsettled.",
+            "Options appear: de-escalate with soothing words, suggest a short break, or argue back."
           ]
         },
         {
-          "title": "Act 3 \u2014 Conversation",
+          "title": "Act 3 \u2014 Resolution",
           "steps": [
-            "You: 'When texts get short, I feel distance. I need clarity, not guesswork.'",
-            "Partner: 'I get overwhelmed and shut down. I don\u2019t want that to push you away.'"
-          ]
-        },
-        {
-          "title": "Act 4 \u2014 Agreement",
-          "steps": [
-            "You agree on a 'pause signal' when messages get tense and to revisit later.",
-            "Both: 'We\u2019ll check in tomorrow to see how it felt.'"
+            "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
+            "If you stayed calm, your child feels reassured.",
+            "If you escalated, the conflict lingers and your child feels stressed."
           ]
         }
       ]
     },
     {
-      "id": "date-night-planning",
-      "title": "Planning a Balanced Date Night",
+      "id": "dating-after-breakup-with-child-involved",
+      "title": "Dating After Breakup (With Child Involved)",
       "acts": [
         {
-          "title": "Act 1 \u2014 Preferences",
+          "title": "Act 1 \u2014 First Date",
           "steps": [
-            "You: 'Dinner and a quiet movie?'",
-            "Partner: 'I was thinking live music\u2026'"
+            "You decide to meet someone new for coffee.",
+            "Your child is staying with your ex.",
+            "Do you tell your ex about this date or keep it private?"
           ]
         },
         {
-          "title": "Act 2 \u2014 Discovery",
+          "title": "Act 2 \u2014 Introducing the Idea",
           "steps": [
-            "You look up options that blend both moods.",
-            "Partner: 'There\u2019s a bistro with an acoustic set.'"
+            "A few weeks later, your child overhears you talking on the phone with the new person.",
+            "Your child asks: \u201cWho is that?\u201d",
+            "Choices: be honest but gentle, change the subject, or dismiss it quickly."
           ]
         },
         {
-          "title": "Act 3 \u2014 Decision",
+          "title": "Act 3 \u2014 First Reactions",
           "steps": [
-            "You: 'Let\u2019s try the bistro \u2014 talk first, then music.'",
-            "Partner: 'Deal!'"
+            "Your ex finds out that you\u2019ve started dating.",
+            "They confront you \u2014 either calmly, defensively, or angrily.",
+            "You can choose to: reassure them that your child\u2019s needs come first, argue, or refuse to discuss."
+          ]
+        },
+        {
+          "title": "Act 4 \u2014 Resolution",
+          "steps": [
+            "Depending on your decisions:",
+            "Positive path: Your ex accepts your right to move on, your child feels secure, and boundaries are set.",
+            "Neutral path: Tensions remain but are manageable.",
+            "Negative path: Conflict worsens, child feels caught in the middle, and co-parenting suffers."
           ]
         }
       ]
