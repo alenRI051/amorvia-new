@@ -1,16 +1,17 @@
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('JS ready');
-  // Ensure background exists even if CSS preload fails
-  const bg = document.getElementById('bg');
-  if (bg && !getComputedStyle(bg).backgroundImage.includes('room.svg')) {
-    bg.style.backgroundImage = "url('./assets/backgrounds/room.svg')";
-    bg.style.backgroundSize = "cover";
-    bg.style.backgroundPosition = "center";
-    bg.style.backgroundRepeat = "no-repeat";
+// Heavier app logic (loaded on demand)
+export function init(){
+  console.log('Amorvia app initialized');
+  // simulate heavier work split into chunks to avoid long tasks
+  const items = Array.from({length: 5000}, (_,i)=>i);
+  let i = 0;
+  function chunk(){
+    const end = Math.min(i+250, items.length);
+    for (; i<end; i++) { Math.sqrt(i*i*i); }
+    if (i < items.length) {
+      if ('requestIdleCallback' in window) requestIdleCallback(chunk);
+      else setTimeout(chunk, 0);
+    }
   }
-  // Wire buttons (placeholder)
-  const prev = document.getElementById('prevBtn');
-  const next = document.getElementById('nextBtn');
-  if(prev) prev.addEventListener('click', ()=>console.log('Prev clicked'));
-  if(next) next.addEventListener('click', ()=>console.log('Next clicked'));
-});
+  if ('requestIdleCallback' in window) requestIdleCallback(chunk);
+  else setTimeout(chunk, 0);
+}

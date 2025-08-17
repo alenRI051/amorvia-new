@@ -3,67 +3,79 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Amorvia — Relationship Game</title>
+  <title>Amorvia — Interactive Relationship Scenarios</title>
 
   <!-- SEO -->
-  <meta name="description" content="Amorvia — an educational relationship game with multi‑act scenarios to practice real-life conversations." />
-  <link rel="canonical" href="https://www.amorvia.eu/" />
-  <meta name="robots" content="index, follow" />
+  <meta name="description" content="Amorvia is an interactive relationship journey with multi‑act scenarios. Practice conversations, set boundaries, and make choices that shape the story."/>
+  <link rel="canonical" href="https://www.amorvia.eu/"/>
+  <meta name="robots" content="index,follow"/>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Amorvia — Relationship Game" />
-  <meta property="og:description" content="Play scenarios, learn, and grow through guided choices." />
-  <meta property="og:url" content="https://www.amorvia.eu/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://www.amorvia.eu/assets/og-image.png" />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Amorvia — Interactive Relationship Scenarios"/>
+  <meta property="og:description" content="Make choices through multi‑act scenarios and learn healthy patterns."/>
+  <meta property="og:url" content="https://www.amorvia.eu/"/>
+  <meta property="og:image" content="https://www.amorvia.eu/assets/og-cover.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Amorvia — Interactive Relationship Scenarios"/>
+  <meta name="twitter:description" content="Practice difficult conversations in a safe, guided simulator."/>
+  <meta name="twitter:image" content="https://www.amorvia.eu/assets/og-cover.png"/>
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Amorvia — Relationship Game" />
-  <meta name="twitter:description" content="Play scenarios, learn, and grow through guided choices." />
-  <meta name="twitter:image" content="https://www.amorvia.eu/assets/og-image.png" />
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json"/>
+  <meta name="theme-color" content="#0f172a"/>
 
-  <!-- JSON-LD -->
+  <!-- Icons -->
+  <link rel="icon" href="./favicon.png" type="image/png"/>
+
+  <!-- Performance -->
+  <link rel="preload" href="./css/styles.css" as="style">
+  <link rel="preload" href="./assets/backgrounds/room.svg" as="image">
+  <link rel="stylesheet" href="./css/styles.css">
+
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Amorvia",
     "url": "https://www.amorvia.eu/",
-    "applicationCategory": "Game",
+    "applicationCategory": "EducationApplication",
     "operatingSystem": "Web",
-    "description": "Interactive multi‑act scenarios for practicing relationship skills."
+    "description": "Interactive multi‑act scenarios for practicing healthy relationship skills."
   }
   </script>
 
-  <!-- Performance -->
-  <link rel="preload" href="./assets/backgrounds/room.svg" as="image">
-  <link rel="preload" href="./css/styles.css" as="style">
-  <link rel="stylesheet" href="./css/styles.css">
+  <style>
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:#0b1220;color:#e5e7eb}
+    .container{min-height:60vh;padding:16px}
+    #bg{height:320px;background:#0b1220;border:1px solid #333;margin-bottom:12px}
+    :focus-visible{outline:3px solid #2563eb;outline-offset:3px;border-radius:6px}
+    .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{left:16px;top:16px;background:#fff;color:#0b1220;padding:8px 12px;border-radius:8px;z-index:9999}
+  </style>
 </head>
 <body>
-  <a href="#main" class="skip-link">Skip to content</a>
-
-  <header role="banner" class="header">
-    <h1>Amorvia <span class="muted">— Multi‑Act</span></h1>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="header" role="banner">
+    <h1>Amorvia <span style="opacity:.65;font-weight:500">— Multi‑Act</span></h1>
   </header>
 
-  <main id="main" role="main" class="container">
-    <!-- Test stage -->
-    <div id="bg" class="bg" role="img" aria-label="Room background"></div>
-    <figure class="character left"><img alt="Left character" src="./assets/characters/male_casual.svg" width="200" height="300" loading="eager"></figure>
-    <figure class="character right"><img alt="Right character" src="./assets/characters/female_casual.svg" width="200" height="300" loading="eager"></figure>
-
-    <section aria-label="Controls" class="controls">
+  <main id="main" class="container" role="main">
+    <div id="bg" role="img" aria-label="Background"></div>
+    <div style="display:flex;gap:12px;margin:8px 0">
       <button id="prevBtn" class="button" type="button" aria-label="Previous step">Prev</button>
       <button id="nextBtn" class="button" type="button" aria-label="Next step">Next</button>
-    </section>
+    </div>
+
+    <figure class="character left" style="position:absolute;bottom:32px;left:5%;width:200px">
+      <img alt="Left character" src="./assets/characters/male_casual.svg" width="200" height="300" loading="eager">
+    </figure>
+    <figure class="character right" style="position:absolute;bottom:32px;right:5%;width:200px">
+      <img alt="Right character" src="./assets/characters/female_casual.svg" width="200" height="300" loading="eager">
+    </figure>
   </main>
 
-  <footer role="contentinfo" class="footer">
-    <small>Health: <a href="./api/health" rel="nofollow">/api/health</a></small>
-  </footer>
-
-  <script defer src="./js/app.js"></script>
+  <script type="module" src="./js/bootstrap.js"></script>
 </body>
 </html>
