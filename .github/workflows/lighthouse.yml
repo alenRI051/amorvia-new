@@ -1,40 +1,27 @@
 name: lighthouse
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      url:
+        description: 'Target URL to audit'
+        required: false
+        default: 'https://amorvia-new.vercel.app/'
 
 jobs:
-  lighthouse:
+  lhci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Resolve target URL
-        id: url
-        run: |
-          if [ -n "${{ secrets.LIGHTHOUSE_URL }}" ]; then
-            echo "url=${{ secrets.LIGHTHOUSE_URL }}" >> $GITHUB_OUTPUT
-          else
-            echo "url=https://www.amorvia.eu/" >> $GITHUB_OUTPUT
-          fi
-          echo "Target URL: ${{ steps.url.outputs.url }}"
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Lighthouse CI
-        run: npm i -g @lhci/cli
-
+      # Run Lighthouse CI via a maintained action (handles Chrome install)
       - name: Run Lighthouse
-        run: |
-          lhci autorun             --collect.url=${{ steps.url.outputs.url }}             --upload.target=filesystem             --assert.assertions.'categories:performance'=error@90             --assert.assertions.'categories:accessibility'=error@90             --assert.assertions.'categories:seo'=error@90             --assert.assertions.'categories:best-practices'=error@90
-
-      - name: Upload LHCI reports
-        uses: actions/upload-artifact@v4
+        uses: treosh/lighthouse-ci-action@v10
         with:
-          name: lighthouse-reports
-          path: .lighthouseci/**
+          urls: |
+            ${{ github.event.inputs.url || vars.LIGHTHOUSE_URL || 'https://amorvia-new.vercel.app/' }}
+          uploadArtifacts: true            # attach HTML/JSON reports to the run
+          temporaryPublicStorage: true     # shareable links in run summary
+          configPath: ./.lighthouserc.json # optional, if present
