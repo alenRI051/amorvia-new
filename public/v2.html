@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Amorvia — Scenario v2 Demo</title>
+  <meta name="description" content="Amorvia v2 branching scenario demo with meters and choices."/>
+  <link rel="canonical" href="https://amorvia.eu/"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#0f172a"/>
+  <link rel="icon" href="/favicon.png" type="image/png"/>
+  <link rel="preload" href="/assets/backgrounds/room.svg" as="image" fetchpriority="high">
+  <link rel="preload" href="/assets/characters/male_casual.svg" as="image">
+  <link rel="preload" href="/assets/characters/female_casual.svg" as="image">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/ui.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Amorvia",
+    "url": "https://amorvia.eu/",
+    "applicationCategory": "EducationApplication",
+    "operatingSystem": "Web",
+    "description": "Interactive multi-act scenarios for practicing healthy relationship skills."
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header>
+    <h1>Amorvia <span class="muted">— Scenario v2</span></h1>
+  </header>
+  <main id="main" class="wrap">
+    <aside class="card panel">
+      <p class="muted">This page uses the new branching <strong>Scenario v2</strong> engine.</p>
+      <div style="display:grid;gap:8px">
+        <label for="scenarioPicker">Pick scenario</label>
+        <select id="scenarioPicker" class="select">
+          <option value="co-parenting-with-bipolar-partner">Co-Parenting with Bipolar Partner (Act 1)</option>
+        </select>
+        <button id="restartAct" class="button" type="button">Restart Act</button>
+      </div>
+    </aside>
+    <section class="card stage">
+      <div class="panel toolbar row">
+        <label for="bgSelect">Background</label>
+        <select id="bgSelect" class="select">
+          <option value="/assets/backgrounds/room.svg">Room</option>
+        </select>
+        <label for="leftSelect">Left</label>
+        <select id="leftSelect" class="select">
+          <option value="/assets/characters/male_casual.svg">Male • Casual</option>
+        </select>
+        <label for="rightSelect">Right</label>
+        <select id="rightSelect" class="select">
+          <option value="/assets/characters/female_casual.svg">Female • Casual</option>
+        </select>
+        <div class="spacer"></div>
+        <div id="hud" class="hud row" aria-label="Status meters" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="canvas">
+        <img id="bgImg" class="bg" alt="" decoding="async" fetchpriority="high" loading="eager">
+        <figure class="character left"><img id="leftImg" src="/assets/characters/male_casual.svg" alt="Left character" width="200" height="300" loading="eager" decoding="async"/></figure>
+        <figure class="character right"><img id="rightImg" src="/assets/characters/female_casual.svg" alt="Right character" width="200" height="300" loading="eager" decoding="async"/></figure>
+      </div>
+
+      <div class="panel dialog">
+        <div class="row">
+          <span id="actBadge" class="badge">Act —</span>
+          <h2 id="sceneTitle" class="no-margin">Scenario</h2>
+        </div>
+        <div id="dialog" class="mt8" aria-live="polite"></div>
+        <div id="choices" class="choices row" aria-label="Choices"></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/js/app.v2.js" defer></script>
+  <script src="/js/analytics.js" defer></script>
+  <script src="/sw-register.js" defer></script>
+</body>
+</html>

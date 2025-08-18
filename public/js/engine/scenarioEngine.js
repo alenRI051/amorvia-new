@@ -7,7 +7,7 @@ export class ScenarioEngine {
     };
     this._scenario = null;
     this._act = null;
-    this._state = null; // { scenarioId, actId, nodeId, meters, baseline }
+    this._state = null;
     this._subs = new Set();
   }
   subscribe(fn) { this._subs.add(fn); return () => this._subs.delete(fn); }
@@ -15,7 +15,6 @@ export class ScenarioEngine {
   get scenario() { return this._scenario; }
   get state() { return this._state; }
   get act() { return this._act; }
-
   async fetchById(id) {
     const res = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to fetch scenario ${id}: ${res.status}`);
@@ -56,23 +55,19 @@ export class ScenarioEngine {
     localStorage.removeItem(this._key(this._state.scenarioId, this._state.actId));
     this.startAct(this._state.actId, { forceFresh: true });
   }
-
   startAct(actId, { forceFresh = false } = {}) {
     if (!this._scenario) throw new Error('No scenario loaded');
     const act = this._scenario.acts.find(a => a.id === actId) || this._scenario.acts[0];
     if (!act) throw new Error('Scenario has no acts');
     this._act = act;
-
     let persisted = !forceFresh && this._loadPersisted(this._scenario.id, act.id);
     const baseline = persisted?.baseline || this._defaultMeters();
     const meters = persisted?.meters || { ...baseline };
     const nodeId = persisted?.nodeId || act.start;
-
     this._state = { scenarioId: this._scenario.id, actId: act.id, nodeId, meters, baseline };
     this._emit();
     return this.currentNode();
   }
-
   currentNode() {
     if (!this._state) return null;
     const { nodeId } = this._state;
@@ -81,7 +76,6 @@ export class ScenarioEngine {
     if (!node) throw new Error(`Node not found: ${nodeId}`);
     return node;
   }
-
   lineNext() {
     const node = this.currentNode();
     if (!node || node.type !== 'line') throw new Error('Not on a line node');
@@ -89,7 +83,6 @@ export class ScenarioEngine {
     this._save(); this._emit();
     return this.currentNode();
   }
-
   choose(index) {
     const node = this.currentNode();
     if (!node || node.type !== 'choice') throw new Error('Not on a choice node');
@@ -100,13 +93,11 @@ export class ScenarioEngine {
     this._save(); this._emit();
     return this.currentNode();
   }
-
   goto(targetId) {
     this._state.nodeId = targetId || 'end';
     this._save(); this._emit();
     return this.currentNode();
   }
-
   applyEffects(effects) {
     const meters = this._state.meters;
     const cfg = (this.opts.metersConfig || this._scenario?.meters) || {};
@@ -117,15 +108,13 @@ export class ScenarioEngine {
       meters[k] = this._clamp(current + Number(delta || 0), min, max);
     }
   }
-
   deltas() {
     const d = {};
     const { meters, baseline } = this._state;
-    for (const k of Object.keys(meters)) d[k] = Math.round((meters[k] - (baseline[k] ?? 0)) * 1) / 1;
+    for (const k of Object.keys(meters)) d[k] = Math.round((meters[k] - (baseline[k] ?? 0)));
     return d;
   }
 }
-
 export function formatDeltas(d) {
   return Object.entries(d).map(([k, v]) => `${k}${v>=0?'+':''}${v}`).join(' · ');
 }

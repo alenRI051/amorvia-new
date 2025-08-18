@@ -23,7 +23,6 @@
       "minLength": 1
     },
     "meters": {
-      "description": "Optional per-scenario meters with labels and starting values.",
       "type": "object",
       "minProperties": 1,
       "additionalProperties": {
@@ -66,7 +65,6 @@
   },
   "$defs": {
     "effects": {
-      "description": "Meter deltas to apply; keys are meter ids; values in [-100, 100].",
       "type": "object",
       "minProperties": 1,
       "additionalProperties": {
@@ -96,8 +94,7 @@
         },
         "to": {
           "type": "string",
-          "minLength": 1,
-          "description": "Next node id inside the same act, or the string 'end'."
+          "minLength": 1
         }
       }
     },
