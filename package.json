@@ -1,0 +1,12 @@
+{
+  "name": "amorvia-static",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static deploy of Amorvia on Vercel (public/ as output directory).",
+  "scripts": {
+    "test": "node tools/smoke.test.mjs",
+    "e2e": "node tools/smoke.test.mjs"
+  },
+  "devDependencies": {}
+}
