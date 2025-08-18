@@ -2,7 +2,7 @@
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
-const getMode = () => localStorage.getItem('amorvia:mode') || 'v2';
+const getMode = () => localStorage.getItem('amorvia:mode') || 'v1';
 const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
 function applyModeToDOM(mode) {
