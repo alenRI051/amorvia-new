@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia — Interactive Relationship Scenarios</title>
-  <meta name="description" content="Amorvia is an interactive relationship journey with multi‑act scenarios. Practice conversations, set boundaries, and make choices that shape the story."/>
+  <meta name="description" content="Amorvia is an interactive relationship journey with multi-act scenarios. Practice conversations, set boundaries, and make choices that shape the story."/>
   <link rel="canonical" href="https://amorvia.eu/"/>
   <meta name="robots" content="index,follow"/>
   <link rel="manifest" href="/manifest.json"/>
@@ -21,24 +21,26 @@
     "url": "https://amorvia.eu/",
     "applicationCategory": "EducationApplication",
     "operatingSystem": "Web",
-    "description": "Interactive multi‑act scenarios for practicing healthy relationship skills."
+    "description": "Interactive multi-act scenarios for practicing healthy relationship skills."
   }
   </script>
 </head>
-<body class="mode-v1">
+<body class="mode-v2">
   <a class="skip-link" href="#main">Skip to content</a>
   <header>
-    <h1>Amorvia <span class="muted">— Multi‑Act</span></h1>
+    <h1>Amorvia <span class="muted">— Multi-Act</span></h1>
   </header>
+
   <main id="main" class="wrap">
     <aside class="card panel">
-      <div class="v1-only">
+      <div class="v1-only" aria-hidden="true" hidden>
         <label class="sr-only" for="search">Search scenarios</label>
         <input id="search" class="input" placeholder="Search scenarios…" autocomplete="off"/>
         <div id="scenarioList" class="list" aria-label="Scenarios"></div>
       </div>
-      <div class="v2-only" hidden aria-hidden="true">
-        <div style="display:grid;gap:8px">
+
+      <div class="v2-only">
+        <div class="stack">
           <label for="scenarioPicker">Pick scenario</label>
           <select id="scenarioPicker" class="select">
             <option value="co-parenting-with-bipolar-partner">Co-Parenting with Bipolar Partner (Act 1)</option>
@@ -47,6 +49,7 @@
         </div>
       </div>
     </aside>
+
     <section class="card stage">
       <div class="panel toolbar row">
         <label for="bgSelect">Background</label>
@@ -65,28 +68,30 @@
         <label for="modeSelect">Mode</label>
         <select id="modeSelect" class="select">
           <option value="v1">Classic v1</option>
-          <option value="v2">Branching v2</option>
+          <option value="v2" selected>Branching v2</option>
         </select>
-        <div id="hud" class="hud row v2-only" role="status" aria-live="polite" hidden aria-hidden="true"></div>
-        <button id="prevBtn" class="button v1-only" type="button">Prev</button>
-        <button id="nextBtn" class="button v1-only" type="button">Next</button>
+        <div id="hud" class="hud row v2-only" role="status" aria-live="polite"></div>
+        <button id="prevBtn" class="button v1-only" type="button" hidden aria-hidden="true">Prev</button>
+        <button id="nextBtn" class="button v1-only" type="button" hidden aria-hidden="true">Next</button>
       </div>
+
       <div class="canvas">
         <img id="bgImg" class="bg" alt="" decoding="async" fetchpriority="high" loading="eager">
         <figure class="character left"><img id="leftImg" src="/assets/characters/male_casual.svg" alt="Left character" width="200" height="300" loading="eager" decoding="async"/></figure>
         <figure class="character right"><img id="rightImg" src="/assets/characters/female_casual.svg" alt="Right character" width="200" height="300" loading="eager" decoding="async"/></figure>
       </div>
+
       <div class="panel dialog">
         <div class="row">
           <span id="actBadge" class="badge">Act —</span>
-          <h2 id="sceneTitle" class="no-margin">Select a scenario</h2>
+          <h2 id="sceneTitle" class="no-margin">Scenario</h2>
         </div>
-        <div id="dialog" class="mt8" aria-live="polite">Pick a scenario to begin.</div>
-        <div id="choices" class="choices row v2-only" hidden aria-hidden="true"></div>
+        <div id="dialog" class="mt8" aria-live="polite"></div>
+        <div id="choices" class="choices row v2-only" aria-label="Choices"></div>
       </div>
     </section>
   </main>
-  <!-- Use RELATIVE path so it can't be rewritten to HTML by a misroute -->
+
   <script type="module" src="./js/bootstrap.js" defer></script>
   <script src="/js/analytics.js" defer></script>
   <script src="/sw-register.js" defer></script>

@@ -1,9 +1,9 @@
-// CSP-safe bootstrap (no inline styles). Chooses v1 or v2 module and paints bg image.
-
+\
+// CSP-safe bootstrap. Defaults to v2 so site works even without v1 app.js present.
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
-const getMode = () => localStorage.getItem('amorvia:mode') || 'v1';
+const getMode = () => localStorage.getItem('amorvia:mode') || 'v2';
 const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
 function applyModeToDOM(mode) {
@@ -15,8 +15,9 @@ function applyModeToDOM(mode) {
 
 const modeSel = document.getElementById('modeSelect');
 if (modeSel) {
-  modeSel.value = getMode();
-  applyModeToDOM(modeSel.value);
+  const initial = getMode();
+  modeSel.value = initial;
+  applyModeToDOM(initial);
   modeSel.addEventListener('change', () => {
     setMode(modeSel.value);
     location.reload();
