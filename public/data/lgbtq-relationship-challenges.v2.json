@@ -1,0 +1,306 @@
+{
+  "version": 2,
+  "id": "lgbtq-relationship-challenges",
+  "title": "LGBTQ+ Relationship Challenges",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 28
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 18
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Disclosure",
+      "start": "l1",
+      "nodes": [
+        {
+          "id": "l1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You consider how and when to share your relationship status with family and your child.",
+          "next": "l2"
+        },
+        {
+          "id": "l2",
+          "type": "choice",
+          "prompt": "What is your approach?",
+          "choices": [
+            {
+              "label": "Plan a supportive context and language",
+              "to": "l3",
+              "effects": {
+                "trust": 5,
+                "tension": -3
+              }
+            },
+            {
+              "label": "Share spontaneously without coordination",
+              "to": "l4",
+              "effects": {
+                "tension": 4
+              }
+            },
+            {
+              "label": "Delay indefinitely due to fear",
+              "to": "l5",
+              "effects": {
+                "trust": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "l3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You pick a calm moment and align on wording.",
+          "next": "lend1"
+        },
+        {
+          "id": "l4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Some relatives react unpredictably.",
+          "next": "lend1"
+        },
+        {
+          "id": "l5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Uncertainty lingers and creates tension.",
+          "next": "lend1"
+        },
+        {
+          "id": "lend1",
+          "type": "end",
+          "summary": "End of Act 1. You set a foundation for openness."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 - School & Community",
+      "start": "l2a1",
+      "nodes": [
+        {
+          "id": "l2a1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You navigate forms, teacher meetings, and community settings.",
+          "next": "l2a2"
+        },
+        {
+          "id": "l2a2",
+          "type": "choice",
+          "prompt": "Your strategy:",
+          "choices": [
+            {
+              "label": "Proactive: notify key adults and request inclusive language",
+              "to": "l2a3",
+              "effects": {
+                "trust": 4,
+                "childStress": -3
+              }
+            },
+            {
+              "label": "Reactive: address issues only when they arise",
+              "to": "l2a4",
+              "effects": {
+                "tension": 2
+              }
+            },
+            {
+              "label": "Avoidance: keep it private everywhere",
+              "to": "l2a5",
+              "effects": {
+                "childStress": 2,
+                "trust": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "l2a3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Proactive steps reduce friction and clarify expectations.",
+          "next": "l2end"
+        },
+        {
+          "id": "l2a4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "It works sometimes but issues repeat.",
+          "next": "l2end"
+        },
+        {
+          "id": "l2a5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Avoidance limits support networks.",
+          "next": "l2end"
+        },
+        {
+          "id": "l2end",
+          "type": "end",
+          "summary": "End of Act 2. Institutions can help when engaged."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 - Co-Parent Dynamics",
+      "start": "l3a1",
+      "nodes": [
+        {
+          "id": "l3a1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Your co-parent has concerns about timing and messaging.",
+          "next": "l3a2"
+        },
+        {
+          "id": "l3a2",
+          "type": "choice",
+          "prompt": "How do you engage?",
+          "choices": [
+            {
+              "label": "Collaborate on a shared message and boundaries",
+              "to": "l3a3",
+              "effects": {
+                "trust": 6,
+                "tension": -4
+              }
+            },
+            {
+              "label": "Assert independence without discussion",
+              "to": "l3a4",
+              "effects": {
+                "tension": 8,
+                "trust": -5
+              }
+            },
+            {
+              "label": "Delay any changes until consensus",
+              "to": "l3a5",
+              "effects": {
+                "trust": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "l3a3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Shared language reduces confusion for the child.",
+          "next": "l3end"
+        },
+        {
+          "id": "l3a4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Unilateral choices strain co-parenting.",
+          "next": "l3end"
+        },
+        {
+          "id": "l3a5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Waiting reduces conflict now but slows progress.",
+          "next": "l3end"
+        },
+        {
+          "id": "l3end",
+          "type": "end",
+          "summary": "End of Act 3. Coordination matters."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 - Child-Centered Plan",
+      "start": "l4a1",
+      "nodes": [
+        {
+          "id": "l4a1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You consider what supports your child's sense of safety and belonging.",
+          "next": "l4a2"
+        },
+        {
+          "id": "l4a2",
+          "type": "choice",
+          "prompt": "Going forward:",
+          "choices": [
+            {
+              "label": "Set a gradual timeline with check-ins",
+              "to": "l4a3",
+              "effects": {
+                "childStress": -3,
+                "trust": 4
+              }
+            },
+            {
+              "label": "Introduce new partner at a neutral activity",
+              "to": "l4a4",
+              "effects": {
+                "childStress": -2,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Hold off and focus on stability for now",
+              "to": "l4a5",
+              "effects": {
+                "childStress": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "l4a3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "A paced plan helps everyone adjust.",
+          "next": "l4end"
+        },
+        {
+          "id": "l4a4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Low-pressure context keeps expectations realistic.",
+          "next": "l4end"
+        },
+        {
+          "id": "l4a5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Stability first can be wise in some seasons.",
+          "next": "l4end"
+        },
+        {
+          "id": "l4end",
+          "type": "end",
+          "summary": "End of Act 4. The plan centers your child's well-being."
+        }
+      ]
+    }
+  ]
+}

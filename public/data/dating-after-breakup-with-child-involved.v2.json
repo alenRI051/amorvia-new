@@ -269,7 +269,7 @@
               }
             },
             {
-              "label": "Not yet: prioritize stability; revisit after Act 6 weeks",
+              "label": "Not yet: prioritize stability; revisit after 6 weeks",
               "to": "a4n5",
               "effects": {
                 "childStress": -1

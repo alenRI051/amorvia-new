@@ -1,16 +1,19 @@
-Amorvia - Metrics + Save/Load Modal Patch
+Amorvia Beta Scenarios Bundle
+Date: 2025-08-18
 
-Files included:
-- public/js/metrics.js      -> posts events to /api/track using sendBeacon/fetch
-- public/js/app.v2.js       -> replaces prompt-based saves with an in-page modal (Undo + Saves button)
-- api/track.js              -> minimal Vercel Function that accepts POST JSON and returns 204
+Included scenarios (v2 JSON):
+- Co-Parenting with Bipolar Partner
+- Dating After Breakup (With Child Involved)
+- Step-Parenting Conflicts
+- Cultural or Religious Difference
+- LGBTQ+ Relationship Challenges
+- (Extras) Scene: Different Rules; Scene: First Agreements
+
+Indices:
+- public/data/v2-index.beta.json  -> the 5 scenarios from the Master Doc (rename to v2-index.json to use)
+- public/data/v2-index.all.json   -> all 7 scenarios (rename to v2-index.json to use)
 
 Install:
-1) Copy these files into your repo (preserve paths).
-2) Ensure your Vercel project allows functions under /api (default is OK).
-3) Deploy. After load, open v2 mode and click "Saves" to open the modal.
-
-Notes:
-- All files are ASCII only.
-- The modal lists existing save slots. Click a pill to load. Use the input to save.
-- Metrics events: scenario_start, choice_made, line_next, act_end, save_slot, load_slot.
+1) Upload the 'public/data' folder to your root 'public/data'.
+2) Pick your index file and rename to 'v2-index.json' (beta or all).
+3) Hard reload once (or bump SW VERSION) to refresh caches.
