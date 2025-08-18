@@ -1,42 +1,15 @@
 name: e2e
-
-on:
-  pull_request:
-    branches: [ main ]
-  push:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Sanity check structure
-        run: |
-          test -f index.html
-          test -f vercel.json
-          test -f api/health/index.js
-          test -f css/styles.css
-          test -f js/app.js
-          test -f data/scenarios.json
-          test -f assets/backgrounds/room.svg
-          echo "✅ Structure OK"
-
-      - name: Validate scenarios.json (multi‑act format)
-        run: |
-          node -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync('data/scenarios.json','utf8'));if(!Array.isArray(j.scenarios))process.exit(1);const ok=j.scenarios.every(s=>Array.isArray(s.acts)&&s.acts.length>0&&Array.isArray(s.acts[0].steps));if(!ok)process.exit(2);console.log('✅ scenarios.json OK')"
-        env:
-          NODE_NO_WARNINGS: "1"
-
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Lint HTML meta
-        run: |
-          grep -qi "<title>" index.html
-          grep -qi 'meta name="description"' index.html || true
-          grep -qi 'link rel="canonical"' index.html || true
-          echo "✅ Basic meta present (or optional)"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm ci || true   # ok if there are no deps
+      - run: npm run test
+        env:
+          SITE_URL: https://amorvia.eu
