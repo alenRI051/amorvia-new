@@ -1,0 +1,6 @@
+{
+  "name": "amorvia-static",
+  "private": true,
+  "scripts": {},
+  "description": "Static deploy (public/ as output directory)."
+}

@@ -1,14 +1,13 @@
-Amorvia root bundle — offline-ready
+Amorvia — PUBLIC static bundle (Vercel)
 
-Files included:
-- index.html (SW registration fixed & root-relative URLs)
-- service-worker.js (offline caching)
-- sw-register.js (clean UTF-8)
-- offline.html (fallback)
-- vercel.json (headers merged)
+Move your existing **css/**, **js/**, and **assets/** into **public/**.
 
-How to use:
-1) Upload/replace these files at the **root** of your repo (same level as index.html).
-2) Deploy to Vercel.
-3) In Chrome DevTools → Application → Service Workers: unregister old SW, Clear storage, reload.
-4) Test offline: Network tab → Offline → refresh; UI should still load (or offline.html if first load).
+Vercel Project Settings → Build & Development:
+- Framework preset: Other (Static)
+- Build Command: (empty)
+- Output Directory: public
+- Install Command: (empty)
+
+After deploy:
+- DevTools → Application → Service Workers: Unregister old, Clear storage, reload.
+- Test Offline: Network → Offline → refresh.
