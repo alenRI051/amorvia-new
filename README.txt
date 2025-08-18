@@ -1,19 +1,18 @@
-Amorvia — Performance Patch
-===========================
+Amorvia — Security Headers + CLS Patch
 
-What changed
-- Background is now a real <img> (`#bgImg`) so the browser can treat it as LCP and prioritize it.
-- Preload for the hero image with `fetchpriority="high"`.
-- Async stylesheet load to reduce render-blocking (noscript fallback kept).
-- Bootstrap updated to set `bgImg.src` and warm `/data/index.json`.
+Files:
+- vercel.json                 → adds HSTS, CSP, COOP, X-Frame-Options, Referrer-Policy, and nosniff
+- public/css/styles-extra.css → reserves space for character images to drop CLS
 
-How to apply
-1) Replace your `/public/index.html` with the one in this patch (or merge the <img> + preload changes).
-2) Replace `/public/js/bootstrap.js`.
-3) Deploy.
-4) Run Lighthouse against **https://amorvia.eu/** (avoid the `www.` redirect).
+How to apply:
+1) Replace your existing vercel.json at the repo root with this one.
+2) EITHER:
+   a) Append the CSS rules in public/css/styles-extra.css to the end of your public/css/styles.css, OR
+   b) Link it from index.html after your main CSS:
+      <link rel="stylesheet" href="/css/styles-extra.css">
+3) Deploy. For a clean test, unregister the Service Worker (DevTools → Application) and hard-reload.
+4) Run Lighthouse against https://amorvia.eu/ (avoid the www redirect).
 
-Optional
-- Optimize `/public/assets/backgrounds/room.svg` with SVGO for a little extra win.
-- If you run Lighthouse in CI, append `?nosw=1` to avoid SW noise.
-
+Notes on CSP:
+- 'script-src' includes 'unsafe-inline' to allow your JSON-LD <script> and the preload onload trick.
+- If you later remove inline uses, we can tighten CSP further.
