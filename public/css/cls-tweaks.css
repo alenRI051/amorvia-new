@@ -1,0 +1,10 @@
+/* Extra CLS stability without hurting paint timing */
+.character { width: 200px; height: 300px; }               /* reserve space */
+.character img { display:block; width:100%; height:100%; object-fit:contain; }
+
+/* Scenario list & dialog: avoid late jumps when content appears */
+#scenarioList { content-visibility: auto; contain-intrinsic-size: 400px; }
+.panel.dialog { content-visibility: auto; contain-intrinsic-size: 160px; }
+
+/* Make sure buttons don't shift when text wraps */
+.button { contain: layout paint; }

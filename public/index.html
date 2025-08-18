@@ -10,11 +10,15 @@
   <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#0f172a"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
-  <!-- Preload hero background as real image so it can become LCP -->
+  <!-- Preload hero and character images so they start downloading ASAP -->
   <link rel="preload" href="/assets/backgrounds/room.svg" as="image" fetchpriority="high">
-  <!-- Async CSS to reduce render-blocking; keep noscript for non-JS -->
+  <link rel="preload" href="/assets/characters/male_casual.svg" as="image">
+  <link rel="preload" href="/assets/characters/female_casual.svg" as="image">
+  <!-- Async CSS to reduce render blocking -->
   <link rel="preload" href="/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="/css/styles.css"></noscript>
+  <!-- Optional: CLS tweaks -->
+  <link rel="stylesheet" href="/css/cls-tweaks.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -44,7 +48,7 @@
     .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #1f2937}
     .toolbar .spacer{flex:1}
     .canvas{position:relative;overflow:hidden;height:420px}
-    /* bg is now a real <img> so it can be prioritized as LCP */
+    /* bg is a real <img> for proper LCP */
     .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
     .character{position:absolute;bottom:0;width:200px}
     .character.left{left:6%}.character.right{right:6%}
@@ -55,7 +59,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header>
-    <h1>Amorvia <span style="opacity:.7;font-weight:500">— Multi‑Act</span></h1>
+    <h1>Amorvia <span style="opacity:.7;font-weight:500">— Multi-Act</span></h1>
   </header>
   <main id="main" class="wrap">
     <aside class="card panel">
@@ -82,10 +86,11 @@
         <button id="nextBtn" class="button" type="button">Next</button>
       </div>
       <div class="canvas">
-        <!-- Background is now an <img> for better LCP -->
+        <!-- Background is an <img> for better LCP -->
         <img id="bgImg" class="bg" alt="" decoding="async" fetchpriority="high" loading="eager">
-        <figure class="character left"><img id="leftImg" alt="Left character" width="200" height="300" loading="eager"/></figure>
-        <figure class="character right"><img id="rightImg" alt="Right character" width="200" height="300" loading="eager"/></figure>
+        <!-- Set default src for characters so they render immediately -->
+        <figure class="character left"><img id="leftImg" src="/assets/characters/male_casual.svg" alt="Left character" width="200" height="300" loading="eager" decoding="async"/></figure>
+        <figure class="character right"><img id="rightImg" src="/assets/characters/female_casual.svg" alt="Right character" width="200" height="300" loading="eager" decoding="async"/></figure>
       </div>
       <div class="panel dialog">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
