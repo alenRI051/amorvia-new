@@ -1,4 +1,4 @@
-\
+
 // CSP-safe bootstrap (no inline styles). Chooses v1 or v2 module and paints bg image.
 
 const bgImg = document.getElementById('bgImg');
