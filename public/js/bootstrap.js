@@ -1,7 +1,26 @@
-/* Amorvia bootstrap - clean ASCII, CSP-safe, relative imports */
+/* Amorvia bootstrap - char/bg wiring + relative imports (ASCII) */
 (function(){
-  const bgImg = document.getElementById('bgImg');
-  if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
+  function $(id){ return document.getElementById(id); }
+
+  var bgImg = $('bgImg');
+  var leftImg = $('leftImg');
+  var rightImg = $('rightImg');
+  var bgSel = $('bgSelect');
+  var leftSel = $('leftSelect');
+  var rightSel = $('rightSelect');
+
+  function applyCharAndBg(){
+    if (bgImg && bgSel && bgSel.value) bgImg.src = bgSel.value;
+    if (leftImg && leftSel && leftSel.value) leftImg.src = leftSel.value;
+    if (rightImg && rightSel && rightSel.value) rightImg.src = rightSel.value;
+  }
+  ['change'].forEach(function(evt){
+    if (bgSel) bgSel.addEventListener(evt, applyCharAndBg);
+    if (leftSel) leftSel.addEventListener(evt, applyCharAndBg);
+    if (rightSel) rightSel.addEventListener(evt, applyCharAndBg);
+  });
+  // initial paint
+  applyCharAndBg();
 
   function getMode(){ return localStorage.getItem('amorvia:mode') || 'v2'; }
   function setMode(m){ try{ localStorage.setItem('amorvia:mode', m); }catch{} }
@@ -13,7 +32,7 @@
     document.querySelectorAll('.v2-only').forEach(function(el){ var on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
   }
 
-  var modeSel = document.getElementById('modeSelect');
+  var modeSel = $('modeSelect');
   if (modeSel) {
     var initial = getMode();
     modeSel.value = initial;
@@ -31,7 +50,7 @@
     if (loaded) return;
     loaded = true;
     var mode = getMode();
-    // bootstrap.js lives in /js/, so import from the same directory (no '/js/js').
+    // bootstrap.js lives in /js/, so import from the same directory
     var url = mode === 'v2' ? './app.v2.js' : './app.js';
     try{
       console.debug('[bootstrap] importing', url, 'mode=', mode);
