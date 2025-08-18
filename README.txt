@@ -1,15 +1,14 @@
-Amorvia — Modules-only pack (v2)
-Generated: 2025-08-18
+Amorvia UI Patch
 
-Included files:
-- public/js/app.v2.js
-- public/js/engine/scenarioEngine.js
-- public/js/app.js  (v1 stub)
+This index.html guarantees all required DOM elements exist for both modes:
+- v1: #search, #scenarioList, #prevBtn, #nextBtn
+- v2: #scenarioPicker, #restartAct, #hud, #choices
+and shared elements: #bgImg, #leftImg, #rightImg, #actBadge, #sceneTitle, #dialog, selectors.
 
-Install:
-1) Copy the `public/js` folder into your deployment (preserve paths).
-2) Bypass SW once (DevTools → Application → "Bypass for network") or visit /?nosw=1.
-3) Verify these URLs return JS (200 + a JavaScript content-type):
-   /js/app.v2.js
-   /js/engine/scenarioEngine.js
-   /js/app.js
+How to apply:
+1) Copy public/index.html and public/css/ui.patch.css into your repo (preserve paths).
+2) Ensure /js/bootstrap.js is the "clean" relative-import version (no /js/js path).
+3) Bypass the service worker once (Application -> Bypass for network) and hard-reload.
+4) Switch modes with the Mode select and confirm:
+   - v2 shows HUD meters and choices
+   - v1 shows list with Prev/Next
