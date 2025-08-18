@@ -1,0 +1,309 @@
+{
+  "version": 2,
+  "id": "dating-after-breakup-with-child-involved",
+  "title": "Dating After Breakup (With Child Involved)",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 25
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 15
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - First Date",
+      "start": "a1n1",
+      "nodes": [
+        {
+          "id": "a1n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You plan to meet someone new for coffee while your child is with your ex.",
+          "next": "a1n2"
+        },
+        {
+          "id": "a1n2",
+          "type": "choice",
+          "prompt": "Do you tell your ex about the date?",
+          "choices": [
+            {
+              "label": "Give a short, neutral heads-up",
+              "to": "a1n3",
+              "effects": {
+                "trust": 4,
+                "tension": -3
+              }
+            },
+            {
+              "label": "Keep it private for now",
+              "to": "a1n4",
+              "effects": {
+                "trust": -1
+              }
+            },
+            {
+              "label": "Announce it pointedly to assert independence",
+              "to": "a1n5",
+              "effects": {
+                "tension": 8,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They reply briefly. Boundaries feel acknowledged.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You keep it private and focus on the evening.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1n5",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They react defensively and question your priorities.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1end",
+          "type": "end",
+          "summary": "End of Act 1. You set an initial tone for co-parent communication."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 - Introducing the Idea",
+      "start": "a2n1",
+      "nodes": [
+        {
+          "id": "a2n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Weeks later, your child overhears you on the phone with the new person and asks who it is.",
+          "next": "a2n2"
+        },
+        {
+          "id": "a2n2",
+          "type": "choice",
+          "prompt": "How do you handle the question?",
+          "choices": [
+            {
+              "label": "Honest but gentle: a friend you enjoy talking to",
+              "to": "a2n3",
+              "effects": {
+                "childStress": -2,
+                "trust": 2
+              }
+            },
+            {
+              "label": "Change the subject for now",
+              "to": "a2n4",
+              "effects": {
+                "childStress": 1
+              }
+            },
+            {
+              "label": "Dismiss it quickly: not your business",
+              "to": "a2n5",
+              "effects": {
+                "childStress": 4,
+                "trust": -3
+              }
+            }
+          ]
+        },
+        {
+          "id": "a2n3",
+          "type": "line",
+          "speaker": "child",
+          "text": "They nod and ask if they will meet them someday.",
+          "next": "a2end"
+        },
+        {
+          "id": "a2n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You pause the topic and plan to revisit when calm.",
+          "next": "a2end"
+        },
+        {
+          "id": "a2n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "They withdraw and seem unsure what to feel.",
+          "next": "a2end"
+        },
+        {
+          "id": "a2end",
+          "type": "end",
+          "summary": "End of Act 2. You set expectations for future conversations."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 - First Reactions",
+      "start": "a3n1",
+      "nodes": [
+        {
+          "id": "a3n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Your ex finds out you have started dating and wants to talk.",
+          "next": "a3n2"
+        },
+        {
+          "id": "a3n2",
+          "type": "choice",
+          "prompt": "How do you respond to their concerns?",
+          "choices": [
+            {
+              "label": "Reassure: child's needs first; discuss pacing and boundaries",
+              "to": "a3n3",
+              "effects": {
+                "tension": -6,
+                "trust": 6,
+                "childStress": -2
+              }
+            },
+            {
+              "label": "Argue and defend your privacy",
+              "to": "a3n4",
+              "effects": {
+                "tension": 10,
+                "trust": -8,
+                "childStress": 4
+              }
+            },
+            {
+              "label": "Refuse to discuss at all",
+              "to": "a3n5",
+              "effects": {
+                "trust": -4
+              }
+            }
+          ]
+        },
+        {
+          "id": "a3n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They accept a gradual approach and a check-in plan.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "The conversation escalates and communication cools down.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "They back off but resentment grows.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3end",
+          "type": "end",
+          "summary": "End of Act 3. You either built alignment or added friction."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 - Resolution",
+      "start": "a4n1",
+      "nodes": [
+        {
+          "id": "a4n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You consider whether and when to introduce the new person to your child.",
+          "next": "a4n2"
+        },
+        {
+          "id": "a4n2",
+          "type": "choice",
+          "prompt": "Choose a path:",
+          "choices": [
+            {
+              "label": "Guided introduction: short, neutral activity later",
+              "to": "a4n3",
+              "effects": {
+                "childStress": -3,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Slow lane: wait 3-6 months before any meet",
+              "to": "a4n4",
+              "effects": {
+                "tension": -2,
+                "trust": 2
+              }
+            },
+            {
+              "label": "Not yet: prioritize stability; revisit after Act 6 weeks",
+              "to": "a4n5",
+              "effects": {
+                "childStress": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "a4n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You plan a brief, child-focused meeting with no pressure.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You commit to time and consistency before introductions.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You decide to hold off and monitor your child's adjustment.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4end",
+          "type": "end",
+          "summary": "End of Act 4. You finish with a deliberate, child-centered plan."
+        }
+      ]
+    }
+  ]
+}
