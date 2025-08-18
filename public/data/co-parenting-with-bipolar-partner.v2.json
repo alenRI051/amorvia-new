@@ -5,27 +5,34 @@
   "meters": {
     "tension": {
       "label": "Tension",
+      "min": 0,
+      "max": 100,
       "start": 20
     },
     "trust": {
       "label": "Trust",
+      "min": 0,
+      "max": 100,
       "start": 50
     },
     "childStress": {
       "label": "Child Stress",
+      "min": 0,
+      "max": 100,
       "start": 10
     }
   },
   "acts": [
     {
-      "id": "a1",
+      "id": "act-1",
       "title": "Act 1 \u2014 First Exchange",
       "start": "n1",
       "nodes": [
         {
           "id": "n1",
           "type": "line",
-          "text": "You arrive to pick up your child; your ex seems upset.",
+          "speaker": "ex",
+          "text": "They seem upset and speak in a confusing way.",
           "next": "n2"
         },
         {
@@ -34,46 +41,42 @@
           "prompt": "How do you respond?",
           "choices": [
             {
-              "label": "Stay calm and validate",
+              "label": "Stay calm and validate feelings",
+              "to": "n3",
               "effects": {
                 "tension": -10,
                 "trust": 5
-              },
-              "to": "n3"
+              }
             },
             {
-              "label": "Ignore and take the child",
+              "label": "Ignore and proceed",
+              "to": "n3",
               "effects": {
-                "tension": 5,
-                "trust": -5
-              },
-              "to": "n4"
+                "tension": 0
+              }
             },
             {
-              "label": "Snap back",
+              "label": "Respond emotionally",
+              "to": "n3",
               "effects": {
                 "tension": 15,
-                "childStress": 10
-              },
-              "to": "n4"
+                "trust": -10,
+                "childStress": 5
+              }
             }
           ]
         },
         {
           "id": "n3",
           "type": "line",
-          "text": "They soften a little and speak more clearly.",
-          "next": "end"
-        },
-        {
-          "id": "n4",
-          "type": "line",
-          "text": "They raise their voice; the air feels tense.",
+          "speaker": "narrator",
+          "text": "You move toward the exchange.",
           "next": "end"
         },
         {
           "id": "end",
-          "type": "end"
+          "type": "end",
+          "summary": "Act finished."
         }
       ]
     }
