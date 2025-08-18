@@ -20,11 +20,11 @@ const els = {
 
 const state = {
   scenarios: [],     // [{id,title,acts}]
-  current: null,     // full scenario {id,title,acts:[{title,steps:[]},...]}
+  current: null,     // full scenario
   actIndex: 0
 };
 
-const mdLite = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); // bold only
+const mdLite = (s) => (s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); // bold only
 
 async function getJSON(url) {
   const res = await fetch(url, { cache: 'no-store' });
@@ -100,7 +100,7 @@ async function loadScenario(id) {
       data = await getJSON(`/data/${id}.json`);
     } catch {
       const full = await getJSON('/data/full-index.json');
-      data = full.scenarios.find(s => s.id === id);
+      data = (full.scenarios || []).find(s => s.id === id);
       if (!data) throw new Error('Not found in full-index either.');
     }
     state.current = data;
