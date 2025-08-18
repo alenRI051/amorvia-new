@@ -1,4 +1,4 @@
-\
+
 // CSP-safe bootstrap. Defaults to v2 so site works even without v1 app.js present.
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
