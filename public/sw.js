@@ -1,23 +1,16 @@
-/* sw.js - Offline cache for Amorvia */
-const VERSION = 'v0.2.' + Date.now();
+/* sw.js - Offline cache with update message */
+const VERSION = 'v0.3.' + Date.now();
 const CORE_URLS = [
   '/', '/index.html',
   '/css/styles.css', '/css/ui.patch.css',
-  '/js/bootstrap.js', '/js/app.v2.js', '/js/engine/scenarioEngine.js', '/js/app.js',
+  '/js/bootstrap.js', '/js/app.v2.js', '/js/engine/scenarioEngine.js', '/js/app.js', '/js/metrics.js',
   '/data/v2-index.json', '/data/co-parenting-with-bipolar-partner.v2.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(VERSION);
-    const results = await Promise.allSettled(CORE_URLS.map(u => fetch(u, { cache: 'no-store' })));
-    const ok = [];
-    results.forEach((r, i) => {
-      if (r.status === 'fulfilled' && r.value.ok) ok.push(new Response(r.value.clone().body, { headers: r.value.headers }));
-      else console.warn('[sw] skip precache', CORE_URLS[i]);
-    });
-    // Add to cache by refetching OK ones to keep request info
-    await cache.addAll(CORE_URLS.filter((u, i) => results[i].status === 'fulfilled' && results[i].value.ok));
+    await cache.addAll(CORE_URLS);
     self.skipWaiting();
   })());
 });
@@ -39,7 +32,6 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
 
   if (isHTML(req)) {
-    // Network first for HTML
     event.respondWith((async () => {
       try {
         const net = await fetch(req);
@@ -56,7 +48,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (isData(url)) {
-    // Cache-first for data (works offline), update in background
     event.respondWith((async () => {
       const cache = await caches.open(VERSION);
       const cached = await cache.match(req);
@@ -67,7 +58,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (isStatic(url)) {
-    // Stale-while-revalidate for JS/CSS/assets
     event.respondWith((async () => {
       const cache = await caches.open(VERSION);
       const cached = await cache.match(req);
@@ -76,4 +66,9 @@ self.addEventListener('fetch', (event) => {
     })());
     return;
   }
+});
+
+// Inform clients when a new version is ready
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });

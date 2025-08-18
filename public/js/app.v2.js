@@ -1,5 +1,6 @@
-// app.v2.js - v2 UI glue (ASCII)
+// app.v2.js - v2 UI with Undo and Save/Load, metrics stub (ASCII)
 import { ScenarioEngine, formatDeltas } from './engine/scenarioEngine.js';
+import { track } from './metrics.js';
 
 const $ = (s) => document.querySelector(s);
 
@@ -19,6 +20,34 @@ const els = {
   choices: $('#choices')
 };
 
+function ensureTopBarControls(){
+  // Add Undo / Save / Load buttons next to choices if not present
+  if (!document.getElementById('undoBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'undoBtn'; btn.className = 'button'; btn.textContent = 'Undo';
+    btn.addEventListener('click', () => { if (!eng.undo()) btn.disabled = true; });
+    els.choices.parentElement && els.choices.parentElement.insertBefore(btn, els.choices);
+  }
+  if (!document.getElementById('saveBtn')) {
+    const b = document.createElement('button');
+    b.id = 'saveBtn'; b.className = 'button'; b.textContent = 'Save';
+    b.addEventListener('click', () => {
+      const name = prompt('Save slot name:', 'slot1');
+      if (name) { eng.saveSlot(name); alert('Saved to ' + name); }
+    });
+    els.choices.parentElement && els.choices.parentElement.insertBefore(b, els.choices);
+  }
+  if (!document.getElementById('loadBtn')) {
+    const b = document.createElement('button');
+    b.id = 'loadBtn'; b.className = 'button'; b.textContent = 'Load';
+    b.addEventListener('click', () => {
+      const name = prompt('Load slot name:', 'slot1');
+      if (name && eng.loadSlot(name)) renderNode();
+    });
+    els.choices.parentElement && els.choices.parentElement.insertBefore(b, els.choices);
+  }
+}
+
 function applyCharAndBg() {
   if (els.leftImg && els.leftSel) els.leftImg.src = els.leftSel.value;
   if (els.rightImg && els.rightSel) els.rightImg.src = els.rightSel.value;
@@ -33,8 +62,7 @@ function applyCharAndBg() {
 const eng = new ScenarioEngine();
 
 function renderHUD() {
-  const st = eng.state;
-  if (!st) return;
+  const st = eng.state; if (!st) return;
   const cfg = (eng.scenario && eng.scenario.meters) || {
     tension: { label: 'Tension' },
     trust: { label: 'Trust' },
@@ -43,13 +71,11 @@ function renderHUD() {
   els.hud.innerHTML = '';
   const frag = document.createDocumentFragment();
   Object.entries(st.meters || {}).forEach(([k, v]) => {
-    const meter = document.createElement('div');
-    meter.className = 'meter';
+    const meter = document.createElement('div'); meter.className = 'meter';
     const dot = document.createElement('span'); dot.className = 'dot';
     const label = document.createElement('span'); label.className = 'label'; label.textContent = (cfg[k] && cfg[k].label) || k;
     const val = document.createElement('span'); val.className = 'value'; val.textContent = String(Math.round(v));
-    meter.append(dot, label, val);
-    frag.appendChild(meter);
+    meter.append(dot, label, val); frag.appendChild(meter);
   });
   els.hud.appendChild(frag);
 }
@@ -57,6 +83,7 @@ function renderHUD() {
 function mdLite(s) { return String(s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
 
 function renderNode() {
+  ensureTopBarControls();
   const node = eng.currentNode();
   const act = eng.act;
   if (!node || !act) return;
@@ -78,7 +105,7 @@ function renderNode() {
     const btn = document.createElement('button');
     btn.className = 'button';
     btn.textContent = 'Continue';
-    btn.addEventListener('click', () => { eng.lineNext(); });
+    btn.addEventListener('click', () => { eng.lineNext(); track('line_next', { nodeId: node.id }); });
     els.choices.appendChild(btn);
     btn.focus();
   } else if (node.type === 'choice') {
@@ -91,7 +118,7 @@ function renderNode() {
       const b = document.createElement('button');
       b.className = 'choice-btn';
       b.innerHTML = '<span class="kbd">[' + (i + 1) + ']</span> ' + c.label;
-      b.addEventListener('click', () => { eng.choose(i); });
+      b.addEventListener('click', () => { eng.choose(i); track('choice_made', { nodeId: node.id, index: i, label: c.label }); });
       els.choices.appendChild(b);
       if (i === 0) b.focus();
     });
@@ -112,25 +139,27 @@ function renderNode() {
     if (idx2 >= 0 && idx2 < acts2.length - 1) {
       const next = document.createElement('button');
       next.className = 'button'; next.textContent = 'Next Act';
-      next.addEventListener('click', () => eng.startAct(acts2[idx2 + 1].id, { forceFresh: true }));
+      next.addEventListener('click', () => { eng.startAct(acts2[idx2 + 1].id, { forceFresh: true }); track('act_next', { actId: acts2[idx2 + 1].id }); });
       els.choices.appendChild(next);
     }
     retry.focus();
+    track('act_end', { deltas });
   }
   renderHUD();
 }
 
 function wireKeyboard() {
   document.addEventListener('keydown', (e) => {
-    const node = eng.currentNode();
-    if (!node) return;
+    const node = eng.currentNode(); if (!node) return;
     if (node.type === 'choice') {
       const num = parseInt(e.key, 10);
       if (!Number.isNaN(num) && num >= 1 && num <= ((node.choices && node.choices.length) || 0)) {
-        e.preventDefault(); eng.choose(num - 1);
+        e.preventDefault(); eng.choose(num - 1); track('choice_made_key', { index: num - 1 });
       }
     } else if (node.type === 'line') {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); eng.lineNext(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); eng.lineNext(); track('line_next_key', {}); }
+    } else if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+      e.preventDefault(); eng.undo();
     }
   });
 }
@@ -155,6 +184,7 @@ async function loadScenarioById(id) {
   const s = await eng.fetchById(id);
   eng.loadScenario(s);
   eng.startAct(s.acts[0].id);
+  track('scenario_start', { id: s.id, title: s.title });
 }
 
 function wireScenarioPicker() {
