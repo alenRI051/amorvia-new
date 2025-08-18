@@ -1,11 +1,4 @@
 
 
-/* --- Mode helpers --- */
-body.mode-v1 .v1-only { display: block; }
-body.mode-v1 .v2-only { display: none !important; }
-body.mode-v2 .v1-only { display: none !important; }
-body.mode-v2 .v2-only { display: flex; }
-
-/* Ensure v2-only blocks that are block-level look right */
-body.mode-v2 #choices { display: flex; }
-body.mode-v2 #hud { display: flex; }
+/* Ensure <img class="bg"> covers stage (CSP-safe background) */
+.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }

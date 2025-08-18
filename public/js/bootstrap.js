@@ -1,31 +1,31 @@
 \
-// Bootstrap that can run v1 or v2 in-place
+// CSP-safe bootstrap (no inline styles). Chooses v1 or v2 module and paints bg image.
 
-// Paint background early
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
-// Helpers
 const getMode = () => localStorage.getItem('amorvia:mode') || 'v1';
 const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
-// Apply body class + toggle visibility attrs
 function applyModeToDOM(mode) {
   document.body.classList.remove('mode-v1','mode-v2');
   document.body.classList.add(mode === 'v2' ? 'mode-v2' : 'mode-v1');
-
-  // Keep aria-hidden/hidden in sync for a11y
-  const v1s = document.querySelectorAll('.v1-only');
-  const v2s = document.querySelectorAll('.v2-only');
-  v1s.forEach(el => { const on = mode === 'v1'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
-  v2s.forEach(el => { const on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
+  document.querySelectorAll('.v1-only').forEach(el => { const on = mode === 'v1'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
+  document.querySelectorAll('.v2-only').forEach(el => { const on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
 }
 
-// Warm the data index quickly
-const warm = () => fetch('/data/index.json', { cache: 'no-store' }).catch(() => {});
-if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 1500 }); else setTimeout(warm, 1500);
+const modeSel = document.getElementById('modeSelect');
+if (modeSel) {
+  modeSel.value = getMode();
+  applyModeToDOM(modeSel.value);
+  modeSel.addEventListener('change', () => {
+    setMode(modeSel.value);
+    location.reload();
+  });
+} else {
+  applyModeToDOM(getMode());
+}
 
-// Load chosen app lazily
 let loaded = false;
 async function loadChosenApp() {
   if (loaded) return;
@@ -33,34 +33,16 @@ async function loadChosenApp() {
   const mode = getMode();
   try {
     if (mode === 'v2') {
-      const m = await import('/js/app.v2.js');
-      // app.v2.js self-initializes; no call needed
+      await import('./js/app.v2.js');
     } else {
-      const m = await import('/js/app.js');
-      if (m && typeof m.init === 'function') m.init();
+      const m = await import('./js/app.js');
+      if (m?.init) m.init();
     }
-  } catch (err) {
-    console.error('Failed to start app:', err);
+  } catch (e) {
+    console.error('Failed to start app:', e);
   }
 }
 
-// Wire mode selector: change → save → reload (simplest teardown)
-const modeSel = document.getElementById('modeSelect');
-if (modeSel) {
-  // Init value from storage
-  modeSel.value = getMode();
-  // Apply classes on first paint
-  applyModeToDOM(modeSel.value);
-  modeSel.addEventListener('change', (e) => {
-    const next = modeSel.value;
-    setMode(next);
-    // Full reload keeps JS state clean across modes
-    location.reload();
-  });
-} else {
-  applyModeToDOM(getMode());
-}
-
-// Load app on first interaction or idle
 ['click','keydown','pointerdown'].forEach(evt => window.addEventListener(evt, loadChosenApp, { once: true }));
-if ('requestIdleCallback' in window) { requestIdleCallback(loadChosenApp, { timeout: 2000 }); } else { setTimeout(loadChosenApp, 2000); }
+if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 });
+else setTimeout(loadChosenApp, 2000);
