@@ -1,4 +1,3 @@
-
 // Amorvia Classic v1 — CSP-safe UI (exports init)
 /* global localStorage, fetch, document */
 export async function init() {
