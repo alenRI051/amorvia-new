@@ -1,8 +1,10 @@
-// CSP-safe bootstrap. Defaults to v2 so site works even without v1 app.js present.
+\
+// Bootstrap (relative-import fix)
+// Ensures dynamic imports resolve relative to /js/, not /js/js/.
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
-const getMode = () => localStorage.getItem('amorvia:mode') || 'v1';
+const getMode = () => localStorage.getItem('amorvia:mode') || 'v2';
 const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
 function applyModeToDOM(mode) {
@@ -30,15 +32,14 @@ async function loadChosenApp() {
   if (loaded) return;
   loaded = true;
   const mode = getMode();
+  // IMPORTANT: bootstrap.js lives at /js/bootstrap.js, so use './app*.js', NOT './js/app*.js'
+  const url = mode === 'v2' ? './app.v2.js' : './app.js';
   try {
-    if (mode === 'v2') {
-      await import('./js/app.v2.js');
-    } else {
-      const m = await import('./js/app.js');
-      if (m?.init) m.init();
-    }
+    console.debug('[bootstrap] importing', url, 'mode=', mode);
+    const m = await import(url);
+    if (mode === 'v1' && m?.init) m.init();
   } catch (e) {
-    console.error('Failed to start app:', e);
+    console.error('Failed to start app. Module:', url, 'Mode:', mode, e);
   }
 }
 
