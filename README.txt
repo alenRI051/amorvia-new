@@ -1,26 +1,15 @@
-Amorvia — v1/v2 Toggle Integration Pack
+Amorvia — Classic v1 Bundle
 Generated: 2025-08-18
 
-What this does
-- Adds a **Mode** dropdown (Classic v1 / Branching v2) directly on /index.html.
-- The selected mode is saved to localStorage and loaded on next visit.
-- The page loads only the JS for the chosen mode (v1: /js/app.js, v2: /js/app.v2.js).
-- Visual sections are shown/hidden per mode (v1: search/list/prev/next; v2: picker/HUD/choices).
-
 Files
-- public/index.html         → updated with the Mode select + v2 controls/containers
-- public/js/bootstrap.js    → reads mode, sets body class, lazy-loads the correct app module
-- public/css/ui.css         → appended mode helper classes
-- public/js/app.v2.js       → v2 UI glue (included for convenience)
-- public/js/engine/scenarioEngine.js  → engine
-- public/schema/scenario.v2.schema.json → schema
+- public/js/app.js             — v1 UI module (exports init())
+- public/data/scenarios.json   — your scenarios dataset (v1)
 
 How to use
-1) Drop files into your repo (preserve paths). Keep your existing /js/app.js (v1).
-2) Deploy. On /, pick **Mode → Branching v2** to try the v2 flow; **Mode → Classic v1** to go back.
-3) The selection persists. Switching modes triggers a full reload to keep state clean.
+1) Copy these files into your repo (preserve paths). They coexist with your v2 files.
+2) Visit / and choose Mode → Classic v1 (or set localStorage 'amorvia:mode' to 'v1').
+3) The v1 app shows a searchable list and Prev/Next across acts; content comes from /data/scenarios.json.
 
 Notes
-- CSP remains strict (no inline styles/scripts).
-- SW registration still respects your '?nosw=1' guard.
-- If you have /data/v2-index.json present, app.v2.js will auto-populate the picker.
+- CSP-safe (no inline styles). Uses your existing DOM ids and styles.
+- You can freely edit /data/scenarios.json; it’s loaded with cache: 'no-store' so changes appear on refresh.
