@@ -1,44 +1,26 @@
-name: lighthouse
+name: Lighthouse
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch:
-    inputs:
-      url:
-        description: 'Target URL'
-        required: false
-        default: 'https://amorvia-new.vercel.app/'
+  pull_request:
+  schedule:
+    - cron: '0 3 * * *'  # nightly at 03:00 UTC
 
 jobs:
-  run-lighthouse:
+  lighthouse:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install Lighthouse CLI
-        run: npm i -g lighthouse
-
-      - name: Run Lighthouse (HTML + JSON)
+      - name: Run Lighthouse (desktop) on production with ?nosw=1
+        run: bash tools/run-lighthouse.sh
         env:
-          TARGET_URL: ${{ github.event.inputs.url || vars.LIGHTHOUSE_URL || 'https://amorvia-new.vercel.app/' }}
-        run: |
-          mkdir -p lhci_reports
-          lighthouse "$TARGET_URL" \
-            --chrome-flags="--headless --no-sandbox" \
-            --output=html --output=json \
-            --output-path=./lhci_reports/report.html
-          # The JSON is saved alongside HTML automatically as report.json
+          SITE_URL: https://amorvia.eu
 
-      - name: Upload Lighthouse artifacts
-        if: always()
+      - name: Upload Lighthouse report
         uses: actions/upload-artifact@v4
         with:
-          name: lhci-report
-          path: lhci_reports/**
-          retention-days: 7
+          name: lighthouse-report
+          path: lighthouse/*
