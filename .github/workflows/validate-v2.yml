@@ -1,0 +1,22 @@
+name: Validate Scenario v2 JSON
+
+on:
+  push:
+    paths:
+      - 'public/data/*.v2.json'
+      - 'public/schema/scenario.v2.schema.json'
+      - '.github/workflows/validate-v2.yml'
+  pull_request:
+    paths:
+      - 'public/data/*.v2.json'
+      - 'public/schema/scenario.v2.schema.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate v2 scenarios with ajv-cli
+        run: |
+          npx --yes ajv-cli validate             -s public/schema/scenario.v2.schema.json             -d 'public/data/*.v2.json'             --strict=false
