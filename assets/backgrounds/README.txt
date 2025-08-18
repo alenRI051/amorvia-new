@@ -1,1 +1,0 @@
-Place background images here.

@@ -1,1 +1,0 @@
-Place character sprites here.
