@@ -1,5 +1,6 @@
-// Scenario v2 UI wiring (auto-populates from v2-index if present)
-import { ScenarioEngine, formatDeltas } from '/js/engine/scenarioEngine.js';
+\
+// Scenario v2 UI wiring (modules-only build)
+import { ScenarioEngine, formatDeltas } from './engine/scenarioEngine.js';
 
 const $ = (s) => document.querySelector(s);
 
@@ -139,28 +140,20 @@ async function populatePicker() {
   try {
     const res = await fetch('/data/v2-index.json', { cache: 'no-store' });
     const idx = await res.json();
-    if (!Array.isArray(idx.scenarios)) throw new Error('bad index');
-    const current = els.picker?.value;
     els.picker.innerHTML = '';
-    idx.scenarios.forEach(s => {
+    (idx.scenarios || []).forEach(s => {
       const opt = document.createElement('option');
       opt.value = s.id; opt.textContent = s.title || s.id;
       els.picker.appendChild(opt);
     });
-    if (current && [...els.picker.options].some(o => o.value === current)) els.picker.value = current;
   } catch (e) {
     console.warn('Failed to load v2-index.json', e);
-    if (els.picker && !els.picker.options.length) {
-      const opt = document.createElement('option');
-      opt.value = 'co-parenting-with-bipolar-partner';
-      opt.textContent = 'Co-Parenting with Bipolar Partner';
-      els.picker.appendChild(opt);
-    }
+    els.picker.innerHTML = '<option value="co-parenting-with-bipolar-partner">Co-Parenting with Bipolar Partner</option>';
   }
 }
 
 async function loadScenarioById(id) {
-  const s = await (await fetch(`/data/${id}.v2.json`, { cache: 'no-store' })).json();
+  const s = await eng.fetchById(id);
   eng.loadScenario(s);
   eng.startAct(s.acts[0].id);
 }

@@ -1,15 +1,15 @@
-Amorvia — Classic v1 Bundle
+Amorvia — Modules-only pack (v2)
 Generated: 2025-08-18
 
-Files
-- public/js/app.js             — v1 UI module (exports init())
-- public/data/scenarios.json   — your scenarios dataset (v1)
+Included files:
+- public/js/app.v2.js
+- public/js/engine/scenarioEngine.js
+- public/js/app.js  (v1 stub)
 
-How to use
-1) Copy these files into your repo (preserve paths). They coexist with your v2 files.
-2) Visit / and choose Mode → Classic v1 (or set localStorage 'amorvia:mode' to 'v1').
-3) The v1 app shows a searchable list and Prev/Next across acts; content comes from /data/scenarios.json.
-
-Notes
-- CSP-safe (no inline styles). Uses your existing DOM ids and styles.
-- You can freely edit /data/scenarios.json; it’s loaded with cache: 'no-store' so changes appear on refresh.
+Install:
+1) Copy the `public/js` folder into your deployment (preserve paths).
+2) Bypass SW once (DevTools → Application → "Bypass for network") or visit /?nosw=1.
+3) Verify these URLs return JS (200 + a JavaScript content-type):
+   /js/app.v2.js
+   /js/engine/scenarioEngine.js
+   /js/app.js

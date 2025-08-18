@@ -1,4 +1,5 @@
-// Tiny engine (same as previous)
+\
+// Tiny Scenario Engine
 export class ScenarioEngine {
   constructor(options = {}) {
     this.opts = { storagePrefix: options.storagePrefix || 'amorvia:v2', metersConfig: options.metersConfig || null };
