@@ -1,8 +1,25 @@
-// app.v2.js - v2 UI with Undo and Save/Load, metrics stub (ASCII)
+// app.v2.js - v2 UI with Undo and Save/Load Modal + metrics
 import { ScenarioEngine, formatDeltas } from './engine/scenarioEngine.js';
 import { track } from './metrics.js';
 
-const $ = (s) => document.querySelector(s);
+// Inject minimal modal CSS so no extra file is needed
+(function(){
+  const css = [
+    '#saveModalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:9998}',
+    '#saveModal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#0f172a;color:#e5e7eb;border:1px solid #1f2937;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);padding:16px;min-width:280px;z-index:9999}',
+    '#saveModal h3{margin:0 0 8px 0;font-size:16px}',
+    '#saveModal .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}',
+    '#saveModal input[type=text]{flex:1;min-width:160px;padding:6px 8px;background:#0b1220;border:1px solid #334155;border-radius:8px;color:#e5e7eb}',
+    '#saveModal .list{max-height:160px;overflow:auto;margin-top:8px;border:1px solid #203047;border-radius:10px;padding:8px}',
+    '#saveModal .pill{display:inline-flex;gap:6px;align-items:center;margin:4px;padding:4px 8px;border:1px solid #334155;border-radius:999px;background:#111827;cursor:pointer}',
+    '#saveModal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}',
+    '#saveModal .btn{padding:6px 10px;border-radius:8px;border:1px solid #334155;background:#111827;color:#e5e7eb;cursor:pointer}',
+    '#saveModal .btn.primary{border-color:#2563eb}'
+  ].join('\n');
+  const style = document.createElement('style'); style.textContent = css; document.head.appendChild(style);
+})();
+
+function $(s){ return document.querySelector(s); }
 
 const els = {
   bg: $('#bgImg'),
@@ -20,34 +37,6 @@ const els = {
   choices: $('#choices')
 };
 
-function ensureTopBarControls(){
-  // Add Undo / Save / Load buttons next to choices if not present
-  if (!document.getElementById('undoBtn')) {
-    const btn = document.createElement('button');
-    btn.id = 'undoBtn'; btn.className = 'button'; btn.textContent = 'Undo';
-    btn.addEventListener('click', () => { if (!eng.undo()) btn.disabled = true; });
-    els.choices.parentElement && els.choices.parentElement.insertBefore(btn, els.choices);
-  }
-  if (!document.getElementById('saveBtn')) {
-    const b = document.createElement('button');
-    b.id = 'saveBtn'; b.className = 'button'; b.textContent = 'Save';
-    b.addEventListener('click', () => {
-      const name = prompt('Save slot name:', 'slot1');
-      if (name) { eng.saveSlot(name); alert('Saved to ' + name); }
-    });
-    els.choices.parentElement && els.choices.parentElement.insertBefore(b, els.choices);
-  }
-  if (!document.getElementById('loadBtn')) {
-    const b = document.createElement('button');
-    b.id = 'loadBtn'; b.className = 'button'; b.textContent = 'Load';
-    b.addEventListener('click', () => {
-      const name = prompt('Load slot name:', 'slot1');
-      if (name && eng.loadSlot(name)) renderNode();
-    });
-    els.choices.parentElement && els.choices.parentElement.insertBefore(b, els.choices);
-  }
-}
-
 function applyCharAndBg() {
   if (els.leftImg && els.leftSel) els.leftImg.src = els.leftSel.value;
   if (els.rightImg && els.rightSel) els.rightImg.src = els.rightSel.value;
@@ -60,6 +49,73 @@ function applyCharAndBg() {
 });
 
 const eng = new ScenarioEngine();
+
+// ----- Save/Load Modal -----
+function parseSlotKey(k){
+  // format: prefix:slot:name:scenarioId:actId
+  const parts = k.split(':');
+  const idx = parts.indexOf('slot');
+  if (idx >= 0 && parts[idx+1]) return parts[idx+1];
+  return k;
+}
+function ensureModal(){
+  if (document.getElementById('saveModalBackdrop')) return;
+  const backdrop = document.createElement('div'); backdrop.id = 'saveModalBackdrop'; backdrop.setAttribute('role','presentation');
+  const modal = document.createElement('div'); modal.id = 'saveModal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true');
+  modal.innerHTML = [
+    '<h3>Manage Saves</h3>',
+    '<div class="row"><input id="slotName" type="text" placeholder="slot name (e.g., slot1)"><button id="doSave" class="btn primary" type="button">Save</button></div>',
+    '<div class="list" id="slotList" aria-label="Saved Slots"></div>',
+    '<div class="actions"><button id="closeSave" class="btn" type="button">Close</button></div>'
+  ].join('');
+  document.body.append(backdrop, modal);
+  document.getElementById('closeSave').addEventListener('click', hideModal);
+  document.getElementById('doSave').addEventListener('click', () => {
+    const name = String(document.getElementById('slotName').value || '').trim();
+    if (!name) return;
+    eng.saveSlot(name);
+    track('save_slot', { name });
+    refreshSlots();
+  });
+  backdrop.addEventListener('click', hideModal);
+}
+function showModal(){ ensureModal(); document.getElementById('saveModalBackdrop').style.display = 'block'; document.getElementById('saveModal').style.display = 'block'; refreshSlots(); }
+function hideModal(){ const b = document.getElementById('saveModalBackdrop'); const m = document.getElementById('saveModal'); if (b) b.style.display='none'; if (m) m.style.display='none'; }
+function refreshSlots(){
+  const wrap = document.getElementById('slotList'); if (!wrap) return;
+  wrap.innerHTML = '';
+  const keys = eng.listSlots('');
+  if (!keys.length){ wrap.textContent = 'No saves yet.'; return; }
+  keys.forEach(k => {
+    const pill = document.createElement('button');
+    pill.type = 'button'; pill.className = 'pill';
+    const name = parseSlotKey(k);
+    pill.textContent = name;
+    pill.addEventListener('click', () => {
+      if (eng.loadSlot(name)) {
+        track('load_slot', { name });
+        hideModal();
+        renderNode();
+      }
+    });
+    wrap.appendChild(pill);
+  });
+}
+
+function ensureTopBarControls(){
+  if (!document.getElementById('undoBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'undoBtn'; btn.className = 'button'; btn.textContent = 'Undo';
+    btn.addEventListener('click', () => { if (!eng.undo()) btn.disabled = true; });
+    els.choices.parentElement && els.choices.parentElement.insertBefore(btn, els.choices);
+  }
+  if (!document.getElementById('savesBtn')) {
+    const b = document.createElement('button');
+    b.id = 'savesBtn'; b.className = 'button'; b.textContent = 'Saves';
+    b.addEventListener('click', () => showModal());
+    els.choices.parentElement && els.choices.parentElement.insertBefore(b, els.choices);
+  }
+}
 
 function renderHUD() {
   const st = eng.state; if (!st) return;
