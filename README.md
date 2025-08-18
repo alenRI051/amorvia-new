@@ -1,68 +1,24 @@
-\
-# Amorvia Offline Pack (Service Worker)
+# Lighthouse CI (Desktop) for Amorvia
 
-This pack adds **offline caching** to your static site on Vercel.
+This workflow runs Lighthouse against your production site and **always appends `?nosw=1`** to avoid Service Worker effects.
+It produces **JSON + HTML** reports as a build artifact.
 
-## Files
-- `/service-worker.js` — caching logic
-- `/sw-register.js` — small helper to register the SW
-- `/offline.html` — fallback page when completely offline
+## What's included
+- `.github/workflows/lighthouse.yml` — triggers on push to `main`, on PRs, nightly, and manual dispatch.
+- `tools/run-lighthouse.sh` — runs Lighthouse via `npx` and saves reports to `./lighthouse/report.{json,html}`.
 
-## Integrate
+## Change test URL
+By default, it tests `https://amorvia.eu/?nosw=1`. To test a different URL:
+- Edit the `SITE_URL` env in the workflow file, or
+- Override in a manual run by changing the `SITE_URL` env before dispatching.
 
-1) **Place files at the web root** (same level as `/index.html`). Your tree should contain:
-```
-index.html
-service-worker.js
-sw-register.js
-offline.html
-css/
-js/
-assets/
-manifest.json
-```
-2) **Register the SW** in your `index.html` just before `</body>`:
-```html
-<script src="/sw-register.js"></script>
-```
-(If you prefer inline, you can paste its contents directly.)
-
-3) **Ensure your manifest scope/start_url** cover root:
-```json
-{
-  "start_url": "/?source=pwa",
-  "scope": "/",
-  "display": "standalone"
-}
+## Local run
+You can also run locally (Chrome required):
+```bash
+bash tools/run-lighthouse.sh
+# Reports in ./lighthouse/
 ```
 
-4) **Update `vercel.json` headers** to avoid caching the SW file aggressively and set manifest type:
-```json
-{
-  "headers": [
-    {
-      "source": "/service-worker.js",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache" }
-      ]
-    },
-    {
-      "source": "/manifest.json",
-      "headers": [
-        { "key": "Content-Type", "value": "application/manifest+json; charset=utf-8" }
-      ]
-    }
-  ]
-}
-```
-Merge those with your existing `headers` array.
-
-5) **Tune the precache list** in `service-worker.js` (`PRECACHE_URLS`) if your file names differ.
-
-## How it works
-- **Navigations**: network-first with cache fallback to `index.html` or `offline.html`.
-- **Static assets** (`/css`, `/js`, `/assets`, `/icons`, manifest, favicon): cache-first.
-- **JSON/data**: network-first for freshness, cache fallback when offline.
-- Skips `/api/health` and third‑party origins.
-
-Bump `SW_VERSION` to invalidate caches after big releases.
+## Notes
+- `?nosw=1` assumes your app **skips SW registration** when this param is present (or when `navigator.webdriver` is true). If you haven’t added that yet, I can provide a tiny patch.
+- The workflow uses `npx` so you don't need to add devDependencies.
