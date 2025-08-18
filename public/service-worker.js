@@ -1,13 +1,28 @@
-/* Amorvia Service Worker — offline caching */
-const SW_VERSION = 'v1.1.0';
+/* Amorvia Service Worker — offline caching with optional scene precache */
+const SW_VERSION = 'v1.2.0';
 const STATIC_CACHE = `amorvia-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `amorvia-runtime-${SW_VERSION}`;
-const PRECACHE_URLS = ['/', '/index.html', '/css/styles.css', '/js/bootstrap.js', '/favicon.png', '/manifest.json', '/offline.html'];
+
+// Add known scene slugs here to precache their JSON on first install
+// Example: const SCENES = ['first-agreements','new-introductions'];
+const SCENES = [];
+
+const PRECACHE_URLS = [
+  '/',
+  '/index.html',
+  '/css/styles.css',
+  '/js/bootstrap.js',
+  '/favicon.png',
+  '/manifest.json',
+  '/offline.html',
+  ...SCENES.map(s => `/data/${s}.json`)
+];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(caches.open(STATIC_CACHE).then(cache => cache.addAll(PRECACHE_URLS.filter(Boolean))));
 });
+
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
@@ -16,7 +31,9 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
   })());
 });
+
 function sameOrigin(u){ try{ return new URL(u).origin === self.location.origin }catch{ return false } }
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -24,6 +41,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.pathname.startsWith('/api/health')) return;
   if (req.headers.has('range')) return;
+
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
       try {
@@ -40,7 +58,15 @@ self.addEventListener('fetch', (event) => {
     })());
     return;
   }
-  if (url.pathname.startsWith('/css/') || url.pathname.startsWith('/js/') || url.pathname.startsWith('/assets/') || url.pathname.startsWith('/icons/') || url.pathname === '/favicon.png' || url.pathname === '/manifest.json') {
+
+  if (
+    url.pathname.startsWith('/css/') ||
+    url.pathname.startsWith('/js/') ||
+    url.pathname.startsWith('/assets/') ||
+    url.pathname.startsWith('/icons/') ||
+    url.pathname === '/favicon.png' ||
+    url.pathname === '/manifest.json'
+  ) {
     event.respondWith((async () => {
       const c = await caches.open(STATIC_CACHE);
       const hit = await c.match(req);
@@ -55,6 +81,7 @@ self.addEventListener('fetch', (event) => {
     })());
     return;
   }
+
   if (url.pathname.endsWith('.json') || url.pathname.startsWith('/data/')) {
     event.respondWith((async () => {
       const c = await caches.open(RUNTIME_CACHE);
@@ -69,6 +96,7 @@ self.addEventListener('fetch', (event) => {
     })());
     return;
   }
+
   event.respondWith((async () => {
     const c = await caches.open(RUNTIME_CACHE);
     const hit = await c.match(req);
