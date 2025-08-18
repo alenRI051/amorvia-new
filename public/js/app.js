@@ -1,4 +1,4 @@
-// Minimal, dependency-free UI wiring for Amorvia (strict CSP friendly)
+// CSP-safe app.js: no inline style attributes
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -35,26 +35,18 @@ async function getJSON(url) {
 
 function markActive(id) {
   state.activeId = id;
-  // Remove previous active
   els.list?.querySelectorAll('.list-item[aria-current="true"]').forEach(el => {
     el.setAttribute('aria-current', 'false');
     el.classList.remove('active');
   });
-  // Mark current
   const currentBtn = els.list?.querySelector(`[data-id="${CSS.escape(id)}"]`);
-  if (currentBtn) {
-    currentBtn.setAttribute('aria-current', 'true');
-    currentBtn.classList.add('active');
-  }
+  if (currentBtn) { currentBtn.setAttribute('aria-current', 'true'); currentBtn.classList.add('active'); }
 }
 
 function renderList(items) {
   if (!els.list) return;
   els.list.innerHTML = '';
-  if (!items.length) {
-    els.list.innerHTML = `<div style="opacity:.8">No scenarios found.</div>`;
-    return;
-  }
+  if (!items.length) { els.list.innerHTML = '<div class="muted">No scenarios found.</div>'; return; }
   const frag = document.createDocumentFragment();
   items.forEach(s => {
     const btn = document.createElement('button');
@@ -76,11 +68,7 @@ function applyCharacterChoices() {
   if (els.leftImg && els.leftSel)  els.leftImg.src  = els.leftSel.value;
   if (els.rightImg && els.rightSel) els.rightImg.src = els.rightSel.value;
 }
-function applyBackgroundChoice() {
-  if (els.bg && els.bgSel) {
-    els.bg.src = els.bgSel.value;
-  }
-}
+function applyBackgroundChoice() { if (els.bg && els.bgSel) els.bg.src = els.bgSel.value; }
 
 function renderAct() {
   if (!state.current) return;
@@ -94,8 +82,8 @@ function renderAct() {
 
   const steps = (act?.steps || []).map(line => `<li>${mdLite(line)}</li>`).join('');
   els.dialog.innerHTML = steps
-    ? `<ul class="mt8" style="padding-left:20px">${steps}</ul>`
-    : `<p class="mt8" style="opacity:.85">No content for this act.</p>`;
+    ? `<ul class="mt8 ul-indent">${steps}</ul>`
+    : `<p class="mt8 text-muted">No content for this act.</p>`;
 
   els.prev.disabled = i <= 0;
   els.next.disabled = i >= acts.length - 1;
@@ -104,30 +92,17 @@ function renderAct() {
 async function loadScenario(id) {
   try {
     let data;
-    try {
-      data = await getJSON(`/data/${id}.json`);
-    } catch {
-      const full = await getJSON('/data/full-index.json');
-      data = (full.scenarios || []).find(s => s.id === id);
-      if (!data) throw new Error('Not found in full-index either.');
-    }
-    state.current = data;
-    state.actIndex = 0;
-    markActive(id);
-    renderAct();
-  } catch (err) {
-    console.error('Could not load scenario', id, err);
-    els.dialog.innerHTML = `<p class="mt8" style="opacity:.8">Failed to load scenario. Please check <code>/data/${id}.json</code>.</p>`;
-  }
+    try { data = await getJSON(`/data/${id}.json`); }
+    catch { const full = await getJSON('/data/full-index.json'); data = (full.scenarios || []).find(s => s.id === id); if (!data) throw new Error('Not found in full-index either.'); }
+    state.current = data; state.actIndex = 0; markActive(id); renderAct();
+  } catch (err) { console.error('Could not load scenario', id, err); els.dialog.innerHTML = '<p class="mt8 text-muted">Failed to load scenario.</p>'; }
 }
 
 function wireSearch() {
   if (!els.search) return;
   els.search.addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();
-    const items = !q
-      ? state.scenarios
-      : state.scenarios.filter(s => (s.title + ' ' + s.id).toLowerCase().includes(q));
+    const items = !q ? state.scenarios : state.scenarios.filter(s => (s.title + ' ' + s.id).toLowerCase().includes(q));
     renderList(items);
   });
 }
@@ -155,7 +130,7 @@ async function loadIndex() {
     if (!state.activeId && state.scenarios[0]) loadScenario(state.scenarios[0].id);
   } catch (err) {
     console.error('Could not load /data/index.json', err);
-    els.list.innerHTML = `<div style="opacity:.8">Failed to load scenarios.</div>`;
+    els.list.innerHTML = '<div class="muted">Failed to load scenarios.</div>';
   }
 }
 

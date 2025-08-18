@@ -1,3 +1,22 @@
+/* Base layout and components moved from inline <style> (CSP-safe) */
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:#0b1220;color:#e5e7eb}
+:focus-visible{outline:3px solid #2563eb;outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+header{padding:16px 16px 0}
+.wrap{display:grid;grid-template-columns:320px 1fr;gap:16px;min-height:100vh}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.panel{padding:12px}
+.list{max-height:70vh;overflow:auto;display:grid;gap:8px}
+.stage{display:grid;grid-template-rows:auto 1fr auto}
+.toolbar{border-bottom:1px solid #1f2937}
+.canvas{position:relative;overflow:hidden;height:420px}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.character{position:absolute;bottom:0;width:200px}
+.character.left{left:6%}.character.right{right:6%}
+.dialog{border-top:1px solid #1f2937}
+.badge{display:inline-block;background:#e8fff1;color:#14532d;border:1px solid #bde7cb;border-radius:999px;padding:4px 10px;font-size:12px}
+
 /* Buttons / inputs */
 .button{padding:8px 12px;border-radius:10px;border:1px solid #334155;background:#111827;color:#e5e7eb;cursor:pointer}
 .input,.select{padding:8px 10px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e5e7eb}
@@ -14,8 +33,12 @@
 .list-item[aria-current="true"], .list-item.active{border-color:#60a5fa;background:#0b1a2f}
 .list-item:focus-visible{outline:3px solid #2563eb; outline-offset:3px}
 
-/* CLS stability (characters & panels) */
+/* CLS stability */
 .character{width:200px;height:300px}
 .character img{display:block;width:100%;height:100%;object-fit:contain}
 #scenarioList{content-visibility:auto;contain-intrinsic-size:400px}
 .panel.dialog{content-visibility:auto;contain-intrinsic-size:160px}
+
+/* Utilities used by app.js for CSP-safe rendering */
+.ul-indent{padding-left:20px}
+.text-muted{opacity:.85}
