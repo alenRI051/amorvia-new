@@ -1,4 +1,5 @@
-// Scenario v2 UI wiring
+\
+// Scenario v2 UI wiring (auto-populates from v2-index.json)
 import { ScenarioEngine, formatDeltas } from '/js/engine/scenarioEngine.js';
 
 const $ = (s) => document.querySelector(s);
@@ -54,9 +55,7 @@ function renderHUD() {
   els.hud.appendChild(frag);
 }
 
-function mdLite(s='') {
-  return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-}
+function mdLite(s='') { return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
 
 function renderNode() {
   const node = eng.currentNode();
@@ -83,8 +82,7 @@ function renderNode() {
     btn.addEventListener('click', () => { eng.lineNext(); });
     els.choices.appendChild(btn);
     btn.focus();
-  }
-  else if (node.type === 'choice') {
+  } else if (node.type === 'choice') {
     const p = document.createElement('p');
     p.className = 'content';
     p.innerHTML = mdLite(node.prompt || '');
@@ -98,8 +96,7 @@ function renderNode() {
       els.choices.appendChild(b);
       if (i === 0) b.focus();
     });
-  }
-  else if (node.type === 'end') {
+  } else if (node.type === 'end') {
     const deltas = eng.deltas();
     const p = document.createElement('p');
     p.className = 'summary';
@@ -111,7 +108,6 @@ function renderNode() {
     retry.addEventListener('click', () => eng.resetAct());
     els.choices.appendChild(retry);
 
-    // if there is a next act, offer to continue
     const acts = eng.scenario.acts || [];
     const idx = acts.findIndex(a => a.id === eng.state.actId);
     if (idx >= 0 && idx < acts.length - 1) {
@@ -132,16 +128,29 @@ function wireKeyboard() {
     if (node.type === 'choice') {
       const num = parseInt(e.key, 10);
       if (!Number.isNaN(num) && num >= 1 && num <= (node.choices?.length || 0)) {
-        e.preventDefault();
-        eng.choose(num - 1);
+        e.preventDefault(); eng.choose(num - 1);
       }
     } else if (node.type === 'line') {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        eng.lineNext();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); eng.lineNext(); }
     }
   });
+}
+
+async function populatePicker() {
+  try {
+    const res = await fetch('/data/v2-index.json', { cache: 'no-store' });
+    const idx = await res.json();
+    els.picker.innerHTML = '';
+    (idx.scenarios || []).forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id; opt.textContent = s.title || s.id;
+      els.picker.appendChild(opt);
+    });
+  } catch (e) {
+    console.warn('Failed to load v2-index.json', e);
+    // Fallback (hardcoded if index fails)
+    els.picker.innerHTML = '<option value="co-parenting-with-bipolar-partner">Co-Parenting with Bipolar Partner</option>';
+  }
 }
 
 async function loadScenarioById(id) {
@@ -156,23 +165,17 @@ function wireScenarioPicker() {
   });
 }
 
-function wireRestart() {
-  els.restart?.addEventListener('click', () => eng.resetAct());
-}
+function wireRestart() { els.restart?.addEventListener('click', () => eng.resetAct()); }
+function subscribeRender() { eng.subscribe(() => { try { renderNode(); } catch (e) { console.error(e); } }); }
 
-function subscribeRender() {
-  eng.subscribe(() => {
-    try { renderNode(); } catch (e) { console.error(e); }
-  });
-}
-
-function init() {
+async function init() {
   applyCharAndBg();
   wireKeyboard();
   wireScenarioPicker();
   wireRestart();
   subscribeRender();
-  loadScenarioById(els.picker?.value || 'co-parenting-with-bipolar-partner');
+  await populatePicker();
+  await loadScenarioById(els.picker?.value || 'co-parenting-with-bipolar-partner');
 }
 
 init();

@@ -1,112 +1,39 @@
-/* Amorvia Service Worker — tailored with scene precache */
-const SW_VERSION = 'v1.3.0';
-const STATIC_CACHE = `amorvia-static-${SW_VERSION}`;
-const RUNTIME_CACHE = `amorvia-runtime-${SW_VERSION}`;
-
-// Precache these scene JSON files on install
-const SCENES = ["scene-first-agreements", "co-parenting-with-bipolar-partner", "brzi-kontakti", "scene-new-introductions", "dating-after-breakup-with-child-involved", "scene-different-rules", "to-do", "scene-de-escalation", "direction"];
-
-const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/css/styles.css',
-  '/js/bootstrap.js',
-  '/favicon.png',
-  '/manifest.json',
-  '/offline.html',
-  ...SCENES.map(s => `/data/${s}.json`),
-  '/data/index.json'
-];
-
-self.addEventListener('install', (event) => {
+/* Amorvia Service Worker — adds runtime cache for /data/*.v2.json */
+self.addEventListener('install', (e) => {
   self.skipWaiting();
-  event.waitUntil(caches.open(STATIC_CACHE).then(cache => cache.addAll(PRECACHE_URLS.filter(Boolean))));
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(key => !key.includes(SW_VERSION) && caches.delete(key)));
-    if ('navigationPreload' in self.registration) await self.registration.navigationPreload.enable();
-    self.clients.claim();
+self.addEventListener('activate', (e) => {
+  e.waitUntil((async () => {
+    // simple cleanup of old caches if you ever change names
+    const keep = new Set(['v2-data']);
+    const names = await caches.keys();
+    await Promise.all(names.map(n => keep.has(n) ? null : caches.delete(n)));
+    await self.clients.claim();
   })());
 });
 
-function sameOrigin(u){ try{ return new URL(u).origin === self.location.origin }catch{ return false } }
-
+// Stale-While-Revalidate for scenario v2 JSON
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET') return;
-  if (!sameOrigin(req.url)) return;
   const url = new URL(req.url);
-  if (url.pathname.startsWith('/api/health')) return;
-  if (req.headers.has('range')) return;
 
-  if (req.mode === 'navigate') {
+  // Only handle same-origin .v2.json under /data/
+  if (url.origin === location.origin && url.pathname.startsWith('/data/') && url.pathname.endsWith('.v2.json')) {
     event.respondWith((async () => {
-      try {
-        const preload = await event.preloadResponse;
-        if (preload) return preload;
-        const net = await fetch(req);
-        const c = await caches.open(RUNTIME_CACHE);
-        c.put(req, net.clone());
-        return net;
-      } catch {
-        const c = await caches.open(STATIC_CACHE);
-        return (await c.match('/index.html')) || c.match('/offline.html');
-      }
-    })());
-    return;
-  }
-
-  if (
-    url.pathname.startsWith('/css/') ||
-    url.pathname.startsWith('/js/') ||
-    url.pathname.startsWith('/assets/') ||
-    url.pathname.startsWith('/icons/') ||
-    url.pathname === '/favicon.png' ||
-    url.pathname === '/manifest.json'
-  ) {
-    event.respondWith((async () => {
-      const c = await caches.open(STATIC_CACHE);
-      const hit = await c.match(req);
-      if (hit) return hit;
-      try {
-        const res = await fetch(req);
-        if (res.ok && res.type === 'basic') c.put(req, res.clone());
+      const cache = await caches.open('v2-data');
+      const cached = await cache.match(req);
+      const network = fetch(req).then(async (res) => {
+        if (res && res.ok) {
+          cache.put(req, res.clone()).catch(()=>{});
+        }
         return res;
-      } catch {
-        return hit || (await c.match('/offline.html')) || Response.error();
-      }
-    })());
-    return;
-  }
+      }).catch(() => null);
 
-  if (url.pathname.endsWith('.json') || url.pathname.startsWith('/data/')) {
-    event.respondWith((async () => {
-      const c = await caches.open(RUNTIME_CACHE);
-      try {
-        const res = await fetch(req, { cache: 'no-store' });
-        c.put(req, res.clone());
-        return res;
-      } catch {
-        const hit = await c.match(req);
-        return hit || new Response(JSON.stringify({ offline: true }), { headers: { 'Content-Type': 'application/json' }, status: 200 });
-      }
+      // Serve fast if cached, update in background
+      if (cached) return cached;
+      // Fallback to network (or offline error)
+      return (await network) || new Response(JSON.stringify({ error: 'offline' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
     })());
-    return;
   }
-
-  event.respondWith((async () => {
-    const c = await caches.open(RUNTIME_CACHE);
-    const hit = await c.match(req);
-    if (hit) return hit;
-    try {
-      const res = await fetch(req);
-      if (res.ok && res.type === 'basic') c.put(req, res.clone());
-      return res;
-    } catch {
-      return hit || Response.error();
-    }
-  })());
 });
