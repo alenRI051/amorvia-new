@@ -1,4 +1,4 @@
-// Minimal, dependency-free UI wiring for Amorvia
+// Minimal, dependency-free UI wiring for Amorvia (strict CSP friendly)
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -15,21 +15,37 @@ const els = {
   rightSel: $('#rightSelect'),
   leftImg:  $('#leftImg'),
   rightImg: $('#rightImg'),
-  bg:     $('#bg')
+  bg:     $('#bgImg')
 };
 
 const state = {
-  scenarios: [],     // [{id,title,acts}]
-  current: null,     // full scenario
-  actIndex: 0
+  scenarios: [],
+  current: null,
+  actIndex: 0,
+  activeId: null
 };
 
-const mdLite = (s) => (s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); // bold only
+const mdLite = (s) => (s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
 async function getJSON(url) {
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${url}`);
   return res.json();
+}
+
+function markActive(id) {
+  state.activeId = id;
+  // Remove previous active
+  els.list?.querySelectorAll('.list-item[aria-current="true"]').forEach(el => {
+    el.setAttribute('aria-current', 'false');
+    el.classList.remove('active');
+  });
+  // Mark current
+  const currentBtn = els.list?.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  if (currentBtn) {
+    currentBtn.setAttribute('aria-current', 'true');
+    currentBtn.classList.add('active');
+  }
 }
 
 function renderList(items) {
@@ -42,14 +58,9 @@ function renderList(items) {
   const frag = document.createDocumentFragment();
   items.forEach(s => {
     const btn = document.createElement('button');
-    btn.className = 'button';
-    btn.style.display = 'flex';
-    btn.style.justifyContent = 'space-between';
-    btn.style.alignItems = 'center';
-    btn.style.width = '100%';
-    btn.style.textAlign = 'left';
-    btn.style.gap = '8px';
+    btn.className = 'button list-item';
     btn.dataset.id = s.id;
+    btn.setAttribute('aria-current', s.id === state.activeId ? 'true' : 'false');
     btn.innerHTML = `
       <span>${s.title}</span>
       <span class="badge" aria-label="Number of acts">${s.acts ? `Acts: ${s.acts}` : ''}</span>
@@ -58,6 +69,7 @@ function renderList(items) {
     frag.appendChild(btn);
   });
   els.list.appendChild(frag);
+  if (state.activeId) markActive(state.activeId);
 }
 
 function applyCharacterChoices() {
@@ -66,7 +78,7 @@ function applyCharacterChoices() {
 }
 function applyBackgroundChoice() {
   if (els.bg && els.bgSel) {
-    els.bg.style.backgroundImage = `url('${els.bgSel.value}')`;
+    els.bg.src = els.bgSel.value;
   }
 }
 
@@ -77,24 +89,20 @@ function renderAct() {
   state.actIndex = i;
 
   const act = acts[i];
-  els.actBadge.textContent = acts.length
-    ? `Act ${i + 1} of ${acts.length}`
-    : 'Act —';
-
+  els.actBadge.textContent = acts.length ? `Act ${i + 1} of ${acts.length}` : 'Act —';
   els.title.textContent = state.current.title || 'Scenario';
+
   const steps = (act?.steps || []).map(line => `<li>${mdLite(line)}</li>`).join('');
   els.dialog.innerHTML = steps
-    ? `<ul style="margin:8px 0 0; padding-left:20px">${steps}</ul>`
-    : `<p style="margin:8px 0 0; opacity:.85">No content for this act.</p>`;
+    ? `<ul class="mt8" style="padding-left:20px">${steps}</ul>`
+    : `<p class="mt8" style="opacity:.85">No content for this act.</p>`;
 
-  // Buttons
   els.prev.disabled = i <= 0;
   els.next.disabled = i >= acts.length - 1;
 }
 
 async function loadScenario(id) {
   try {
-    // prefer split files, fallback to full-index
     let data;
     try {
       data = await getJSON(`/data/${id}.json`);
@@ -105,10 +113,11 @@ async function loadScenario(id) {
     }
     state.current = data;
     state.actIndex = 0;
+    markActive(id);
     renderAct();
   } catch (err) {
     console.error('Could not load scenario', id, err);
-    els.dialog.innerHTML = `<p style="opacity:.8">Failed to load scenario. Please check <code>/data/${id}.json</code>.</p>`;
+    els.dialog.innerHTML = `<p class="mt8" style="opacity:.8">Failed to load scenario. Please check <code>/data/${id}.json</code>.</p>`;
   }
 }
 
@@ -143,8 +152,7 @@ async function loadIndex() {
     const data = await getJSON('/data/index.json');
     state.scenarios = data.scenarios || [];
     renderList(state.scenarios);
-    // Auto-load first scenario for a welcoming experience
-    if (state.scenarios[0]) loadScenario(state.scenarios[0].id);
+    if (!state.activeId && state.scenarios[0]) loadScenario(state.scenarios[0].id);
   } catch (err) {
     console.error('Could not load /data/index.json', err);
     els.list.innerHTML = `<div style="opacity:.8">Failed to load scenarios.</div>`;

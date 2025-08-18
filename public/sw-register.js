@@ -1,5 +1,8 @@
-// Register the service worker for Amorvia + show update prompt
-if ('serviceWorker' in navigator) {
+// Register the service worker for Amorvia, skip under automation or ?nosw=1
+(function(){
+  const underAutomation = navigator.webdriver || new URL(location.href).searchParams.get('nosw') === '1';
+  if (!('serviceWorker' in navigator) || underAutomation) return;
+
   window.addEventListener('load', async () => {
     try {
       const reg = await navigator.serviceWorker.register('/service-worker.js', { scope: '/' });
@@ -19,4 +22,4 @@ if ('serviceWorker' in navigator) {
       console.warn('[SW] registration failed', err);
     }
   });
-}
+})();

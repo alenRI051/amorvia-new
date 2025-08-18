@@ -1,16 +1,28 @@
-Amorvia — Character Preloads + CLS Tweaks Patch
------------------------------------------------
+Amorvia — Hardening Pack (2025-08-18)
+=============================================================
 
-This patch:
-- Preloads the two character SVGs so they start downloading immediately.
-- Sets default `src` on the left/right character images (no late pop-in).
-- Adds optional CLS tweaks via `css/cls-tweaks.css` to reserve space and stabilize UI.
+What this pack does
+- **Strict CSP (no 'unsafe-inline')** using a SHA-256 hash for your inline JSON-LD only.
+- Removes inline styles and moves them to **/css/ui.css** (so 'style-src' can be 'self').
+- Adds selected-scenario highlight + better focus styles (keyboard-friendly).
+- Adds a tiny privacy-friendly analytics beacon (**/js/analytics.js**) that POSTs to **/api/pv** (Edge Function). No cookies, no IDs.
+- Makes the SW **skip in lab runs** when **?nosw=1** or **navigator.webdriver** is true.
 
-Apply:
-1) Replace `/public/index.html` with the one in this patch (or merge the <link rel="preload"> and default src changes).
-2) Add `/public/css/cls-tweaks.css` and keep the `<link>` in the <head> (already included in this index.html).
-3) Deploy, then re-run Lighthouse on https://amorvia.eu/.
+Files included
+- public/index.html
+- public/css/ui.css
+- public/js/app.js
+- public/js/bootstrap.js
+- public/js/analytics.js
+- public/sw-register.js
+- api/pv.js   (Edge Function)
+- vercel.json (security headers with CSP hash: sha256-c/JBXIj3sV+QrUV5EbMnBGHkc7eTrtOcxKvOPxq6iZY=)
 
-Notes:
-- The selects still control character art; the defaults match the initial <img src>, so there’s no mismatch.
-- If you later change default characters, update both the <select> values and the two default <img src> paths.
+Apply
+1) Copy these files into your repo (preserving paths). Merge with any local changes you made.
+2) Ensure your existing **public/service-worker.js** stays in place.
+3) Deploy. Then Lighthouse: test **https://amorvia.eu/?nosw=1** for lab runs.
+
+Notes
+- If you change the JSON-LD content, the CSP hash must be updated. I can regenerate it for you.
+- The analytics endpoint logs minimal info to Vercel logs (path, referrer host, UA slice, timestamp). Extend it later if you need.
