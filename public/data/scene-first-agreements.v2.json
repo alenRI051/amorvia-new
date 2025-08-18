@@ -1,0 +1,314 @@
+{
+  "version": 2,
+  "id": "scene-first-agreements",
+  "title": "Scene: First Agreements",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 30
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 45
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 15
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Pathfinding",
+      "start": "fa1",
+      "nodes": [
+        {
+          "id": "fa1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Week 2 after separation. You both agree a parenting plan is needed soon.",
+          "next": "fa2"
+        },
+        {
+          "id": "fa2",
+          "type": "choice",
+          "prompt": "Choose how to start:",
+          "choices": [
+            {
+              "label": "Mediation-first: neutral mediator drafts a plan",
+              "to": "fa3",
+              "effects": {
+                "tension": -6,
+                "trust": 6
+              }
+            },
+            {
+              "label": "DIY plan: draft together, validate with a social worker",
+              "to": "fa4",
+              "effects": {
+                "tension": -3,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Lawyered: each retains counsel to shape a formal agreement",
+              "to": "fa5",
+              "effects": {
+                "tension": 10,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "fa3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You book a mediator and set ground rules for respectful meetings.",
+          "next": "faend"
+        },
+        {
+          "id": "fa4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You create a shared doc and list the big topics to cover.",
+          "next": "faend"
+        },
+        {
+          "id": "fa5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Consultations begin. Communication becomes more formal.",
+          "next": "faend"
+        },
+        {
+          "id": "faend",
+          "type": "end",
+          "summary": "End of Act 1. You set a starting lane."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 - Drafting the Plan",
+      "start": "fb1",
+      "nodes": [
+        {
+          "id": "fb1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You begin drafting schedules, holidays, communication rules, and decision-making.",
+          "next": "fb2"
+        },
+        {
+          "id": "fb2",
+          "type": "choice",
+          "prompt": "How detailed should the plan be at first?",
+          "choices": [
+            {
+              "label": "Start simple: core schedule and 2 clear rules",
+              "to": "fb3",
+              "effects": {
+                "tension": -4,
+                "trust": 4
+              }
+            },
+            {
+              "label": "Moderate detail: schedule, holidays, and a check-in process",
+              "to": "fb4",
+              "effects": {
+                "tension": -3,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Full detail now: every scenario covered",
+              "to": "fb5",
+              "effects": {
+                "tension": 5,
+                "trust": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "fb3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You capture the essentials to test in the real world.",
+          "next": "fbend"
+        },
+        {
+          "id": "fb4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You balance clarity with flexibility and add a review cadence.",
+          "next": "fbend"
+        },
+        {
+          "id": "fb5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You push for completeness, which takes longer but feels thorough.",
+          "next": "fbend"
+        },
+        {
+          "id": "fbend",
+          "type": "end",
+          "summary": "End of Act 2. A first draft is on paper."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 - Sticking Points",
+      "start": "fc1",
+      "nodes": [
+        {
+          "id": "fc1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Two topics are hard: handover times and travel permissions.",
+          "next": "fc2"
+        },
+        {
+          "id": "fc2",
+          "type": "choice",
+          "prompt": "How do you work through disagreement?",
+          "choices": [
+            {
+              "label": "Take a 10-minute break, return with one compromise each",
+              "to": "fc3",
+              "effects": {
+                "tension": -6,
+                "trust": 4,
+                "childStress": -2
+              }
+            },
+            {
+              "label": "Escalate: bring in mediator or neutral third party",
+              "to": "fc4",
+              "effects": {
+                "tension": -3,
+                "trust": 2
+              }
+            },
+            {
+              "label": "Dig in and argue point by point",
+              "to": "fc5",
+              "effects": {
+                "tension": 12,
+                "trust": -8,
+                "childStress": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "fc3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You trade concessions and write a workable compromise.",
+          "next": "fcend"
+        },
+        {
+          "id": "fc4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "A neutral helps reframe interests and offers a middle path.",
+          "next": "fcend"
+        },
+        {
+          "id": "fc5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "The tone worsens and progress stalls.",
+          "next": "fcend"
+        },
+        {
+          "id": "fcend",
+          "type": "end",
+          "summary": "End of Act 3. You either made progress or built tension."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 - Resolution",
+      "start": "fd1",
+      "nodes": [
+        {
+          "id": "fd1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You review the draft against the child's needs and your capacity.",
+          "next": "fd2"
+        },
+        {
+          "id": "fd2",
+          "type": "choice",
+          "prompt": "What next?",
+          "choices": [
+            {
+              "label": "Sign a 60-day pilot and schedule a review",
+              "to": "fd3",
+              "effects": {
+                "trust": 6,
+                "tension": -4,
+                "childStress": -2
+              }
+            },
+            {
+              "label": "Partial agreement now, keep negotiating a few items",
+              "to": "fd4",
+              "effects": {
+                "trust": 2,
+                "tension": -1
+              }
+            },
+            {
+              "label": "No deal for now; move to formal legal process",
+              "to": "fd5",
+              "effects": {
+                "tension": 10,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "fd3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You commit to a pilot and a clear review date to adjust.",
+          "next": "fdend"
+        },
+        {
+          "id": "fd4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You bank progress and keep talks focused on remaining items.",
+          "next": "fdend"
+        },
+        {
+          "id": "fd5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You hand it to counsel. Timelines and tone likely change.",
+          "next": "fdend"
+        },
+        {
+          "id": "fdend",
+          "type": "end",
+          "summary": "End of Act 4. You leave with a plan, partial plan, or escalation."
+        }
+      ]
+    }
+  ]
+}

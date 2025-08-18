@@ -130,7 +130,7 @@
               }
             },
             {
-              "label": "Coach mode: align on consequences/rewards, allow style differences",
+              "label": "Coach mode: align on consequences, allow style differences",
               "to": "a2n5",
               "effects": {
                 "tension": -4,
