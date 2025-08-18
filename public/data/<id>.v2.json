@@ -1,0 +1,18 @@
+import { ScenarioEngine, formatDeltas } from '/js/engine/scenarioEngine.js';
+
+const eng = new ScenarioEngine();                // or pass { metersConfig }
+const s = await eng.fetchById('co-parenting-with-bipolar-partner'); // loads /data/<id>.v2.json
+eng.loadScenario(s);
+eng.subscribe((state) => {
+  // re-render: state.actId, state.nodeId, state.meters
+  // use eng.currentNode() to decide whether to show a line or choices
+});
+eng.startAct('a1');
+
+// advance:
+const node = eng.currentNode();
+if (node.type === 'line') eng.lineNext();
+if (node.type === 'choice') eng.choose(0); // index of selected button
+
+// summary:
+const summary = formatDeltas(eng.deltas()); // e.g., "tension-10 · trust+5"
