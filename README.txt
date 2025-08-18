@@ -1,19 +1,19 @@
-Amorvia Data Pack — generated 2025-08-18
+Amorvia — Performance Patch
+===========================
 
-Created files:
-- public/data/index.json         → slim list for sidebar (id, title, acts)
-- public/data/full-index.json    → full scenarios payload (what you pasted)
-- public/data/<id>.json          → one file per scenario
-- public/service-worker.js       → SCENES precached: scene-first-agreements, co-parenting-with-bipolar-partner, brzi-kontakti, scene-new-introductions, dating-after-breakup-with-child-involved, scene-different-rules, to-do, scene-de-escalation, direction
+What changed
+- Background is now a real <img> (`#bgImg`) so the browser can treat it as LCP and prioritize it.
+- Preload for the hero image with `fetchpriority="high"`.
+- Async stylesheet load to reduce render-blocking (noscript fallback kept).
+- Bootstrap updated to set `bgImg.src` and warm `/data/index.json`.
 
-How to use:
-1) Copy **public/data/** into your project's /public/data/.
-2) Replace your current **/public/service-worker.js** with this one (version v1.3.0).
-3) Deploy, then in Chrome DevTools → Application → Service Workers: Unregister old, Clear storage, reload.
-4) Your app can fetch:
-   - GET /data/index.json             (for the list)
-   - GET /data/<id>.json              (for details)
-5) SW precaches all /data/<id>.json so first-run works offline.
+How to apply
+1) Replace your `/public/index.html` with the one in this patch (or merge the <img> + preload changes).
+2) Replace `/public/js/bootstrap.js`.
+3) Deploy.
+4) Run Lighthouse against **https://amorvia.eu/** (avoid the `www.` redirect).
 
-If your bootstrap code expects *only* /data/index.json (with full details),
-point it to /data/full-index.json instead.
+Optional
+- Optimize `/public/assets/backgrounds/room.svg` with SVGO for a little extra win.
+- If you run Lighthouse in CI, append `?nosw=1` to avoid SW noise.
+
