@@ -3,13 +3,15 @@ on: [push, pull_request]
 
 jobs:
   test:
+    # Run only if package.json exists in the repo
+    if: ${{ hashFiles('package.json') != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm ci || true   # ok if there are no deps
+      - run: npm ci || true
       - run: npm run test
         env:
           SITE_URL: https://amorvia.eu
