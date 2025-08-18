@@ -1,28 +1,32 @@
-Amorvia — Hardening Pack (2025-08-18)
-=============================================================
+Amorvia Scenario v2 — Schema + Tiny Engine
+Generated: 2025-08-18
 
-What this pack does
-- **Strict CSP (no 'unsafe-inline')** using a SHA-256 hash for your inline JSON-LD only.
-- Removes inline styles and moves them to **/css/ui.css** (so 'style-src' can be 'self').
-- Adds selected-scenario highlight + better focus styles (keyboard-friendly).
-- Adds a tiny privacy-friendly analytics beacon (**/js/analytics.js**) that POSTs to **/api/pv** (Edge Function). No cookies, no IDs.
-- Makes the SW **skip in lab runs** when **?nosw=1** or **navigator.webdriver** is true.
+Files
+- public/schema/scenario.v2.schema.json
+- public/js/engine/scenarioEngine.js
+- public/data/example-co-parenting.v2.json
 
-Files included
-- public/index.html
-- public/css/ui.css
-- public/js/app.js
-- public/js/bootstrap.js
-- public/js/analytics.js
-- public/sw-register.js
-- api/pv.js   (Edge Function)
-- vercel.json (security headers with CSP hash: sha256-c/JBXIj3sV+QrUV5EbMnBGHkc7eTrtOcxKvOPxq6iZY=)
+How to use
+1) Put your v2 scenario JSONs in /public/data/<id>.v2.json following the schema.
+2) In your UI, import the engine:
+   import { ScenarioEngine, formatDeltas } from '/js/engine/scenarioEngine.js';
+3) Load & start:
+   const eng = new ScenarioEngine();
+   const s = await eng.fetchById('co-parenting-with-bipolar-partner');
+   eng.loadScenario(s);
+   eng.subscribe(state => { /* re-render UI here */ });
+   eng.startAct('a1');
+4) Advance:
+   const node = eng.currentNode();
+   if (node.type === 'line') eng.lineNext();
+   if (node.type === 'choice') eng.choose(0); // or 1,2... index of selection
+5) Show summary:
+   formatDeltas(eng.deltas());
 
-Apply
-1) Copy these files into your repo (preserving paths). Merge with any local changes you made.
-2) Ensure your existing **public/service-worker.js** stays in place.
-3) Deploy. Then Lighthouse: test **https://amorvia.eu/?nosw=1** for lab runs.
+Validate in CI (ajv)
+- npm i -D ajv ajv-cli
+- npx ajv -s public/schema/scenario.v2.schema.json -d public/data/*.v2.json
 
 Notes
-- If you change the JSON-LD content, the CSP hash must be updated. I can regenerate it for you.
-- The analytics endpoint logs minimal info to Vercel logs (path, referrer host, UA slice, timestamp). Extend it later if you need.
+- JSON Schema can't enforce that "next"/"to" reference existing node ids; the engine will throw if a link is broken.
+- Use the "meters" root object to set starting values/labels per scenario; otherwise defaults are used.
