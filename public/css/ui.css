@@ -1,15 +1,11 @@
 
 
-/* --- Scenario v2 HUD & choices --- */
-.hud .meter{display:inline-flex;align-items:center;gap:6px;border:1px solid #334155;border-radius:999px;padding:4px 8px;background:#0b1a2f}
-.hud .meter .dot{width:8px;height:8px;border-radius:50%;background:#94a3b8}
-.hud .meter .label{opacity:.9}
-.hud .meter .value{font-variant-numeric:tabular-nums;opacity:.9}
+/* --- Mode helpers --- */
+body.mode-v1 .v1-only { display: block; }
+body.mode-v1 .v2-only { display: none !important; }
+body.mode-v2 .v1-only { display: none !important; }
+body.mode-v2 .v2-only { display: flex; }
 
-.choices{margin-top:8px;flex-wrap:wrap;gap:8px}
-.choice-btn{padding:8px 12px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e5e7eb;cursor:pointer}
-.choice-btn:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
-.choice-btn .kbd{opacity:.7;font-size:.9em}
-
-.dialog .content{line-height:1.55}
-.dialog .summary{opacity:.9}
+/* Ensure v2-only blocks that are block-level look right */
+body.mode-v2 #choices { display: flex; }
+body.mode-v2 #hud { display: flex; }
