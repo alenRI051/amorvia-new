@@ -1,0 +1,49 @@
+{
+  "scenarios": [
+    {
+      "id": "scene-first-agreements",
+      "title": "Scene: First Agreements",
+      "acts": 1
+    },
+    {
+      "id": "co-parenting-with-bipolar-partner",
+      "title": "Co-Parenting with Bipolar Partner",
+      "acts": 3
+    },
+    {
+      "id": "brzi-kontakti",
+      "title": "Brzi kontakti",
+      "acts": 1
+    },
+    {
+      "id": "scene-new-introductions",
+      "title": "Scene: New Introductions",
+      "acts": 1
+    },
+    {
+      "id": "dating-after-breakup-with-child-involved",
+      "title": "Dating After Breakup (With Child Involved)",
+      "acts": 4
+    },
+    {
+      "id": "scene-different-rules",
+      "title": "Scene: Different Rules",
+      "acts": 1
+    },
+    {
+      "id": "to-do",
+      "title": "To Do",
+      "acts": 1
+    },
+    {
+      "id": "scene-de-escalation",
+      "title": "Scene: De-escalation",
+      "acts": 1
+    },
+    {
+      "id": "direction",
+      "title": "Direction",
+      "acts": 1
+    }
+  ]
+}

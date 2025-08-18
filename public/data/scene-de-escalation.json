@@ -1,0 +1,14 @@
+{
+  "id": "scene-de-escalation",
+  "title": "Scene: De-escalation",
+  "acts": [
+    {
+      "title": "Act 1",
+      "steps": [
+        "Use brief, concrete messages.",
+        "Avoid late-night heavy topics.",
+        "Confirm understanding in writing."
+      ]
+    }
+  ]
+}

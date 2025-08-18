@@ -1,11 +1,10 @@
-/* Amorvia Service Worker — offline caching with optional scene precache */
-const SW_VERSION = 'v1.2.0';
+/* Amorvia Service Worker — tailored with scene precache */
+const SW_VERSION = 'v1.3.0';
 const STATIC_CACHE = `amorvia-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `amorvia-runtime-${SW_VERSION}`;
 
-// Add known scene slugs here to precache their JSON on first install
-// Example: const SCENES = ['first-agreements','new-introductions'];
-const SCENES = [];
+// Precache these scene JSON files on install
+const SCENES = ["scene-first-agreements", "co-parenting-with-bipolar-partner", "brzi-kontakti", "scene-new-introductions", "dating-after-breakup-with-child-involved", "scene-different-rules", "to-do", "scene-de-escalation", "direction"];
 
 const PRECACHE_URLS = [
   '/',
@@ -15,7 +14,8 @@ const PRECACHE_URLS = [
   '/favicon.png',
   '/manifest.json',
   '/offline.html',
-  ...SCENES.map(s => `/data/${s}.json`)
+  ...SCENES.map(s => `/data/${s}.json`),
+  '/data/index.json'
 ];
 
 self.addEventListener('install', (event) => {

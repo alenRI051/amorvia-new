@@ -1,0 +1,14 @@
+{
+  "id": "scene-first-agreements",
+  "title": "Scene: First Agreements",
+  "acts": [
+    {
+      "title": "Act 1",
+      "steps": [
+        "**Mediation-first:** Seek a neutral mediator to draft a parenting plan.",
+        "**DIY plan:** Draft a plan and validate with a social worker.",
+        "**Lawyered:** Each side retains counsel for a formal agreement."
+      ]
+    }
+  ]
+}

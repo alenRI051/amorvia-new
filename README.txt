@@ -1,16 +1,19 @@
-Amorvia — Upgrade Pack (update toast, iOS icon, precache scaffold)
+Amorvia Data Pack — generated 2025-08-18
 
-Files:
-- public/sw-register.js      → shows "new version available" reload prompt
-- public/service-worker.js    → optional SCENES precache list
-- public/robots.txt, public/sitemap.xml (optional)
-- index-head-patch.html       → snippet to paste inside <head>
+Created files:
+- public/data/index.json         → slim list for sidebar (id, title, acts)
+- public/data/full-index.json    → full scenarios payload (what you pasted)
+- public/data/<id>.json          → one file per scenario
+- public/service-worker.js       → SCENES precached: scene-first-agreements, co-parenting-with-bipolar-partner, brzi-kontakti, scene-new-introductions, dating-after-breakup-with-child-involved, scene-different-rules, to-do, scene-de-escalation, direction
 
-Apply:
-1) Replace /public/sw-register.js and /public/service-worker.js.
-2) Add this inside <head> of /public/index.html:
-   <link rel="apple-touch-icon" href="/icons/icon-192.png">
-3) (Optional) Keep robots.txt & sitemap.xml.
-4) (Optional) Precache known scenes: edit SCENES in service-worker.js and bump SW_VERSION.
-Then redeploy and hard-reload (unregister old SW + clear storage).
+How to use:
+1) Copy **public/data/** into your project's /public/data/.
+2) Replace your current **/public/service-worker.js** with this one (version v1.3.0).
+3) Deploy, then in Chrome DevTools → Application → Service Workers: Unregister old, Clear storage, reload.
+4) Your app can fetch:
+   - GET /data/index.json             (for the list)
+   - GET /data/<id>.json              (for details)
+5) SW precaches all /data/<id>.json so first-run works offline.
 
+If your bootstrap code expects *only* /data/index.json (with full details),
+point it to /data/full-index.json instead.
