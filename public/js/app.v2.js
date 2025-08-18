@@ -1,4 +1,4 @@
-// app.v2.js - ASCII only
+// app.v2.js - v2 UI glue (ASCII)
 import { ScenarioEngine, formatDeltas } from './engine/scenarioEngine.js';
 
 const $ = (s) => document.querySelector(s);

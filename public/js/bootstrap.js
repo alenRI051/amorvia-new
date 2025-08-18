@@ -1,4 +1,4 @@
-/* Amorvia bootstrap - char/bg wiring + relative imports (ASCII) */
+/* Amorvia bootstrap - char/bg wiring, relative imports, health logs (ASCII) */
 (function(){
   function $(id){ return document.getElementById(id); }
 
@@ -19,7 +19,6 @@
     if (leftSel) leftSel.addEventListener(evt, applyCharAndBg);
     if (rightSel) rightSel.addEventListener(evt, applyCharAndBg);
   });
-  // initial paint
   applyCharAndBg();
 
   function getMode(){ return localStorage.getItem('amorvia:mode') || 'v2'; }
@@ -45,12 +44,25 @@
     applyModeToDOM(getMode());
   }
 
+  // Health check - log if modules are served as HTML
+  (async function(){
+    try {
+      const urls = ['/js/app.v2.js','/js/engine/scenarioEngine.js','/js/app.js'];
+      for (const u of urls) {
+        const r = await fetch(u, { cache: 'no-store' });
+        const ct = r.headers.get('content-type') || '';
+        if (!ct.includes('javascript') && !ct.includes('module')) {
+          console.warn('[health] Non-JS content-type for', u, '=>', ct, r.status);
+        }
+      }
+    } catch (e) { /* ignore */ }
+  })();
+
   var loaded = false;
   async function loadChosenApp(){
     if (loaded) return;
     loaded = true;
     var mode = getMode();
-    // bootstrap.js lives in /js/, so import from the same directory
     var url = mode === 'v2' ? './app.v2.js' : './app.js';
     try{
       console.debug('[bootstrap] importing', url, 'mode=', mode);

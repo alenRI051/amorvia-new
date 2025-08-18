@@ -1,4 +1,4 @@
-// engine/scenarioEngine.js - ASCII only
+// engine/scenarioEngine.js - ASCII
 export class ScenarioEngine {
   constructor(options = {}) {
     this.opts = { storagePrefix: options.storagePrefix || 'amorvia:v2', metersConfig: options.metersConfig || null };

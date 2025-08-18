@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Amorvia Scenario v2",
+  "type": "object",
+  "required": [
+    "version",
+    "id",
+    "title",
+    "acts"
+  ],
+  "properties": {
+    "version": {
+      "const": 2
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "meters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "start": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "acts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "start",
+          "nodes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "nodes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "type"
+              ],
+              "oneOf": [
+                {
+                  "properties": {
+                    "type": {
+                      "const": "line"
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "next": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "text"
+                  ]
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "choice"
+                    },
+                    "prompt": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "label"
+                        ],
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "to": {
+                            "type": "string"
+                          },
+                          "effects": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "prompt",
+                    "choices"
+                  ]
+                },
+                {
+                  "properties": {
+                    "type": {
+                      "const": "end"
+                    },
+                    "summary": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

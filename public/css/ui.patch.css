@@ -1,4 +1,4 @@
-/* ui.patch.css - minimal visibility styles so v1/v2 controls are obvious */
+/* ui.patch.css - minimal styles for both modes */
 .muted{opacity:.7;font-weight:500}
 .wrap{display:grid;grid-template-columns:320px 1fr;gap:16px;min-height:100vh}
 @media (max-width:900px){.wrap{grid-template-columns:1fr}}
