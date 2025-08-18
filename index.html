@@ -7,12 +7,12 @@
   <meta name="description" content="Amorvia is an interactive relationship journey with multi‑act scenarios. Practice conversations, set boundaries, and make choices that shape the story."/>
   <link rel="canonical" href="https://amorvia.eu/"/>
   <meta name="robots" content="index,follow"/>
-  <link rel="manifest" href="/manifest.json"/>
+  <link rel="manifest" href="./manifest.json"/>
   <meta name="theme-color" content="#0f172a"/>
-  <link rel="icon" href="/favicon.png" type="image/png"/>
-  <link rel="preload" href="/css/styles.css" as="style">
-  <link rel="preload" href="/assets/backgrounds/room.svg" as="image">
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="./favicon.png" type="image/png"/>
+  <link rel="preload" href="./css/styles.css" as="style">
+  <link rel="preload" href="./assets/backgrounds/room.svg" as="image">
+  <link rel="stylesheet" href="./css/styles.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -27,7 +27,6 @@
   <style>
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:#0b1220;color:#e5e7eb}
     :focus-visible{outline:3px solid #2563eb;outline-offset:3px;border-radius:6px}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
     .skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip-link:focus{left:16px;top:16px;background:#fff;color:#0b1220;padding:8px 12px;border-radius:8px;z-index:9999}
     header{padding:16px 16px 0}
@@ -64,15 +63,15 @@
       <div class="panel toolbar">
         <label for="bgSelect">Background</label>
         <select id="bgSelect" class="select">
-          <option value="/assets/backgrounds/room.svg">Room</option>
+          <option value="./assets/backgrounds/room.svg">Room</option>
         </select>
         <label for="leftSelect">Left</label>
         <select id="leftSelect" class="select">
-          <option value="/assets/characters/male_casual.svg">Male • Casual</option>
+          <option value="./assets/characters/male_casual.svg">Male • Casual</option>
         </select>
         <label for="rightSelect">Right</label>
         <select id="rightSelect" class="select">
-          <option value="/assets/characters/female_casual.svg">Female • Casual</option>
+          <option value="./assets/characters/female_casual.svg">Female • Casual</option>
         </select>
         <div class="spacer"></div>
         <button id="prevBtn" class="button" type="button">Prev</button>
@@ -92,7 +91,6 @@
       </div>
     </section>
   </main>
-  <script type="module" src="/js/bootstrap.js"></script>
-  <script src="/sw-register.js"></script>
+  <script type="module" src="./js/bootstrap.js"></script>
 </body>
 </html>
