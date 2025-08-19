@@ -25,31 +25,278 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1",
-      "start": "a1c1",
+      "title": "Act 1 - Discovery",
+      "start": "n1",
       "nodes": [
         {
-          "id": "a1c1",
+          "id": "n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Your child returns and reports different rules at the other home.",
+          "next": "n2"
+        },
+        {
+          "id": "n2",
           "type": "choice",
-          "prompt": "Choose a path",
+          "prompt": "How do you approach your co-parent?",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
-              "to": "a1n1"
+              "label": "Calm message proposing a shared list",
+              "to": "n3",
+              "effects": {
+                "tension": -5,
+                "trust": 6
+              }
+            },
+            {
+              "label": "Frustrated text about undermining",
+              "to": "n4",
+              "effects": {
+                "tension": 12,
+                "trust": -8,
+                "childStress": 3
+              }
+            },
+            {
+              "label": "Let it slide for a week",
+              "to": "n5",
+              "effects": {
+                "tension": -2,
+                "trust": -1
+              }
             }
           ]
         },
         {
-          "id": "a1n1",
+          "id": "n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They suggest comparing current routines first.",
+          "next": "end"
+        },
+        {
+          "id": "n4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They get defensive; tone is tense.",
+          "next": "end"
+        },
+        {
+          "id": "n5",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "You track differences to discuss later.",
           "next": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of Act 1."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — Compare Lists",
+      "start": "r2n1",
+      "nodes": [
+        {
+          "id": "r2n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You gather current routines.",
+          "next": "r2n2"
+        },
+        {
+          "id": "r2n2",
+          "type": "choice",
+          "prompt": "Approach",
+          "choices": [
+            {
+              "label": "Find overlaps first",
+              "to": "r2n3",
+              "effects": {
+                "tension": -4,
+                "trust": 4
+              }
+            },
+            {
+              "label": "Debate each difference",
+              "to": "r2n4",
+              "effects": {
+                "tension": 6
+              }
+            },
+            {
+              "label": "Let time smooth it",
+              "to": "r2n5",
+              "effects": {
+                "trust": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "r2n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Progress is easier.",
+          "next": "r2end"
+        },
+        {
+          "id": "r2n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "It drags on.",
+          "next": "r2end"
+        },
+        {
+          "id": "r2n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Some issues persist.",
+          "next": "r2end"
+        },
+        {
+          "id": "r2end",
+          "type": "end",
+          "summary": "Lists compared."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 — Pick Battles",
+      "start": "r3n1",
+      "nodes": [
+        {
+          "id": "r3n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You prioritize 3 key rules.",
+          "next": "r3n2"
+        },
+        {
+          "id": "r3n2",
+          "type": "choice",
+          "prompt": "Pick approach",
+          "choices": [
+            {
+              "label": "Agree on consequences",
+              "to": "r3n3",
+              "effects": {
+                "trust": 4
+              }
+            },
+            {
+              "label": "Rewards only",
+              "to": "r3n4",
+              "effects": {
+                "childStress": -2
+              }
+            },
+            {
+              "label": "Consequences only",
+              "to": "r3n5",
+              "effects": {
+                "tension": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "r3n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Consistency improves.",
+          "next": "r3end"
+        },
+        {
+          "id": "r3n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Motivation rises.",
+          "next": "r3end"
+        },
+        {
+          "id": "r3n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Feels punitive.",
+          "next": "r3end"
+        },
+        {
+          "id": "r3end",
+          "type": "end",
+          "summary": "Focus refined."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 — Review",
+      "start": "r4n1",
+      "nodes": [
+        {
+          "id": "r4n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You review the 3 rules after 2 weeks.",
+          "next": "r4n2"
+        },
+        {
+          "id": "r4n2",
+          "type": "choice",
+          "prompt": "Outcome",
+          "choices": [
+            {
+              "label": "Keep as-is",
+              "to": "r4n3",
+              "effects": {
+                "trust": 2
+              }
+            },
+            {
+              "label": "Adjust one rule",
+              "to": "r4n4",
+              "effects": {
+                "trust": 1
+              }
+            },
+            {
+              "label": "Drop one rule",
+              "to": "r4n5",
+              "effects": {
+                "tension": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "r4n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Stability helps.",
+          "next": "r4end"
+        },
+        {
+          "id": "r4n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Flexibility applied.",
+          "next": "r4end"
+        },
+        {
+          "id": "r4n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Less to enforce.",
+          "next": "r4end"
+        },
+        {
+          "id": "r4end",
+          "type": "end",
+          "summary": "Review complete."
         }
       ]
     }
