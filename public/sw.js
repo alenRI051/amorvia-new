@@ -1,14 +1,10 @@
 // Amorvia Service Worker
-// Deterministic version (bump on each deploy)
 const VERSION = 'v0.5-2025-08-19';
 const CACHE_NAME = `amorvia-${VERSION}`;
-
-// Precache essentials
 const CORE = ['/', '/index.html'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(CORE)).catch(() => null));
-  // keep waiting state for update prompt UX
 });
 
 self.addEventListener('activate', (event) => {
@@ -52,14 +48,12 @@ async function staleWhileRevalidate(req) {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
-
   const isNav = event.request.mode === 'navigate' || (event.request.destination === 'document');
   const isData = url.pathname.startsWith('/data/');
   const isStatic = /\/(?:js|css|assets)\//.test(url.pathname);
-
-  if (isNav) { event.respondWith(networkFirst(event.request)); return; }
+  if (isNav)  { event.respondWith(networkFirst(event.request)); return; }
   if (isData) { event.respondWith(staleWhileRevalidate(event.request)); return; }
-  if (isStatic){ event.respondWith(cacheFirst(event.request)); return; }
+  if (isStatic) { event.respondWith(cacheFirst(event.request)); return; }
 });
 
 self.addEventListener('message', (event) => {

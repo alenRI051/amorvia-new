@@ -32,16 +32,16 @@
           "id": "c1",
           "type": "line",
           "speaker": "narrator",
-          "text": "A holiday approaches. Each of you has different traditions you want to share.",
+          "text": "A holiday approaches with different traditions.",
           "next": "c2"
         },
         {
           "id": "c2",
           "type": "choice",
-          "prompt": "How do you frame the conversation?",
+          "prompt": "Frame the talk:",
           "choices": [
             {
-              "label": "Lead with curiosity and list must-haves",
+              "label": "Curiosity + must-haves list",
               "to": "c3",
               "effects": {
                 "tension": -5,
@@ -49,7 +49,7 @@
               }
             },
             {
-              "label": "Insist on your way this year",
+              "label": "Insist on your way",
               "to": "c4",
               "effects": {
                 "tension": 10,
@@ -57,7 +57,7 @@
               }
             },
             {
-              "label": "Avoid the talk and hope it works out",
+              "label": "Avoid and hope",
               "to": "c5",
               "effects": {
                 "tension": 2,
@@ -70,237 +70,27 @@
           "id": "c3",
           "type": "line",
           "speaker": "ex",
-          "text": "They share theirs. Overlap appears.",
+          "text": "They share theirs; overlap appears.",
           "next": "cend"
         },
         {
           "id": "c4",
           "type": "line",
           "speaker": "ex",
-          "text": "They push back and feel dismissed.",
+          "text": "They feel dismissed.",
           "next": "cend"
         },
         {
           "id": "c5",
           "type": "line",
           "speaker": "narrator",
-          "text": "Uncertainty remains and logistics get messy.",
+          "text": "Logistics get messy.",
           "next": "cend"
         },
         {
           "id": "cend",
           "type": "end",
-          "summary": "End of Act 1. Tone for respect (or not) is set."
-        }
-      ]
-    },
-    {
-      "id": "act-2",
-      "title": "Act 2 - Child's Experience",
-      "start": "c2a1",
-      "nodes": [
-        {
-          "id": "c2a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Your child asks which tradition is the 'right' one.",
-          "next": "c2a2"
-        },
-        {
-          "id": "c2a2",
-          "type": "choice",
-          "prompt": "Your response:",
-          "choices": [
-            {
-              "label": "Explain that families can celebrate in different ways",
-              "to": "c2a3",
-              "effects": {
-                "childStress": -4,
-                "trust": 3
-              }
-            },
-            {
-              "label": "Say your tradition is correct",
-              "to": "c2a4",
-              "effects": {
-                "tension": 6,
-                "childStress": 4
-              }
-            },
-            {
-              "label": "Change the subject",
-              "to": "c2a5",
-              "effects": {
-                "childStress": 1
-              }
-            }
-          ]
-        },
-        {
-          "id": "c2a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "They relax and stay curious.",
-          "next": "c2end"
-        },
-        {
-          "id": "c2a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "They look worried and less open to the other parent's tradition.",
-          "next": "c2end"
-        },
-        {
-          "id": "c2a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "The question lingers.",
-          "next": "c2end"
-        },
-        {
-          "id": "c2end",
-          "type": "end",
-          "summary": "End of Act 2. You shaped their view toward difference."
-        }
-      ]
-    },
-    {
-      "id": "act-3",
-      "title": "Act 3 - Scheduling & Respect",
-      "start": "c3a1",
-      "nodes": [
-        {
-          "id": "c3a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You negotiate time and activities. Some events overlap.",
-          "next": "c3a2"
-        },
-        {
-          "id": "c3a2",
-          "type": "choice",
-          "prompt": "Pick a plan:",
-          "choices": [
-            {
-              "label": "Alternate key days yearly, both families included if child is comfortable",
-              "to": "c3a3",
-              "effects": {
-                "trust": 5,
-                "tension": -4
-              }
-            },
-            {
-              "label": "Split the day; rush between events",
-              "to": "c3a4",
-              "effects": {
-                "childStress": 6
-              }
-            },
-            {
-              "label": "Each does their own without coordination",
-              "to": "c3a5",
-              "effects": {
-                "trust": -3,
-                "tension": 4
-              }
-            }
-          ]
-        },
-        {
-          "id": "c3a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A balanced plan reduces friction and preserves meaning.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "The day feels hectic and tiring.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Separate plans reduce exposure to the other tradition.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3end",
-          "type": "end",
-          "summary": "End of Act 3. Logistics reflect values and respect."
-        }
-      ]
-    },
-    {
-      "id": "act-4",
-      "title": "Act 4 - Shared Understanding",
-      "start": "c4a1",
-      "nodes": [
-        {
-          "id": "c4a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "After the holiday, you both reflect on what worked for your child.",
-          "next": "c4a2"
-        },
-        {
-          "id": "c4a2",
-          "type": "choice",
-          "prompt": "Going forward:",
-          "choices": [
-            {
-              "label": "Write a short shared-values note for the child",
-              "to": "c4a3",
-              "effects": {
-                "trust": 4,
-                "tension": -3
-              }
-            },
-            {
-              "label": "Keep it flexible and check-in next year",
-              "to": "c4a4",
-              "effects": {
-                "trust": 2
-              }
-            },
-            {
-              "label": "Drop overlap; double down on separate paths",
-              "to": "c4a5",
-              "effects": {
-                "trust": -3,
-                "tension": 4
-              }
-            }
-          ]
-        },
-        {
-          "id": "c4a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Shared language helps the child feel respected by both cultures.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You keep options open with minimal friction.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Less coordination risks mixed messages later.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4end",
-          "type": "end",
-          "summary": "End of Act 4. You model respect for difference."
+          "summary": "End of Act 1."
         }
       ]
     }

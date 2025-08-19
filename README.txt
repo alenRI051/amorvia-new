@@ -1,15 +1,12 @@
-Amorvia SW Refresh Patch
-Date: 2025-08-19
+Amorvia Release (Beta) — 2025-08-19
 
-Files
-- public/sw.js                (VERSION = 'v0.5-2025-08-19')
-- public/sw-register.js       (registers /sw.js?v=2025-08-19.2)
-- vercel.json                 (adds no-cache header for /sw.js)
+This package contains:
+- public/data/*.v2.json  (5 beta scenarios + extras)
+- public/data/v2-index.json  (beta list active)
+- public/sw.js, public/sw-register.js
+- vercel.json (rewrites + headers)
 
-Install
-1) Copy public/sw.js and public/sw-register.js into your project (overwrite).
-2) Ensure vercel.json includes the /sw.js no-cache header (merge or replace).
+Deploy steps:
+1) Copy the 'public/' folder into your project's root (merge/overwrite existing files).
+2) Ensure your 'vercel.json' matches the provided file (or merge its headers/rewrites).
 3) Deploy. Users will be prompted to refresh when the new SW is ready.
-
-Next deploy
-- Bump VERSION in sw.js and BUILD in sw-register.js.

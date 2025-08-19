@@ -32,16 +32,16 @@
           "id": "s1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Your partner has started taking a more active role with your child. Your ex is uneasy about boundaries.",
+          "text": "Your partner takes a more active role; your ex is uneasy.",
           "next": "s2"
         },
         {
           "id": "s2",
           "type": "choice",
-          "prompt": "How do you frame the step-parent role?",
+          "prompt": "Frame the role:",
           "choices": [
             {
-              "label": "Supportive adult, not replacement parent",
+              "label": "Supportive adult, not replacement",
               "to": "s3",
               "effects": {
                 "trust": 6,
@@ -49,7 +49,7 @@
               }
             },
             {
-              "label": "Equal authority to you in your home",
+              "label": "Equal authority in your home",
               "to": "s4",
               "effects": {
                 "tension": 6
@@ -69,239 +69,27 @@
           "id": "s3",
           "type": "line",
           "speaker": "ex",
-          "text": "That helps. They ask for clarity on discipline.",
+          "text": "That helps; clarify discipline.",
           "next": "send"
         },
         {
           "id": "s4",
           "type": "line",
           "speaker": "ex",
-          "text": "They push back and worry about consistency.",
+          "text": "They push back about consistency.",
           "next": "send"
         },
         {
           "id": "s5",
           "type": "line",
           "speaker": "narrator",
-          "text": "You prefer a gradual approach and agree to check-in.",
+          "text": "You agree to check-in.",
           "next": "send"
         },
         {
           "id": "send",
           "type": "end",
-          "summary": "End of Act 1. Expectations begin to form."
-        }
-      ]
-    },
-    {
-      "id": "act-2",
-      "title": "Act 2 - Discipline & Boundaries",
-      "start": "s2a1",
-      "nodes": [
-        {
-          "id": "s2a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A conflict arises over screen time. Your partner intervenes while you are in another room.",
-          "next": "s2a2"
-        },
-        {
-          "id": "s2a2",
-          "type": "choice",
-          "prompt": "Your response:",
-          "choices": [
-            {
-              "label": "Back your partner in the moment, debrief later",
-              "to": "s2a3",
-              "effects": {
-                "trust": 4,
-                "childStress": -3
-              }
-            },
-            {
-              "label": "Step in and take over calmly",
-              "to": "s2a4",
-              "effects": {
-                "tension": -2
-              }
-            },
-            {
-              "label": "Disagree with your partner in front of the child",
-              "to": "s2a5",
-              "effects": {
-                "tension": 10,
-                "childStress": 6,
-                "trust": -5
-              }
-            }
-          ]
-        },
-        {
-          "id": "s2a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Unified front preserves calm; you align later on tone and limits.",
-          "next": "s2end"
-        },
-        {
-          "id": "s2a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You reset the moment and clarify who leads discipline.",
-          "next": "s2end"
-        },
-        {
-          "id": "s2a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Mixed signals increase stress and future testing.",
-          "next": "s2end"
-        },
-        {
-          "id": "s2end",
-          "type": "end",
-          "summary": "End of Act 2. Roles and signals are clearer\u2014or not."
-        }
-      ]
-    },
-    {
-      "id": "act-3",
-      "title": "Act 3 - Family Dynamics",
-      "start": "s3a1",
-      "nodes": [
-        {
-          "id": "s3a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Your child expresses discomfort about time with the step-parent.",
-          "next": "s3a2"
-        },
-        {
-          "id": "s3a2",
-          "type": "choice",
-          "prompt": "What do you do?",
-          "choices": [
-            {
-              "label": "One-on-one talk with child; adjust activities",
-              "to": "s3a3",
-              "effects": {
-                "childStress": -6,
-                "trust": 3
-              }
-            },
-            {
-              "label": "Force more time to speed bonding",
-              "to": "s3a4",
-              "effects": {
-                "childStress": 8,
-                "trust": -5
-              }
-            },
-            {
-              "label": "Pause step-parent led activities briefly",
-              "to": "s3a5",
-              "effects": {
-                "childStress": -3,
-                "tension": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "s3a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Tailored time reduces friction and returns some ease.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Pushing backfires; resistance increases.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A short reset helps everyone breathe and recalibrate.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3end",
-          "type": "end",
-          "summary": "End of Act 3. You tune the pace to the child's needs."
-        }
-      ]
-    },
-    {
-      "id": "act-4",
-      "title": "Act 4 - Alignment with Ex",
-      "start": "s4a1",
-      "nodes": [
-        {
-          "id": "s4a1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Your ex wants clearer boundaries written down.",
-          "next": "s4a2"
-        },
-        {
-          "id": "s4a2",
-          "type": "choice",
-          "prompt": "Pick a framework:",
-          "choices": [
-            {
-              "label": "Roles doc: what step-parent does/doesn't do",
-              "to": "s4a3",
-              "effects": {
-                "trust": 5,
-                "tension": -3
-              }
-            },
-            {
-              "label": "Zones: co-parent leads discipline; step-parent supports",
-              "to": "s4a4",
-              "effects": {
-                "trust": 3,
-                "tension": -2
-              }
-            },
-            {
-              "label": "No doc needed; keep it informal",
-              "to": "s4a5",
-              "effects": {
-                "trust": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "s4a3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Writing it down reduces guesswork and conflict.",
-          "next": "s4end"
-        },
-        {
-          "id": "s4a4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Clear lanes make daily life smoother.",
-          "next": "s4end"
-        },
-        {
-          "id": "s4a5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Ambiguity remains; future flare-ups likely.",
-          "next": "s4end"
-        },
-        {
-          "id": "s4end",
-          "type": "end",
-          "summary": "End of Act 4. Boundaries become explicit\u2014or stay fuzzy."
+          "summary": "End of Act 1."
         }
       ]
     }

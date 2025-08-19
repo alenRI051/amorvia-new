@@ -32,16 +32,16 @@
           "id": "n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Your child returns from your ex's home and says bedtime there is later and sweets are allowed after dinner.",
+          "text": "Your child returns and reports different rules at the other home.",
           "next": "n2"
         },
         {
           "id": "n2",
           "type": "choice",
-          "prompt": "How do you approach your co-parent about the mismatch?",
+          "prompt": "How do you approach your co-parent?",
           "choices": [
             {
-              "label": "Calm message asking for clarity and proposing one shared list of rules",
+              "label": "Calm message proposing a shared list",
               "to": "n3",
               "effects": {
                 "tension": -5,
@@ -49,7 +49,7 @@
               }
             },
             {
-              "label": "Send a frustrated text about undermining consistency",
+              "label": "Frustrated text about undermining",
               "to": "n4",
               "effects": {
                 "tension": 12,
@@ -58,7 +58,7 @@
               }
             },
             {
-              "label": "Let it slide for now and observe for a week",
+              "label": "Let it slide for a week",
               "to": "n5",
               "effects": {
                 "tension": -2,
@@ -71,267 +71,27 @@
           "id": "n3",
           "type": "line",
           "speaker": "ex",
-          "text": "They reply: Let's compare what we do in each house first.",
+          "text": "They suggest comparing current routines first.",
           "next": "end"
         },
         {
           "id": "n4",
           "type": "line",
           "speaker": "ex",
-          "text": "They respond defensively and the tone gets tense.",
+          "text": "They get defensive; tone is tense.",
           "next": "end"
         },
         {
           "id": "n5",
           "type": "line",
           "speaker": "narrator",
-          "text": "You note the differences and keep track for discussion.",
+          "text": "You track differences to discuss later.",
           "next": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of Act 1. You set the tone for how alignment talks may go."
-        }
-      ]
-    },
-    {
-      "id": "act-2",
-      "title": "Act 2 - Alignment Attempt",
-      "start": "a2n1",
-      "nodes": [
-        {
-          "id": "a2n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You meet online to discuss rules. You each share current routines.",
-          "next": "a2n2"
-        },
-        {
-          "id": "a2n2",
-          "type": "choice",
-          "prompt": "Choose an approach for bridging differences:",
-          "choices": [
-            {
-              "label": "Unified list: agree 3 non-negotiables across both homes",
-              "to": "a2n3",
-              "effects": {
-                "tension": -6,
-                "trust": 7,
-                "childStress": -4
-              }
-            },
-            {
-              "label": "Zones of control: each parent leads specific domains",
-              "to": "a2n4",
-              "effects": {
-                "tension": -3,
-                "trust": 4
-              }
-            },
-            {
-              "label": "Coach mode: align on consequences, allow style differences",
-              "to": "a2n5",
-              "effects": {
-                "tension": -4,
-                "trust": 5,
-                "childStress": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "a2n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You draft 3 shared rules: bedtime window, sweets cap, screen limit.",
-          "next": "a2n6"
-        },
-        {
-          "id": "a2n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You assign domains: you lead bedtime; they lead screens; both share nutrition.",
-          "next": "a2n6"
-        },
-        {
-          "id": "a2n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You write a simple consequence ladder and a weekly reward plan.",
-          "next": "a2n6"
-        },
-        {
-          "id": "a2n6",
-          "type": "choice",
-          "prompt": "How will you record and revisit the plan?",
-          "choices": [
-            {
-              "label": "Shared note with weekly 10-min check-in",
-              "to": "a2end",
-              "effects": {
-                "trust": 5,
-                "tension": -3
-              }
-            },
-            {
-              "label": "Rely on memory and text when needed",
-              "to": "a2end",
-              "effects": {
-                "trust": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "a2end",
-          "type": "end",
-          "summary": "End of Act 2. You shaped a first plan to test."
-        }
-      ]
-    },
-    {
-      "id": "act-3",
-      "title": "Act 3 - Stress Test",
-      "start": "a3n1",
-      "nodes": [
-        {
-          "id": "a3n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A midweek school night runs late after an activity. Your child is tired and asks for extra screen time.",
-          "next": "a3n2"
-        },
-        {
-          "id": "a3n2",
-          "type": "choice",
-          "prompt": "What do you do in the moment?",
-          "choices": [
-            {
-              "label": "Stick to the plan and offer a soothing alternative (story, stretch)",
-              "to": "a3n3",
-              "effects": {
-                "tension": -4,
-                "childStress": -5,
-                "trust": 3
-              }
-            },
-            {
-              "label": "Grant an exception and log it for review",
-              "to": "a3n4",
-              "effects": {
-                "tension": -2,
-                "trust": 1
-              }
-            },
-            {
-              "label": "Argue about the rules in front of the child (call ex)",
-              "to": "a3n5",
-              "effects": {
-                "tension": 12,
-                "childStress": 8,
-                "trust": -6
-              }
-            }
-          ]
-        },
-        {
-          "id": "a3n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Your child settles after a short routine and falls asleep on time.",
-          "next": "a3end"
-        },
-        {
-          "id": "a3n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "The exception helps tonight; you note it to avoid a new pattern.",
-          "next": "a3end"
-        },
-        {
-          "id": "a3n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "The call becomes tense; bedtime gets later and emotions spike.",
-          "next": "a3end"
-        },
-        {
-          "id": "a3end",
-          "type": "end",
-          "summary": "End of Act 3. Real life tested the plan."
-        }
-      ]
-    },
-    {
-      "id": "act-4",
-      "title": "Act 4 - Review and Resolution",
-      "start": "a4n1",
-      "nodes": [
-        {
-          "id": "a4n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You and your co-parent review the week and the child's mood and sleep.",
-          "next": "a4n2"
-        },
-        {
-          "id": "a4n2",
-          "type": "choice",
-          "prompt": "Choose how to adjust going forward:",
-          "choices": [
-            {
-              "label": "Keep the plan and add one clear exception rule",
-              "to": "a4n3",
-              "effects": {
-                "trust": 5,
-                "tension": -3,
-                "childStress": -2
-              }
-            },
-            {
-              "label": "Simplify to 2 shared rules and more autonomy per home",
-              "to": "a4n4",
-              "effects": {
-                "trust": 3,
-                "tension": -2
-              }
-            },
-            {
-              "label": "Pause alignment talks and revisit next month",
-              "to": "a4n5",
-              "effects": {
-                "trust": -3,
-                "tension": 4
-              }
-            }
-          ]
-        },
-        {
-          "id": "a4n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You add a formal 'exception night' with a quick log so it does not become daily.",
-          "next": "a4end"
-        },
-        {
-          "id": "a4n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You streamline to what truly matters and reduce friction on style.",
-          "next": "a4end"
-        },
-        {
-          "id": "a4n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You defer deeper alignment; you agree to keep tone neutral in front of the child.",
-          "next": "a4end"
-        },
-        {
-          "id": "a4end",
-          "type": "end",
-          "summary": "End of Act 4. You finish with a workable plan or a clear pause."
+          "summary": "End of Act 1."
         }
       ]
     }
