@@ -7,7 +7,7 @@
       "label": "Tension",
       "min": 0,
       "max": 100,
-      "start": 30
+      "start": 25
     },
     "trust": {
       "label": "Trust",
@@ -25,72 +25,140 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 - Traditions Clash",
-      "start": "c1",
+      "title": "Act 1 — Traditions Clash",
+      "start": "stub1",
       "nodes": [
         {
-          "id": "c1",
+          "id": "stub1",
           "type": "line",
           "speaker": "narrator",
-          "text": "A holiday approaches with different traditions.",
-          "next": "c2"
+          "text": "Act 1 exists in your repo; this is a portability stub.",
+          "next": "stubend"
         },
         {
-          "id": "c2",
+          "id": "stubend",
+          "type": "end",
+          "summary": "Continue to Act 2."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — Planning the Holiday",
+      "start": "c2n1",
+      "nodes": [
+        {
+          "id": "c2n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Logistics meeting to map the holiday schedule.",
+          "next": "c2n2"
+        },
+        {
+          "id": "c2n2",
           "type": "choice",
-          "prompt": "Frame the talk:",
+          "prompt": "Negotiation frame",
           "choices": [
             {
-              "label": "Curiosity + must-haves list",
-              "to": "c3",
+              "label": "List non‑negotiables + trade fairly",
+              "to": "c2n3",
               "effects": {
-                "tension": -5,
+                "tension": -6,
                 "trust": 5
               }
             },
             {
-              "label": "Insist on your way",
-              "to": "c4",
+              "label": "Split time 50/50 without nuance",
+              "to": "c2n4",
               "effects": {
-                "tension": 10,
-                "trust": -6
+                "tension": 2
               }
             },
             {
-              "label": "Avoid and hope",
-              "to": "c5",
+              "label": "Push for majority time",
+              "to": "c2n5",
               "effects": {
-                "tension": 2,
-                "trust": -1
+                "tension": 10,
+                "trust": -6
               }
             }
           ]
         },
         {
-          "id": "c3",
+          "id": "c2n3",
           "type": "line",
           "speaker": "ex",
-          "text": "They share theirs; overlap appears.",
-          "next": "cend"
+          "text": "You find overlap and swap smaller events.",
+          "next": "c2n6"
         },
         {
-          "id": "c4",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They feel dismissed.",
-          "next": "cend"
-        },
-        {
-          "id": "c5",
+          "id": "c2n4",
           "type": "line",
           "speaker": "narrator",
-          "text": "Logistics get messy.",
-          "next": "cend"
+          "text": "It feels fair but mismatched to traditions.",
+          "next": "c2n6"
         },
         {
-          "id": "cend",
+          "id": "c2n5",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They push back hard.",
+          "next": "c2n6"
+        },
+        {
+          "id": "c2n6",
+          "type": "choice",
+          "prompt": "Child’s involvement",
+          "choices": [
+            {
+              "label": "Share a kid‑friendly plan",
+              "to": "c2n7",
+              "effects": {
+                "childStress": -3,
+                "trust": 2
+              }
+            },
+            {
+              "label": "Adults decide; tell child later",
+              "to": "c2n8",
+              "effects": {
+                "childStress": 1
+              }
+            },
+            {
+              "label": "Let child choose everything",
+              "to": "c2n9",
+              "effects": {
+                "childStress": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "c2n7",
+          "type": "line",
+          "speaker": "child",
+          "text": "They feel reassured by clarity.",
+          "next": "c2end2"
+        },
+        {
+          "id": "c2n8",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You’ll reveal after details settle.",
+          "next": "c2end2"
+        },
+        {
+          "id": "c2n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Pressure shifts to the child.",
+          "next": "c2end2"
+        },
+        {
+          "id": "c2end2",
           "type": "end",
-          "summary": "End of Act 1."
+          "summary": "A workable plan—or a fragile one."
         }
       ]
     }

@@ -25,58 +25,143 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 \u2014 First Exchange",
-      "start": "n1",
+      "title": "Act 1 — First Exchange",
+      "start": "stub1",
       "nodes": [
         {
-          "id": "n1",
+          "id": "stub1",
           "type": "line",
-          "speaker": "ex",
-          "text": "They seem upset and speak in a confusing way.",
-          "next": "n2"
+          "speaker": "narrator",
+          "text": "Act 1 exists in your repo; this is a portability stub.",
+          "next": "stubend"
         },
         {
-          "id": "n2",
+          "id": "stubend",
+          "type": "end",
+          "summary": "Continue to Act 2."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — De‑escalation at the Door",
+      "start": "a2n1",
+      "nodes": [
+        {
+          "id": "a2n1",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They open the door still tense. Your child looks on.",
+          "next": "a2n2"
+        },
+        {
+          "id": "a2n2",
           "type": "choice",
-          "prompt": "How do you respond?",
+          "prompt": "First move?",
           "choices": [
             {
-              "label": "Stay calm and validate feelings",
-              "to": "n3",
+              "label": "Soft tone + name the goal (child transfer)",
+              "to": "a2n3",
               "effects": {
                 "tension": -10,
-                "trust": 5
+                "trust": 4,
+                "childStress": -3
               }
             },
             {
-              "label": "Ignore and proceed",
-              "to": "n3",
+              "label": "Ignore tension, go by the book",
+              "to": "a2n4",
               "effects": {
-                "tension": 0
+                "tension": -2
               }
             },
             {
-              "label": "Respond emotionally",
-              "to": "n3",
+              "label": "Point out the behavior",
+              "to": "a2n5",
               "effects": {
-                "tension": 15,
-                "trust": -10,
-                "childStress": 5
+                "tension": 8,
+                "trust": -6,
+                "childStress": 4
               }
             }
           ]
         },
         {
-          "id": "n3",
+          "id": "a2n3",
           "type": "line",
           "speaker": "narrator",
-          "text": "You move toward the exchange.",
-          "next": "end"
+          "text": "You model calm. They mirror a bit.",
+          "next": "a2n6"
         },
         {
-          "id": "end",
+          "id": "a2n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You keep it procedural. It works but feels cold.",
+          "next": "a2n6"
+        },
+        {
+          "id": "a2n5",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They react defensively, raising voice.",
+          "next": "a2n6"
+        },
+        {
+          "id": "a2n6",
+          "type": "choice",
+          "prompt": "A curveball: pickup bag is missing.",
+          "choices": [
+            {
+              "label": "Offer quick fix + follow‑up later",
+              "to": "a2n7",
+              "effects": {
+                "tension": -6,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Insist it was agreed and wait",
+              "to": "a2n8",
+              "effects": {
+                "tension": 6,
+                "childStress": 3
+              }
+            },
+            {
+              "label": "Let it go this time",
+              "to": "a2n9",
+              "effects": {
+                "trust": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "a2n7",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They appreciate the flexibility.",
+          "next": "a2end2"
+        },
+        {
+          "id": "a2n8",
+          "type": "line",
+          "speaker": "ex",
+          "text": "The standoff ends but mood sours.",
+          "next": "a2end2"
+        },
+        {
+          "id": "a2n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You keep the moment light for the child.",
+          "next": "a2end2"
+        },
+        {
+          "id": "a2end2",
           "type": "end",
-          "summary": "Act finished."
+          "summary": "Transfer completes. Tone set for future exchanges."
         }
       ]
     }

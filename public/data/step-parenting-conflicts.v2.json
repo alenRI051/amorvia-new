@@ -25,71 +25,141 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 - New Role",
-      "start": "s1",
+      "title": "Act 1 — New Role",
+      "start": "stub1",
       "nodes": [
         {
-          "id": "s1",
+          "id": "stub1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Your partner takes a more active role; your ex is uneasy.",
-          "next": "s2"
+          "text": "Act 1 exists in your repo; this is a portability stub.",
+          "next": "stubend"
         },
         {
-          "id": "s2",
+          "id": "stubend",
+          "type": "end",
+          "summary": "Continue to Act 2."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — Boundaries and Roles",
+      "start": "s2n1",
+      "nodes": [
+        {
+          "id": "s2n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "A homework dispute pops up while your partner is present.",
+          "next": "s2n2"
+        },
+        {
+          "id": "s2n2",
           "type": "choice",
-          "prompt": "Frame the role:",
+          "prompt": "Who steps in?",
           "choices": [
             {
-              "label": "Supportive adult, not replacement",
-              "to": "s3",
+              "label": "You lead; partner supports",
+              "to": "s2n3",
               "effects": {
-                "trust": 6,
-                "tension": -4
+                "tension": -4,
+                "trust": 4
               }
             },
             {
-              "label": "Equal authority in your home",
-              "to": "s4",
+              "label": "Partner takes the lead",
+              "to": "s2n4",
               "effects": {
-                "tension": 6
+                "tension": 5,
+                "trust": -3
               }
             },
             {
-              "label": "Let it evolve without labels",
-              "to": "s5",
+              "label": "Let the child self‑manage",
+              "to": "s2n5",
               "effects": {
-                "trust": 1,
-                "tension": -1
+                "childStress": -1,
+                "trust": -1
               }
             }
           ]
         },
         {
-          "id": "s3",
+          "id": "s2n3",
           "type": "line",
-          "speaker": "ex",
-          "text": "That helps; clarify discipline.",
-          "next": "send"
+          "speaker": "partner",
+          "text": "They back your cue and add encouragement.",
+          "next": "s2n6"
         },
         {
-          "id": "s4",
+          "id": "s2n4",
           "type": "line",
           "speaker": "ex",
-          "text": "They push back about consistency.",
-          "next": "send"
+          "text": "Later, your ex questions authority boundaries.",
+          "next": "s2n6"
         },
         {
-          "id": "s5",
+          "id": "s2n5",
           "type": "line",
           "speaker": "narrator",
-          "text": "You agree to check-in.",
-          "next": "send"
+          "text": "It resolves but expectations blur.",
+          "next": "s2n6"
         },
         {
-          "id": "send",
+          "id": "s2n6",
+          "type": "choice",
+          "prompt": "Alignment message to co‑parent?",
+          "choices": [
+            {
+              "label": "Share a short roles statement",
+              "to": "s2n7",
+              "effects": {
+                "tension": -5,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Skip for now",
+              "to": "s2n8",
+              "effects": {
+                "trust": -1
+              }
+            },
+            {
+              "label": "Assert partner as equal authority",
+              "to": "s2n9",
+              "effects": {
+                "tension": 7
+              }
+            }
+          ]
+        },
+        {
+          "id": "s2n7",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They acknowledge boundaries; ask for consistency.",
+          "next": "s2end2"
+        },
+        {
+          "id": "s2n8",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Uncertainty remains between homes.",
+          "next": "s2end2"
+        },
+        {
+          "id": "s2n9",
+          "type": "line",
+          "speaker": "ex",
+          "text": "Friction rises about decision rights.",
+          "next": "s2end2"
+        },
+        {
+          "id": "s2end2",
           "type": "end",
-          "summary": "End of Act 1."
+          "summary": "Roles clarified to varying degrees."
         }
       ]
     }

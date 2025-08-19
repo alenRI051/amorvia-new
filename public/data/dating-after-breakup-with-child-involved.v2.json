@@ -25,71 +25,139 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 - First Date",
-      "start": "a1n1",
+      "title": "Act 1 — First Date",
+      "start": "stub1",
       "nodes": [
         {
-          "id": "a1n1",
+          "id": "stub1",
           "type": "line",
           "speaker": "narrator",
-          "text": "You plan to meet someone new for coffee.",
-          "next": "a1n2"
+          "text": "Act 1 exists in your repo; this is a portability stub.",
+          "next": "stubend"
         },
         {
-          "id": "a1n2",
+          "id": "stubend",
+          "type": "end",
+          "summary": "Continue to Act 2."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — Introducing the Idea",
+      "start": "b2n1",
+      "nodes": [
+        {
+          "id": "b2n1",
+          "type": "line",
+          "speaker": "child",
+          "text": "“Who were you talking to?”",
+          "next": "b2n2"
+        },
+        {
+          "id": "b2n2",
           "type": "choice",
-          "prompt": "Tell your ex?",
+          "prompt": "Your response",
           "choices": [
             {
-              "label": "Neutral heads-up",
-              "to": "a1n3",
+              "label": "Honest but gentle",
+              "to": "b2n3",
               "effects": {
-                "trust": 4,
-                "tension": -3
+                "trust": 5,
+                "childStress": -4
               }
             },
             {
-              "label": "Keep private",
-              "to": "a1n4",
+              "label": "Change subject",
+              "to": "b2n4",
               "effects": {
-                "trust": -1
+                "trust": -2
               }
             },
             {
-              "label": "Pointed announcement",
-              "to": "a1n5",
+              "label": "Dismiss it quickly",
+              "to": "b2n5",
               "effects": {
-                "tension": 8,
-                "trust": -6
+                "childStress": 2
               }
             }
           ]
         },
         {
-          "id": "a1n3",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They reply briefly.",
-          "next": "a1end"
-        },
-        {
-          "id": "a1n4",
+          "id": "b2n3",
           "type": "line",
           "speaker": "narrator",
-          "text": "You keep it private.",
-          "next": "a1end"
+          "text": "You explain they’re a friend you like spending time with.",
+          "next": "b2n6"
         },
         {
-          "id": "a1n5",
+          "id": "b2n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You steer to homework. Curiosity lingers.",
+          "next": "b2n6"
+        },
+        {
+          "id": "b2n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "They go quiet; mood cools.",
+          "next": "b2n6"
+        },
+        {
+          "id": "b2n6",
+          "type": "choice",
+          "prompt": "Follow‑up plan",
+          "choices": [
+            {
+              "label": "Check feelings later tonight",
+              "to": "b2n7",
+              "effects": {
+                "trust": 3
+              }
+            },
+            {
+              "label": "Ask co‑parent for alignment note",
+              "to": "b2n8",
+              "effects": {
+                "tension": -4,
+                "trust": 2
+              }
+            },
+            {
+              "label": "Say nothing further",
+              "to": "b2n9",
+              "effects": {
+                "trust": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "b2n7",
+          "type": "line",
+          "speaker": "child",
+          "text": "They share a small worry; you reassure.",
+          "next": "b2end2"
+        },
+        {
+          "id": "b2n8",
           "type": "line",
           "speaker": "ex",
-          "text": "They react defensively.",
-          "next": "a1end"
+          "text": "Co‑parent agrees to keep language neutral.",
+          "next": "b2end2"
         },
         {
-          "id": "a1end",
+          "id": "b2n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "The topic fades without clarity.",
+          "next": "b2end2"
+        },
+        {
+          "id": "b2end2",
           "type": "end",
-          "summary": "End of Act 1."
+          "summary": "Idea has been introduced with varying stability."
         }
       ]
     }

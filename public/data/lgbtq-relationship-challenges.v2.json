@@ -25,39 +25,108 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 - Disclosure",
-      "start": "l1",
+      "title": "Act 1 — Disclosure",
+      "start": "stub1",
       "nodes": [
         {
-          "id": "l1",
+          "id": "stub1",
           "type": "line",
           "speaker": "narrator",
-          "text": "You consider how to share your relationship status.",
-          "next": "l2"
+          "text": "Act 1 exists in your repo; this is a portability stub.",
+          "next": "stubend"
         },
         {
-          "id": "l2",
+          "id": "stubend",
+          "type": "end",
+          "summary": "Continue to Act 2."
+        }
+      ]
+    },
+    {
+      "id": "act-2",
+      "title": "Act 2 — Support Network",
+      "start": "l2n1",
+      "nodes": [
+        {
+          "id": "l2n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You consider who can support healthy conversations.",
+          "next": "l2n2"
+        },
+        {
+          "id": "l2n2",
           "type": "choice",
-          "prompt": "Approach:",
+          "prompt": "Who do you involve?",
           "choices": [
             {
-              "label": "Plan supportive context",
-              "to": "l3",
+              "label": "Trusted family ally",
+              "to": "l2n3",
               "effects": {
-                "trust": 5,
-                "tension": -3
+                "trust": 4,
+                "tension": -4
               }
             },
             {
-              "label": "Share spontaneously",
-              "to": "l4",
+              "label": "School counselor",
+              "to": "l2n4",
               "effects": {
-                "tension": 4
+                "trust": 3
               }
             },
             {
-              "label": "Delay indefinitely",
-              "to": "l5",
+              "label": "No one; keep private",
+              "to": "l2n5",
+              "effects": {
+                "tension": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "l2n3",
+          "type": "line",
+          "speaker": "ally",
+          "text": "They help set inclusive language.",
+          "next": "l2n6"
+        },
+        {
+          "id": "l2n4",
+          "type": "line",
+          "speaker": "counselor",
+          "text": "They propose age‑appropriate framing.",
+          "next": "l2n6"
+        },
+        {
+          "id": "l2n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You proceed alone for now.",
+          "next": "l2n6"
+        },
+        {
+          "id": "l2n6",
+          "type": "choice",
+          "prompt": "Co‑parent sync",
+          "choices": [
+            {
+              "label": "Share a brief joint statement",
+              "to": "l2n7",
+              "effects": {
+                "tension": -5,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Inform separately",
+              "to": "l2n8",
+              "effects": {
+                "tension": 2
+              }
+            },
+            {
+              "label": "Delay again",
+              "to": "l2n9",
               "effects": {
                 "trust": -2
               }
@@ -65,30 +134,30 @@
           ]
         },
         {
-          "id": "l3",
+          "id": "l2n7",
           "type": "line",
-          "speaker": "narrator",
-          "text": "You align on wording.",
-          "next": "lend1"
+          "speaker": "ex",
+          "text": "You agree on kind, simple wording.",
+          "next": "l2end2"
         },
         {
-          "id": "l4",
+          "id": "l2n8",
           "type": "line",
           "speaker": "narrator",
-          "text": "Reactions vary.",
-          "next": "lend1"
+          "text": "Messages may conflict.",
+          "next": "l2end2"
         },
         {
-          "id": "l5",
+          "id": "l2n9",
           "type": "line",
           "speaker": "narrator",
-          "text": "Uncertainty lingers.",
-          "next": "lend1"
+          "text": "Uncertainty extends.",
+          "next": "l2end2"
         },
         {
-          "id": "lend1",
+          "id": "l2end2",
           "type": "end",
-          "summary": "End of Act 1."
+          "summary": "Support assembled to varying degrees."
         }
       ]
     }
