@@ -1,74 +1,67 @@
-/* sw.js - Offline cache with update message */
-const VERSION = 'v0.3.' + Date.now();
-const CORE_URLS = [
-  '/', '/index.html',
-  '/css/styles.css', '/css/ui.patch.css',
-  '/js/bootstrap.js', '/js/app.v2.js', '/js/engine/scenarioEngine.js', '/js/app.js', '/js/metrics.js',
-  '/data/v2-index.json', '/data/co-parenting-with-bipolar-partner.v2.json'
-];
+// Amorvia Service Worker
+// Deterministic version (bump on each deploy)
+const VERSION = 'v0.5-2025-08-19';
+const CACHE_NAME = `amorvia-${VERSION}`;
+
+// Precache essentials
+const CORE = ['/', '/index.html'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(VERSION);
-    await cache.addAll(CORE_URLS);
-    self.skipWaiting();
-  })());
+  event.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(CORE)).catch(() => null));
+  // keep waiting state for update prompt UX
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k)));
-    await self.clients.claim();
+    await Promise.all(keys.map(k => k.startsWith('amorvia-') && k !== CACHE_NAME ? caches.delete(k) : null));
   })());
+  self.clients.claim();
 });
 
-function isHTML(req){ return req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html'); }
-function isData(url){ return url.pathname.startsWith('/data/'); }
-function isStatic(url){ return url.pathname.match(/^\/(js|css|assets)\//); }
+async function networkFirst(req) {
+  try {
+    const fresh = await fetch(req);
+    const cache = await caches.open(CACHE_NAME);
+    cache.put(req, fresh.clone());
+    return fresh;
+  } catch (err) {
+    const cache = await caches.open(CACHE_NAME);
+    const hit = await cache.match(req, {ignoreVary:true});
+    if (hit) return hit;
+    throw err;
+  }
+}
+
+async function cacheFirst(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const hit = await cache.match(req, {ignoreVary:true});
+  if (hit) return hit;
+  const fresh = await fetch(req);
+  cache.put(req, fresh.clone());
+  return fresh;
+}
+
+async function staleWhileRevalidate(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req, {ignoreVary:true});
+  const fetching = fetch(req).then(res => { cache.put(req, res.clone()); return res; }).catch(() => null);
+  return cached || await fetching;
+}
 
 self.addEventListener('fetch', (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
+  const url = new URL(event.request.url);
+  if (url.origin !== location.origin) return;
 
-  if (isHTML(req)) {
-    event.respondWith((async () => {
-      try {
-        const net = await fetch(req);
-        const cache = await caches.open(VERSION);
-        cache.put(req, net.clone());
-        return net;
-      } catch (e) {
-        const cache = await caches.open(VERSION);
-        const cached = await cache.match(req) || await cache.match('/index.html');
-        return cached || new Response('Offline', { status: 503 });
-      }
-    })());
-    return;
-  }
+  const isNav = event.request.mode === 'navigate' || (event.request.destination === 'document');
+  const isData = url.pathname.startsWith('/data/');
+  const isStatic = /\/(?:js|css|assets)\//.test(url.pathname);
 
-  if (isData(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(VERSION);
-      const cached = await cache.match(req);
-      const netPromise = fetch(req).then(res => { if (res && res.ok) cache.put(req, res.clone()); return res; }).catch(() => null);
-      return cached || netPromise || new Response(JSON.stringify({ error: 'offline' }), { headers: {'content-type':'application/json'}, status: 200 });
-    })());
-    return;
-  }
-
-  if (isStatic(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(VERSION);
-      const cached = await cache.match(req);
-      const netPromise = fetch(req).then(res => { if (res && res.ok) cache.put(req, res.clone()); return res; }).catch(() => null);
-      return cached || netPromise || new Response('', { status: 504 });
-    })());
-    return;
-  }
+  if (isNav) { event.respondWith(networkFirst(event.request)); return; }
+  if (isData) { event.respondWith(staleWhileRevalidate(event.request)); return; }
+  if (isStatic){ event.respondWith(cacheFirst(event.request)); return; }
 });
 
-// Inform clients when a new version is ready
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
