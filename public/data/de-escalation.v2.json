@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "different-rules",
-  "title": "Scene: Different Rules",
+  "id": "de-escalation",
+  "title": "Scene: De-Escalation",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -34,7 +34,7 @@
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
+              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-nig",
               "to": "a1n1"
             }
           ]
@@ -43,7 +43,7 @@
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-night heavy topics.\\\",\\r\\n \\\"Confirm understanding in writing.\\\"\\r\\n ]\\r",
           "next": "end"
         },
         {

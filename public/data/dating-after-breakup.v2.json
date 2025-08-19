@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "different-rules",
-  "title": "Scene: Different Rules",
+  "id": "dating-after-breakup",
+  "title": "Dating After Breakup",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -34,7 +34,7 @@
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
+              "label": "\\u2013 The First Step Back into Dating**\\n- **Setting:** A friend invites you to",
               "to": "a1n1"
             }
           ]
@@ -43,7 +43,7 @@
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "\\u2013 The First Step Back into Dating**\\n- **Setting:** A friend invites you to a casua",
           "next": "end"
         },
         {

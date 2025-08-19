@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "different-rules",
-  "title": "Scene: Different Rules",
+  "id": "cultural",
+  "title": "Cultural",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -24,26 +24,26 @@
   },
   "acts": [
     {
-      "id": "act-1",
-      "title": "Act 1",
-      "start": "a1c1",
+      "id": "act-2",
+      "title": "Act 2",
+      "start": "a2c1",
       "nodes": [
         {
-          "id": "a1c1",
+          "id": "a2c1",
           "type": "choice",
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
-              "to": "a1n1"
+              "label": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can sel",
+              "to": "a2n1"
             }
           ]
         },
         {
-          "id": "a1n1",
+          "id": "a2n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can select what kind of message to send: \\n - Scientific data \\n - A cultural artifact (art, music, story) \\n - A decis",
           "next": "end"
         },
         {

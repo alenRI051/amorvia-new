@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "different-rules",
-  "title": "Scene: Different Rules",
+  "id": "new-introductions",
+  "title": "Scene: New Introductions",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -34,7 +34,7 @@
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
+              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expec",
               "to": "a1n1"
             }
           ]
@@ -43,7 +43,7 @@
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expectations with your ex.\\\",\\r\\n \\\"**Guided intro:** Short, neutral, child-focused activity f",
           "next": "end"
         },
         {

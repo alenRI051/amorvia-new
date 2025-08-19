@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "different-rules",
-  "title": "Scene: Different Rules",
+  "id": "co-parenting",
+  "title": "Co-Parenting",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -34,7 +34,7 @@
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, review",
+              "label": "of the co-parenting scenario, written in a way that allows the user to choose th",
               "to": "a1n1"
             }
           ]
@@ -43,7 +43,7 @@
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Unified rules**: One list for the household, reviewed weekly.\\\",\\r\\n \\\"**Zones of control**: Each parent leads in specific domains.\\\",\\r\\n",
+          "text": "of the co-parenting scenario, written in a way that allows the user to choose their role (mother or father) while still staying close to real-life emotion \\u2014 with a touch of dark humor, irony, and empathy to keep *Amorvia*\\u",
           "next": "end"
         },
         {
