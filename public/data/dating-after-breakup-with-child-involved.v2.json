@@ -25,20 +25,20 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — First Date",
-      "start": "stub1",
+      "title": "Act 1 — First Date (stub)",
+      "start": "d1",
       "nodes": [
         {
-          "id": "stub1",
+          "id": "d1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this is a portability stub.",
-          "next": "stubend"
+          "text": "Act 1 exists in your repo; this stub keeps continuity.",
+          "next": "d1e"
         },
         {
-          "id": "stubend",
+          "id": "d1e",
           "type": "end",
-          "summary": "Continue to Act 2."
+          "summary": "Proceed to Act 2."
         }
       ]
     },
@@ -107,7 +107,7 @@
         {
           "id": "b2n6",
           "type": "choice",
-          "prompt": "Follow‑up plan",
+          "prompt": "Follow-up plan",
           "choices": [
             {
               "label": "Check feelings later tonight",
@@ -117,7 +117,7 @@
               }
             },
             {
-              "label": "Ask co‑parent for alignment note",
+              "label": "Ask co-parent for alignment note",
               "to": "b2n8",
               "effects": {
                 "tension": -4,
@@ -144,7 +144,7 @@
           "id": "b2n8",
           "type": "line",
           "speaker": "ex",
-          "text": "Co‑parent agrees to keep language neutral.",
+          "text": "Co-parent agrees to keep language neutral.",
           "next": "b2end2"
         },
         {
@@ -158,6 +158,196 @@
           "id": "b2end2",
           "type": "end",
           "summary": "Idea has been introduced with varying stability."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 — First Reactions",
+      "start": "d3n1",
+      "nodes": [
+        {
+          "id": "d3n1",
+          "type": "line",
+          "speaker": "ex",
+          "text": "Your ex finds out and wants to talk.",
+          "next": "d3n2"
+        },
+        {
+          "id": "d3n2",
+          "type": "choice",
+          "prompt": "Tone of conversation",
+          "choices": [
+            {
+              "label": "Reassure child-first boundaries",
+              "to": "d3n3",
+              "effects": {
+                "tension": -6,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Defend your choices",
+              "to": "d3n4",
+              "effects": {
+                "tension": 5
+              }
+            },
+            {
+              "label": "Refuse to discuss",
+              "to": "d3n5",
+              "effects": {
+                "trust": -4
+              }
+            }
+          ]
+        },
+        {
+          "id": "d3n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You emphasize routines remain stable.",
+          "next": "d3n6"
+        },
+        {
+          "id": "d3n4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They feel shut out.",
+          "next": "d3n6"
+        },
+        {
+          "id": "d3n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "A stalemate forms.",
+          "next": "d3n6"
+        },
+        {
+          "id": "d3n6",
+          "type": "choice",
+          "prompt": "Information policy",
+          "choices": [
+            {
+              "label": "Share milestones, not details",
+              "to": "d3n7",
+              "effects": {
+                "trust": 3,
+                "tension": -2
+              }
+            },
+            {
+              "label": "Share everything",
+              "to": "d3n8",
+              "effects": {
+                "tension": 2
+              }
+            },
+            {
+              "label": "Share nothing",
+              "to": "d3n9",
+              "effects": {
+                "trust": -3
+              }
+            }
+          ]
+        },
+        {
+          "id": "d3n7",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You align on boundaries.",
+          "next": "d3end"
+        },
+        {
+          "id": "d3n8",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Oversharing risks more opinions.",
+          "next": "d3end"
+        },
+        {
+          "id": "d3n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Low trust persists.",
+          "next": "d3end"
+        },
+        {
+          "id": "d3end",
+          "type": "end",
+          "summary": "Reactions processed; ground rules sketched."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 — Resolution",
+      "start": "d4n1",
+      "nodes": [
+        {
+          "id": "d4n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You plan how to proceed the next month.",
+          "next": "d4n2"
+        },
+        {
+          "id": "d4n2",
+          "type": "choice",
+          "prompt": "Next steps",
+          "choices": [
+            {
+              "label": "Slow pace + periodic check-ins",
+              "to": "d4n3",
+              "effects": {
+                "tension": -5,
+                "trust": 5,
+                "childStress": -3
+              }
+            },
+            {
+              "label": "Accelerate integration",
+              "to": "d4n4",
+              "effects": {
+                "childStress": 3,
+                "tension": 3
+              }
+            },
+            {
+              "label": "Pause dating for now",
+              "to": "d4n5",
+              "effects": {
+                "tension": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "d4n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Everyone adjusts with clarity.",
+          "next": "d4end"
+        },
+        {
+          "id": "d4n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Some friction appears; you note to reassess.",
+          "next": "d4end"
+        },
+        {
+          "id": "d4n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You focus on stability.",
+          "next": "d4end"
+        },
+        {
+          "id": "d4end",
+          "type": "end",
+          "summary": "Resolution path chosen. Scenario complete."
         }
       ]
     }

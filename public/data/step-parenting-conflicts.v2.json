@@ -25,20 +25,20 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — New Role",
-      "start": "stub1",
+      "title": "Act 1 — New Role (stub)",
+      "start": "s1",
       "nodes": [
         {
-          "id": "stub1",
+          "id": "s1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this is a portability stub.",
-          "next": "stubend"
+          "text": "Act 1 exists in your repo; this stub keeps continuity.",
+          "next": "s1e"
         },
         {
-          "id": "stubend",
+          "id": "s1e",
           "type": "end",
-          "summary": "Continue to Act 2."
+          "summary": "Proceed to Act 2."
         }
       ]
     },
@@ -76,7 +76,7 @@
               }
             },
             {
-              "label": "Let the child self‑manage",
+              "label": "Let the child self-manage",
               "to": "s2n5",
               "effects": {
                 "childStress": -1,
@@ -109,7 +109,7 @@
         {
           "id": "s2n6",
           "type": "choice",
-          "prompt": "Alignment message to co‑parent?",
+          "prompt": "Alignment message to co-parent?",
           "choices": [
             {
               "label": "Share a short roles statement",
@@ -160,6 +160,194 @@
           "id": "s2end2",
           "type": "end",
           "summary": "Roles clarified to varying degrees."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 — Incident at Exchange",
+      "start": "s3n1",
+      "nodes": [
+        {
+          "id": "s3n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "At pickup, your partner reminds the child about chores; ex overhears.",
+          "next": "s3n2"
+        },
+        {
+          "id": "s3n2",
+          "type": "choice",
+          "prompt": "Respond to the moment",
+          "choices": [
+            {
+              "label": "Step in and own the reminder",
+              "to": "s3n3",
+              "effects": {
+                "tension": -4,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Let partner proceed",
+              "to": "s3n4",
+              "effects": {
+                "tension": 4
+              }
+            },
+            {
+              "label": "Apologize and change subject",
+              "to": "s3n5",
+              "effects": {
+                "trust": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "s3n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They accept your lead.",
+          "next": "s3n6"
+        },
+        {
+          "id": "s3n4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They object to partner’s authority.",
+          "next": "s3n6"
+        },
+        {
+          "id": "s3n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Tension subsides but feels unresolved.",
+          "next": "s3n6"
+        },
+        {
+          "id": "s3n6",
+          "type": "choice",
+          "prompt": "Clarify roles for future exchanges?",
+          "choices": [
+            {
+              "label": "Exchange scripts (who speaks when)",
+              "to": "s3n7",
+              "effects": {
+                "tension": -5,
+                "trust": 4
+              }
+            },
+            {
+              "label": "Partner stays quiet at exchanges",
+              "to": "s3n8",
+              "effects": {
+                "tension": -3
+              }
+            },
+            {
+              "label": "No change",
+              "to": "s3n9",
+              "effects": {
+                "tension": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "s3n7",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Everyone knows the cues.",
+          "next": "s3end"
+        },
+        {
+          "id": "s3n8",
+          "type": "line",
+          "speaker": "partner",
+          "text": "They agree to step back in that moment.",
+          "next": "s3end"
+        },
+        {
+          "id": "s3n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You’ll adapt case-by-case.",
+          "next": "s3end"
+        },
+        {
+          "id": "s3end",
+          "type": "end",
+          "summary": "Exchange protocol clarified."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 — Family Rules Agreement",
+      "start": "s4n1",
+      "nodes": [
+        {
+          "id": "s4n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You propose a simple two-home rules list.",
+          "next": "s4n2"
+        },
+        {
+          "id": "s4n2",
+          "type": "choice",
+          "prompt": "Draft approach",
+          "choices": [
+            {
+              "label": "Three rules, kid-language",
+              "to": "s4n3",
+              "effects": {
+                "childStress": -3,
+                "trust": 4
+              }
+            },
+            {
+              "label": "Long, detailed policy",
+              "to": "s4n4",
+              "effects": {
+                "tension": 2
+              }
+            },
+            {
+              "label": "Keep separate rules",
+              "to": "s4n5",
+              "effects": {
+                "trust": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "s4n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Everyone can remember the basics.",
+          "next": "s4end"
+        },
+        {
+          "id": "s4n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "It feels rigid; hard to maintain.",
+          "next": "s4end"
+        },
+        {
+          "id": "s4n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Consistency remains a challenge.",
+          "next": "s4end"
+        },
+        {
+          "id": "s4end",
+          "type": "end",
+          "summary": "Agreement level set. Scenario complete."
         }
       ]
     }

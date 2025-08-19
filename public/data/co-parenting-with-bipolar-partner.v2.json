@@ -25,26 +25,26 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — First Exchange",
-      "start": "stub1",
+      "title": "Act 1 — First Exchange (stub)",
+      "start": "a1n1",
       "nodes": [
         {
-          "id": "stub1",
+          "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this is a portability stub.",
-          "next": "stubend"
+          "text": "Act 1 exists in your repo; this stub keeps continuity.",
+          "next": "a1end"
         },
         {
-          "id": "stubend",
+          "id": "a1end",
           "type": "end",
-          "summary": "Continue to Act 2."
+          "summary": "Proceed to Act 2."
         }
       ]
     },
     {
       "id": "act-2",
-      "title": "Act 2 — De‑escalation at the Door",
+      "title": "Act 2 — De-escalation at the Door",
       "start": "a2n1",
       "nodes": [
         {
@@ -113,7 +113,7 @@
           "prompt": "A curveball: pickup bag is missing.",
           "choices": [
             {
-              "label": "Offer quick fix + follow‑up later",
+              "label": "Offer quick fix + follow-up later",
               "to": "a2n7",
               "effects": {
                 "tension": -6,
@@ -162,6 +162,252 @@
           "id": "a2end2",
           "type": "end",
           "summary": "Transfer completes. Tone set for future exchanges."
+        }
+      ]
+    },
+    {
+      "id": "act-3",
+      "title": "Act 3 — Boundary Setting",
+      "start": "a3n1",
+      "nodes": [
+        {
+          "id": "a3n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Later that week, a barrage of late-night messages arrives.",
+          "next": "a3n2"
+        },
+        {
+          "id": "a3n2",
+          "type": "choice",
+          "prompt": "How do you respond tonight?",
+          "choices": [
+            {
+              "label": "Pause and reply in the morning",
+              "to": "a3n3",
+              "effects": {
+                "tension": -5,
+                "trust": 2,
+                "childStress": -2
+              }
+            },
+            {
+              "label": "Send a firm boundary now",
+              "to": "a3n4",
+              "effects": {
+                "tension": 2,
+                "trust": 1
+              }
+            },
+            {
+              "label": "Argue point-by-point",
+              "to": "a3n5",
+              "effects": {
+                "tension": 10,
+                "trust": -6,
+                "childStress": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "a3n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You sleep; clarity helps in the morning.",
+          "next": "a3n6"
+        },
+        {
+          "id": "a3n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You write a short boundary message: no heavy topics after 9pm.",
+          "next": "a3n6"
+        },
+        {
+          "id": "a3n5",
+          "type": "line",
+          "speaker": "ex",
+          "text": "The exchange spirals briefly.",
+          "next": "a3n6"
+        },
+        {
+          "id": "a3n6",
+          "type": "choice",
+          "prompt": "Put structure in place?",
+          "choices": [
+            {
+              "label": "Suggest a shared calendar",
+              "to": "a3n7",
+              "effects": {
+                "trust": 4,
+                "tension": -4
+              }
+            },
+            {
+              "label": "Mediation check-in",
+              "to": "a3n8",
+              "effects": {
+                "trust": 3,
+                "tension": -3
+              }
+            },
+            {
+              "label": "Do nothing for now",
+              "to": "a3n9",
+              "effects": {
+                "tension": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "a3n7",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They agree to try calendar blocks.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3n8",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You pencil a short session for next week.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Things settle temporarily.",
+          "next": "a3end"
+        },
+        {
+          "id": "a3end",
+          "type": "end",
+          "summary": "Boundaries are clearer; next exchange should be smoother."
+        }
+      ]
+    },
+    {
+      "id": "act-4",
+      "title": "Act 4 — Resolution Plan",
+      "start": "a4n1",
+      "nodes": [
+        {
+          "id": "a4n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You propose a brief debrief after the next transfer.",
+          "next": "a4n2"
+        },
+        {
+          "id": "a4n2",
+          "type": "choice",
+          "prompt": "Focus of the debrief",
+          "choices": [
+            {
+              "label": "What worked + 1 improvement",
+              "to": "a4n3",
+              "effects": {
+                "trust": 5,
+                "tension": -6,
+                "childStress": -3
+              }
+            },
+            {
+              "label": "Logistics only",
+              "to": "a4n4",
+              "effects": {
+                "tension": -2
+              }
+            },
+            {
+              "label": "Rehash past grievances",
+              "to": "a4n5",
+              "effects": {
+                "tension": 10,
+                "trust": -8,
+                "childStress": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "a4n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "You both agree on a pickup script.",
+          "next": "a4n6"
+        },
+        {
+          "id": "a4n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "It’s efficient but not warmer.",
+          "next": "a4n6"
+        },
+        {
+          "id": "a4n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "It stalls the talk; you reset.",
+          "next": "a4n6"
+        },
+        {
+          "id": "a4n6",
+          "type": "choice",
+          "prompt": "Safety fallback?",
+          "choices": [
+            {
+              "label": "Neutral location if tone spikes",
+              "to": "a4n7",
+              "effects": {
+                "childStress": -4,
+                "tension": -4
+              }
+            },
+            {
+              "label": "Text-only for 72h after flare-ups",
+              "to": "a4n8",
+              "effects": {
+                "tension": -3
+              }
+            },
+            {
+              "label": "No fallback",
+              "to": "a4n9",
+              "effects": {
+                "tension": 3
+              }
+            }
+          ]
+        },
+        {
+          "id": "a4n7",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Plan feels solid and child-centered.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4n8",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You both can cool off when needed.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4n9",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Hope carries the plan without guardrails.",
+          "next": "a4end"
+        },
+        {
+          "id": "a4end",
+          "type": "end",
+          "summary": "Resolution plan set. Scenario complete."
         }
       ]
     }
