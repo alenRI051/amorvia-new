@@ -1,81 +1,46 @@
-/* Amorvia bootstrap - char/bg wiring, relative imports, health logs (ASCII) */
-(function(){
-  function $(id){ return document.getElementById(id); }
 
-  var bgImg = $('bgImg');
-  var leftImg = $('leftImg');
-  var rightImg = $('rightImg');
-  var bgSel = $('bgSelect');
-  var leftSel = $('leftSelect');
-  var rightSel = $('rightSelect');
+/* Amorvia bootstrap + extras/labs hook */
+const bgImg = document.getElementById('bgImg');
+if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
-  function applyCharAndBg(){
-    if (bgImg && bgSel && bgSel.value) bgImg.src = bgSel.value;
-    if (leftImg && leftSel && leftSel.value) leftImg.src = leftSel.value;
-    if (rightImg && rightSel && rightSel.value) rightImg.src = rightSel.value;
-  }
-  ['change'].forEach(function(evt){
-    if (bgSel) bgSel.addEventListener(evt, applyCharAndBg);
-    if (leftSel) leftSel.addEventListener(evt, applyCharAndBg);
-    if (rightSel) rightSel.addEventListener(evt, applyCharAndBg);
-  });
-  applyCharAndBg();
+const getMode = () => localStorage.getItem('amorvia:mode') || 'v2';
+const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
-  function getMode(){ return localStorage.getItem('amorvia:mode') || 'v2'; }
-  function setMode(m){ try{ localStorage.setItem('amorvia:mode', m); }catch{} }
+function applyModeToDOM(mode) {
+  document.body.classList.remove('mode-v1','mode-v2');
+  document.body.classList.add(mode === 'v2' ? 'mode-v2' : 'mode-v1');
+  document.querySelectorAll('.v1-only').forEach(el => { const on = mode === 'v1'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
+  document.querySelectorAll('.v2-only').forEach(el => { const on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
+}
 
-  function applyModeToDOM(mode){
-    document.body.classList.remove('mode-v1','mode-v2');
-    document.body.classList.add(mode === 'v2' ? 'mode-v2' : 'mode-v1');
-    document.querySelectorAll('.v1-only').forEach(function(el){ var on = mode === 'v1'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
-    document.querySelectorAll('.v2-only').forEach(function(el){ var on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
-  }
+const modeSel = document.getElementById('modeSelect');
+if (modeSel) {
+  modeSel.value = getMode();
+  applyModeToDOM(modeSel.value);
+  modeSel.addEventListener('change', () => { setMode(modeSel.value); location.reload(); });
+} else {
+  applyModeToDOM(getMode());
+}
 
-  var modeSel = $('modeSelect');
-  if (modeSel) {
-    var initial = getMode();
-    modeSel.value = initial;
-    applyModeToDOM(initial);
-    modeSel.addEventListener('change', function(){
-      setMode(modeSel.value);
-      location.reload();
-    });
-  } else {
-    applyModeToDOM(getMode());
-  }
-
-  // Health check - log if modules are served as HTML
-  (async function(){
-    try {
-      const urls = ['/js/app.v2.js','/js/engine/scenarioEngine.js','/js/app.js'];
-      for (const u of urls) {
-        const r = await fetch(u, { cache: 'no-store' });
-        const ct = r.headers.get('content-type') || '';
-        if (!ct.includes('javascript') && !ct.includes('module')) {
-          console.warn('[health] Non-JS content-type for', u, '=>', ct, r.status);
-        }
-      }
-    } catch (e) { /* ignore */ }
-  })();
-
-  var loaded = false;
-  async function loadChosenApp(){
-    if (loaded) return;
-    loaded = true;
-    var mode = getMode();
-    var url = mode === 'v2' ? './app.v2.js' : './app.js';
-    try{
-      console.debug('[bootstrap] importing', url, 'mode=', mode);
-      var m = await import(url);
-      if (mode === 'v1' && m && typeof m.init === 'function') m.init();
-    }catch(e){
-      console.error('Failed to start app. Module:', url, 'Mode:', mode, e);
+let loaded = false;
+async function loadChosenApp() {
+  if (loaded) return; loaded = true;
+  const mode = getMode();
+  try {
+    if (mode === 'v2') {
+      // Load v2 app then the labs addon
+      const app = await import('/js/app.v2.js').catch(()=>null);
+      await import('/js/addons/extras-tabs.js').catch(()=>null);
+      if (app && app.init) app.init();
+    } else {
+      const m = await import('/js/app.js');
+      if (m?.init) m.init();
     }
+  } catch (e) {
+    console.error('Failed to start app:', e);
   }
+}
 
-  ['click','keydown','pointerdown'].forEach(function(evt){
-    window.addEventListener(evt, loadChosenApp, { once: true });
-  });
-  if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 });
-  else setTimeout(loadChosenApp, 2000);
-})();
+['click','keydown','pointerdown'].forEach(evt => window.addEventListener(evt, loadChosenApp, { once: true }));
+if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 });
+else setTimeout(loadChosenApp, 2000);
