@@ -1,7 +1,99 @@
 {
   "version": 2,
-  "id": "placeholder",
-  "title": "Placeholder",
-  "meters": {},
-  "acts": []
+  "id": "different-rules",
+  "title": "Scene: Different Rules",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 25
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 15
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Discovery",
+      "start": "n1",
+      "nodes": [
+        {
+          "id": "n1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Your child returns and reports different rules at the other home.",
+          "next": "n2"
+        },
+        {
+          "id": "n2",
+          "type": "choice",
+          "prompt": "How do you approach your co-parent?",
+          "choices": [
+            {
+              "label": "Calm message proposing a shared list",
+              "to": "n3",
+              "effects": {
+                "tension": -5,
+                "trust": 6
+              }
+            },
+            {
+              "label": "Frustrated text about undermining",
+              "to": "n4",
+              "effects": {
+                "tension": 12,
+                "trust": -8,
+                "childStress": 3
+              }
+            },
+            {
+              "label": "Let it slide for a week",
+              "to": "n5",
+              "effects": {
+                "tension": -2,
+                "trust": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They suggest comparing current routines first.",
+          "next": "end"
+        },
+        {
+          "id": "n4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They get defensive; tone is tense.",
+          "next": "end"
+        },
+        {
+          "id": "n5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You track differences to discuss later.",
+          "next": "end"
+        },
+        {
+          "id": "end",
+          "type": "end",
+          "summary": "End of Act 1."
+        }
+      ]
+    }
+  ]
 }

@@ -1,7 +1,84 @@
 {
   "version": 2,
-  "id": "placeholder",
-  "title": "Placeholder",
-  "meters": {},
-  "acts": []
+  "id": "co-parenting-with-bipolar-partner",
+  "title": "Co-Parenting with Bipolar Partner",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 20
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 10
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 \u2014 First Exchange",
+      "start": "n1",
+      "nodes": [
+        {
+          "id": "n1",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They seem upset and speak in a confusing way.",
+          "next": "n2"
+        },
+        {
+          "id": "n2",
+          "type": "choice",
+          "prompt": "How do you respond?",
+          "choices": [
+            {
+              "label": "Stay calm and validate feelings",
+              "to": "n3",
+              "effects": {
+                "tension": -10,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Ignore and proceed",
+              "to": "n3",
+              "effects": {
+                "tension": 0
+              }
+            },
+            {
+              "label": "Respond emotionally",
+              "to": "n3",
+              "effects": {
+                "tension": 15,
+                "trust": -10,
+                "childStress": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You move toward the exchange.",
+          "next": "end"
+        },
+        {
+          "id": "end",
+          "type": "end",
+          "summary": "Act finished."
+        }
+      ]
+    }
+  ]
 }

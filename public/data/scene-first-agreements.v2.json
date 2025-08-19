@@ -1,7 +1,98 @@
 {
   "version": 2,
-  "id": "placeholder",
-  "title": "Placeholder",
-  "meters": {},
-  "acts": []
+  "id": "scene-first-agreements",
+  "title": "Scene: First Agreements",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 30
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 45
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 15
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Pathfinding",
+      "start": "fa1",
+      "nodes": [
+        {
+          "id": "fa1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Week 2 after separation. You both need a plan.",
+          "next": "fa2"
+        },
+        {
+          "id": "fa2",
+          "type": "choice",
+          "prompt": "Choose how to start:",
+          "choices": [
+            {
+              "label": "Mediation-first",
+              "to": "fa3",
+              "effects": {
+                "tension": -6,
+                "trust": 6
+              }
+            },
+            {
+              "label": "DIY + social worker validation",
+              "to": "fa4",
+              "effects": {
+                "tension": -3,
+                "trust": 3
+              }
+            },
+            {
+              "label": "Lawyered",
+              "to": "fa5",
+              "effects": {
+                "tension": 10,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "fa3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You book a mediator.",
+          "next": "faend"
+        },
+        {
+          "id": "fa4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You start a shared doc.",
+          "next": "faend"
+        },
+        {
+          "id": "fa5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Consultations begin.",
+          "next": "faend"
+        },
+        {
+          "id": "faend",
+          "type": "end",
+          "summary": "End of Act 1."
+        }
+      ]
+    }
+  ]
 }

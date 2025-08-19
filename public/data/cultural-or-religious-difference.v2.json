@@ -1,7 +1,98 @@
 {
   "version": 2,
-  "id": "placeholder",
-  "title": "Placeholder",
-  "meters": {},
-  "acts": []
+  "id": "cultural-or-religious-difference",
+  "title": "Cultural or Religious Difference",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 30
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 15
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Traditions Clash",
+      "start": "c1",
+      "nodes": [
+        {
+          "id": "c1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "A holiday approaches with different traditions.",
+          "next": "c2"
+        },
+        {
+          "id": "c2",
+          "type": "choice",
+          "prompt": "Frame the talk:",
+          "choices": [
+            {
+              "label": "Curiosity + must-haves list",
+              "to": "c3",
+              "effects": {
+                "tension": -5,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Insist on your way",
+              "to": "c4",
+              "effects": {
+                "tension": 10,
+                "trust": -6
+              }
+            },
+            {
+              "label": "Avoid and hope",
+              "to": "c5",
+              "effects": {
+                "tension": 2,
+                "trust": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "c3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They share theirs; overlap appears.",
+          "next": "cend"
+        },
+        {
+          "id": "c4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They feel dismissed.",
+          "next": "cend"
+        },
+        {
+          "id": "c5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Logistics get messy.",
+          "next": "cend"
+        },
+        {
+          "id": "cend",
+          "type": "end",
+          "summary": "End of Act 1."
+        }
+      ]
+    }
+  ]
 }

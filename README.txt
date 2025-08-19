@@ -1,19 +1,19 @@
-Amorvia Release (Beta + Metrics) — 2025-08-19
+Amorvia Fullstack Beta — 2025-08-19
 
 Includes:
-- public/data/*.v2.json (placeholders for structure) + v2-index.json (beta active)
-- Service Worker: public/sw.js + public/sw-register.js
-- Metrics: api/track.js (server) + public/js/metrics.js (client)
+- public/data/*.v2.json (5 beta scenarios + 2 extras) + v2-index.json (beta active)
+- public/sw.js + public/sw-register.js (VERSION v0.5-2025-08-19; BUILD 2025-08-19.2)
+- api/track.js (lightweight metrics endpoint)
+- public/js/metrics.js (ESM, also sets window.AmorviaMetrics)
+- public/js/metrics-autowire.js (wraps common engine methods)
 - vercel.json (rewrites + headers, incl. /sw.js no-cache)
-- public/index.metrics.snippet.html (where to place metrics script tag)
+- public/index.metrics.snippet.html (script tags to include)
 
-Install:
-1) Merge 'public/' and 'api/' into your project (preserve your existing index.html).
-2) Ensure 'vercel.json' merges in the rewrites+headers shown here.
-3) Add this tag to your HTML:
-   <script src="/js/metrics.js" defer></script>
-4) Deploy. Then check Vercel → Deployments → Function Logs for lines starting with [metrics].
-
-Notes:
-- Replace placeholder scenario files with your real content as needed (this package focuses on wiring).
-- Next SW deploy: bump VERSION in sw.js and BUILD in sw-register.js.
+Deploy:
+1) Merge 'public/' and 'api/' into your project root.
+2) Ensure 'vercel.json' merges or replaces your config as needed.
+3) In your HTML, either import metrics in app.v2.js (ESM) or add:
+   <script type="module" src="/js/metrics.js"></script>
+   <script type="module" src="/js/metrics-autowire.js"></script>
+4) Deploy. Then watch Vercel → Deployments → Function Logs for [metrics] lines.
+5) Future deploys: bump VERSION in sw.js and BUILD in sw-register.js to force SW update.

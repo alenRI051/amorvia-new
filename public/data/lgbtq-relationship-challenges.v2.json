@@ -1,7 +1,96 @@
 {
   "version": 2,
-  "id": "placeholder",
-  "title": "Placeholder",
-  "meters": {},
-  "acts": []
+  "id": "lgbtq-relationship-challenges",
+  "title": "LGBTQ+ Relationship Challenges",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "min": 0,
+      "max": 100,
+      "start": 28
+    },
+    "trust": {
+      "label": "Trust",
+      "min": 0,
+      "max": 100,
+      "start": 50
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "min": 0,
+      "max": 100,
+      "start": 18
+    }
+  },
+  "acts": [
+    {
+      "id": "act-1",
+      "title": "Act 1 - Disclosure",
+      "start": "l1",
+      "nodes": [
+        {
+          "id": "l1",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You consider how to share your relationship status.",
+          "next": "l2"
+        },
+        {
+          "id": "l2",
+          "type": "choice",
+          "prompt": "Approach:",
+          "choices": [
+            {
+              "label": "Plan supportive context",
+              "to": "l3",
+              "effects": {
+                "trust": 5,
+                "tension": -3
+              }
+            },
+            {
+              "label": "Share spontaneously",
+              "to": "l4",
+              "effects": {
+                "tension": 4
+              }
+            },
+            {
+              "label": "Delay indefinitely",
+              "to": "l5",
+              "effects": {
+                "trust": -2
+              }
+            }
+          ]
+        },
+        {
+          "id": "l3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You align on wording.",
+          "next": "lend1"
+        },
+        {
+          "id": "l4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Reactions vary.",
+          "next": "lend1"
+        },
+        {
+          "id": "l5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Uncertainty lingers.",
+          "next": "lend1"
+        },
+        {
+          "id": "lend1",
+          "type": "end",
+          "summary": "End of Act 1."
+        }
+      ]
+    }
+  ]
 }
