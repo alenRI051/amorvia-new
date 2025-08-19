@@ -25,20 +25,71 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — First Date (stub)",
-      "start": "d1",
+      "title": "Act 1 - First Date",
+      "start": "a1n1",
       "nodes": [
         {
-          "id": "d1",
+          "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this stub keeps continuity.",
-          "next": "d1e"
+          "text": "You plan to meet someone new for coffee.",
+          "next": "a1n2"
         },
         {
-          "id": "d1e",
+          "id": "a1n2",
+          "type": "choice",
+          "prompt": "Tell your ex?",
+          "choices": [
+            {
+              "label": "Neutral heads-up",
+              "to": "a1n3",
+              "effects": {
+                "trust": 4,
+                "tension": -3
+              }
+            },
+            {
+              "label": "Keep private",
+              "to": "a1n4",
+              "effects": {
+                "trust": -1
+              }
+            },
+            {
+              "label": "Pointed announcement",
+              "to": "a1n5",
+              "effects": {
+                "tension": 8,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1n3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They reply briefly.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1n4",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You keep it private.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1n5",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They react defensively.",
+          "next": "a1end"
+        },
+        {
+          "id": "a1end",
           "type": "end",
-          "summary": "Proceed to Act 2."
+          "summary": "End of Act 1."
         }
       ]
     },

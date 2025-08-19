@@ -25,20 +25,71 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — New Role (stub)",
+      "title": "Act 1 - New Role",
       "start": "s1",
       "nodes": [
         {
           "id": "s1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this stub keeps continuity.",
-          "next": "s1e"
+          "text": "Your partner takes a more active role; your ex is uneasy.",
+          "next": "s2"
         },
         {
-          "id": "s1e",
+          "id": "s2",
+          "type": "choice",
+          "prompt": "Frame the role:",
+          "choices": [
+            {
+              "label": "Supportive adult, not replacement",
+              "to": "s3",
+              "effects": {
+                "trust": 6,
+                "tension": -4
+              }
+            },
+            {
+              "label": "Equal authority in your home",
+              "to": "s4",
+              "effects": {
+                "tension": 6
+              }
+            },
+            {
+              "label": "Let it evolve without labels",
+              "to": "s5",
+              "effects": {
+                "trust": 1,
+                "tension": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "s3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "That helps; clarify discipline.",
+          "next": "send"
+        },
+        {
+          "id": "s4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They push back about consistency.",
+          "next": "send"
+        },
+        {
+          "id": "s5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You agree to check-in.",
+          "next": "send"
+        },
+        {
+          "id": "send",
           "type": "end",
-          "summary": "Proceed to Act 2."
+          "summary": "End of Act 1."
         }
       ]
     },

@@ -25,20 +25,58 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — First Exchange (stub)",
-      "start": "a1n1",
+      "title": "Act 1 — First Exchange",
+      "start": "n1",
       "nodes": [
         {
-          "id": "a1n1",
+          "id": "n1",
           "type": "line",
-          "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this stub keeps continuity.",
-          "next": "a1end"
+          "speaker": "ex",
+          "text": "They seem upset and speak in a confusing way.",
+          "next": "n2"
         },
         {
-          "id": "a1end",
+          "id": "n2",
+          "type": "choice",
+          "prompt": "How do you respond?",
+          "choices": [
+            {
+              "label": "Stay calm and validate feelings",
+              "to": "n3",
+              "effects": {
+                "tension": -10,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Ignore and proceed",
+              "to": "n3",
+              "effects": {
+                "tension": 0
+              }
+            },
+            {
+              "label": "Respond emotionally",
+              "to": "n3",
+              "effects": {
+                "tension": 15,
+                "trust": -10,
+                "childStress": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "n3",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "You move toward the exchange.",
+          "next": "end"
+        },
+        {
+          "id": "end",
           "type": "end",
-          "summary": "Proceed to Act 2."
+          "summary": "Act finished."
         }
       ]
     },

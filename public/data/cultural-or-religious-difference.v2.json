@@ -25,20 +25,72 @@
   "acts": [
     {
       "id": "act-1",
-      "title": "Act 1 — Traditions Clash (stub)",
-      "start": "c1s",
+      "title": "Act 1 - Traditions Clash",
+      "start": "c1",
       "nodes": [
         {
-          "id": "c1s",
+          "id": "c1",
           "type": "line",
           "speaker": "narrator",
-          "text": "Act 1 exists in your repo; this stub keeps continuity.",
-          "next": "c1e"
+          "text": "A holiday approaches with different traditions.",
+          "next": "c2"
         },
         {
-          "id": "c1e",
+          "id": "c2",
+          "type": "choice",
+          "prompt": "Frame the talk:",
+          "choices": [
+            {
+              "label": "Curiosity + must-haves list",
+              "to": "c3",
+              "effects": {
+                "tension": -5,
+                "trust": 5
+              }
+            },
+            {
+              "label": "Insist on your way",
+              "to": "c4",
+              "effects": {
+                "tension": 10,
+                "trust": -6
+              }
+            },
+            {
+              "label": "Avoid and hope",
+              "to": "c5",
+              "effects": {
+                "tension": 2,
+                "trust": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "c3",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They share theirs; overlap appears.",
+          "next": "cend"
+        },
+        {
+          "id": "c4",
+          "type": "line",
+          "speaker": "ex",
+          "text": "They feel dismissed.",
+          "next": "cend"
+        },
+        {
+          "id": "c5",
+          "type": "line",
+          "speaker": "narrator",
+          "text": "Logistics get messy.",
+          "next": "cend"
+        },
+        {
+          "id": "cend",
           "type": "end",
-          "summary": "Proceed to Act 2."
+          "summary": "End of Act 1."
         }
       ]
     },
