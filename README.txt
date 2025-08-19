@@ -1,20 +1,19 @@
-Amorvia — Extras Toggle + Labs Tab Bundle — 2025-08-19
+Amorvia — Themed Tabs (hover/active) — 2025-08-19
 
-Includes:
-- public/js/bootstrap.js  → loads v2 app and the extras/labs addon
-- public/js/addons/extras-tabs.js  → builds "Scenarios" and "Labs" tabs in the sidebar, plus a "Show extras in main" checkbox
-- public/data/v2-index.json  → beta scenarios + extras listed
+Files:
+- public/js/addons/extras-tabs.js  (themed, no inline styles, role=tablist tabs)
+- public/css/addons.css            (styles for tabs, list items, toggle)
 
 Install:
-1) Copy these files into your project (keep paths):
-   - /public/js/bootstrap.js
+1) Copy these files into your project, preserving paths:
    - /public/js/addons/extras-tabs.js
-   - /public/data/v2-index.json
-2) Deploy. With your auto-refresh SW, one reload will show the tabs.
-3) Behavior:
-   - "Scenarios" tab shows the 5 beta scenarios (optionally includes Extras if the checkbox is checked).
-   - "Labs" tab always shows Extras.
-   - Clicking an item dispatches 'amorvia:select-scenario' and attempts to call startScenarioById/startScenario if available.
+   - /public/css/addons.css
+2) Ensure your bootstrap loads the addon for v2 (you already have this):
+   await import('/js/addons/extras-tabs.js')
+   (The addon itself injects a <link rel="stylesheet" href="/css/addons.css"> so you don't need to edit HTML.)
+3) Deploy and reload once (auto-refresh SW).
 
-Rollback:
-- To disable the addon, revert bootstrap.js or delete /public/js/addons/extras-tabs.js.
+Notes:
+- Tabs use ARIA roles and support keyboard navigation (← → / ↑ ↓).
+- Focus states respect your global :focus-visible.
+- Colors tuned for your dark theme (#0f172a / #0f172a family).
