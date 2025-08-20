@@ -18,28 +18,12 @@
 .av-tab:active { transform: translateY(1px); }
 .av-tab:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; border-radius: 12px; }
 
-.av-tab.av-tab-active {
-  background: #1e293b;
-  border-color: #64748b;
-}
-
-.av-pane { }
+.av-tab.av-tab-active { background: #1e293b; border-color: #64748b; }
 .av-list { gap: 8px; }
-
-.av-item {
-  display: block;
-  width: 100%;
-  text-align: left;
-}
+.av-item { display: block; width: 100%; text-align: left; }
 .av-item:hover { border-color: #475569; background: #0f172a; }
 .av-item:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; border-radius: 12px; }
 
-/* Toggle */
-.av-toggle {
-  display:flex; align-items:center; gap:6px;
-  user-select: none;
-}
-.av-toggle input[type="checkbox"] {
-  width: 16px; height: 16px; accent-color: #2563eb;
-}
+.av-toggle { display:flex; align-items:center; gap:6px; user-select: none; }
+.av-toggle input[type="checkbox"] { width: 16px; height: 16px; accent-color: #2563eb; }
 .av-toggle-text { font-size: 12px; opacity: .9; }
