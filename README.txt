@@ -1,22 +1,29 @@
-Amorvia — Eager Tabs Bootstrap Patch — 2025-08-20
+Amorvia — Tabs + Anchor + Eager Bootstrap Bundle — 2025-08-20
 
-What this does
-- Eager-loads /js/addons/extras-tabs.js when mode === 'v2' so tabs appear immediately on refresh.
-- Keeps the heavier v2 app and art-loader lazily loaded on user interaction or idle.
+This bundle ensures the Scenarios/Labs tabs are visible immediately after refresh:
+- /js/addons/ensure-anchor.js creates #scenarioList if missing.
+- /js/addons/extras-tabs.js mounts tabs (waits briefly for the anchor; falls back if needed).
+- /js/bootstrap.js eagerly imports both when mode === 'v2', while keeping the heavy app lazy.
 
 Install
-1) Replace your /public/js/bootstrap.js with the one in this patch.
-2) Ensure these files exist in your project:
+1) Copy files to your project, preserving paths:
+   - /public/js/bootstrap.js
+   - /public/js/addons/ensure-anchor.js
    - /public/js/addons/extras-tabs.js
-   - /public/js/addons/art-loader.js
-   - (optional CSS for tabs: /public/css/addons.css — auto-injected by the addon)
-3) Confirm your sidebar has the anchor:
-   <div id="scenarioList" class="list v2-only"></div>
-4) Deploy and reload once.
+   - /public/css/addons.css   (theme for tabs; optional but recommended)
 
-Dev tip (if SW caches old scripts):
-- Temporarily change the eager import to: import('/js/addons/extras-tabs.js?t='+Date.now())
+2) (Permanent HTML anchor recommended) In your left sidebar add:
+   <!-- Amorvia: mount point for the Scenarios/Labs tabs addon -->
+<div id="scenarioList" class="list v2-only"></div>
 
-Smoke test (Console)
-  document.querySelector('#labsTabs')?.id           // → "labsTabs"
-  localStorage.getItem('amorvia:mode')              // → "v2"
+3) Deploy and reload once.
+
+Sanity checks (Console)
+   localStorage.getItem('amorvia:mode');                     // "v2"
+   (await fetch('/js/addons/ensure-anchor.js')).status;      // 200
+   (await fetch('/js/addons/extras-tabs.js')).status;        // 200
+   document.querySelector('#labsTabs') !== null;             // true after reload
+
+Notes
+- Service Worker caching: during dev you may add '?t='+Date.now() to imports in bootstrap.js.
+- The addons are CSP-safe, no inline styles or eval.

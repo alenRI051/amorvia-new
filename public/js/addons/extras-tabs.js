@@ -3,7 +3,7 @@
  * Extras/Labs Tabs Addon — anchor-aware
  * - Waits for #scenarioList with MutationObserver (SPA-safe)
  * - Replaces the anchor exactly if found; otherwise falls back to sidebar/body
- * - Reuses EXTRA_IDS consistently
+ * - Uses EXTRA_IDS for filtering
  * - CSP-safe: dynamically injects /css/addons.css
  */
 (function(){
@@ -105,34 +105,31 @@
     if (initial) select(initial.id);
   }
 
-  async function init(){
-    try{
-      ensureAddonCSS();
+  async function mount(){
+    ensureAddonCSS();
+    const anchor = await waitFor('#scenarioList', { timeout: 4000 });
+    const host = anchor || findSidebarFallback();
 
-      // Wait for the anchor; fallback to sidebar/body if it never appears
-      const anchor = await waitFor('#scenarioList', { timeout: 8000 });
-      const host = anchor || findSidebarFallback();
+    const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
+    const tabMain = h('button', { class:'av-tab', id:'tabMain', role:'tab', 'aria-selected':'true', 'aria-controls':'paneMain' }, 'Scenarios');
+    const tabLabs = h('button', { class:'av-tab', id:'tabLabs', role:'tab', 'aria-selected':'false', 'aria-controls':'paneLabs' }, 'Labs');
+    const spacer = h('div', { class:'av-tabs-spacer', 'aria-hidden':'true' });
+    const label = h('label', { class:'av-toggle' },
+      h('input', { type:'checkbox', id:'showExtrasInMain', 'aria-label':'Show extras in main' }),
+      h('span', { class:'av-toggle-text' }, 'Show extras in main')
+    );
+    tabs.append(tabMain, tabLabs, spacer, label);
 
-      // Build tabs shell
-      const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
-      const tabMain = h('button', { class:'av-tab', id:'tabMain', role:'tab', 'aria-selected':'true', 'aria-controls':'paneMain' }, 'Scenarios');
-      const tabLabs = h('button', { class:'av-tab', id:'tabLabs', role:'tab', 'aria-selected':'false', 'aria-controls':'paneLabs' }, 'Labs');
-      const spacer = h('div', { class:'av-tabs-spacer', 'aria-hidden':'true' });
-      const label = h('label', { class:'av-toggle' },
-        h('input', { type:'checkbox', id:'showExtrasInMain', 'aria-label':'Show extras in main' }),
-        h('span', { class:'av-toggle-text' }, 'Show extras in main')
-      );
-      tabs.append(tabMain, tabLabs, spacer, label);
+    const paneMain = h('div', { id:'paneMain', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabMain' });
+    const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
+    const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
 
-      const paneMain = h('div', { id:'paneMain', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabMain' });
-      const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
-      const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
+    if (anchor && anchor.parentElement) anchor.parentElement.replaceChild(wrap, anchor);
+    else host.appendChild(wrap);
 
-      if (anchor && anchor.parentElement) anchor.parentElement.replaceChild(wrap, anchor);
-      else host.appendChild(wrap);
+    setupTabs(tabs);
 
-      setupTabs(tabs);
-
+    try {
       const index = await fetchJSON('/data/v2-index.json');
       const all = Array.isArray(index.scenarios) ? index.scenarios : [];
       const beta = all.filter(s => !EXTRA_IDS.has(s.id));
@@ -145,11 +142,11 @@
       };
       cb && cb.addEventListener('change', update);
       update();
-    }catch(e){
-      console.warn('extras-tabs init failed:', e);
+    } catch (e) {
+      console.warn('extras-tabs: failed to load index', e);
     }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
+  else mount();
 })();
