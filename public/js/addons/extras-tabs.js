@@ -1,9 +1,9 @@
 
 /**
- * Extras/Labs Tabs Addon (themed) — robust mount
- * - Accessible tabs with role=tablist / role=tab / role=tabpanel
+ * Extras/Labs Tabs Addon (themed) — refined
+ * - Uses EXTRA_IDS consistently
+ * - Mounts exactly at #scenarioList if present (replaces anchor), else falls back to a sensible sidebar
  * - Loads /css/addons.css dynamically (CSP-safe)
- * - Mounts in #scenarioList if present; otherwise finds a sensible sidebar container
  */
 (function(){
   const EXTRA_IDS = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
@@ -31,9 +31,9 @@
   }
 
   function findListContainer(){
-    // 1) Prefer explicit anchor
+    // 1) Prefer explicit anchor: mount will replace this element
     const anchor = document.getElementById('scenarioList');
-    if (anchor && anchor.parentElement) return anchor.parentElement;
+    if (anchor) return anchor;
 
     // 2) Common sidebars
     const pick =
@@ -41,7 +41,6 @@
       document.querySelector('aside.sidebar') ||
       document.querySelector('aside') ||
       document.querySelector('.sidebar,.left,.left-pane,.panel');
-
     if (pick) return pick;
 
     // 3) Try near the scenario select
@@ -52,7 +51,7 @@
       if (host) return host;
     }
 
-    // 4) Last resort: body (top)
+    // 4) Last resort: body
     return document.body;
   }
 
@@ -114,7 +113,7 @@
       ensureAddonCSS();
       const host = findListContainer();
 
-      // Hide old #scenarioList if present (to avoid double UI)
+      // Hide old #scenarioList content if the anchor exists (we will replace it)
       const old = document.getElementById('scenarioList');
       if (old) { old.hidden = true; old.setAttribute('aria-hidden', 'true'); }
 
@@ -132,22 +131,30 @@
       const paneMain = h('div', { id:'paneMain', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabMain' });
       const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
       const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
-      host.appendChild(wrap);
+
+      // Mount: replace anchor if present, otherwise append
+      if (host && host.id === 'scenarioList' && host.parentElement) {
+        host.parentElement.replaceChild(wrap, host);
+      } else if (host) {
+        host.appendChild(wrap);
+      } else {
+        document.body.appendChild(wrap);
+      }
 
       setupTabs(tabs);
 
+      // Load index and split beta/extras with EXTRA_IDS
       const index = await fetchJSON('/data/v2-index.json');
       const all = Array.isArray(index.scenarios) ? index.scenarios : [];
-      const extras = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
-      const beta = all.filter(s => !extras.has(s.id));
-      const extrasList = all.filter(s => extras.has(s.id));
+      const beta = all.filter(s => !EXTRA_IDS.has(s.id));
+      const extrasList = all.filter(s => EXTRA_IDS.has(s.id));
 
       const cb = document.getElementById('showExtrasInMain');
       const update = () => {
-        renderList(paneMain, cb.checked ? beta.concat(extrasList) : beta);
+        renderList(paneMain, cb && cb.checked ? beta.concat(extrasList) : beta);
         renderList(paneLabs, extrasList);
       };
-      cb.addEventListener('change', update);
+      cb && cb.addEventListener('change', update);
       update();
     }catch(e){
       console.warn('extras-tabs init failed:', e);
