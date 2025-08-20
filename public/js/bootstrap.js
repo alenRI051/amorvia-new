@@ -22,25 +22,32 @@ if (modeSel) {
   applyModeToDOM(getMode());
 }
 
+ndow.addEventListener(evt, loadChosenApp, { once: true }));
+if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 });
+else setTimeout(loadChosenApp, 2000);
 let loaded = false;
 async function loadChosenApp() {
-  if (loaded) return; loaded = true;
+  if (loaded) return;
+  loaded = true;
   const mode = getMode();
   try {
     if (mode === 'v2') {
-      // Load v2 app then the labs addon
-      const app = await import('/js/app.v2.js').catch(()=>null);
-      await import('/js/addons/extras-tabs.js').catch(()=>null);
-      if (app && app.init) app.init();
+      // 1) Load the v2 app
+      const app = await import('/js/app.v2.js');
+
+      // 2) Load addons (Extras tabs + Art loader)
+      await Promise.allSettled([
+        import('/js/addons/extras-tabs.js'),
+        import('/js/addons/art-loader.js'),
+      ]);
+
+      // 3) Start the app
+      app?.init?.();
     } else {
       const m = await import('/js/app.js');
-      if (m?.init) m.init();
+      m?.init?.();
     }
   } catch (e) {
     console.error('Failed to start app:', e);
   }
 }
-
-['click','keydown','pointerdown'].forEach(evt => window.addEventListener(evt, loadChosenApp, { once: true }));
-if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 });
-else setTimeout(loadChosenApp, 2000);
