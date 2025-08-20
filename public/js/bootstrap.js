@@ -1,5 +1,4 @@
-
-/* Amorvia bootstrap + extras/labs + art */
+/* Amorvia bootstrap + extras/labs (eager) + art (lazy) */
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
@@ -30,6 +29,12 @@ if (modeSel) {
   applyModeToDOM(getMode());
 }
 
+/* ✅ Eager-mount the Scenarios/Labs tabs so they show right after refresh */
+if (getMode() === 'v2') {
+  // Add ?t=Date.now() while developing if SW caching is sticky.
+  import('/js/addons/extras-tabs.js').catch(e => console.warn('[extras-tabs]', e));
+}
+
 let loaded = false;
 async function loadChosenApp() {
   if (loaded) return;
@@ -37,16 +42,14 @@ async function loadChosenApp() {
   const mode = getMode();
   try {
     if (mode === 'v2') {
-      // 1) Load the v2 app
+      // Load the v2 app
       const app = await import('/js/app.v2.js');
 
-      // 2) Load addons (Extras tabs + Art loader)
+      // Light addons can remain lazy
       await Promise.allSettled([
-        import('/js/addons/extras-tabs.js'),
         import('/js/addons/art-loader.js'),
       ]);
 
-      // 3) Start the app
       app?.init?.();
     } else {
       const m = await import('/js/app.js');
@@ -57,7 +60,7 @@ async function loadChosenApp() {
   }
 }
 
-// Prime on first interaction or idle
+// Prime on first interaction or idle (keeps initial paint light)
 ['click','keydown','pointerdown'].forEach(evt =>
   window.addEventListener(evt, loadChosenApp, { once: true })
 );
