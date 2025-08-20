@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 200 300">
+  <title>Parent A — Calm</title>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#glow)" opacity="0.95">
+    <circle cx="100" cy="70" r="38" fill="#0f172a"/>
+    <rect x="55" y="108" rx="22" ry="22" width="90" height="120" fill="#0f172a"/>
+    <ellipse cx="100" cy="230" rx="42" ry="26" fill="#0f172a"/>
+    <ellipse cx="100" cy="160" rx="70" ry="95" fill="#10b981" opacity="0.2"/>
+  </g>
+</svg>
