@@ -1,16 +1,17 @@
 
 /**
- * Extras/Labs Tabs Addon (themed) — refined
- * - Uses EXTRA_IDS consistently
- * - Mounts exactly at #scenarioList if present (replaces anchor), else falls back to a sensible sidebar
- * - Loads /css/addons.css dynamically (CSP-safe)
+ * Extras/Labs Tabs Addon — anchor-aware
+ * - Waits for #scenarioList with MutationObserver (SPA-safe)
+ * - Replaces the anchor exactly if found; otherwise falls back to sidebar/body
+ * - Reuses EXTRA_IDS consistently
+ * - CSP-safe: dynamically injects /css/addons.css
  */
 (function(){
   const EXTRA_IDS = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
 
   function ensureAddonCSS(){
     const href = '/css/addons.css';
-    if (![...document.styleSheets].some(s => s.href && s.href.endsWith(href))) {
+    if (![...document.styleSheets].some(s => (s.href||'').endsWith(href))) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href + '?v=' + Date.now();
@@ -30,35 +31,34 @@
     return el;
   }
 
-  function findListContainer(){
-    // 1) Prefer explicit anchor: mount will replace this element
-    const anchor = document.getElementById('scenarioList');
-    if (anchor) return anchor;
+  function waitFor(selector, {timeout=8000, root=document}={}){
+    return new Promise(resolve => {
+      const found = root.querySelector(selector);
+      if (found) return resolve(found);
+      const obs = new MutationObserver(() => {
+        const el = root.querySelector(selector);
+        if (el) { obs.disconnect(); resolve(el); }
+      });
+      obs.observe(root, {childList:true, subtree:true});
+      if (timeout > 0) setTimeout(() => { obs.disconnect(); resolve(null); }, timeout);
+    });
+  }
 
-    // 2) Common sidebars
-    const pick =
+  function findSidebarFallback(){
+    return (
       document.querySelector('aside.card.panel') ||
       document.querySelector('aside.sidebar') ||
       document.querySelector('aside') ||
-      document.querySelector('.sidebar,.left,.left-pane,.panel');
-    if (pick) return pick;
-
-    // 3) Try near the scenario select
-    const scenSel =
-      document.querySelector('#scenarioSelect, select[name="scenario"], select#scenario, .scenario-select');
-    if (scenSel) {
-      const host = scenSel.closest('aside, .sidebar, .panel, .left, .column, .wrap, div');
-      if (host) return host;
-    }
-
-    // 4) Last resort: body
-    return document.body;
+      document.querySelector('.sidebar,.left,.left-pane,.panel') ||
+      document.querySelector('#scenarioSelect')?.closest('aside, .sidebar, .panel, .left, .column, .wrap, div') ||
+      document.body
+    );
   }
 
   async function fetchJSON(url){
-    const res = await fetch(url, { credentials: 'same-origin', cache: 'no-cache' });
+    const res = await fetch(url, { credentials:'same-origin', cache:'no-cache' });
     if (!res.ok) throw new Error('HTTP '+res.status+' for '+url);
-    return await res.json();
+    return res.json();
   }
 
   function openScenarioById(id){
@@ -73,35 +73,32 @@
 
   function renderList(container, scenarios){
     container.innerHTML = '';
-    const ul = h('div', { class: 'list av-list', role: 'list' });
+    const list = h('div', { class:'list av-list', role:'list' });
     scenarios.forEach(s => {
-      const btn = h('button', { class: 'button av-item', role:'listitem', 'data-id': s.id, onClick: ()=>openScenarioById(s.id) }, s.title || s.id);
-      ul.appendChild(btn);
+      const btn = h('button', { class:'button av-item', role:'listitem', 'data-id': s.id, onClick: ()=>openScenarioById(s.id) }, s.title || s.id);
+      list.appendChild(btn);
     });
-    container.appendChild(ul);
+    container.appendChild(list);
   }
 
   function setupTabs(tabsRoot){
-    const buttons = tabsRoot.querySelectorAll('[role="tab"]');
+    const tabs = tabsRoot.querySelectorAll('[role="tab"]');
     function select(id){
-      buttons.forEach(btn => {
-        const isActive = btn.id === id;
-        btn.setAttribute('aria-selected', String(isActive));
-        btn.classList.toggle('av-tab-active', isActive);
+      tabs.forEach(btn => {
+        const active = btn.id === id;
+        btn.setAttribute('aria-selected', String(active));
+        btn.classList.toggle('av-tab-active', active);
         const panel = document.getElementById(btn.getAttribute('aria-controls'));
-        if (panel) panel.hidden = !isActive;
+        if (panel) panel.hidden = !active;
       });
     }
-    buttons.forEach(btn => {
+    tabs.forEach(btn => {
       btn.addEventListener('click', () => select(btn.id));
-      btn.addEventListener('keydown', (e) => {
-        const arr = Array.from(buttons);
-        const idx = arr.indexOf(btn);
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          e.preventDefault(); arr[(idx+1)%arr.length].focus();
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          e.preventDefault(); arr[(idx-1+arr.length)%arr.length].focus();
-        }
+      btn.addEventListener('keydown', e => {
+        const arr = Array.from(tabs);
+        const i = arr.indexOf(btn);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); arr[(i+1)%arr.length].focus(); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); arr[(i-1+arr.length)%arr.length].focus(); }
       });
     });
     const initial = tabsRoot.querySelector('[role="tab"][aria-selected="true"]');
@@ -111,11 +108,10 @@
   async function init(){
     try{
       ensureAddonCSS();
-      const host = findListContainer();
 
-      // Hide old #scenarioList content if the anchor exists (we will replace it)
-      const old = document.getElementById('scenarioList');
-      if (old) { old.hidden = true; old.setAttribute('aria-hidden', 'true'); }
+      // Wait for the anchor; fallback to sidebar/body if it never appears
+      const anchor = await waitFor('#scenarioList', { timeout: 8000 });
+      const host = anchor || findSidebarFallback();
 
       // Build tabs shell
       const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
@@ -132,18 +128,11 @@
       const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
       const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
 
-      // Mount: replace anchor if present, otherwise append
-      if (host && host.id === 'scenarioList' && host.parentElement) {
-        host.parentElement.replaceChild(wrap, host);
-      } else if (host) {
-        host.appendChild(wrap);
-      } else {
-        document.body.appendChild(wrap);
-      }
+      if (anchor && anchor.parentElement) anchor.parentElement.replaceChild(wrap, anchor);
+      else host.appendChild(wrap);
 
       setupTabs(tabs);
 
-      // Load index and split beta/extras with EXTRA_IDS
       const index = await fetchJSON('/data/v2-index.json');
       const all = Array.isArray(index.scenarios) ? index.scenarios : [];
       const beta = all.filter(s => !EXTRA_IDS.has(s.id));
