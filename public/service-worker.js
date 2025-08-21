@@ -1,39 +1,85 @@
-/* Amorvia Service Worker — adds runtime cache for /data/*.v2.json */
-self.addEventListener('install', (e) => {
+/* Amorvia Service Worker — versioned caches, auto-activate */
+const SCRIPT_URL = (self.registration && self.registration.scriptURL) || self.location.href;
+const VERSION = new URL(SCRIPT_URL, self.location).searchParams.get('v') || 'dev';
+const PREFIX = 'amorvia';
+const STATIC = `${PREFIX}-static-${VERSION}`;
+const RUNTIME = `${PREFIX}-rt-${VERSION}`;
+
+// Core assets to precache (add ?v= to align cache keys)
+const v = (u) => {
+  try {
+    const url = new URL(u, self.location.origin);
+    url.searchParams.set('v', VERSION);
+    return url.toString();
+  } catch { return u; }
+};
+
+const CORE = [
+  '/', '/index.html',
+  v('/css/styles.css'),
+  v('/css/ui.patch.css'),
+  v('/js/bootstrap.js')
+];
+
+self.addEventListener('install', (event) => {
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(STATIC).then((cache) => cache.addAll(CORE)).catch(()=>{})
+  );
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil((async () => {
-    // simple cleanup of old caches if you ever change names
-    const keep = new Set(['v2-data']);
-    const names = await caches.keys();
-    await Promise.all(names.map(n => keep.has(n) ? null : caches.delete(n)));
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter((k) => k.startsWith(PREFIX) && !k.endsWith(VERSION))
+        .map((k) => caches.delete(k))
+    );
     await self.clients.claim();
   })());
 });
 
-// Stale-While-Revalidate for scenario v2 JSON
+// Strategy helpers
+const isHTMLNavigation = (req) => req.mode === 'navigate' ||
+  (req.headers.get('accept') || '').includes('text/html');
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
+  if (req.method !== 'GET') return;
+
   const url = new URL(req.url);
 
-  // Only handle same-origin .v2.json under /data/
-  if (url.origin === location.origin && url.pathname.startsWith('/data/') && url.pathname.endsWith('.v2.json')) {
+  // Navigation: network-first with cache fallback for offline
+  if (isHTMLNavigation(req)) {
     event.respondWith((async () => {
-      const cache = await caches.open('v2-data');
-      const cached = await cache.match(req);
-      const network = fetch(req).then(async (res) => {
-        if (res && res.ok) {
-          cache.put(req, res.clone()).catch(()=>{});
-        }
-        return res;
-      }).catch(() => null);
-
-      // Serve fast if cached, update in background
-      if (cached) return cached;
-      // Fallback to network (or offline error)
-      return (await network) || new Response(JSON.stringify({ error: 'offline' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+      try {
+        const net = await fetch(req);
+        const cache = await caches.open(RUNTIME);
+        cache.put(req, net.clone());
+        return net;
+      } catch {
+        const cache = await caches.open(RUNTIME);
+        const match = await cache.match(req) || await caches.match('/index.html');
+        return match || new Response('<h1>Offline</h1>', { headers: { 'Content-Type': 'text/html' } });
+      }
     })());
+    return;
   }
+
+  // Static assets: stale-while-revalidate
+  if (url.origin === location.origin && (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/css/') || url.pathname.startsWith('/js/'))) {
+    event.respondWith((async () => {
+      const cache = await caches.open(RUNTIME);
+      const cached = await cache.match(req);
+      const fetchPromise = fetch(req).then((net) => {
+        cache.put(req, net.clone());
+        return net;
+      }).catch(() => cached);
+      return cached || fetchPromise;
+    })());
+    return;
+  }
+
+  // Default: pass-through
 });

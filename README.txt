@@ -1,28 +1,31 @@
-Amorvia — Cache-Bust Tabs Patch — 2025-08-21
+Amorvia — SW Version Lock Patch — 2025-08-21
 
-Symptom
-- Tabs missing on normal reload, appear after Ctrl+F5. Cause: your current Vercel headers mark JS as "immutable" for 1 year, so the browser serves stale JS until a hard refresh.
+Goal
+- Use ONE version string for: service worker cache keys AND JS dynamic imports.
+- Ensures normal reload (no Ctrl+F5) picks up new tabs/UI immediately.
 
-Fix (two layers)
-1) **Import with version query** so URLs change on deploy (included bootstrap.js).
-   - Set AV_ASSET_V once per release to any new string.
-   - Eager imports:
-       import('/js/addons/ensure-anchor.js?v='+AV_ASSET_V).finally(() =>
-         import('/js/addons/extras-tabs.js?v='+AV_ASSET_V)
-       );
-   - App imports also use ?v= to keep everything in sync.
-
-2) **Header overrides** (recommended) so addons and bootstrap are not immutable:
-   - Merge vercel.headers.patch.json into your existing vercel.json (or use vercel.example.json as a base).
-   - Specifically:
-       /js/addons/(.*)  -> Cache-Control: no-cache
-       /js/bootstrap.js -> Cache-Control: no-cache
+Files
+- /public/version.json                      (single source of truth)
+- /public/sw-register.js                    (registers SW with ?v=version, sets window.__AMORVIA_VERSION__)
+- /public/service-worker.js                 (reads version from scriptURL, versioned caches, auto-activate)
+- /public/js/bootstrap.js                   (uses same version for dynamic imports)
 
 Install
-1) Replace /public/js/bootstrap.js with the file in this patch.
-2) (Recommended) Update vercel.json headers using vercel.headers.patch.json.
-3) Deploy. Normal reload should now show tabs without needing Ctrl+F5.
+1) Copy files into your project, preserving paths (replace existing sw-register.js, service-worker.js, bootstrap.js).
+2) Keep <script src="/sw-register.js" defer></script> in your HTML (already present).
+3) Deploy.
 
-Notes
-- For production, bump AV_ASSET_V on each release (e.g., 'beta-2025-08-21-02').
-- If you already have a Service Worker with versioning, you can also mirror the same version value.
+How it works
+- sw-register.js fetches /version.json, exposes window.__AMORVIA_VERSION__, registers /service-worker.js?v=<ver>.
+- The SW derives its VERSION from scriptURL (?v=...), names caches with that version, cleans old caches, and claims clients.
+- bootstrap.js imports all dynamic JS with ?v=<same ver> so URLs change alongside SW.
+
+Update flow
+- To roll a new release, bump "version" in /public/version.json (e.g., "beta-2025-08-21-02").
+- Deploy. On the next visit, the SW and dynamic imports use the new version; old caches are dropped automatically.
+
+Sanity checks (Console)
+  // After page load:
+  window.__AMORVIA_VERSION__                     // -> "beta-2025-08-21-01"
+  navigator.serviceWorker.controller !== null    // -> true (controlled by SW)
+  caches.keys().then(k=>console.log(k))          // -> ["amorvia-static-...", "amorvia-rt-..."]

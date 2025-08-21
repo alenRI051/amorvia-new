@@ -1,4 +1,4 @@
-/* Amorvia bootstrap — eager tabs/anchor with cache-busting, lazy app */
+/* Amorvia bootstrap — SW-linked version */
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
@@ -21,8 +21,9 @@ if (modeSel) {
   applyModeToDOM(getMode());
 }
 
-/* ✅ Eager: import with a version query so CDN/immutable caches won't serve stale files */
-const AV_ASSET_V = 'beta-2025-08-21-01';
+// Share the same version string as the SW (if sw-register ran already)
+const AV_ASSET_V = window.__AMORVIA_VERSION__ || 'beta-2025-08-21-01';
+
 if (getMode() === 'v2') {
   import('/js/addons/ensure-anchor.js?v=' + AV_ASSET_V)
     .finally(() => import('/js/addons/extras-tabs.js?v=' + AV_ASSET_V))
