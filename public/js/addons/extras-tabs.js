@@ -1,10 +1,10 @@
 
 /**
- * Extras/Labs Tabs Addon — anchor-aware
- * - Waits for #scenarioList with MutationObserver (SPA-safe)
- * - Replaces the anchor exactly if found; otherwise falls back to sidebar/body
+ * Extras/Labs Tabs Addon — v2 anchor aware
+ * - Prefers #scenarioListV2 (or a visible #scenarioList.v2-only)
+ * - Replaces the anchor exactly; falls back to sidebar/body
  * - Uses EXTRA_IDS for filtering
- * - CSP-safe: dynamically injects /css/addons.css
+ * - Injects /css/addons.css (CSP-safe)
  */
 (function(){
   const EXTRA_IDS = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
@@ -46,11 +46,11 @@
 
   function findSidebarFallback(){
     return (
+      document.querySelector('.v2-only .list')?.closest('aside, .sidebar, .panel, .left, .column, .wrap, div') ||
       document.querySelector('aside.card.panel') ||
       document.querySelector('aside.sidebar') ||
       document.querySelector('aside') ||
       document.querySelector('.sidebar,.left,.left-pane,.panel') ||
-      document.querySelector('#scenarioSelect')?.closest('aside, .sidebar, .panel, .left, .column, .wrap, div') ||
       document.body
     );
   }
@@ -107,7 +107,8 @@
 
   async function mount(){
     ensureAddonCSS();
-    const anchor = await waitFor('#scenarioList', { timeout: 4000 });
+    // Prefer v2 anchor; ignore v1 block
+    const anchor = await waitFor('#scenarioListV2, #scenarioList.v2-only', { timeout: 4000 });
     const host = anchor || findSidebarFallback();
 
     const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
