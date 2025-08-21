@@ -1,9 +1,9 @@
 
 /**
- * Extras/Labs Tabs Addon — insert-after + reparent guard
+ * Amorvia Extras/Labs Tabs — v0.6 re-parent guard
  * - Prefers #scenarioListV2 (or visible #scenarioList.v2-only)
- * - If tabs already exist, re-parent them under the anchor
- * - Otherwise create fresh UI and insert AFTER the anchor (keeps anchor)
+ * - If tabs already exist, re-parent them under the anchor (avoids duplicates)
+ * - Otherwise builds UI and inserts AFTER the anchor (keeps anchor in DOM)
  * - Injects /css/addons.css
  */
 (function(){
@@ -112,7 +112,7 @@
     const anchor = await waitFor('#scenarioListV2, #scenarioList.v2-only', { timeout: 4000 });
     const host = anchor || findSidebarFallback();
 
-    // If a tabs UI already exists, re-parent it under the anchor and bail
+    // If tabs UI already exists, re-parent it under the anchor and bail
     const existingTabs = document.getElementById('labsTabs');
     const existingWrap = existingTabs ? existingTabs.closest('.av-wrap') : null;
     if (existingWrap) {
@@ -121,7 +121,7 @@
       } else {
         host.appendChild(existingWrap);
       }
-      return; // avoid duplicating UI
+      return;
     }
 
     // Build fresh UI
@@ -140,7 +140,7 @@
     const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
 
     if (anchor && anchor.parentElement) {
-      anchor.insertAdjacentElement('afterend', wrap); // keep anchor
+      anchor.insertAdjacentElement('afterend', wrap);
     } else {
       host.appendChild(wrap);
     }

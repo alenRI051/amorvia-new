@@ -1,14 +1,23 @@
-Amorvia — Tabs Re-parent Guard Patch — 2025-08-21
+Amorvia — BETA Ready Delta Pack — 2025-08-21
 
-This version keeps the anchor, inserts tabs AFTER it, and if tabs already exist it moves them under the anchor (no duplicates).
+This zip bundles the final v2 Scenarios/Labs tabs with anchor helpers and theme.
 
-Install
-1) Replace /public/js/addons/extras-tabs.js with the file in this zip.
-2) Reload once. If the SW caches, import with '?t='+Date.now() one time.
+Files to copy (preserve paths):
+- /public/js/addons/extras-tabs.js
+- /public/js/addons/ensure-anchor.js
+- /public/css/addons.css
 
-Checks (Console)
+Bootstrap (ensure eager import):
+  import('/js/addons/ensure-anchor.js').finally(() =>
+    import('/js/addons/extras-tabs.js')
+  );
+
+HTML (under the v2 Scenario select):
+  <!-- Amorvia: mount point for the Scenarios/Labs tabs addon (v2) -->
+  <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
+
+Checks (Console):
   localStorage.getItem('amorvia:mode');            // "v2"
-  !!document.getElementById('scenarioListV2');     // true
   !!document.querySelector('#labsTabs');           // true
-  document.getElementById('scenarioPicker').nextElementSibling?.id === 'scenarioListV2' // anchor placement
-  document.getElementById('scenarioListV2').nextElementSibling?.classList.contains('av-wrap') // tabs right after anchor
+  document.getElementById('scenarioListV2')
+    ?.nextElementSibling?.classList.contains('av-wrap'); // true

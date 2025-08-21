@@ -1,4 +1,7 @@
-// /public/js/addons/ensure-anchor.js
+
+/**
+ * ensure-anchor.js — ensures a v2 anchor exists below the Scenario select
+ */
 (function(){
   function ensureAnchor(){
     if (document.getElementById('scenarioListV2')) return;
@@ -12,17 +15,13 @@
     if (sel) {
       sel.insertAdjacentElement('afterend', anchor);
     } else {
-      // fallback (still v2-only if possible)
       const host =
         document.querySelector('aside.card.panel .v2-only') ||
         document.querySelector('.v2-only') ||
         document.body;
       host.appendChild(anchor);
     }
-
-    document.dispatchEvent(new CustomEvent('amorvia:anchor-ready'));
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureAnchor);
   else ensureAnchor();
 })();
-

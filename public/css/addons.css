@@ -1,12 +1,12 @@
 
-/* Amorvia Tabs theme */
-.av-wrap { display: grid; gap: 8px; }
-.av-tabs { display:flex; align-items:center; gap:8px; border-bottom:1px solid #1f2937; padding: 4px 0; }
-.av-tabs-spacer { flex:1; }
-.av-tab { appearance:none; border:1px solid #334155; background:#111827; color:#e5e7eb; border-radius:10px; padding:6px 12px; cursor:pointer; }
-.av-tab:hover { background:#0f172a; border-color:#475569; }
-.av-tab.av-tab-active { background:#1e293b; border-color:#64748b; }
-.av-pane .av-item { width:100%; text-align:left; }
-.av-item:hover { background:#0f172a; border-color:#475569; }
-.av-toggle { display:flex; align-items:center; gap:6px; }
-.av-toggle input[type="checkbox"] { accent-color:#2563eb; }
+/* Amorvia addons.css — tabs theme */
+.av-wrap { margin-top: 8px; }
+.av-tabs { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.av-tab { padding: 6px 10px; border: 1px solid #334155; background: #0b1220; color: #e5e7eb; border-radius: 10px; cursor: pointer; }
+.av-tab:hover { background: #101827; }
+.av-tab-active { background: #1f2937; border-color: #475569; }
+.av-tabs-spacer { flex: 1; }
+.av-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #94a3b8; }
+.av-pane[hidden] { display: none; }
+.av-list { display: grid; gap: 6px; max-height: 60vh; overflow: auto; }
+.av-item { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
