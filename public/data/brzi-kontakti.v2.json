@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "brzi-kontakti",
   "title": "Brzi kontakti",
   "acts": [

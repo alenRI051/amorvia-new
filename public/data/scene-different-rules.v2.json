@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "scene-different-rules",
   "title": "Scene: Different Rules",
   "acts": [

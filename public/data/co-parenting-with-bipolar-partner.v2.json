@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "co-parenting-with-bipolar-partner",
   "title": "Co-Parenting with Bipolar Partner",
   "acts": [

@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "scene-new-introductions",
   "title": "Scene: New Introductions",
   "acts": [

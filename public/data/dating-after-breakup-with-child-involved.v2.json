@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
   "acts": [

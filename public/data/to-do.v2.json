@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "to-do",
   "title": "To Do",
   "acts": [

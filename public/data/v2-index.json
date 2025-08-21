@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2.index",
+  "version": 2,
   "scenarios": [
     {
       "id": "scene-first-agreements",

@@ -1,4 +1,6 @@
 {
+  "schema": "scenario.v2",
+  "version": 2,
   "id": "scene-de-escalation",
   "title": "Scene: De-escalation",
   "acts": [
