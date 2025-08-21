@@ -1,56 +1,13 @@
 {
-  "version": 2,
   "id": "scene-new-introductions",
   "title": "Scene: New Introductions",
-  "meters": {
-    "tension": {
-      "label": "Tension",
-      "min": 0,
-      "max": 100,
-      "start": 25
-    },
-    "trust": {
-      "label": "Trust",
-      "min": 0,
-      "max": 100,
-      "start": 50
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "min": 0,
-      "max": 100,
-      "start": 15
-    }
-  },
   "acts": [
     {
-      "id": "act-1",
       "title": "Act 1",
-      "start": "a1c1",
-      "nodes": [
-        {
-          "id": "a1c1",
-          "type": "choice",
-          "prompt": "Choose a path",
-          "choices": [
-            {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expec",
-              "to": "a1n1"
-            }
-          ]
-        },
-        {
-          "id": "a1n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expectations with your ex.\\\",\\r\\n \\\"**Guided intro:** Short, neutral, child-focused activity f",
-          "next": "end"
-        },
-        {
-          "id": "end",
-          "type": "end",
-          "summary": "End of act."
-        }
+      "steps": [
+        "**Slow lane:** Wait 3–6 months and discuss expectations with your ex.",
+        "**Guided intro:** Short, neutral, child-focused activity first.",
+        "**Not yet:** Prioritize child's stability; revisit in Act 3."
       ]
     }
   ]

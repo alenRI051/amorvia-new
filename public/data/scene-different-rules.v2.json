@@ -1,86 +1,13 @@
 {
-  "version": 2,
   "id": "scene-different-rules",
   "title": "Scene: Different Rules",
-  "meters": {
-    "tension": {
-      "label": "Tension",
-      "start": 25
-    },
-    "trust": {
-      "label": "Trust",
-      "start": 45
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 15
-    }
-  },
   "acts": [
     {
-      "id": "a1",
-      "title": "Act 1 \u2014 Aligning House Rules",
-      "start": "n1",
-      "nodes": [
-        {
-          "id": "n1",
-          "type": "line",
-          "text": "Your child says: \u201cMom lets me stay up late.\u201d You and your ex have different bedtimes.",
-          "next": "n2"
-        },
-        {
-          "id": "n2",
-          "type": "choice",
-          "prompt": "What approach do you propose?",
-          "choices": [
-            {
-              "label": "**Unified rules:** One list for both homes, reviewed weekly.",
-              "effects": {
-                "trust": 8,
-                "tension": -6
-              },
-              "to": "n3"
-            },
-            {
-              "label": "**Zones of control:** Each parent leads specific domains (e.g., meals vs. bedtime).",
-              "effects": {
-                "trust": 4,
-                "tension": -3
-              },
-              "to": "n4"
-            },
-            {
-              "label": "**Coach mode:** Agree on consistent rewards and consequences instead of fixed curfews.",
-              "effects": {
-                "childStress": -6,
-                "trust": 3
-              },
-              "to": "n5"
-            }
-          ]
-        },
-        {
-          "id": "n3",
-          "type": "line",
-          "text": "You draft a shared rule list and commit to revisit on Sundays.",
-          "next": "end"
-        },
-        {
-          "id": "n4",
-          "type": "line",
-          "text": "You split decision areas to avoid clashes. Each parent informs the other of changes.",
-          "next": "end"
-        },
-        {
-          "id": "n5",
-          "type": "line",
-          "text": "You define a consistent reward/consequence ladder tied to behavior.",
-          "next": "end"
-        },
-        {
-          "id": "end",
-          "type": "end"
-        }
+      "title": "Act 1",
+      "steps": [
+        "**Unified rules**: One list for the household, reviewed weekly.",
+        "**Zones of control**: Each parent leads in specific domains.",
+        "**Coach mode**: Agree on consistent consequences and rewards."
       ]
     }
   ]

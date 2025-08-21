@@ -1,56 +1,13 @@
 {
-  "version": 2,
   "id": "scene-de-escalation",
-  "title": "Scene: De-Escalation",
-  "meters": {
-    "tension": {
-      "label": "Tension",
-      "min": 0,
-      "max": 100,
-      "start": 25
-    },
-    "trust": {
-      "label": "Trust",
-      "min": 0,
-      "max": 100,
-      "start": 50
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "min": 0,
-      "max": 100,
-      "start": 15
-    }
-  },
+  "title": "Scene: De-escalation",
   "acts": [
     {
-      "id": "act-1",
       "title": "Act 1",
-      "start": "a1c1",
-      "nodes": [
-        {
-          "id": "a1c1",
-          "type": "choice",
-          "prompt": "Choose a path",
-          "choices": [
-            {
-              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-nig",
-              "to": "a1n1"
-            }
-          ]
-        },
-        {
-          "id": "a1n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-night heavy topics.\\\",\\r\\n \\\"Confirm understanding in writing.\\\"\\r\\n ]\\r",
-          "next": "end"
-        },
-        {
-          "id": "end",
-          "type": "end",
-          "summary": "End of act."
-        }
+      "steps": [
+        "Use brief, concrete messages.",
+        "Avoid late-night heavy topics.",
+        "Confirm understanding in writing."
       ]
     }
   ]

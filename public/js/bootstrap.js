@@ -21,8 +21,7 @@ if (modeSel) {
   applyModeToDOM(getMode());
 }
 
-// Share the same version string as the SW (if sw-register ran already)
-const AV_ASSET_V = window.__AMORVIA_VERSION__ || 'beta-2025-08-21-01';
+const AV_ASSET_V = window.__AMORVIA_VERSION__ || 'beta-2025-08-21';
 
 if (getMode() === 'v2') {
   import('/js/addons/ensure-anchor.js?v=' + AV_ASSET_V)

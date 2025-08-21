@@ -1,31 +1,23 @@
-Amorvia — SW Version Lock Patch — 2025-08-21
+Amorvia — Full BETA bundle (beta-2025-08-21)
 
-Goal
-- Use ONE version string for: service worker cache keys AND JS dynamic imports.
-- Ensures normal reload (no Ctrl+F5) picks up new tabs/UI immediately.
+Included
+- index.html (v1 + v2 UIs, v2 anchor ready)
+- css: styles.css, ui.patch.css, addons.css
+- js: bootstrap (version-locked), app.v2.js, app.js (v1 stub)
+- addons: ensure-anchor.js, extras-tabs.js (insert-after + reparent), art-loader.js
+- data: v2-index.json + scenario docs (9 scenarios)
+- PWA: version.json, sw-register.js, service-worker.js, manifest.json, favicon.png
+- assets: backgrounds/room.svg, characters/{male,female}_casual.svg
+- vercel.json (no-cache for bootstrap/addons/sw, immutable for assets/css)
+- api/track.js (204 stub)
 
-Files
-- /public/version.json                      (single source of truth)
-- /public/sw-register.js                    (registers SW with ?v=version, sets window.__AMORVIA_VERSION__)
-- /public/service-worker.js                 (reads version from scriptURL, versioned caches, auto-activate)
-- /public/js/bootstrap.js                   (uses same version for dynamic imports)
+Deploy
+1) Upload the contents of /public (and /api + vercel.json if using Vercel) to your root.
+2) Bump /public/version.json "version" each release.
+3) Normal reload picks up new JS; tabs visible without Ctrl+F5.
 
-Install
-1) Copy files into your project, preserving paths (replace existing sw-register.js, service-worker.js, bootstrap.js).
-2) Keep <script src="/sw-register.js" defer></script> in your HTML (already present).
-3) Deploy.
-
-How it works
-- sw-register.js fetches /version.json, exposes window.__AMORVIA_VERSION__, registers /service-worker.js?v=<ver>.
-- The SW derives its VERSION from scriptURL (?v=...), names caches with that version, cleans old caches, and claims clients.
-- bootstrap.js imports all dynamic JS with ?v=<same ver> so URLs change alongside SW.
-
-Update flow
-- To roll a new release, bump "version" in /public/version.json (e.g., "beta-2025-08-21-02").
-- Deploy. On the next visit, the SW and dynamic imports use the new version; old caches are dropped automatically.
-
-Sanity checks (Console)
-  // After page load:
-  window.__AMORVIA_VERSION__                     // -> "beta-2025-08-21-01"
-  navigator.serviceWorker.controller !== null    // -> true (controlled by SW)
-  caches.keys().then(k=>console.log(k))          // -> ["amorvia-static-...", "amorvia-rt-..."]
+Smoke test
+- Load /. DevTools console:
+  window.__AMORVIA_VERSION__                // -> "beta-2025-08-21"
+  !!document.querySelector('#labsTabs')     // -> true
+  fetch('/api/track', {method:'POST'})    // -> 204

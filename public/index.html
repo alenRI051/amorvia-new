@@ -18,7 +18,7 @@
 
   <main id="main" class="wrap">
     <aside class="card panel">
-      <!-- Classic v1 UI -->
+      <!-- v1 -->
       <div class="v1-only" hidden aria-hidden="true">
         <label class="sr-only" for="search">Search scenarios</label>
         <input id="search" class="input" placeholder="Search scenarios..." autocomplete="off"/>
@@ -29,16 +29,12 @@
         </div>
       </div>
 
-      <!-- Branching v2 UI -->
+      <!-- v2 -->
       <div class="v2-only">
         <label for="scenarioPicker">Scenario</label>
-        <select id="scenarioPicker" class="select">
-          <option value="co-parenting-with-bipolar-partner">Co-Parenting with Bipolar Partner</option>
-        </select>
-
-        <!-- Amorvia: mount point for the Scenarios/Labs tabs addon (v2) -->
-  <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
-        
+        <select id="scenarioPicker" class="select"></select>
+        <!-- Anchor for tabs -->
+        <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
         <button id="restartAct" class="button mt8" type="button">Restart Act</button>
       </div>
     </aside>
