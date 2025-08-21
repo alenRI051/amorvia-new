@@ -1,10 +1,10 @@
 
 /**
- * Extras/Labs Tabs Addon — v2 anchor aware
- * - Prefers #scenarioListV2 (or a visible #scenarioList.v2-only)
- * - Replaces the anchor exactly; falls back to sidebar/body
- * - Uses EXTRA_IDS for filtering
- * - Injects /css/addons.css (CSP-safe)
+ * Extras/Labs Tabs Addon — insert-after + reparent guard
+ * - Prefers #scenarioListV2 (or visible #scenarioList.v2-only)
+ * - If tabs already exist, re-parent them under the anchor
+ * - Otherwise create fresh UI and insert AFTER the anchor (keeps anchor)
+ * - Injects /css/addons.css
  */
 (function(){
   const EXTRA_IDS = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
@@ -107,10 +107,24 @@
 
   async function mount(){
     ensureAddonCSS();
+
     // Prefer v2 anchor; ignore v1 block
     const anchor = await waitFor('#scenarioListV2, #scenarioList.v2-only', { timeout: 4000 });
     const host = anchor || findSidebarFallback();
 
+    // If a tabs UI already exists, re-parent it under the anchor and bail
+    const existingTabs = document.getElementById('labsTabs');
+    const existingWrap = existingTabs ? existingTabs.closest('.av-wrap') : null;
+    if (existingWrap) {
+      if (anchor) {
+        anchor.insertAdjacentElement('afterend', existingWrap);
+      } else {
+        host.appendChild(existingWrap);
+      }
+      return; // avoid duplicating UI
+    }
+
+    // Build fresh UI
     const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
     const tabMain = h('button', { class:'av-tab', id:'tabMain', role:'tab', 'aria-selected':'true', 'aria-controls':'paneMain' }, 'Scenarios');
     const tabLabs = h('button', { class:'av-tab', id:'tabLabs', role:'tab', 'aria-selected':'false', 'aria-controls':'paneLabs' }, 'Labs');
@@ -125,8 +139,11 @@
     const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
     const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
 
-    if (anchor && anchor.parentElement) anchor.parentElement.replaceChild(wrap, anchor);
-    else host.appendChild(wrap);
+    if (anchor && anchor.parentElement) {
+      anchor.insertAdjacentElement('afterend', wrap); // keep anchor
+    } else {
+      host.appendChild(wrap);
+    }
 
     setupTabs(tabs);
 

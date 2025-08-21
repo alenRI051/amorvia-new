@@ -1,19 +1,14 @@
-Amorvia — V2 Anchor + Tabs Patch — 2025-08-21
+Amorvia — Tabs Re-parent Guard Patch — 2025-08-21
 
-Files
-- /public/js/addons/extras-tabs.js     (prefers #scenarioListV2, replaces anchor, CSS auto-inject)
-- /public/js/addons/ensure-anchor.js   (creates #scenarioListV2 if missing)
-- /public/snippets/scenarioListV2-anchor.html
+This version keeps the anchor, inserts tabs AFTER it, and if tabs already exist it moves them under the anchor (no duplicates).
 
 Install
-1) Copy the JS files into your project (preserve paths).
-2) (Recommended) Add this under the v2 Scenario select in your sidebar:
-   <!-- Amorvia: mount point for the Scenarios/Labs tabs addon (v2) -->
-<div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
-3) Ensure your bootstrap eagerly imports:
-   import('/js/addons/ensure-anchor.js').finally(() => import('/js/addons/extras-tabs.js'));
+1) Replace /public/js/addons/extras-tabs.js with the file in this zip.
+2) Reload once. If the SW caches, import with '?t='+Date.now() one time.
 
-Checks
-   (await fetch('/js/addons/extras-tabs.js')).status   // 200
-   document.getElementById('scenarioListV2') !== null  // true after reload
-   document.querySelector('#labsTabs') !== null        // tabs visible
+Checks (Console)
+  localStorage.getItem('amorvia:mode');            // "v2"
+  !!document.getElementById('scenarioListV2');     // true
+  !!document.querySelector('#labsTabs');           // true
+  document.getElementById('scenarioPicker').nextElementSibling?.id === 'scenarioListV2' // anchor placement
+  document.getElementById('scenarioListV2').nextElementSibling?.classList.contains('av-wrap') // tabs right after anchor
