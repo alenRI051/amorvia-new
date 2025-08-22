@@ -1,1 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://amorvia.eu/schema/scenario.v2.schema.json",
+  "title": "Amorvia Scenario v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "version", "id", "title", "acts"],
+  "properties": {
+    "schema": { "const": "scenario.v2", "description": "Document kind" },
+    "version": { "const": 2, "description": "Schema version" },
+    "id": { "$ref": "#/$defs/idString", "description": "Scenario identifier (slug)" },
+    "title": { "type": "string", "minLength": 1 },
+    "meters": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/meterName" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string", "minLength": 1 },
+          "start": { "type": "number", "minimum": 0, "maximum": 100 },
+          "min":   { "type": "number", "minimum": 0, "maximum": 100 },
+          "max":   { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      },
+      "description": "Optional meters (e.g., trust, tension). Runtime should check min ≤ start ≤ max."
+    },
+    "acts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/act" }
+    }
+  },
+  "$defs": {
+    "idString": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,32}$"
+    },
+    "meterName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,32}$"
+    },
+    "effects": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/meterName" },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": -100,
+        "maximum": 100
+      },
+      "description": "Delta per meter (−100..100). Keys should correspond to defined meter names."
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "to"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "effects": { "$ref": "#/$defs/effects" },
+        "to": { "$ref": "#/$defs/idString" }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type"],
+      "properties": {
+        "id":   { "$ref": "#/$defs/idString" },
+        "type": { "enum": ["line", "choice", "goto", "end"] },
+        "text":   { "type": "string", "minLength": 1 },
+        "next":   { "$ref": "#/$defs/idString" },
+        "prompt": { "type": "string", "minLength": 1 },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/choice" }
+        },
+        "to": { "$ref": "#/$defs/idString" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "line" } },   "required": ["type"] }, "then": { "required": ["text"] } },
+        { "if": { "properties": { "type": { "const": "choice" } }, "required": ["type"] }, "then": { "required": ["prompt", "choices"] } },
+        { "if": { "properties": { "type": { "const": "goto" } },   "required": ["type"] }, "then": { "required": ["to"] } },
+        { "if": { "properties": { "type": { "const": "end" } },    "required": ["type"] }, "then": {} }
+      ]
+    },
+    "act": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "start", "nodes"],
+      "properties": {
+        "id":    { "$ref": "#/$defs/idString" },
+        "title": { "type": "string", "minLength": 1 },
+        "start": { "$ref": "#/$defs/idString", "description": "Node id to begin this act" },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/node" }
+        }
+      }
+    }
+  }
+}
 
