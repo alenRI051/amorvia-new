@@ -1,74 +1,53 @@
+// Hardened v2 loader – always converts scenario.v2 to a graph before giving it to the engine.
+import { ensureGraph } from '/js/compat/v2-to-graph.js';
 
-export function init(){
-  const picker = document.getElementById('scenarioPicker');
-  const actBadge = document.getElementById('actBadge');
-  const sceneTitle = document.getElementById('sceneTitle');
-  const dialog = document.getElementById('dialog');
-  const choices = document.getElementById('choices');
-  const hud = document.getElementById('hud');
-  const restartBtn = document.getElementById('restartAct');
+// Minimal engine access helper (adjust if your engine lives elsewhere)
+function eng(){
+  return window.ScenarioEngine || window.AmorviaV2?.engine || window.Amorvia?.engine;
+}
 
-  let state = { scenario:null, actIndex:0, stepIndex:0 };
-
-  async function loadIndex(){
-    const res = await fetch('/data/v2-index.json?v='+(window.__AMORVIA_VERSION__||Date.now()), { cache:'no-cache' });
-    const idx = await res.json();
-    const list = idx.scenarios || [];
-    picker.innerHTML = '';
-    list.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s.id; opt.textContent = s.title || s.id;
-      picker.appendChild(opt);
-    });
-    if (list.length) await selectScenario(list[0].id);
+/** Loads by id from /data/<id>.v2.json, converts to graph, and starts the engine */
+export async function loadScenarioById(id){
+  const raw = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' }).then(r => {
+    if (!r.ok) throw new Error('HTTP '+r.status+' '+r.url);
+    return r.json();
+  });
+  const graph = ensureGraph(raw);
+  if (!graph || !graph.startId || !graph.nodes || !graph.nodes[graph.startId]) {
+    console.error('[v2] bad graph', graph);
+    throw new Error('Scenario conversion failed (no start node)');
   }
-
-  async function selectScenario(id){
-    const res = await fetch(`/data/${id}.v2.json?v=`+(window.__AMORVIA_VERSION__||Date.now()), { cache:'no-cache' });
-    const doc = await res.json();
-    state = { scenario: doc, actIndex: 0, stepIndex: 0 };
-    picker.value = id;
-    render();
+  const E = eng();
+  if (!E || typeof E.loadScenario !== 'function') {
+    console.error('[v2] engine missing or invalid', E);
+    throw new Error('Engine not available');
   }
+  E.loadScenario(graph);
+  if (typeof E.start === 'function') E.start(graph.startId);
+  else if (typeof E.startAct === 'function') E.startAct(0);
+  console.debug('[v2] started', { id, start: graph.startId, nodes: Object.keys(graph.nodes).length });
+}
 
-  function render(){
-    const s = state.scenario;
-    if (!s) return;
-    const act = s.acts[state.actIndex];
-    actBadge.textContent = act?.title || `Act ${state.actIndex+1}`;
-    sceneTitle.textContent = s.title || s.id;
-
-    const steps = act?.steps || [];
-    const step = steps[state.stepIndex] || '';
-    dialog.textContent = typeof step === 'string' ? step : (step.text || JSON.stringify(step));
-
-    choices.innerHTML = '';
-    const opts = step && step.choices || act?.choices || null;
-    if (Array.isArray(opts)) {
-      opts.forEach((c,i)=>{
-        const btn = document.createElement('button');
-        btn.className='button';
-        btn.textContent = c.label || c.text || `Option ${i+1}`;
-        btn.addEventListener('click', ()=>{
-          if (typeof c.gotoAct === 'number') { state.actIndex = c.gotoAct; state.stepIndex = 0; }
-          else if (typeof c.goto === 'number') { state.stepIndex = c.goto; }
-          else { state.stepIndex = Math.min(state.stepIndex+1, steps.length-1); }
-          render();
-        });
-        choices.appendChild(btn);
-      });
-    }
-
-    hud.innerHTML = '';
-    const info = `Act ${state.actIndex+1}/${s.acts.length} • Step ${state.stepIndex+1}/${steps.length}`;
-    const span = document.createElement('span');
-    span.textContent = info;
-    hud.appendChild(span);
+/** Optional init that wires a simple scenario picker if present */
+export async function init(){
+  // Populate picker from index if present
+  const pick = document.getElementById('scenarioPicker');
+  if (pick && !pick.options.length) {
+    try {
+      const idx = await fetch('/data/v2-index.json', { cache:'no-store' }).then(r=>r.json());
+      const list = Array.isArray(idx?.scenarios) ? idx.scenarios : [];
+      for (const s of list) {
+        const o = document.createElement('option');
+        o.value = s.id; o.textContent = s.title || s.id;
+        pick.appendChild(o);
+      }
+    } catch {}
   }
-
-  picker.addEventListener('change', ()=>selectScenario(picker.value));
-  restartBtn?.addEventListener('click', ()=>{ state.stepIndex = 0; render(); });
-  window.addEventListener('amorvia:open-scenario-doc', (e)=>{ state = { scenario: e.detail.doc, actIndex:0, stepIndex:0 }; render(); });
-
-  loadIndex().catch(err=>console.error('Failed to init v2', err));
+  // Hook change
+  pick?.addEventListener('change', () => loadScenarioById(pick.value));
+  // Autostart first option (if any)
+  if (pick && pick.value) loadScenarioById(pick.value);
+  // expose for addons/console
+  window.AmorviaV2 = window.AmorviaV2 || {};
+  window.AmorviaV2.loadScenarioById = loadScenarioById;
 }

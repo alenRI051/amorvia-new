@@ -1,4 +1,4 @@
-
+/* Amorvia bootstrap (v2-first) – ensures compat hook is present after app.v2.js */
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
@@ -19,11 +19,11 @@ async function loadChosenApp(){
   const mode = getMode();
   try {
     if (mode === 'v2'){
-      const app = await import('/js/app.v2.js');
+      const app = await import('/js/app.v2.js');          // load app first
+      await import('/js/compat/ensure-graph-hook.js');    // ensure the compat hook is present
       await Promise.allSettled([
         import('/js/addons/extras-tabs.js').catch(()=>{}),
-        import('/js/addons/art-loader.js').catch(()=>{}),
-        import('/js/compat/ensure-graph-hook.js')
+        import('/js/addons/art-loader.js').catch(()=>{})
       ]);
       app?.init?.();
     } else {

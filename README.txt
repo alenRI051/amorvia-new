@@ -1,15 +1,15 @@
+Amorvia v2 loader patch — 20250822-191124
 
-Amorvia Fix Bundle — 2025-08-22T18:34:34
+Files included:
+- public/js/bootstrap.js     → ensures compat hook loads *after* app.v2.js
+- public/js/app.v2.js        → hardens loadScenarioById with ensureGraph()
 
-Includes:
-- api/track.ts (Edge) -> /api/track returns 204
-- public/js/compat/v2-to-graph.js + ensure-graph-hook.js
-- public/js/bootstrap.js (imports hook after app.v2.js)
-- public/js/metrics.js
-- public/data/v2-index.json + one scenario example with schema/version
-
-Apply:
-1) Remove any /api/track.js; keep api/track.ts at repo root.
-2) Copy /public/js/* into your site; ensure bootstrap loads.
-3) Ensure your real scenarios have "schema":"scenario.v2","version":2 and index has "scenario.v2.index".
-4) Deploy and test: /api/track -> 204, v2 scenarios load fine.
+How to apply:
+1) Replace your site's /public/js/bootstrap.js with this one, OR replicate the same import order.
+2) Replace /public/js/app.v2.js with this one, OR copy the loadScenarioById function into your file.
+3) Make sure /public/js/compat/v2-to-graph.js exists (from previous bundle).
+4) Hard refresh once (Shift+Reload). If using a Service Worker, you can force update in console:
+   const reg = await navigator.serviceWorker.getRegistration(); await reg?.update();
+5) Test in console:
+   typeof window.ensureGraphLoadById  // should be "function" (if the hook is present)
+   await AmorviaV2.loadScenarioById('co-parenting-with-bipolar-partner');
