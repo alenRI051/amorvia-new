@@ -1,23 +1,15 @@
-Amorvia — Full BETA bundle (beta-2025-08-21)
 
-Included
-- index.html (v1 + v2 UIs, v2 anchor ready)
-- css: styles.css, ui.patch.css, addons.css
-- js: bootstrap (version-locked), app.v2.js, app.js (v1 stub)
-- addons: ensure-anchor.js, extras-tabs.js (insert-after + reparent), art-loader.js
-- data: v2-index.json + scenario docs (9 scenarios)
-- PWA: version.json, sw-register.js, service-worker.js, manifest.json, favicon.png
-- assets: backgrounds/room.svg, characters/{male,female}_casual.svg
-- vercel.json (no-cache for bootstrap/addons/sw, immutable for assets/css)
-- api/track.js (204 stub)
+Amorvia Fix Bundle — 2025-08-22T18:34:34
 
-Deploy
-1) Upload the contents of /public (and /api + vercel.json if using Vercel) to your root.
-2) Bump /public/version.json "version" each release.
-3) Normal reload picks up new JS; tabs visible without Ctrl+F5.
+Includes:
+- api/track.ts (Edge) -> /api/track returns 204
+- public/js/compat/v2-to-graph.js + ensure-graph-hook.js
+- public/js/bootstrap.js (imports hook after app.v2.js)
+- public/js/metrics.js
+- public/data/v2-index.json + one scenario example with schema/version
 
-Smoke test
-- Load /. DevTools console:
-  window.__AMORVIA_VERSION__                // -> "beta-2025-08-21"
-  !!document.querySelector('#labsTabs')     // -> true
-  fetch('/api/track', {method:'POST'})    // -> 204
+Apply:
+1) Remove any /api/track.js; keep api/track.ts at repo root.
+2) Copy /public/js/* into your site; ensure bootstrap loads.
+3) Ensure your real scenarios have "schema":"scenario.v2","version":2 and index has "scenario.v2.index".
+4) Deploy and test: /api/track -> 204, v2 scenarios load fine.

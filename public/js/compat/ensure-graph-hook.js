@@ -21,7 +21,6 @@
     return graph;
   }
 
-  // Patch common entry points
   const targets = [
     ['AmorviaV2','loadScenarioById'],
     ['','loadScenarioById'],
@@ -38,13 +37,11 @@
     }
   }
 
-  // Event-based fallback (for addons)
   window.addEventListener('amorvia:select-scenario', async (ev)=>{
     const id = ev?.detail?.id;
     if (!id) return;
     try{ await loadAndStart(id); }catch(e){ console.warn('[ensure-graph] event load failed', e); }
   });
 
-  // Expose helper
   window.ensureGraphLoadById = loadAndStart;
 })();

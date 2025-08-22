@@ -27,39 +27,6 @@
         },
         "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
       ]
-    },
-    {
-      "title": "Act 2 — Escalation",
-      "steps": [
-        "The discussion grows tense, and your ex raises their voice.",
-        "Your child notices the tension and becomes unsettled.",
-        {
-          "text": "Pick an approach:",
-          "choices": [
-            {
-              "label": "De-escalate with soothing words",
-              "goto": 3
-            },
-            {
-              "label": "Suggest a short break",
-              "goto": 3
-            },
-            {
-              "label": "Argue back",
-              "goto": 3
-            }
-          ]
-        },
-        "…"
-      ]
-    },
-    {
-      "title": "Act 3 — Resolution",
-      "steps": [
-        "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
-        "If you stayed calm, your child feels reassured.",
-        "If you escalated, the conflict lingers and your child feels stressed."
-      ]
     }
   ]
 }
