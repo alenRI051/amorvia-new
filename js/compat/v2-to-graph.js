@@ -1,38 +1,60 @@
 // js/compat/v2-to-graph.js
-// v2 -> engine graph converter with support for legacy `acts[].steps[]` outlines.
+// Ultra-robust v2 -> engine graph converter.
+// Accepts:
+//  - Graph-like { startId, nodes }
+//  - v2 { version:2, acts:[ {nodes:[]}|{steps:[]} ], meters?, title? }
+//  - steps as strings OR objects ({text,prompt,choices,to,next,type})
+//  - nodes as array OR object map
+//  - missing act.start -> inferred
+//  - links acts linearly if needed
 
 export function isGraphLike(doc){
   return !!(doc && typeof doc === 'object' && doc.startId && doc.nodes && typeof doc.nodes === 'object');
 }
 
+function coerceChoice(c){
+  if (!c) return null;
+  const out = {
+    label: c.label || 'Option',
+    to: c.to || c.next || null,
+  };
+  if (c.effects) out.effects = c.effects;
+  return out;
+}
+
+function coerceNode(n, fallbackId){
+  if (typeof n === 'string') {
+    return { id: fallbackId, type: 'line', text: n };
+  }
+  const id = n.id || fallbackId;
+  const type = n.type || (Array.isArray(n.choices) ? 'choice' : (n.to || n.next) ? 'goto' : undefined) || 'line';
+  const text = n.text || n.prompt || '';
+  const out = { id, type, text };
+  if (n.to) out.to = n.to;
+  if (n.next) out.next = n.next;
+  if (Array.isArray(n.choices)) {
+    out.choices = n.choices.map(coerceChoice).filter(Boolean);
+    if (out.choices.length === 0) delete out.choices;
+  }
+  return out;
+}
+
 function normalizeActNodes(act, ai){
-  // Prefer explicit `nodes` if present.
-  if (Array.isArray(act?.nodes) && act.nodes.length) {
-    // Ensure ids exist.
-    return act.nodes.map((n, si) => ({
-      id: n.id || `a${ai+1}s${si+1}`,
-      type: n.type,
-      text: n.text,
-      prompt: n.prompt,
-      to: n.to,
-      next: n.next,
-      choices: Array.isArray(n.choices) ? n.choices.map(c => ({
-        label: c.label || 'Option',
-        to: c.to,
-        effects: c.effects
-      })) : undefined
-    }));
+  // nodes: can be array or object map
+  if (act && act.nodes) {
+    if (Array.isArray(act.nodes)) {
+      return act.nodes.map((n, si) => coerceNode(n, `a${ai+1}s${si+1}`));
+    }
+    if (typeof act.nodes === 'object') {
+      const arr = Object.keys(act.nodes).sort().map((k, idx) => coerceNode({ id:k, ...(act.nodes[k]||{}) }, `a${ai+1}s${idx+1}`));
+      return arr;
+    }
   }
-
-  // Legacy: `steps` was an array of strings (outline)
-  if (Array.isArray(act?.steps) && act.steps.length) {
-    return act.steps.map((s, si) => ({
-      id: `a${ai+1}s${si+1}`,
-      type: 'line',
-      text: String(s ?? '')
-    }));
+  // steps: array of strings or objects
+  if (Array.isArray(act?.steps)) {
+    return act.steps.map((s, si) => coerceNode(s, `a${ai+1}s${si+1}`));
   }
-
+  // nothing usable
   return [];
 }
 
@@ -41,57 +63,50 @@ export function toGraph(doc){
   let startId = '';
 
   const acts = Array.isArray(doc?.acts) ? doc.acts : [];
+  const actMeta = [];
+
   acts.forEach((act, ai) => {
     const list = normalizeActNodes(act, ai);
     let prevId = null;
+    let firstIdInAct = null;
 
     list.forEach((n, si) => {
       const id = n.id || `a${ai+1}s${si+1}`;
-      const out = { id };
-
-      // Prefer prompt for choice, else text.
-      out.text = n.prompt || n.text || '';
-
-      // Infer type if omitted
-      const inferred = Array.isArray(n.choices) ? 'choice' : (n.to || n.next) ? 'goto' : (n.type || undefined);
-      if (inferred) out.type = inferred;
-
-      if (out.type === 'choice') {
-        out.choices = (n.choices || []).map(c => ({
-          label: c.label || 'Option',
-          to: c.to,
-          effects: c.effects
-        }));
-      }
-      if (n.to)   out.to   = n.to;
-      if (n.next) out.next = n.next;
-
+      const out = coerceNode(n, id);
       nodes[id] = out;
 
-      if (!startId) startId = act.start || id;
+      if (!firstIdInAct) firstIdInAct = id;
+      if (!startId) startId = (act && act.start) || firstIdInAct;
 
-      // Linear fallback: previous → this
-      if (prevId && !nodes[prevId].to && !nodes[prevId].next && nodes[prevId].type !== 'choice') {
-        nodes[prevId].next = id;
+      // link prev -> this if prev has no explicit next/to and is not a choice/end
+      if (prevId) {
+        const pn = nodes[prevId];
+        if (pn && !pn.to && !pn.next && pn.type !== 'choice' && pn.type !== 'end') {
+          pn.next = id;
+        }
       }
       prevId = id;
     });
 
-    // Mark act boundaries
-    act.__firstId = list.length ? (list[0].id || `a${ai+1}s1`) : null;
-    act.__lastId  = list.length ? (list[list.length-1].id || `a${ai+1}s${list.length}`) : null;
+    actMeta.push({ first: firstIdInAct, last: prevId });
   });
 
-  // Chain acts if needed
-  for (let ai = 0; ai < acts.length - 1; ai++) {
-    const last = acts[ai].__lastId;
-    const nextStart = acts[ai+1].__firstId;
-    if (last && nextStart) {
-      const nlast = nodes[last];
-      if (nlast && !nlast.to && !nlast.next && nlast.type !== 'choice' && nlast.type !== 'end') {
-        nlast.to = nextStart;
+  // chain acts if needed
+  for (let i=0; i<actMeta.length-1; i++){
+    const last = actMeta[i].last;
+    const nextFirst = actMeta[i+1].first;
+    if (last && nextFirst) {
+      const ln = nodes[last];
+      if (ln && !ln.to && !ln.next && ln.type !== 'choice' && ln.type !== 'end') {
+        ln.to = nextFirst;
       }
     }
+  }
+
+  // finalize startId fallback
+  if (!startId) {
+    const keys = Object.keys(nodes);
+    if (keys.length) startId = keys[0];
   }
 
   return { title: doc?.title || '', startId, nodes, meters: doc?.meters || {} };
@@ -100,7 +115,7 @@ export function toGraph(doc){
 export function ensureGraph(doc){
   if (isGraphLike(doc)) return doc;
   if (doc?.version === 2) return toGraph(doc);
-  // Fallback minimal coercion
-  const coerced = { title: doc?.title || '', acts: Array.isArray(doc?.acts) ? doc.acts : [{ start: doc?.start, nodes: doc?.nodes || doc?.steps || [] }], meters: doc?.meters || {} };
-  return toGraph(coerced);
+  // ultra-fallback coercion
+  const acts = Array.isArray(doc?.acts) ? doc.acts : (Array.isArray(doc?.steps) ? [{ steps: doc.steps }] : []);
+  return toGraph({ title: doc?.title || '', acts, meters: doc?.meters || {} });
 }
