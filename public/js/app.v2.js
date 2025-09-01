@@ -1,32 +1,45 @@
-// /public/js/app.v2.js
+// v2 loader with robust engine autoload
 import { ensureGraph } from '/js/compat/v2-to-graph.js';
 
-// Try to find or import the engine on demand
 let _enginePromise;
 async function getEngine() {
+  // Existing global?
   if (window.ScenarioEngine) return window.ScenarioEngine;
-  if (!_enginePromise) {
-    // Adjust the first path if your file lives elsewhere
-    const candidates = [
-      '/js/engine/scenarioEngine.js',
-      '/js/engine/ScenarioEngine.js',
-      '/js/scenarioEngine.js'
-    ];
-    _enginePromise = (async () => {
-      let lastErr;
-      for (const p of candidates) {
-        try {
-          const mod = await import(p);
-          return window.ScenarioEngine || mod.ScenarioEngine || mod.default;
-        } catch (e) { lastErr = e; }
+  if (_enginePromise) return _enginePromise;
+
+  const candidates = [
+    '/js/engine/scenarioEngine.js',
+    '/js/engine/scenario-engine.js',
+    '/js/engine/ScenarioEngine.js',
+    '/js/scenarioEngine.js',
+    '/js/ScenarioEngine.js',
+    '/engine/scenarioEngine.js',
+    '/engine/ScenarioEngine.js',
+    '/scenarioEngine.js'                 // <-- seen in earlier stack traces
+  ];
+
+  _enginePromise = (async () => {
+    let lastErr;
+    for (const p of candidates) {
+      try {
+        const mod = await import(p);
+        const E = window.ScenarioEngine || mod.ScenarioEngine || mod.engine || mod.default;
+        if (E && (typeof E.loadScenario === 'function' || typeof E.start === 'function' || typeof E.startAct === 'function')) {
+          console.info('[v2] engine loaded from', p);
+          // Attach globally for other modules
+          if (!window.ScenarioEngine) window.ScenarioEngine = E;
+          return E;
+        }
+      } catch (e) {
+        lastErr = e;
       }
-      throw new Error('Engine not available (tried: ' + candidates.join(', ') + ') ' + (lastErr?.message || ''));
-    })();
-  }
+    }
+    throw new Error('Engine not available (tried: ' + candidates.join(', ') + ')');
+  })();
+
   return _enginePromise;
 }
 
-/** Loads /data/<id>.v2.json, converts to graph, and starts the engine */
 export async function loadScenarioById(id){
   const raw = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' }).then(r => {
     if (!r.ok) throw new Error('HTTP '+r.status+' '+r.url);
@@ -39,16 +52,17 @@ export async function loadScenarioById(id){
   }
 
   const E = await getEngine();
-  if (!E?.loadScenario) throw new Error('Engine not available');
+  if (!E?.loadScenario && typeof E !== 'object') throw new Error('Engine not available');
 
-  E.loadScenario(graph);
-  if (typeof E.start === 'function') E.start(graph.startId);
-  else if (typeof E.startAct === 'function') E.startAct(0);
+  // Normalize simple engine API variants
+  const api = E;
+  if (typeof api.loadScenario === 'function') api.loadScenario(graph);
+  if (typeof api.start === 'function') api.start(graph.startId);
+  else if (typeof api.startAct === 'function') api.startAct(0);
 
   console.debug('[v2] started', { id, start: graph.startId, nodes: Object.keys(graph.nodes).length });
 }
 
-/** Optional init: populate picker and autostart */
 export async function init(){
   const pick = document.getElementById('scenarioPicker');
   if (pick && !pick.options.length) {
@@ -67,4 +81,3 @@ export async function init(){
   window.AmorviaV2 = window.AmorviaV2 || {};
   window.AmorviaV2.loadScenarioById = loadScenarioById;
 }
-

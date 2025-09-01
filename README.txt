@@ -1,15 +1,24 @@
-Amorvia v2 loader patch — 20250822-191124
 
-Files included:
-- public/js/bootstrap.js     → ensures compat hook loads *after* app.v2.js
-- public/js/app.v2.js        → hardens loadScenarioById with ensureGraph()
+Amorvia engine autoload patch — 20250822-193236
 
-How to apply:
-1) Replace your site's /public/js/bootstrap.js with this one, OR replicate the same import order.
-2) Replace /public/js/app.v2.js with this one, OR copy the loadScenarioById function into your file.
-3) Make sure /public/js/compat/v2-to-graph.js exists (from previous bundle).
-4) Hard refresh once (Shift+Reload). If using a Service Worker, you can force update in console:
+This version of /public/js/app.v2.js will try multiple likely paths for the engine:
+- /js/engine/scenarioEngine.js
+- /js/engine/scenario-engine.js
+- /js/engine/ScenarioEngine.js
+- /js/scenarioEngine.js
+- /js/ScenarioEngine.js
+- /engine/scenarioEngine.js
+- /engine/ScenarioEngine.js
+- /scenarioEngine.js
+
+It attaches the found engine to window.ScenarioEngine for compatibility, then starts
+the scenario after converting v2 → graph.
+
+Apply:
+1) Replace /public/js/app.v2.js with this one.
+2) Hard refresh (Shift+Reload). If a SW is active:
    const reg = await navigator.serviceWorker.getRegistration(); await reg?.update();
-5) Test in console:
-   typeof window.ensureGraphLoadById  // should be "function" (if the hook is present)
+
+Verify in console:
    await AmorviaV2.loadScenarioById('co-parenting-with-bipolar-partner');
+   typeof ScenarioEngine   // should become "object" or "function"
