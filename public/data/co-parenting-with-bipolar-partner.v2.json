@@ -1,31 +1,77 @@
 {
-  "schema": "scenario.v2",
   "version": 2,
-  "id": "co-parenting-with-bipolar-partner",
   "title": "Co-Parenting with Bipolar Partner",
+  "meters": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "Trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "ChildStress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
+  },
   "acts": [
     {
-      "title": "Act 1 — First Exchange",
-      "steps": [
-        "You arrive to pick up your child, but your ex seems upset.",
+      "id": "act-1",
+      "title": "Act 1 — Intro",
+      "start": "a1s1",
+      "nodes": [
         {
-          "text": "They start speaking in a confusing or emotional way.",
+          "id": "a1s1",
+          "type": "line",
+          "text": "You arrive at the scene. Take a breath and assess."
+        },
+        {
+          "id": "a1s2",
+          "type": "choice",
+          "prompt": "How do you start?",
           "choices": [
             {
-              "label": "Stay calm",
-              "goto": 2
+              "label": "Stay calm and listen",
+              "to": "a1s3",
+              "effects": {
+                "Tension": -5,
+                "Trust": 5
+              }
             },
             {
-              "label": "Ignore",
-              "goto": 2
-            },
-            {
-              "label": "Respond emotionally",
-              "goto": 2
+              "label": "Push your point",
+              "to": "a1s4",
+              "effects": {
+                "Tension": 5,
+                "Trust": -5
+              }
             }
           ]
         },
-        "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
+        {
+          "id": "a1s3",
+          "type": "line",
+          "text": "You keep your tone soft and ask an open question.",
+          "next": "a1s5"
+        },
+        {
+          "id": "a1s4",
+          "type": "line",
+          "text": "You press your argument; the other person bristles.",
+          "next": "a1s5"
+        },
+        {
+          "id": "a1s5",
+          "type": "end",
+          "text": "End of stub. Replace with full content."
+        }
       ]
     }
   ]

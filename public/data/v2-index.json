@@ -1,10 +1,40 @@
 {
-  "schema": "scenario.v2.index",
-  "version": 2,
   "scenarios": [
     {
       "id": "co-parenting-with-bipolar-partner",
       "title": "Co-Parenting with Bipolar Partner"
+    },
+    {
+      "id": "scene-first-agreements",
+      "title": "Scene: First Agreements"
+    },
+    {
+      "id": "scene-new-introductions",
+      "title": "Scene: New Introductions"
+    },
+    {
+      "id": "scene-different-rules",
+      "title": "Scene: Different Rules"
+    },
+    {
+      "id": "scene-de-escalation",
+      "title": "Scene: De-escalation"
+    },
+    {
+      "id": "dating-after-breakup-with-child-involved",
+      "title": "Dating After Breakup (With Child Involved)"
+    },
+    {
+      "id": "brzi-kontakti",
+      "title": "Brzi kontakti"
+    },
+    {
+      "id": "direction",
+      "title": "Direction"
+    },
+    {
+      "id": "visitor",
+      "title": "Visitor"
     }
   ]
 }
