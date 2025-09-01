@@ -16,6 +16,7 @@ export const ScenarioEngine = {
     this.state.nodes = graph.nodes;
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
+    this.state.meters = { ...(graph.meters || {}) };
     this.render();
   },
 
