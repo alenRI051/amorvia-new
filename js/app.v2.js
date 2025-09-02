@@ -1,7 +1,17 @@
-
 // /js/app.v2.js
+// v2 loader with robust engine autoload + metrics
 import { ensureGraph } from '/js/compat/v2-to-graph.js';
-console.info('[v2] loader sig v2025-09-01-d');
+import { track } from '/js/metrics.js';
+
+console.info('[v2] loader sig v2025-09-01-e');
+
+let wired = false;
+function wireGlobalEventListeners(){
+  if (wired) return;
+  wired = true;
+  window.addEventListener('amorvia:node',  (e)=> track('node',   e.detail||{}));
+  window.addEventListener('amorvia:choice',(e)=> track('choice', e.detail||{}));
+}
 
 async function getEngine() {
   if (window.ScenarioEngine) return window.ScenarioEngine;
@@ -19,27 +29,25 @@ async function getEngine() {
     try {
       const m = await import(`${p}?v=${Date.now()}`);
       const E = window.ScenarioEngine || m.ScenarioEngine || m.engine || m.default;
-      if (E && (E.loadScenario || E.start || E.startAct)) { window.ScenarioEngine = E; return E; }
+      if (E && (E.loadScenario || E.start || E.startAct)) { 
+        window.ScenarioEngine = E; 
+        console.info('[v2] engine loaded from', p);
+        wireGlobalEventListeners();
+        return E; 
+      }
     } catch {}
   }
-  throw new Error('engine missing');
+  throw new Error('engine missing or invalid');
 }
 
 export async function loadScenarioById(id) {
-  const raw = await fetch(`/data/${id}.v2.json?ts=${Date.now()}`, { cache: 'no-store' }).then(r => {
-    if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url);
-    return r.json();
-  });
-  let g;
-  try {
-    g = ensureGraph(raw);
-  } catch (e) {
-    console.error('[v2] conversion threw: ', e);
-    g = { title: raw?.title || '', startId: 'END', nodes: { END: { id: 'END', type: 'end', text: '— End —' } } };
-  }
+  track('scenario_open', { id });
+  const raw = await fetch(`/data/${id}.v2.json?ts=${Date.now()}`, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url); return r.json(); });
+
+  const g = ensureGraph(raw);
   if (!g.nodes || !g.startId || !g.nodes[g.startId]) {
-    console.error('[v2] still bad graph', g);
-    // fabricate minimal
+    console.error('[v2] bad graph, fabricating end node', g);
     g.startId = 'END';
     g.nodes = { END: { id: 'END', type: 'end', text: '— End —' } };
   }
@@ -51,6 +59,7 @@ export async function loadScenarioById(id) {
 }
 
 export async function init() {
+  try{ track('boot'); }catch{}
   const pick = document.getElementById('scenarioPicker');
   if (pick && !pick.options.length) {
     try {
@@ -59,7 +68,6 @@ export async function init() {
         const o = document.createElement('option');
         o.value = s.id; o.textContent = s.title || s.id; pick.appendChild(o);
       });
-      if (!pick.value && pick.options.length) pick.value = pick.options[0].value;
     } catch {}
   }
   pick?.addEventListener('change', () => loadScenarioById(pick.value));

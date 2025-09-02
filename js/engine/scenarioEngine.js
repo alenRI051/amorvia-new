@@ -1,13 +1,11 @@
-
-// Lightweight Scenario Engine (drop-in) — ESM module
-// API: ScenarioEngine.loadScenario(graph), ScenarioEngine.start(startId)
-// Graph shape: { title, startId, nodes: { [id]: { id, text, type?, choices?, to?, next? } } }
-
+// /js/engine/scenarioEngine.js
+// Lightweight Scenario Engine (ESM) with event emits for metrics
 const qs = (sel) => document.querySelector(sel);
-
 function setText(el, text) { if (!el) return; el.textContent = text ?? ''; }
 function clear(el) { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); }
 function button(label) { const b = document.createElement('button'); b.type = 'button'; b.className = 'button'; b.textContent = label; return b; }
+
+function emit(name, detail){ try{ window.dispatchEvent(new CustomEvent('amorvia:'+name, { detail })); }catch{} }
 
 export const ScenarioEngine = {
   state: { title: '', nodes: {}, startId: '', currentId: '', meters: {} },
@@ -18,13 +16,13 @@ export const ScenarioEngine = {
     this.state.nodes = graph.nodes;
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
-    this.state.meters = Object.assign({}, graph.meters || {});
     this.render();
+    emit('node', { id: this.state.currentId });
   },
 
-  start(startId) { if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); },
+  start(startId) { if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); emit('node', { id: this.state.currentId }); },
   currentNode() { return this.state.nodes[this.state.currentId]; },
-  goto(id) { if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); },
+  goto(id) { if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); emit('node', { id }); },
 
   applyEffects(effects) {
     if (!effects) return;
@@ -62,7 +60,11 @@ export const ScenarioEngine = {
     if (type === 'choice' && Array.isArray(node.choices) && node.choices.length) {
       node.choices.forEach((c, idx) => {
         const btn = button(c.label || `Option ${idx+1}`);
-        btn.addEventListener('click', () => { this.applyEffects(c.effects); this.goto(c.to); });
+        btn.addEventListener('click', () => { 
+          this.applyEffects(c.effects); 
+          emit('choice', { label: c.label || `Option ${idx+1}`, to: c.to });
+          this.goto(c.to); 
+        });
         choicesEl.appendChild(btn);
       });
     } else if (type === 'goto' && node.to) {
@@ -79,7 +81,6 @@ export const ScenarioEngine = {
       }
       const end = document.createElement('div'); end.textContent = '— End —'; choicesEl.appendChild(end);
     }
-    this.renderHUD();
   }
 };
 
