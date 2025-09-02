@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "title": "Visitor",
+  "meters": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Trust": {
+      "label": "Trust",
+      "start": 50
+    },
+    "ChildStress": {
+      "label": "Child Stress",
+      "start": 10
+    }
+  },
+  "acts": [
+    {
+      "title": "Act 1",
+      "steps": [
+        "A friend comes to pick up an item.",
+        "Your partner is uneasy.",
+        "You set boundaries politely."
+      ]
+    }
+  ]
+}

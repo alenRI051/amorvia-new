@@ -1,0 +1,8 @@
+
+/* Tabs */
+.av-tabs{display:flex;gap:8px;align-items:center;margin:8px 0}
+.av-tab{padding:6px 10px;border-radius:10px;border:1px solid #334155;background:#0d1323;color:#e5e7eb;cursor:pointer}
+.av-tab-active{background:#13223a;border-color:#3b82f6}
+.av-tabs-spacer{flex:1}
+.av-toggle{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.9}
+.av-pane{margin-top:6px}

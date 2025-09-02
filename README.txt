@@ -1,24 +1,22 @@
-Amorvia v2 loader bundle
-========================
+Amorvia BETA bundle — v0.6-2025-09-01
 
-Included:
-- js/compat/v2-to-graph.js
-    • toGraph(doc): convert v2 acts/nodes → flat graph
-    • ensureGraph(doc): return doc if already graph-like, else convert
+What this includes
+- index.html (CSP-safe, no inline JS except build stamp)
+- css/*  (base + addon tabs)
+- js/bootstrap.js  (mode switch, loads v2 app + addons)
+- js/app.v2.js     (robust engine autoload + compat loader)
+- js/compat/v2-to-graph.js (ultra-robust converter)
+- js/engine/scenarioEngine.js (small engine)
+- js/addons/{extras-tabs,art-loader}.js
+- sw.js + sw-register.js (offline, auto-refresh)
+- data/v2-index.json + sample scenario .v2.json files
 
-How your loader should use it (matches your snippet):
-----------------------------------------------------
-    import { ensureGraph } from '/js/compat/v2-to-graph.js';
+Install
+1) Upload everything to your site root preserving folders.
+2) Hard refresh. If a Service Worker is present, in DevTools console run:
+   const reg = await navigator.serviceWorker.getRegistration(); await reg?.update(); location.reload();
 
-    const raw = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' }).then(r => r.json());
-    const graph = ensureGraph(raw);
-    const E = await getEngine();
-    E.loadScenario?.(graph);
-    E.start?.(graph.startId);
-
-Optional engine tweak (initialize meters):
------------------------------------------
-In js/engine/scenarioEngine.js, inside loadScenario(graph) add:
-    this.state.meters = { ...(graph.meters || {}) };
-
-This will show initial meter values immediately in the HUD if your doc defines them.
+Notes
+- Replace any sample scenarios in /data with your full content.
+- The converter will accept acts.steps OR acts.nodes (array or map).
+- Extras/Labs tabs are injected into the left sidebar (id scenarioListV2).

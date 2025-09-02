@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "title": "Direction",
+  "meters": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Trust": {
+      "label": "Trust",
+      "start": 50
+    },
+    "ChildStress": {
+      "label": "Child Stress",
+      "start": 10
+    }
+  },
+  "acts": [
+    {
+      "title": "Act 1",
+      "steps": [
+        "Non\u2011human silhouettes with aura color shifts.",
+        "Eye shape reflects emotion.",
+        "Backgrounds: realistic interiors."
+      ]
+    }
+  ]
+}
