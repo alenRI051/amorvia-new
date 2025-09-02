@@ -1,19 +1,23 @@
-// Lightweight Scenario Engine (drop‑in) — ESM module
-// Idempotent: reuses existing global and logs only once.
+// ScenarioEngine (drop-in) — idempotent build, no duplicate logs
+// Exports a minimal engine that renders to #dialog/#choices/#hud.
+// If an instance already exists on window, reuse it and avoid re-logging.
 
-const _existing = typeof window !== 'undefined' ? window.ScenarioEngine : undefined;
+/* eslint-disable no-undef */
+const qs = (sel) => document.querySelector(sel);
 
-let ScenarioEngine = _existing;
-if (!ScenarioEngine) {
-  const qs = (sel) => document.querySelector(sel);
-  const setText = (el, text) => { if (el) el.textContent = text ?? ''; };
-  const clear = (el) => { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); };
-  const button = (label) => { const b = document.createElement('button'); b.type='button'; b.className='button'; b.textContent=label; return b; };
+function setText(el, text) { if (!el) return; el.textContent = text ?? ''; }
+function clear(el) { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); }
+function button(label) { const b = document.createElement('button'); b.type = 'button'; b.className = 'button'; b.textContent = label; return b; }
 
+let ScenarioEngine;
+if (typeof window !== 'undefined' && window.ScenarioEngine) {
+  // Reuse the existing global to keep state and avoid duplicate logs.
+  ScenarioEngine = window.ScenarioEngine;
+} else {
   ScenarioEngine = {
     state: { title: '', nodes: {}, startId: '', currentId: '', meters: {} },
 
-    loadScenario(graph){
+    loadScenario(graph) {
       if (!graph || !graph.startId || !graph.nodes) throw new Error('Invalid graph');
       this.state.title = graph.title || '';
       this.state.nodes = graph.nodes;
@@ -22,13 +26,22 @@ if (!ScenarioEngine) {
       this.render();
     },
 
-    start(startId){ if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); },
-    currentNode(){ return this.state.nodes[this.state.currentId]; },
-    goto(id){ if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); },
+    start(startId) {
+      if (startId && this.state.nodes[startId]) this.state.currentId = startId;
+      this.render();
+    },
 
-    applyEffects(effects){
+    currentNode() { return this.state.nodes[this.state.currentId]; },
+
+    goto(id) {
+      if (!this.state.nodes[id]) { console.error('Node not found:', id); return; }
+      this.state.currentId = id;
+      this.render();
+    },
+
+    applyEffects(effects) {
       if (!effects) return;
-      for (const [k,v] of Object.entries(effects)) {
+      for (const [k, v] of Object.entries(effects)) {
         const cur = Number(this.state.meters[k] ?? 0);
         const next = Math.max(0, Math.min(100, cur + Number(v)));
         this.state.meters[k] = next;
@@ -36,17 +49,17 @@ if (!ScenarioEngine) {
       this.renderHUD();
     },
 
-    renderHUD(){
+    renderHUD() {
       const hud = qs('#hud'); if (!hud) return; clear(hud);
-      for (const [k,v] of Object.entries(this.state.meters)) {
-        const wrap = document.createElement('div'); wrap.className='meter row';
+      for (const [k, v] of Object.entries(this.state.meters)) {
+        const wrap = document.createElement('div'); wrap.className = 'meter row';
         const name = document.createElement('span'); name.textContent = k;
         const val = document.createElement('span'); val.textContent = String(v);
         wrap.appendChild(name); wrap.appendChild(val); hud.appendChild(wrap);
       }
     },
 
-    render(){
+    render() {
       const node = this.currentNode();
       const dialog = qs('#dialog'), choicesEl = qs('#choices'), titleEl = qs('#sceneTitle'), badge = qs('#actBadge');
       if (!node) { setText(dialog, '⚠️ No current node.'); if (choicesEl) clear(choicesEl); return; }
@@ -82,17 +95,14 @@ if (!ScenarioEngine) {
     }
   };
 
-  // mark + expose
-  ScenarioEngine.__amorviaReady = true;
   if (typeof window !== 'undefined') {
     window.ScenarioEngine = ScenarioEngine;
-    if (!window.__amorviaEngineLogged) {
+    if (!window.__AMORVIA_ENGINE_LOGGED__) {
       console.info('[ScenarioEngine] drop-in engine ready');
-      window.__amorviaEngineLogged = true;
+      window.__AMORVIA_ENGINE_LOGGED__ = true;
     }
   }
 }
 
-// Export existing or new instance
 export { ScenarioEngine };
 export default ScenarioEngine;
