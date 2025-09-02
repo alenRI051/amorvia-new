@@ -3,9 +3,24 @@
   "id": "co-parenting-with-bipolar-partner",
   "title": "Co-Parenting with Bipolar Partner",
   "meters": {
-    "Tension": { "label": "Tension", "start": 20, "min": 0, "max": 100 },
-    "Trust": { "label": "Trust", "start": 50, "min": 0, "max": 100 },
-    "ChildStress": { "label": "Child Stress", "start": 10, "min": 0, "max": 100 }
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "child_stress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
   },
   "acts": [
     {
@@ -13,47 +28,24 @@
       "steps": [
         "You arrive to pick up your child, but your ex seems upset.",
         "They start speaking in a confusing or emotional way.",
-        {
-          "prompt": "How do you respond?",
-          "choices": [
-            { "label": "Stay calm", "effects": { "Tension": -5, "Trust": 2 } },
-            { "label": "Ignore the behavior", "effects": { "Trust": -2, "ChildStress": 2 } },
-            { "label": "Respond emotionally", "effects": { "Tension": 6, "ChildStress": 3 } }
-          ]
-        }
+        "Choose: stay calm, ignore the behavior, or respond emotionally."
       ]
     },
     {
       "title": "Act 2 — Escalation",
       "steps": [
-        "The discussion grows tense, and your ex raises their voice.",
+        "The discussion grows tense; voices rise.",
         "Your child notices the tension and becomes unsettled.",
-        {
-          "prompt": "Next move?",
-          "choices": [
-            { "label": "De-escalate with soothing words", "effects": { "Tension": -6, "Trust": 3, "ChildStress": -2 } },
-            { "label": "Suggest a short break", "effects": { "Tension": -3 } },
-            { "label": "Argue back", "effects": { "Tension": 8, "Trust": -4, "ChildStress": 4 } }
-          ]
-        }
+        "Options: de-escalate with soothing words, suggest a short break, or argue back."
       ]
     },
     {
       "title": "Act 3 — Resolution",
       "steps": [
-        "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
-        "If you stayed calm, your child feels reassured.",
-        "If you escalated, the conflict lingers and your child feels stressed.",
-        {
-          "prompt": "How do you close the hand-off?",
-          "choices": [
-            { "label": "Agree a quick plan & confirm in text", "effects": { "Trust": 4, "Tension": -4, "ChildStress": -2 } },
-            { "label": "Keep it brief, end hand-off now", "effects": { "Tension": -1 } },
-            { "label": "Keep arguing", "effects": { "Tension": 7, "Trust": -3, "ChildStress": 3 } }
-          ]
-        }
+        "Depending on choices: small compromise, unresolved exit, or worse conflict.",
+        "If you stayed calm, child feels reassured.",
+        "If you escalated, conflict lingers and child feels stressed."
       ]
     }
   ]
 }
-

@@ -1,8 +1,27 @@
 {
-  "schema": "scenario.v2",
   "version": 2,
   "id": "to-do",
   "title": "To Do",
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "child_stress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
+  },
   "acts": [
     {
       "title": "Act 1",

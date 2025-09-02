@@ -1,20 +1,21 @@
 {
   "version": 2,
+  "id": "scene-de-escalation",
   "title": "Scene: De-escalation",
   "meters": {
-    "Tension": {
+    "tension": {
       "label": "Tension",
       "start": 20,
       "min": 0,
       "max": 100
     },
-    "Trust": {
+    "trust": {
       "label": "Trust",
       "start": 50,
       "min": 0,
       "max": 100
     },
-    "ChildStress": {
+    "child_stress": {
       "label": "Child Stress",
       "start": 10,
       "min": 0,
@@ -23,55 +24,11 @@
   },
   "acts": [
     {
-      "id": "act-1",
-      "title": "Act 1 — Intro",
-      "start": "a1s1",
-      "nodes": [
-        {
-          "id": "a1s1",
-          "type": "line",
-          "text": "You arrive at the scene. Take a breath and assess."
-        },
-        {
-          "id": "a1s2",
-          "type": "choice",
-          "prompt": "How do you start?",
-          "choices": [
-            {
-              "label": "Stay calm and listen",
-              "to": "a1s3",
-              "effects": {
-                "Tension": -5,
-                "Trust": 5
-              }
-            },
-            {
-              "label": "Push your point",
-              "to": "a1s4",
-              "effects": {
-                "Tension": 5,
-                "Trust": -5
-              }
-            }
-          ]
-        },
-        {
-          "id": "a1s3",
-          "type": "line",
-          "text": "You keep your tone soft and ask an open question.",
-          "next": "a1s5"
-        },
-        {
-          "id": "a1s4",
-          "type": "line",
-          "text": "You press your argument; the other person bristles.",
-          "next": "a1s5"
-        },
-        {
-          "id": "a1s5",
-          "type": "end",
-          "text": "End of stub. Replace with full content."
-        }
+      "title": "Act 1",
+      "steps": [
+        "Use brief, concrete messages.",
+        "Avoid late-night heavy topics.",
+        "Confirm understanding in writing."
       ]
     }
   ]
