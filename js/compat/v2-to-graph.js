@@ -1,3 +1,4 @@
+\
 // js/compat/v2-to-graph.js
 // Ultra-robust v2 -> engine graph converter.
 // Accepts:
