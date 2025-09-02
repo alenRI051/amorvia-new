@@ -2,15 +2,15 @@
   "version": 2,
   "title": "Direction",
   "meters": {
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
     "Trust": {
       "label": "Trust",
       "start": 50
     },
-    "ChildStress": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Child_Stress": {
       "label": "Child Stress",
       "start": 10
     }
@@ -19,8 +19,8 @@
     {
       "title": "Act 1",
       "steps": [
-        "Non\u2011human silhouettes with aura color shifts.",
-        "Eye shape reflects emotion.",
+        "Non-human silhouettes with aura color shifts by mood.",
+        "Eye shape reflects emotional state.",
         "Backgrounds: realistic interiors."
       ]
     }

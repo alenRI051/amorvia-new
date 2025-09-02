@@ -2,15 +2,15 @@
   "version": 2,
   "title": "Visitor",
   "meters": {
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
     "Trust": {
       "label": "Trust",
       "start": 50
     },
-    "ChildStress": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Child_Stress": {
       "label": "Child Stress",
       "start": 10
     }
@@ -19,9 +19,21 @@
     {
       "title": "Act 1",
       "steps": [
-        "A friend comes to pick up an item.",
-        "Your partner is uneasy.",
-        "You set boundaries politely."
+        "A late-evening knock at the door — your ex arrives unexpectedly.",
+        "You decide whether to invite them in, talk at the door, or postpone."
+      ]
+    },
+    {
+      "title": "Act 2",
+      "steps": [
+        "Tension rises; the child is nearby. Choices affect Trust and Tension meters.",
+        "You model calm boundaries."
+      ]
+    },
+    {
+      "title": "Act 3",
+      "steps": [
+        "A resolution: set visiting rules, agree on a time, or end the chat."
       ]
     }
   ]

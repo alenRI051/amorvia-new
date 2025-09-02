@@ -2,15 +2,15 @@
   "version": 2,
   "title": "Scene: New Introductions",
   "meters": {
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
     "Trust": {
       "label": "Trust",
       "start": 50
     },
-    "ChildStress": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Child_Stress": {
       "label": "Child Stress",
       "start": 10
     }
@@ -19,9 +19,9 @@
     {
       "title": "Act 1",
       "steps": [
-        "Wait 3\u20136 months and discuss expectations.",
-        "Short, neutral, child-focused activity first.",
-        "Prioritize child's stability; revisit later."
+        "Slow lane: Wait 3–6 months and discuss expectations with your ex.",
+        "Guided intro: Short, neutral, child-focused activity first.",
+        "Not yet: Prioritize child's stability; revisit later."
       ]
     }
   ]

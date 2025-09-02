@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "title": "Scene: De-escalation",
+  "title": "Scene: Different Rules",
   "meters": {
     "Trust": {
       "label": "Trust",
@@ -19,9 +19,9 @@
     {
       "title": "Act 1",
       "steps": [
-        "Use brief, concrete messages.",
-        "Avoid late-night heavy topics.",
-        "Confirm understanding in writing."
+        "Unified rules: One list for both households, reviewed weekly.",
+        "Zones of control: Each parent leads in specific domains.",
+        "Coach mode: Agree on consistent consequences and rewards."
       ]
     }
   ]

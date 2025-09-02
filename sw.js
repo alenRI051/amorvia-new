@@ -1,16 +1,13 @@
-const VERSION = 'v0.6-2025-09-01';
-const CORE = [
-  '/', '/index.html', '/css/styles.css', '/css/ui.patch.css', '/css/addons.css',
-  '/js/bootstrap.js', '/js/app.v2.js?v=v0.6-2025-09-01', '/js/compat/v2-to-graph.js?v=v0.6-2025-09-01',
-  '/js/engine/scenarioEngine.js', '/js/addons/extras-tabs.js', '/js/addons/art-loader.js'
-];
-self.addEventListener('install', e=>{ e.waitUntil(caches.open('core-'+VERSION).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())); });
-self.addEventListener('activate', e=>{ e.waitUntil(self.clients.claim()); });
-self.addEventListener('fetch', e=>{
-  const url = new URL(e.request.url);
-  if (url.pathname.startsWith('/data/')) { // network-first for JSON
-    e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
-    return;
-  }
-  e.respondWith(caches.match(e.request).then(r=>r || fetch(e.request)));
+const VERSION = 'v0.6-' + Date.now();
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(VERSION).then(c => c.addAll(['/','/index.html','/css/styles.css','/css/ui.patch.css','/js/bootstrap.js','/js/app.v2.js','/js/compat/v2-to-graph.js','/js/engine/scenarioEngine.js','/js/addons/extras-tabs.js','/js/addons/art-loader.js','/data/v2-index.json'])));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==VERSION).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  const { request } = e;
+  if (request.method !== 'GET') return;
+  e.respondWith(caches.match(request).then(res => res || fetch(request)));
 });

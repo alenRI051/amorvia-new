@@ -2,47 +2,48 @@
   "version": 2,
   "title": "Dating After Breakup (With Child Involved)",
   "meters": {
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
     "Trust": {
       "label": "Trust",
       "start": 50
     },
-    "ChildStress": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Child_Stress": {
       "label": "Child Stress",
       "start": 10
     }
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 First Date",
+      "title": "Act 1 — First Date",
       "steps": [
         "You decide to meet someone new for coffee.",
         "Your child is staying with your ex.",
-        "Do you tell your ex or keep it private?"
+        "Do you tell your ex about this date or keep it private?"
       ]
     },
     {
-      "title": "Act 2 \u2014 Introducing the Idea",
+      "title": "Act 2 — Introducing the Idea",
       "steps": [
-        "Weeks later your child asks who you were talking to.",
-        "Be honest but gentle, change subject, or dismiss quickly."
+        "Weeks later, your child overhears you on the phone.",
+        "They ask: 'Who is that?' Decide how to respond."
       ]
     },
     {
-      "title": "Act 3 \u2014 First Reactions",
+      "title": "Act 3 — First Reactions",
       "steps": [
-        "Your ex confronts you; choose to reassure, argue, or refuse to discuss."
+        "Your ex finds out and confronts you — calmly, defensively, or angrily.",
+        "Choose: reassure co-parenting focus, argue, or refuse to discuss."
       ]
     },
     {
-      "title": "Act 4 \u2014 Resolution",
+      "title": "Act 4 — Resolution",
       "steps": [
-        "Positive path: acceptance and boundaries.",
-        "Neutral path: tensions remain but manageable.",
-        "Negative path: conflict worsens."
+        "Positive: boundaries set and child feels secure.",
+        "Neutral: tensions remain manageable.",
+        "Negative: conflict worsens; child feels caught in the middle."
       ]
     }
   ]

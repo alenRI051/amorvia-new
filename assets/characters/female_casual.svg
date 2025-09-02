@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><defs><filter id="shadow"><feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ff2b77" flood-opacity="0.3"/></filter></defs><g filter="url(#shadow)"><circle cx="100" cy="80" r="35" fill="#ec4899"/><rect x="60" y="120" width="80" height="120" rx="18" fill="#f472b6"/></g></svg>

@@ -2,15 +2,15 @@
   "version": 2,
   "title": "Scene: First Agreements",
   "meters": {
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
     "Trust": {
       "label": "Trust",
       "start": 50
     },
-    "ChildStress": {
+    "Tension": {
+      "label": "Tension",
+      "start": 20
+    },
+    "Child_Stress": {
       "label": "Child Stress",
       "start": 10
     }
@@ -19,9 +19,9 @@
     {
       "title": "Act 1",
       "steps": [
-        "Seek a neutral mediator to draft a parenting plan.",
-        "Draft a plan and validate it.",
-        "Retain counsel for a formal agreement."
+        "Mediation-first: Seek a neutral mediator to draft a parenting plan.",
+        "DIY plan: Draft a plan and validate with a social worker.",
+        "Lawyered: Each side retains counsel for a formal agreement."
       ]
     }
   ]

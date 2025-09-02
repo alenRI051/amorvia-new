@@ -1,4 +1,3 @@
-\
 // Lightweight Scenario Engine (drop-in) — ESM module
 const qs = (sel) => document.querySelector(sel);
 function setText(el, text) { if (!el) return; el.textContent = text ?? ''; }
@@ -7,9 +6,8 @@ function button(label) { const b = document.createElement('button'); b.type = 'b
 
 export const ScenarioEngine = {
   state: { title: '', nodes: {}, startId: '', currentId: '', meters: {} },
-
   loadScenario(graph) {
-    if (!graph || !graph.startId || !graph.nodes) { throw new Error('Invalid graph'); }
+    if (!graph || !graph.startId || !graph.nodes) throw new Error('Invalid graph');
     this.state.title = graph.title || '';
     this.state.nodes = graph.nodes;
     this.state.startId = graph.startId;
@@ -20,7 +18,6 @@ export const ScenarioEngine = {
   start(startId) { if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); },
   currentNode() { return this.state.nodes[this.state.currentId]; },
   goto(id) { if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); },
-
   applyEffects(effects) {
     if (!effects) return;
     for (const [k, v] of Object.entries(effects)) {
@@ -46,8 +43,7 @@ export const ScenarioEngine = {
     if (titleEl) setText(titleEl, this.state.title || 'Scenario');
     if (badge) setText(badge, 'Act');
     setText(dialog, node.text || '');
-    if (!choicesEl) return;
-    clear(choicesEl);
+    if (!choicesEl) return; clear(choicesEl);
     const type = node.type || (Array.isArray(node.choices) ? 'choice' : (node.to || node.next) ? 'goto' : 'line');
     if (type === 'choice' && Array.isArray(node.choices) && node.choices.length) {
       node.choices.forEach((c, idx) => {

@@ -1,16 +1,11 @@
-\
 (function(){
-  function by(id){ return document.getElementById(id); }
-  function init(){
-    const bgSel = by('bgSelect'), leftSel = by('leftSelect'), rightSel = by('rightSelect');
-    const bgImg = by('bgImg'), leftImg = by('leftImg'), rightImg = by('rightImg');
-    function apply(){
-      if (bgImg && bgSel) bgImg.src = bgSel.value;
-      if (leftImg && leftSel) leftImg.src = leftSel.value;
-      if (rightImg && rightSel) rightImg.src = rightSel.value;
-    }
-    [bgSel,leftSel,rightSel].forEach(sel=> sel && sel.addEventListener('change', apply));
-    apply();
-  }
-  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+  const bgSel = document.getElementById('bgSelect');
+  const lSel = document.getElementById('leftSelect');
+  const rSel = document.getElementById('rightSelect');
+  const bg = document.getElementById('bgImg');
+  const li = document.getElementById('leftImg');
+  const ri = document.getElementById('rightImg');
+  function upd(){ if(bgSel && bg) bg.src = bgSel.value; if(lSel && li) li.src = lSel.value; if(rSel && ri) ri.src = rSel.value; }
+  [bgSel,lSel,rSel].forEach(s => s && s.addEventListener('change', upd));
+  upd();
 })();
