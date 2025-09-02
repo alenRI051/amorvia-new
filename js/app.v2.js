@@ -1,57 +1,60 @@
-// /js/app.v2.js — canonical engine import, deduped
+// /js/app.v2.js — loader sig v2025-09-02
 import { ensureGraph } from '/js/compat/v2-to-graph.js';
 
-let enginePromise = null;
 async function getEngine() {
   if (window.ScenarioEngine) return window.ScenarioEngine;
-  if (!enginePromise) {
-    enginePromise = import('/js/engine/scenarioEngine.js')  // no cache-buster
-      .then(mod => {
-        const E = window.ScenarioEngine || mod.ScenarioEngine || mod.default || mod.engine;
-        if (!E) throw new Error('Engine module missing exports');
-        // Pin globally for any other loaders
-        if (!window.ScenarioEngine) window.ScenarioEngine = E;
+  const paths = [
+    '/js/engine/scenarioEngine.js',
+    '/js/engine/scenario-engine.js',
+    '/js/engine/ScenarioEngine.js',
+    '/js/scenarioEngine.js',
+    '/js/ScenarioEngine.js',
+    '/engine/scenarioEngine.js',
+    '/engine/ScenarioEngine.js',
+    '/scenarioEngine.js'
+  ];
+  let lastErr;
+  for (const p of paths) {
+    try {
+      const m = await import(p);
+      const E = window.ScenarioEngine || m.ScenarioEngine || m.engine || m.default;
+      if (E && (E.loadScenario || E.start || E.startAct)) {
+        console.info('[v2] engine loaded from', p);
+        window.ScenarioEngine = E;
         return E;
-      })
-      .catch(e => {
-        console.error('[v2] Engine load failed', e);
-        throw e;
-      });
+      }
+    } catch (e) { lastErr = e; }
   }
-  return enginePromise;
+  console.error('[v2] Engine load failed:', lastErr);
+  throw new Error('engine missing');
 }
 
 export async function loadScenarioById(id) {
-  const raw = await fetch(`/data/${id}.v2.json?ts=${Date.now()}`, { cache: 'no-store' }).then(r => {
+  const raw = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' }).then(r => {
     if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url);
     return r.json();
   });
-
   const g = ensureGraph(raw);
-  if (!g?.startId || !g.nodes || !g.nodes[g.startId]) {
+  if (!g.nodes || !g.startId || !g.nodes[g.startId]) {
     console.error('[v2] still bad graph after ensureGraph', g);
-    // Fabricate a minimal end scene to avoid crashing UI
     g.startId = 'END';
     g.nodes = { END: { id: 'END', type: 'end', text: '— End —' } };
   }
-
   const E = await getEngine();
-  if (typeof E.loadScenario === 'function') E.loadScenario(g);
-  if (typeof E.start === 'function') E.start(g.startId);
-  else if (typeof E.startAct === 'function') E.startAct(0);
+  if (E.loadScenario) E.loadScenario(g);
+  if (E.start) E.start(g.startId);
+  else if (E.startAct) E.startAct(0);
 }
 
 export async function init() {
   const pick = document.getElementById('scenarioPicker');
   if (pick && !pick.options.length) {
     try {
-      const idx = await fetch('/data/v2-index.json?ts=' + Date.now(), { cache: 'no-store' }).then(r => r.json());
-      const list = Array.isArray(idx?.scenarios) ? idx.scenarios : [];
-      for (const s of list) {
+      const idx = await fetch('/data/v2-index.json', { cache: 'no-store' }).then(r => r.json());
+      (idx.scenarios || []).forEach(s => {
         const o = document.createElement('option');
-        o.value = s.id; o.textContent = s.title || s.id;
-        pick.appendChild(o);
-      }
+        o.value = s.id; o.textContent = s.title || s.id; pick.appendChild(o);
+      });
     } catch (e) { console.warn('[v2] index load failed', e); }
   }
   pick?.addEventListener('change', () => loadScenarioById(pick.value));

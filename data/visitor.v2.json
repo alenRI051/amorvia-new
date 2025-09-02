@@ -1,39 +1,48 @@
 {
   "version": 2,
+  "id": "visitor",
   "title": "Visitor",
   "meters": {
-    "Trust": {
-      "label": "Trust",
-      "start": 50
-    },
-    "Tension": {
+    "tension": {
       "label": "Tension",
-      "start": 20
+      "start": 20,
+      "min": 0,
+      "max": 100
     },
-    "Child_Stress": {
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "childStress": {
       "label": "Child Stress",
-      "start": 10
+      "start": 10,
+      "min": 0,
+      "max": 100
     }
   },
   "acts": [
     {
-      "title": "Act 1",
+      "title": "Act 1 — Knock at the Door",
       "steps": [
-        "A late-evening knock at the door — your ex arrives unexpectedly.",
-        "You decide whether to invite them in, talk at the door, or postpone."
+        "A late visitor rings the bell during exchange night.",
+        "Your co-parent is visibly anxious about the disruption.",
+        "Decide: ask the visitor to wait, invite them in briefly, or postpone the chat."
       ]
     },
     {
-      "title": "Act 2",
+      "title": "Act 2 — Clarify",
       "steps": [
-        "Tension rises; the child is nearby. Choices affect Trust and Tension meters.",
-        "You model calm boundaries."
+        "The visitor claims urgency; your child watches from the hallway.",
+        "You balance privacy with transparency and boundaries."
       ]
     },
     {
-      "title": "Act 3",
+      "title": "Act 3 — Wrap",
       "steps": [
-        "A resolution: set visiting rules, agree on a time, or end the chat."
+        "You agree on next steps with the visitor and reassure your co-parent and child.",
+        "The exchange resumes calmly."
       ]
     }
   ]
