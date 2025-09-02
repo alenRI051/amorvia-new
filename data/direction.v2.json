@@ -3,19 +3,19 @@
   "id": "direction",
   "title": "Direction",
   "meters": {
-    "tension": {
-      "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
-    },
     "trust": {
       "label": "Trust",
       "start": 50,
       "min": 0,
       "max": 100
     },
-    "child_stress": {
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "childStress": {
       "label": "Child Stress",
       "start": 10,
       "min": 0,
