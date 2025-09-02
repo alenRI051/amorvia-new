@@ -1,17 +1,5 @@
-// /js/app.v2.js
-// v2 loader with robust engine autoload + metrics
+// /js/app.v2.js — loader sig v2025-09-02
 import { ensureGraph } from '/js/compat/v2-to-graph.js';
-import { track } from '/js/metrics.js';
-
-console.info('[v2] loader sig v2025-09-01-e');
-
-let wired = false;
-function wireGlobalEventListeners(){
-  if (wired) return;
-  wired = true;
-  window.addEventListener('amorvia:node',  (e)=> track('node',   e.detail||{}));
-  window.addEventListener('amorvia:choice',(e)=> track('choice', e.detail||{}));
-}
 
 async function getEngine() {
   if (window.ScenarioEngine) return window.ScenarioEngine;
@@ -25,29 +13,30 @@ async function getEngine() {
     '/engine/ScenarioEngine.js',
     '/scenarioEngine.js'
   ];
+  let lastErr;
   for (const p of paths) {
     try {
-      const m = await import(`${p}?v=${Date.now()}`);
+      const m = await import(p + '?v=' + Date.now());
       const E = window.ScenarioEngine || m.ScenarioEngine || m.engine || m.default;
-      if (E && (E.loadScenario || E.start || E.startAct)) { 
-        window.ScenarioEngine = E; 
+      if (E && (E.loadScenario || E.start || E.startAct)) {
         console.info('[v2] engine loaded from', p);
-        wireGlobalEventListeners();
-        return E; 
+        window.ScenarioEngine = E;
+        return E;
       }
-    } catch {}
+    } catch (e) { lastErr = e; }
   }
-  throw new Error('engine missing or invalid');
+  console.error('[v2] Engine load failed:', lastErr);
+  throw new Error('engine missing');
 }
 
 export async function loadScenarioById(id) {
-  track('scenario_open', { id });
-  const raw = await fetch(`/data/${id}.v2.json?ts=${Date.now()}`, { cache: 'no-store' })
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url); return r.json(); });
-
+  const raw = await fetch(`/data/${id}.v2.json?ts=${Date.now()}`, { cache: 'no-store' }).then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url);
+    return r.json();
+  });
   const g = ensureGraph(raw);
   if (!g.nodes || !g.startId || !g.nodes[g.startId]) {
-    console.error('[v2] bad graph, fabricating end node', g);
+    console.error('[v2] still bad graph after ensureGraph', g);
     g.startId = 'END';
     g.nodes = { END: { id: 'END', type: 'end', text: '— End —' } };
   }
@@ -59,7 +48,6 @@ export async function loadScenarioById(id) {
 }
 
 export async function init() {
-  try{ track('boot'); }catch{}
   const pick = document.getElementById('scenarioPicker');
   if (pick && !pick.options.length) {
     try {
@@ -68,7 +56,7 @@ export async function init() {
         const o = document.createElement('option');
         o.value = s.id; o.textContent = s.title || s.id; pick.appendChild(o);
       });
-    } catch {}
+    } catch (e) { console.warn('[v2] index load failed', e); }
   }
   pick?.addEventListener('change', () => loadScenarioById(pick.value));
   if (pick && pick.value) loadScenarioById(pick.value);

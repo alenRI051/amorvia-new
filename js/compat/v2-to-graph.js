@@ -1,5 +1,5 @@
 // Ultra-robust v2 -> graph converter for Amorvia
-// Accepts v2 docs (version:2, acts:[{steps:[...] }]) and emits {title,startId,nodes:{...}}
+// Accepts v2 docs (version:2, acts:[{steps:[...]}]) and emits {title,startId,nodes:{...}}
 
 function normalizeChoice(ch, fallbackTo) {
   if (!ch || typeof ch !== 'object') {
@@ -86,4 +86,3 @@ export function ensureGraph(doc) {
 }
 
 export default ensureGraph;
-
