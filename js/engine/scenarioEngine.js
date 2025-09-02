@@ -1,23 +1,31 @@
+
 // Lightweight Scenario Engine (drop-in) — ESM module
+// API: ScenarioEngine.loadScenario(graph), ScenarioEngine.start(startId)
+// Graph shape: { title, startId, nodes: { [id]: { id, text, type?, choices?, to?, next? } } }
+
 const qs = (sel) => document.querySelector(sel);
+
 function setText(el, text) { if (!el) return; el.textContent = text ?? ''; }
 function clear(el) { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); }
 function button(label) { const b = document.createElement('button'); b.type = 'button'; b.className = 'button'; b.textContent = label; return b; }
 
 export const ScenarioEngine = {
   state: { title: '', nodes: {}, startId: '', currentId: '', meters: {} },
+
   loadScenario(graph) {
-    if (!graph || !graph.startId || !graph.nodes) throw new Error('Invalid graph');
+    if (!graph || !graph.startId || !graph.nodes) { throw new Error('Invalid graph'); }
     this.state.title = graph.title || '';
     this.state.nodes = graph.nodes;
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
-    this.state.meters = graph.meters || {};
+    this.state.meters = Object.assign({}, graph.meters || {});
     this.render();
   },
+
   start(startId) { if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); },
   currentNode() { return this.state.nodes[this.state.currentId]; },
   goto(id) { if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); },
+
   applyEffects(effects) {
     if (!effects) return;
     for (const [k, v] of Object.entries(effects)) {
@@ -27,6 +35,7 @@ export const ScenarioEngine = {
     }
     this.renderHUD();
   },
+
   renderHUD() {
     const hud = qs('#hud'); if (!hud) return; clear(hud);
     for (const [k, v] of Object.entries(this.state.meters)) {
@@ -36,15 +45,20 @@ export const ScenarioEngine = {
       wrap.appendChild(name); wrap.appendChild(val); hud.appendChild(wrap);
     }
   },
+
   render() {
     const node = this.currentNode();
     const dialog = qs('#dialog'), choicesEl = qs('#choices'), titleEl = qs('#sceneTitle'), badge = qs('#actBadge');
     if (!node) { setText(dialog, '⚠️ No current node.'); if (choicesEl) clear(choicesEl); return; }
     if (titleEl) setText(titleEl, this.state.title || 'Scenario');
     if (badge) setText(badge, 'Act');
+
     setText(dialog, node.text || '');
-    if (!choicesEl) return; clear(choicesEl);
+    if (!choicesEl) return;
+    clear(choicesEl);
+
     const type = node.type || (Array.isArray(node.choices) ? 'choice' : (node.to || node.next) ? 'goto' : 'line');
+
     if (type === 'choice' && Array.isArray(node.choices) && node.choices.length) {
       node.choices.forEach((c, idx) => {
         const btn = button(c.label || `Option ${idx+1}`);
@@ -68,5 +82,6 @@ export const ScenarioEngine = {
     this.renderHUD();
   }
 };
+
 window.ScenarioEngine = ScenarioEngine;
 console.info('[ScenarioEngine] drop-in engine ready');

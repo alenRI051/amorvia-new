@@ -1,3 +1,4 @@
+
 // /js/app.v2.js
 import { ensureGraph } from '/js/compat/v2-to-graph.js';
 console.info('[v2] loader sig v2025-09-01-d');
@@ -29,7 +30,13 @@ export async function loadScenarioById(id) {
     if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url);
     return r.json();
   });
-  const g = ensureGraph(raw);
+  let g;
+  try {
+    g = ensureGraph(raw);
+  } catch (e) {
+    console.error('[v2] conversion threw: ', e);
+    g = { title: raw?.title || '', startId: 'END', nodes: { END: { id: 'END', type: 'end', text: '— End —' } } };
+  }
   if (!g.nodes || !g.startId || !g.nodes[g.startId]) {
     console.error('[v2] still bad graph', g);
     // fabricate minimal
@@ -52,6 +59,7 @@ export async function init() {
         const o = document.createElement('option');
         o.value = s.id; o.textContent = s.title || s.id; pick.appendChild(o);
       });
+      if (!pick.value && pick.options.length) pick.value = pick.options[0].value;
     } catch {}
   }
   pick?.addEventListener('change', () => loadScenarioById(pick.value));
@@ -60,4 +68,3 @@ export async function init() {
 }
 
 init().catch(console.error);
-

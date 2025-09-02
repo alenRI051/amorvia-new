@@ -1,10 +1,18 @@
+
+/**
+ * Extras/Labs Tabs Addon (themed, CSP-safe)
+ */
 (function(){
   function ensureCSS(){
     const href = '/css/addons.css';
-    if (![...document.styleSheets].some(s => s.href && s.href.endsWith('addons.css'))) {
-      const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = href + '?v=' + Date.now(); document.head.appendChild(link);
+    if (![...document.styleSheets].some(s => s.href && s.href.includes('/css/addons.css'))) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href + '?v=' + Date.now();
+      document.head.appendChild(link);
     }
   }
+
   function h(tag, props={}, ...children){
     const el = document.createElement(tag);
     for (const [k,v] of Object.entries(props||{})) {
@@ -16,26 +24,33 @@
     children.flat().forEach(c => { if (c!=null) el.appendChild(typeof c==='string' ? document.createTextNode(c) : c); });
     return el;
   }
-  function openScenarioById(id){
-    window.AmorviaV2?.loadScenarioById?.(id);
+
+  async function fetchJSON(url){
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP '+res.status+' for '+url);
+    return await res.json();
   }
-  async function fetchJSON(url){ const r = await fetch(url, { cache:'no-store' }); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }
-  async function init(){
-    ensureCSS();
-    const host = document.getElementById('scenarioListV2')?.parentElement || document.querySelector('aside.card.panel') || document.body;
-    const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
-    const tabMain = h('button', { class:'av-tab', id:'tabMain', role:'tab', 'aria-selected':'true', 'aria-controls':'paneMain' }, 'Scenarios');
-    const tabLabs = h('button', { class:'av-tab', id:'tabLabs', role:'tab', 'aria-selected':'false', 'aria-controls':'paneLabs' }, 'Labs');
-    const spacer = h('div', { class:'av-tabs-spacer', 'aria-hidden':'true' });
-    const label = h('label', { class:'av-toggle' }, h('input', { type:'checkbox', id:'showExtrasInMain', 'aria-label':'Show extras in main' }), h('span', { class:'av-toggle-text' }, 'Show extras in main'));
-    tabs.append(tabMain, tabLabs, spacer, label);
-    const paneMain = h('div', { id:'paneMain', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabMain' });
-    const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
-    const wrap = h('div', { class:'av-wrap' }, tabs, paneMain, paneLabs);
-    const anchor = document.getElementById('scenarioListV2') || host;
-    anchor.insertAdjacentElement('afterend', wrap);
+
+  function openScenarioById(id){
+    if (window.AmorviaV2?.loadScenarioById) return window.AmorviaV2.loadScenarioById(id);
+    const pick = document.getElementById('scenarioPicker');
+    if (pick) { pick.value = id; pick.dispatchEvent(new Event('change')); }
+  }
+
+  function renderList(container, list){
+    container.innerHTML = '';
+    const ul = h('div', { class: 'list av-list', role: 'list' });
+    list.forEach(s => {
+      const btn = h('button', { class: 'button av-item', role:'listitem', 'data-id': s.id, onClick: ()=>openScenarioById(s.id) }, s.title || s.id);
+      ul.appendChild(btn);
+    });
+    container.appendChild(ul);
+  }
+
+  function setupTabs(tabsRoot){
+    const buttons = tabsRoot.querySelectorAll('[role="tab"]');
     function select(id){
-      [tabMain, tabLabs].forEach(btn => {
+      buttons.forEach(btn => {
         const isActive = btn.id === id;
         btn.setAttribute('aria-selected', String(isActive));
         btn.classList.toggle('av-tab-active', isActive);
@@ -43,19 +58,40 @@
         if (panel) panel.hidden = !isActive;
       });
     }
-    tabMain.addEventListener('click', ()=>select('tabMain'));
-    tabLabs.addEventListener('click', ()=>select('tabLabs'));
-    select('tabMain');
-    const idx = await fetchJSON('/data/v2-index.json?ts='+Date.now());
-    const all = Array.isArray(idx.scenarios) ? idx.scenarios : [];
-    const extras = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation']);
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => select(btn.id));
+    });
+    const initial = tabsRoot.querySelector('[role="tab"][aria-selected="true"]');
+    if (initial) select(initial.id);
+  }
+
+  async function init(){
+    ensureCSS();
+    const anchor = document.getElementById('scenarioListV2') || document.querySelector('#scenarioPicker')?.parentElement || document.body;
+    const tabs = h('div', { id:'labsTabs', class:'v2-only av-tabs', role:'tablist', 'aria-label':'Scenario lists' });
+    const tabMain = h('button', { class:'av-tab', id:'tabMain', role:'tab', 'aria-selected':'true', 'aria-controls':'paneMain' }, 'Scenarios');
+    const tabLabs = h('button', { class:'av-tab', id:'tabLabs', role:'tab', 'aria-selected':'false', 'aria-controls':'paneLabs' }, 'Labs');
+    tabs.append(tabMain, tabLabs);
+
+    const paneMain = h('div', { id:'paneMain', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabMain' });
+    const paneLabs = h('div', { id:'paneLabs', class:'av-pane', role:'tabpanel', 'aria-labelledby':'tabLabs', hidden:'true' });
+
+    anchor.innerHTML = '';
+    anchor.appendChild(tabs);
+    anchor.appendChild(paneMain);
+    anchor.appendChild(paneLabs);
+    setupTabs(tabs);
+
+    const index = await fetchJSON('/data/v2-index.json?ts='+Date.now());
+    const all = Array.isArray(index.scenarios) ? index.scenarios : [];
+    const extras = new Set(['different-rules','scene-first-agreements','scene-new-introductions','scene-de-escalation','visitor']);
     const beta = all.filter(s => !extras.has(s.id));
     const extrasList = all.filter(s => extras.has(s.id));
-    const cb = document.getElementById('showExtrasInMain');
-    const renderList = (container, scenarios) => { container.innerHTML=''; scenarios.forEach(s => { const b = h('button', { class:'button av-item', onClick:()=>openScenarioById(s.id) }, s.title || s.id); container.appendChild(b); }); };
-    const update = () => { renderList(paneMain, cb.checked ? beta.concat(extrasList) : beta); renderList(paneLabs, extrasList); };
-    cb.addEventListener('change', update);
-    update();
+
+    renderList(paneMain, beta.length ? beta : all);
+    renderList(paneLabs, extrasList);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();

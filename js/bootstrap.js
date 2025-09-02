@@ -1,3 +1,4 @@
+
 /* Amorvia bootstrap + extras/labs + art */
 const bgImg = document.getElementById('bgImg');
 if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
@@ -10,37 +11,53 @@ function applyModeToDOM(mode) {
   document.body.classList.add(mode === 'v2' ? 'mode-v2' : 'mode-v1');
   document.querySelectorAll('.v1-only').forEach(el => {
     const on = mode === 'v1';
-    el.hidden = !on; el.setAttribute('aria-hidden', String(!on));
+    el.hidden = !on;
+    el.setAttribute('aria-hidden', String(!on));
   });
   document.querySelectorAll('.v2-only').forEach(el => {
     const on = mode === 'v2';
-    el.hidden = !on; el.setAttribute('aria-hidden', String(!on));
+    el.hidden = !on;
+    el.setAttribute('aria-hidden', String(!on));
   });
 }
+
 const modeSel = document.getElementById('modeSelect');
 if (modeSel) {
   modeSel.value = getMode();
   applyModeToDOM(modeSel.value);
   modeSel.addEventListener('change', () => { setMode(modeSel.value); location.reload(); });
-} else { applyModeToDOM(getMode()); }
+} else {
+  applyModeToDOM(getMode());
+}
 
-let loaded=false;
-async function loadChosenApp(){
-  if (loaded) return; loaded = true;
+let loaded = false;
+async function loadChosenApp() {
+  if (loaded) return;
+  loaded = true;
   const mode = getMode();
-  try{
-    if (mode === 'v2'){
-      const app = await import('/js/app.v2.js');
+  try {
+    if (mode === 'v2') {
+      const app = await import('/js/app.v2.js?v='+Date.now());
       await Promise.allSettled([
-        import('/js/addons/extras-tabs.js'),
-        import('/js/addons/art-loader.js'),
+        import('/js/addons/ensure-anchor.js?v='+Date.now()),
+        import('/js/addons/extras-tabs.js?v='+Date.now()),
+        import('/js/addons/art-loader.js?v='+Date.now()),
       ]);
       app?.init?.();
     } else {
-      const m = await import('/js/app.js');
+      const m = await import('/js/app.js?v='+Date.now());
       m?.init?.();
     }
-  }catch(e){ console.error('Failed to start app:', e); }
+  } catch (e) {
+    console.error('Failed to start app:', e);
+  }
 }
-['click','keydown','pointerdown'].forEach(evt => window.addEventListener(evt, loadChosenApp, { once: true }));
-if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp, { timeout: 2000 }); else setTimeout(loadChosenApp, 2000);
+
+['click','keydown','pointerdown'].forEach(evt =>
+  window.addEventListener(evt, loadChosenApp, { once: true })
+);
+if ('requestIdleCallback' in window) {
+  requestIdleCallback(loadChosenApp, { timeout: 2000 });
+} else {
+  setTimeout(loadChosenApp, 2000);
+}

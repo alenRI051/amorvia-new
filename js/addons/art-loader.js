@@ -1,11 +1,20 @@
+
+// Simple image loader for background and characters
 (function(){
-  const bgSel = document.getElementById('bgSelect');
-  const lSel = document.getElementById('leftSelect');
-  const rSel = document.getElementById('rightSelect');
-  const bg = document.getElementById('bgImg');
-  const li = document.getElementById('leftImg');
-  const ri = document.getElementById('rightImg');
-  function upd(){ if(bgSel && bg) bg.src = bgSel.value; if(lSel && li) li.src = lSel.value; if(rSel && ri) ri.src = rSel.value; }
-  [bgSel,lSel,rSel].forEach(s => s && s.addEventListener('change', upd));
-  upd();
+  function byId(id){ return document.getElementById(id); }
+  function bind(selectId, imgId){
+    const sel = byId(selectId);
+    const img = byId(imgId);
+    if (!sel || !img) return;
+    function apply(){ const v = sel.value; if (img.tagName === 'IMG') img.src = v; else if (img) img.style.backgroundImage = `url(${v})`; }
+    sel.addEventListener('change', apply);
+    apply();
+  }
+  function init(){
+    bind('bgSelect', 'bgImg');
+    bind('leftSelect', 'leftImg');
+    bind('rightSelect', 'rightImg');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
