@@ -1,10 +1,30 @@
 {
+  "version": 2,
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "version": 2,
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "child_stress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
+  },
   "acts": [
     {
-      "title": "Act 1 \u2014 First Date",
+      "title": "Act 1 — First Date",
       "steps": [
         "You decide to meet someone new for coffee.",
         "Your child is staying with your ex.",
@@ -12,26 +32,27 @@
       ]
     },
     {
-      "title": "Act 2 \u2014 Introducing the Idea",
+      "title": "Act 2 — Introducing the Idea",
       "steps": [
-        "Weeks later, your child overhears a phone chat.",
-        "Child asks: \u201cWho is that?\u201d",
-        "Choices: honest but gentle; change the subject; dismiss quickly."
+        "Weeks later, your child overhears you on the phone.",
+        "Child asks: 'Who is that?'",
+        "Choices: be honest but gentle, change subject, or dismiss."
       ]
     },
     {
-      "title": "Act 3 \u2014 First Reactions",
+      "title": "Act 3 — First Reactions",
       "steps": [
-        "Your ex finds out you\u2019ve started dating; reaction varies.",
-        "Options: reassure child\u2011first approach; argue; refuse to discuss."
+        "Your ex finds out that you’ve started dating.",
+        "They confront you — calmly, defensively, or angrily.",
+        "Choose to reassure, argue, or refuse to discuss."
       ]
     },
     {
-      "title": "Act 4 \u2014 Resolution",
+      "title": "Act 4 — Resolution",
       "steps": [
-        "Positive: acceptance + boundaries.",
-        "Neutral: tensions remain manageable.",
-        "Negative: conflict worsens; child feels caught."
+        "Positive: ex accepts boundaries; child feels secure.",
+        "Neutral: tensions remain but manageable.",
+        "Negative: conflict worsens; child feels caught in the middle."
       ]
     }
   ]

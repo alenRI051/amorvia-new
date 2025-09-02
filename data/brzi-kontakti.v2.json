@@ -1,14 +1,34 @@
 {
+  "version": 2,
   "id": "brzi-kontakti",
   "title": "Brzi kontakti",
-  "version": 2,
+  "meters": {
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "child_stress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
+  },
   "acts": [
     {
       "title": "Act 1",
       "steps": [
         "CZSS: socskrb.hr",
         "Obiteljski sud / odvjetnici: lokalni kontakti",
-        "Mediacija: provjerite registrirane medijatore Ministarstva pravosu\u0111a"
+        "Mediacija: registrirani medijatori — Ministarstvo pravosuđa"
       ]
     }
   ]

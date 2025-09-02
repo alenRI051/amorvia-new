@@ -15,7 +15,7 @@
       "min": 0,
       "max": 100
     },
-    "childStress": {
+    "child_stress": {
       "label": "Child Stress",
       "start": 10,
       "min": 0,
@@ -28,23 +28,23 @@
       "steps": [
         "You arrive to pick up your child, but your ex seems upset.",
         "They start speaking in a confusing or emotional way.",
-        "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
+        "Choose: stay calm, ignore the behavior, or respond emotionally."
       ]
     },
     {
       "title": "Act 2 — Escalation",
       "steps": [
-        "The discussion grows tense, and your ex raises their voice.",
+        "The discussion grows tense; voices rise.",
         "Your child notices the tension and becomes unsettled.",
-        "Options appear: de-escalate with soothing words, suggest a short break, or argue back."
+        "Options: de-escalate with soothing words, suggest a short break, or argue back."
       ]
     },
     {
       "title": "Act 3 — Resolution",
       "steps": [
-        "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
-        "If you stayed calm, your child feels reassured.",
-        "If you escalated, the conflict lingers and your child feels stressed."
+        "Depending on choices: small compromise, unresolved exit, or worse conflict.",
+        "If you stayed calm, child feels reassured.",
+        "If you escalated, conflict lingers and child feels stressed."
       ]
     }
   ]

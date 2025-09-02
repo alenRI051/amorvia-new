@@ -15,7 +15,7 @@
       "min": 0,
       "max": 100
     },
-    "childStress": {
+    "child_stress": {
       "label": "Child Stress",
       "start": 10,
       "min": 0,
@@ -24,25 +24,25 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Knock at the Door",
+      "title": "Act 1 — Unexpected Knock",
       "steps": [
-        "A late visitor rings the bell during exchange night.",
-        "Your co-parent is visibly anxious about the disruption.",
-        "Decide: ask the visitor to wait, invite them in briefly, or postpone the chat."
+        "A visitor arrives during your custody time.",
+        "Your co-parent did not mention this.",
+        "Decide whether to allow a brief visit, set a later time, or refuse."
       ]
     },
     {
-      "title": "Act 2 — Clarify",
+      "title": "Act 2 — Boundaries",
       "steps": [
-        "The visitor claims urgency; your child watches from the hallway.",
-        "You balance privacy with transparency and boundaries."
+        "The visitor presses for more time.",
+        "You can enforce the boundary, compromise on a short supervised chat, or give in."
       ]
     },
     {
-      "title": "Act 3 — Wrap",
+      "title": "Act 3 — Aftermath",
       "steps": [
-        "You agree on next steps with the visitor and reassure your co-parent and child.",
-        "The exchange resumes calmly."
+        "Child reacts to how the visit was handled.",
+        "Follow-up message to co-parent: neutral recap, defensive text, or no message."
       ]
     }
   ]
