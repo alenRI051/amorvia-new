@@ -4,13 +4,12 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia - Multi-Act</title>
-  <link rel="canonical" href="https://amorvia.eu/"/>
-  <meta name="robots" content="index,follow"/>
   <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#0f172a"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
+  <link rel="stylesheet" href="/css/addons.css"/>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -18,7 +17,7 @@
 
   <main id="main" class="wrap">
     <aside class="card panel">
-      <!-- Classic v1 UI -->
+      <!-- v1 (hidden in this bundle, but kept for compatibility) -->
       <div class="v1-only" hidden aria-hidden="true">
         <label class="sr-only" for="search">Search scenarios</label>
         <input id="search" class="input" placeholder="Search scenarios..." autocomplete="off"/>
@@ -29,7 +28,7 @@
         </div>
       </div>
 
-      <!-- Branching v2 UI -->
+      <!-- v2 -->
       <div class="v2-only">
         <label for="scenarioPicker">Scenario</label>
         <select id="scenarioPicker" class="select"></select>

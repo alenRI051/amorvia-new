@@ -9,16 +9,8 @@
       "title": "Scene: First Agreements"
     },
     {
-      "id": "brzi-kontakti",
-      "title": "Brzi kontakti"
-    },
-    {
       "id": "scene-new-introductions",
       "title": "Scene: New Introductions"
-    },
-    {
-      "id": "dating-after-breakup-with-child-involved",
-      "title": "Dating After Breakup (With Child Involved)"
     },
     {
       "id": "scene-different-rules",
@@ -29,12 +21,20 @@
       "title": "Scene: De-escalation"
     },
     {
+      "id": "dating-after-breakup-with-child-involved",
+      "title": "Dating After Breakup (With Child Involved)"
+    },
+    {
+      "id": "brzi-kontakti",
+      "title": "Brzi kontakti"
+    },
+    {
       "id": "direction",
       "title": "Direction"
     },
     {
-      "id": "visitor",
-      "title": "Visitor"
+      "id": "to-do",
+      "title": "To Do"
     }
   ]
 }

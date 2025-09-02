@@ -1,42 +1,30 @@
 {
-  "version": 2,
+  "id": "co-parenting-with-bipolar-partner",
   "title": "Co-Parenting with Bipolar Partner",
-  "meters": {
-    "Trust": {
-      "label": "Trust",
-      "start": 50
-    },
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
-    "Child_Stress": {
-      "label": "Child Stress",
-      "start": 10
-    }
-  },
+  "version": 2,
   "acts": [
     {
-      "title": "Act 1 — First Exchange",
+      "title": "Act 1 \u2014 First Exchange",
       "steps": [
         "You arrive to pick up your child, but your ex seems upset.",
         "They start speaking in a confusing or emotional way.",
-        "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
+        "Choose: stay calm, ignore, or react emotionally."
       ]
     },
     {
-      "title": "Act 2 — Escalation",
+      "title": "Act 2 \u2014 Escalation",
       "steps": [
-        "The discussion grows tense, and your ex raises their voice.",
-        "Your child notices the tension and becomes unsettled.",
-        "Options: de-escalate with soothing words, suggest a break, or argue back."
+        "The discussion grows tense; voices rise.",
+        "Your child notices and becomes unsettled.",
+        "Options: de\u2011escalate gently, suggest a short break, or argue back."
       ]
     },
     {
-      "title": "Act 3 — Resolution",
+      "title": "Act 3 \u2014 Resolution",
       "steps": [
-        "Depending on choices, you reach compromise, leave unresolved, or make it worse.",
-        "If you stayed calm, your child feels reassured. If you escalated, the conflict lingers."
+        "Depending on choices: a compromise, unresolved tension, or worsened conflict.",
+        "If you stayed calm, your child feels reassured.",
+        "If you escalated, the conflict lingers and your child feels stressed."
       ]
     }
   ]

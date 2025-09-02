@@ -1,88 +1,33 @@
-// /js/engine/scenarioEngine.js
-// Lightweight Scenario Engine (ESM) with event emits for metrics
-const qs = (sel) => document.querySelector(sel);
-function setText(el, text) { if (!el) return; el.textContent = text ?? ''; }
-function clear(el) { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); }
-function button(label) { const b = document.createElement('button'); b.type = 'button'; b.className = 'button'; b.textContent = label; return b; }
-
-function emit(name, detail){ try{ window.dispatchEvent(new CustomEvent('amorvia:'+name, { detail })); }catch{} }
+// Lightweight Scenario Engine ESM
+const qs = (s)=>document.querySelector(s);
+function setText(el,t){ if(el) el.textContent = t ?? ''; }
+function clear(el){ if(!el) return; while(el.firstChild) el.removeChild(el.firstChild); }
+function btn(label){ const b=document.createElement('button'); b.className='button'; b.type='button'; b.textContent=label; return b; }
 
 export const ScenarioEngine = {
-  state: { title: '', nodes: {}, startId: '', currentId: '', meters: {} },
-
-  loadScenario(graph) {
-    if (!graph || !graph.startId || !graph.nodes) { throw new Error('Invalid graph'); }
-    this.state.title = graph.title || '';
-    this.state.nodes = graph.nodes;
-    this.state.startId = graph.startId;
-    this.state.currentId = graph.startId;
+  state:{ title:'', nodes:{}, startId:'', currentId:'', meters:{} },
+  loadScenario(graph){
+    if(!graph||!graph.startId||!graph.nodes) throw new Error('Invalid graph');
+    this.state.title=graph.title||''; this.state.nodes=graph.nodes; this.state.startId=graph.startId; this.state.currentId=graph.startId;
     this.render();
-    emit('node', { id: this.state.currentId });
   },
-
-  start(startId) { if (startId && this.state.nodes[startId]) this.state.currentId = startId; this.render(); emit('node', { id: this.state.currentId }); },
-  currentNode() { return this.state.nodes[this.state.currentId]; },
-  goto(id) { if (!this.state.nodes[id]) { console.error('Node not found:', id); return; } this.state.currentId = id; this.render(); emit('node', { id }); },
-
-  applyEffects(effects) {
-    if (!effects) return;
-    for (const [k, v] of Object.entries(effects)) {
-      const cur = Number(this.state.meters[k] ?? 0);
-      const next = Math.max(0, Math.min(100, cur + Number(v)));
-      this.state.meters[k] = next;
-    }
-    this.renderHUD();
-  },
-
-  renderHUD() {
-    const hud = qs('#hud'); if (!hud) return; clear(hud);
-    for (const [k, v] of Object.entries(this.state.meters)) {
-      const wrap = document.createElement('div'); wrap.className = 'meter row';
-      const name = document.createElement('span'); name.textContent = k;
-      const val = document.createElement('span'); val.textContent = String(v);
-      wrap.appendChild(name); wrap.appendChild(val); hud.appendChild(wrap);
-    }
-  },
-
-  render() {
-    const node = this.currentNode();
-    const dialog = qs('#dialog'), choicesEl = qs('#choices'), titleEl = qs('#sceneTitle'), badge = qs('#actBadge');
-    if (!node) { setText(dialog, '⚠️ No current node.'); if (choicesEl) clear(choicesEl); return; }
-    if (titleEl) setText(titleEl, this.state.title || 'Scenario');
-    if (badge) setText(badge, 'Act');
-
-    setText(dialog, node.text || '');
-    if (!choicesEl) return;
-    clear(choicesEl);
-
-    const type = node.type || (Array.isArray(node.choices) ? 'choice' : (node.to || node.next) ? 'goto' : 'line');
-
-    if (type === 'choice' && Array.isArray(node.choices) && node.choices.length) {
-      node.choices.forEach((c, idx) => {
-        const btn = button(c.label || `Option ${idx+1}`);
-        btn.addEventListener('click', () => { 
-          this.applyEffects(c.effects); 
-          emit('choice', { label: c.label || `Option ${idx+1}`, to: c.to });
-          this.goto(c.to); 
-        });
-        choicesEl.appendChild(btn);
-      });
-    } else if (type === 'goto' && node.to) {
-      const btn = button('Continue'); btn.addEventListener('click', () => this.goto(node.to)); choicesEl.appendChild(btn);
-    } else if (node.next) {
-      const btn = button('Continue'); btn.addEventListener('click', () => this.goto(node.next)); choicesEl.appendChild(btn);
-    } else if (type === 'end') {
-      const done = document.createElement('div'); done.textContent = '— End —'; choicesEl.appendChild(done);
-    } else {
-      const m = /^a(\d+)s(\d+)$/.exec(node.id || '');
-      if (m) {
-        const guess = `a${Number(m[1])}s${Number(m[2]) + 1}`;
-        if (this.state.nodes[guess]) { const btn = button('Continue'); btn.addEventListener('click', () => this.goto(guess)); choicesEl.appendChild(btn); return; }
-      }
-      const end = document.createElement('div'); end.textContent = '— End —'; choicesEl.appendChild(end);
-    }
+  start(id){ if(id && this.state.nodes[id]) this.state.currentId=id; this.render(); },
+  currentNode(){ return this.state.nodes[this.state.currentId]; },
+  goto(id){ if(!this.state.nodes[id]){ console.warn('Node not found',id); return; } this.state.currentId=id; this.render(); },
+  renderHUD(){ const hud=qs('#hud'); if(!hud) return; clear(hud); for(const [k,v] of Object.entries(this.state.meters)){ const d=document.createElement('div'); d.textContent=`${k}: ${v}`; hud.appendChild(d);} },
+  render(){
+    const node=this.currentNode(); const dialog=qs('#dialog'), choices=qs('#choices'), titleEl=qs('#sceneTitle'), badge=qs('#actBadge');
+    if(!node){ setText(dialog, '⚠️ No current node.'); clear(choices); return; }
+    setText(titleEl,this.state.title||'Scenario'); setText(badge,'Act');
+    setText(dialog,node.text||'');
+    if(!choices) return; clear(choices);
+    const type=node.type || (Array.isArray(node.choices)?'choice':(node.to||node.next)?'goto':'line');
+    if(type==='choice' && node.choices?.length){
+      node.choices.forEach((c,i)=>{ const b=btn(c.label||`Option ${i+1}`); b.onclick=()=>this.goto(c.to); choices.appendChild(b); });
+    }else if(type==='goto' && node.to){ const b=btn('Continue'); b.onclick=()=>this.goto(node.to); choices.appendChild(b); }
+    else if(node.next){ const b=btn('Continue'); b.onclick=()=>this.goto(node.next); choices.appendChild(b); }
+    else { const end=document.createElement('div'); end.textContent='— End —'; choices.appendChild(end); }
   }
 };
-
 window.ScenarioEngine = ScenarioEngine;
-console.info('[ScenarioEngine] drop-in engine ready');
+console.info('[ScenarioEngine] ready');

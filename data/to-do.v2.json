@@ -1,0 +1,15 @@
+{
+  "id": "to-do",
+  "title": "To Do",
+  "version": 2,
+  "acts": [
+    {
+      "title": "Act 1",
+      "steps": [
+        "Images: next/image where applicable.",
+        "Color contrast \u2265 4.5:1.",
+        "Landmarks & labels for controls."
+      ]
+    }
+  ]
+}

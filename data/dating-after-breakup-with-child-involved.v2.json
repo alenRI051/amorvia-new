@@ -1,23 +1,10 @@
 {
-  "version": 2,
+  "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "meters": {
-    "Trust": {
-      "label": "Trust",
-      "start": 50
-    },
-    "Tension": {
-      "label": "Tension",
-      "start": 20
-    },
-    "Child_Stress": {
-      "label": "Child Stress",
-      "start": 10
-    }
-  },
+  "version": 2,
   "acts": [
     {
-      "title": "Act 1 — First Date",
+      "title": "Act 1 \u2014 First Date",
       "steps": [
         "You decide to meet someone new for coffee.",
         "Your child is staying with your ex.",
@@ -25,25 +12,26 @@
       ]
     },
     {
-      "title": "Act 2 — Introducing the Idea",
+      "title": "Act 2 \u2014 Introducing the Idea",
       "steps": [
-        "Weeks later, your child overhears you on the phone.",
-        "They ask: 'Who is that?' Decide how to respond."
+        "Weeks later, your child overhears a phone chat.",
+        "Child asks: \u201cWho is that?\u201d",
+        "Choices: honest but gentle; change the subject; dismiss quickly."
       ]
     },
     {
-      "title": "Act 3 — First Reactions",
+      "title": "Act 3 \u2014 First Reactions",
       "steps": [
-        "Your ex finds out and confronts you — calmly, defensively, or angrily.",
-        "Choose: reassure co-parenting focus, argue, or refuse to discuss."
+        "Your ex finds out you\u2019ve started dating; reaction varies.",
+        "Options: reassure child\u2011first approach; argue; refuse to discuss."
       ]
     },
     {
-      "title": "Act 4 — Resolution",
+      "title": "Act 4 \u2014 Resolution",
       "steps": [
-        "Positive: boundaries set and child feels secure.",
+        "Positive: acceptance + boundaries.",
         "Neutral: tensions remain manageable.",
-        "Negative: conflict worsens; child feels caught in the middle."
+        "Negative: conflict worsens; child feels caught."
       ]
     }
   ]

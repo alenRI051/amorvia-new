@@ -1,5 +1,4 @@
-// /api/track.ts
-// Edge runtime route — logs a compact JSON line & returns 204
+// api/track.ts
 export const runtime = 'edge';
 
 export default async function handler(req: Request): Promise<Response> {
@@ -9,19 +8,7 @@ export default async function handler(req: Request): Promise<Response> {
       headers: { 'content-type': 'application/json' },
     });
   }
-
-  // Parse body (best-effort) and log a single concise line
-  const data = await req.json().catch(() => ({} as any));
-  const ua = req.headers.get('user-agent') || '';
-  const ip = (req.headers.get('x-forwarded-for') || '').split(',')[0].trim();
-
-  // This console.log goes to Vercel function logs
-  console.log('[track]', JSON.stringify({
-    t: Date.now(),
-    ip, ua,
-    event: data?.event, detail: data?.detail
-  }));
-
-  // TODO: forward to analytics store if desired
+  // Optionally read the body:
+  // const data = await req.json().catch(()=> ({}));
   return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
 }
