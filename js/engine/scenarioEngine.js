@@ -14,7 +14,7 @@ export const ScenarioEngine = {
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
 
-    // NEW: initialize meters from scenario.variables (default 0)
+    // Initialize meters from scenario.variables (default 0)
     this.state.meters = {};
     if (graph.variables && typeof graph.variables === 'object') {
       for (const [k, v] of Object.entries(graph.variables)) {

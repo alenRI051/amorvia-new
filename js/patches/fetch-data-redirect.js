@@ -1,4 +1,4 @@
-// Amorvia fetch hotfix shim (repo-aligned)
+// Amorvia fetch hotfix shim
 // - Rewrites "/public/data/..." -> "/data/..."
 // - Forces cache: 'no-store'
 // - Adds cache-busting when ?devcache=0 is present
@@ -44,7 +44,9 @@
     const merged = Object.assign({ cache: 'no-store' }, nextInit);
     try {
       const res = await originalFetch(url, merged);
-      if (!res.ok) console.warn('[Amorvia] fetch non-OK', res.status, url);
+      if (!res.ok) {
+        console.warn('[Amorvia] fetch non-OK', res.status, url);
+      }
       return res;
     } catch (err) {
       console.error('[Amorvia] fetch error', url, err);
