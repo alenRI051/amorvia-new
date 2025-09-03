@@ -1,0 +1,175 @@
+*** a/index.html
+--- b/index.html
+@@
+   <head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <title>Amorvia</title>
++    <!-- Hotfix: ensure data fetch paths & caching are correct in prod -->
++    <script src="/js/patches/fetch-data-redirect.js"></script>
+   </head>
+   <body>
+@@
+-    <script src="/js/app.v2.js" defer></script>
++    <script src="/js/app.v2.js" defer></script>
+   </body>
+ </html>
+*** /dev/null
+--- b/js/patches/fetch-data-redirect.js
+@@
++// Amorvia fetch hotfix shim (repo-aligned)
++// - Rewrites "/public/data/..." -> "/data/..."
++// - Forces cache: 'no-store'
++// - Adds cache-busting when ?devcache=0 is present
++(function () {
++  if (!window.fetch) return;
++  const q = new URL(location.href).searchParams;
++  const bust = q.has('devcache') && q.get('devcache') === '0';
++
++  const toRequest = (input, init = {}) => {
++    try {
++      if (typeof input === 'string') {
++        let url = input;
++        if (url.startsWith('/public/data/')) {
++          url = url.replace(/^\/public\/data\//, '/data/');
++        }
++        if (bust) {
++          const sep = url.includes('?') ? '&' : '?';
++          url = `${url}${sep}t=${Date.now()}`;
++        }
++        return [url, init];
++      } else if (input instanceof Request) {
++        let url = input.url;
++        if (url.includes('/public/data/')) {
++          url = url.replace('/public/data/', '/data/');
++        }
++        if (bust) {
++          const u = new URL(url, location.origin);
++          u.searchParams.set('t', String(Date.now()));
++          url = u.toString();
++        }
++        const nextInit = Object.assign({}, input, init);
++        return [url, nextInit];
++      }
++    } catch (e) {
++      console.warn('[Amorvia] fetch hotfix failed to parse input', e);
++    }
++    return [input, init];
++  };
++
++  const originalFetch = window.fetch.bind(window);
++  window.fetch = async function (input, init = {}) {
++    const [url, nextInit] = toRequest(input, init);
++    const merged = Object.assign({ cache: 'no-store' }, nextInit);
++    try {
++      const res = await originalFetch(url, merged);
++      if (!res.ok) {
++        console.warn('[Amorvia] fetch non-OK', res.status, url);
++      }
++      return res;
++    } catch (err) {
++      console.error('[Amorvia] fetch error', url, err);
++      throw err;
++    }
++  };
++
++  console.debug('[Amorvia] fetch hotfix active. devcache=0 -> cache busting enabled.');
++})(); 
+*** a/js/sw-register.js
+--- b/js/sw-register.js
+@@
+-(function () {
+-  if ('serviceWorker' in navigator) {
+-    navigator.serviceWorker.register('/sw.js');
+-  }
+-})();
++(function () {
++  // Allow bypass via ?nosw=1 or when running under automation (Lighthouse/CI)
++  const url = new URL(location.href);
++  const skipSW = url.searchParams.has('nosw') || navigator.webdriver;
++  if ('serviceWorker' in navigator && !skipSW) {
++    navigator.serviceWorker.register('/sw.js');
++  } else {
++    console.debug('[Amorvia] SW registration skipped (nosw or webdriver).');
++  }
++})();
+*** a/vercel.json
+--- b/vercel.json
+@@
+   "routes": [
+   ],
++  "headers": [
++    {
++      "source": "/data/(.*).json",
++      "headers": [
++        { "key": "Cache-Control", "value": "no-store" }
++      ]
++    }
++  ],
+*** a/css/style.css
+--- b/css/style.css
+@@
+ .av-tab-active{background:#1f2937}
+ .av-pane{margin-top:8px}
++
++/* --------------------------- */
++/* Scenario list visibility fix */
++/* Ensures titles are visible on dark background */
++#scenarioList,
++#scenarioList li,
++#scenarioList div,
++.scenario-list,
++.scenario-list li,
++.scenario-list div {
++  color: #f5f5f5 !important;  /* light text for dark backgrounds */
++}
++
++/* Links inside the list */
++#scenarioList a,
++.scenario-list a {
++  color: #f5f5f5 !important;
++  text-decoration: none;
++}
++#scenarioList a:hover,
++.scenario-list a:hover {
++  text-decoration: underline;
++}
++
++/* Buttons inside list items */
++#scenarioList button,
++.scenario-list button {
++  color: #f5f5f5 !important;
++}
++
++/* SVG icons follow text color */
++#scenarioList svg,
++.scenario-list svg {
++  fill: currentColor;
++  stroke: currentColor;
++}
++
++/* Hover/active states */
++#scenarioList .item:hover,
++.scenario-list .item:hover {
++  background: #1f2937;
++}
++#scenarioList .item.is-active,
++.scenario-list .item.is-active {
++  background: #111827;
++  outline: 1px solid #334155;
++  border-radius: 10px;
++}
+*** a/js/engine/scenarioEngine.js
+--- b/js/engine/scenarioEngine.js
+@@
+-    const el = document.createElement('div');
+-    el.className = 'item';
+-    el.textContent = scenario.title;
++    const el = document.createElement('div');
++    el.className = 'item text-white'; // ensure visible on dark backgrounds
++    el.textContent = scenario.title;
+     el.dataset.id = scenario.id;
+     el.addEventListener('click', () => {
+       this.loadScenario(scenario.id);
+     });
+     list.appendChild(el);
