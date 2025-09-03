@@ -66,4 +66,46 @@ header{padding:16px 16px 0}.muted{opacity:.7;font-weight:500}
   outline: 1px solid #334155;
   border-radius: 10px;
 }
+/* --------------------------- */
+/* Scenario list visibility fix */
+#scenarioList,
+#scenarioList li,
+#scenarioList div,
+.scenario-list,
+.scenario-list li,
+.scenario-list div {
+  color: #f5f5f5 !important;  /* light text for dark backgrounds */
+}
+
+#scenarioList a,
+.scenario-list a {
+  color: #f5f5f5 !important;
+  text-decoration: none;
+}
+#scenarioList a:hover,
+.scenario-list a:hover {
+  text-decoration: underline;
+}
+
+#scenarioList button,
+.scenario-list button {
+  color: #f5f5f5 !important;
+}
+
+#scenarioList svg,
+.scenario-list svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+#scenarioList .item:hover,
+.scenario-list .item:hover {
+  background: #1f2937;
+}
+#scenarioList .item.is-active,
+.scenario-list .item.is-active {
+  background: #111827;
+  outline: 1px solid #334155;
+  border-radius: 10px;
+}
 
