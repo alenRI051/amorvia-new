@@ -1,22 +1,18 @@
-Amorvia Metrics Path Fix + Favicon Redirect
-==========================================
+Amorvia: Valid vercel.json + metrics stub
+========================================
 
-This patch fixes the bad '/is/metrics.js' path by replacing it with an
-autowire that injects the correct '/js/metrics.js'. It also redirects
-'/favicon.ico' to '/favicon.png' to eliminate the 404.
+Files included:
+- vercel.json      — strict JSON, parses on Vercel
+- js/metrics.js    — safe no-op stub so /js/metrics.js never 404s
 
-Files:
-- metrics-autowire.js           (drop at repo root; include via <script src="/metrics-autowire.js" defer></script>)
-- js/metrics.js                 (no‑op stub, safe to load)
-- vercel.json                   (adds redirect /favicon.ico -> /favicon.png, keeps data no-store etc.)
-
-Steps:
-1) Unzip to repo root (overwrite vercel.json if prompted).
-2) Ensure index.html includes (near end of body):
-   <script src="/metrics-autowire.js" defer></script>
-   (Remove any older autowire that pointed to '/is/metrics.js'.)
-3) Commit & deploy.
+Apply:
+1) Unzip at repo root:
+   unzip -o amorvia-vercel-fixed.zip -d .
+2) Commit & push:
+   git add vercel.json js/metrics.js
+   git commit -m "fix: valid vercel.json + metrics stub"
+   git push
+3) Redeploy on Vercel.
 4) Test: https://amorvia.eu/?nosw=1&devcache=0&debug=metrics
-   - Network: /metrics-autowire.js 200, /js/metrics.js 200
-   - Console: "[metrics] autowire injected /js/metrics.js"
-   - /favicon.ico should 308/301 -> /favicon.png
+
+You should see no JSON parse errors, no 404 for /js/metrics.js, and fresh /data/*.json.
