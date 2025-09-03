@@ -21,3 +21,12 @@ header{padding:16px 16px 0}.muted{opacity:.7;font-weight:500}
 .av-tab{padding:6px 10px;border-radius:10px;border:1px solid #334155;background:#111827;color:#e5e7eb;cursor:pointer}
 .av-tab-active{background:#1f2937}
 .av-pane{margin-top:8px}
+/* Scenario list visibility hotfix */
+#scenarioList,
+#scenarioList li,
+#scenarioList div,
+.scenario-list,
+.scenario-list li,
+.scenario-list div {
+  color: #f5f5f5 !important;  /* light text for dark backgrounds */
+}
