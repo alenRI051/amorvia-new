@@ -61,5 +61,23 @@ export async function init() {
   if (pick && pick.value) loadScenarioById(pick.value);
   window.AmorviaV2 = Object.assign(window.AmorviaV2 || {}, { loadScenarioById });
 }
+// flattenScenario.js
+export function flattenScenario(v2) {
+  // v2: { title, variables, acts:[{nodes:[...]}], startId? }
+  const nodes = {};
+  let firstId = null;
+  for (const act of v2.acts || []) {
+    for (const n of act.nodes || []) {
+      if (!firstId) firstId = n.id;
+      nodes[n.id] = n;
+    }
+  }
+  return {
+    title: v2.title || "Scenario",
+    variables: v2.variables || {},
+    nodes,
+    startId: v2.startId || firstId || Object.keys(nodes)[0]
+  };
+}
 
 init().catch(console.error);
