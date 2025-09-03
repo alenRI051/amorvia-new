@@ -1,83 +1,80 @@
-// /js/app.v2.js — loader sig v2025-09-02
-import { ensureGraph } from '/js/compat/v2-to-graph.js';
+// app.v2.js — minimal v2 loader wired to ScenarioEngine + flattenScenario
+import { ScenarioEngine } from '/js/engine/scenarioEngine.js';
+import { flattenScenario } from '/js/flattenScenario.js';
 
-async function getEngine() {
-  if (window.ScenarioEngine) return window.ScenarioEngine;
-  const paths = [
-    '/js/engine/scenarioEngine.js',
-    '/js/engine/scenario-engine.js',
-    '/js/engine/ScenarioEngine.js',
-    '/js/scenarioEngine.js',
-    '/js/ScenarioEngine.js',
-    '/engine/scenarioEngine.js',
-    '/engine/ScenarioEngine.js',
-    '/scenarioEngine.js'
-  ];
-  let lastErr;
-  for (const p of paths) {
-    try {
-      const m = await import(p);
-      const E = window.ScenarioEngine || m.ScenarioEngine || m.engine || m.default;
-      if (E && (E.loadScenario || E.start || E.startAct)) {
-        console.info('[v2] engine loaded from', p);
-        window.ScenarioEngine = E;
-        return E;
-      }
-    } catch (e) { lastErr = e; }
-  }
-  console.error('[v2] Engine load failed:', lastErr);
-  throw new Error('engine missing');
+const devBust = location.search.includes('devcache=0') ? `?t=${Date.now()}` : '';
+const noStore = { cache: 'no-store' };
+
+async function getJSON(url) {
+  const res = await fetch(url + devBust, noStore);
+  if (!res.ok) throw new Error(`${url} ${res.status}`);
+  return await res.json();
 }
 
-export async function loadScenarioById(id) {
-  const raw = await fetch(`/data/${id}.v2.json`, { cache: 'no-store' }).then(r => {
-    if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.url);
-    return r.json();
-  });
-  const g = ensureGraph(raw);
-  if (!g.nodes || !g.startId || !g.nodes[g.startId]) {
-    console.error('[v2] still bad graph after ensureGraph', g);
-    g.startId = 'END';
-    g.nodes = { END: { id: 'END', type: 'end', text: '— End —' } };
-  }
-  const E = await getEngine();
-  if (E.loadScenario) E.loadScenario(g);
-  if (E.start) E.start(g.startId);
-  else if (E.startAct) E.startAct(0);
+async function loadIndex() {
+  const idx = await getJSON('/data/v2-index.json');
+  return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
-export async function init() {
-  const pick = document.getElementById('scenarioPicker');
-  if (pick && !pick.options.length) {
-    try {
-      const idx = await fetch('/data/v2-index.json', { cache: 'no-store' }).then(r => r.json());
-      (idx.scenarios || []).forEach(s => {
-        const o = document.createElement('option');
-        o.value = s.id; o.textContent = s.title || s.id; pick.appendChild(o);
-      });
-    } catch (e) { console.warn('[v2] index load failed', e); }
-  }
-  pick?.addEventListener('change', () => loadScenarioById(pick.value));
-  if (pick && pick.value) loadScenarioById(pick.value);
-  window.AmorviaV2 = Object.assign(window.AmorviaV2 || {}, { loadScenarioById });
-}
-// flattenScenario.js
-export function flattenScenario(v2) {
-  // v2: { title, variables, acts:[{nodes:[...]}], startId? }
-  const nodes = {};
-  let firstId = null;
-  for (const act of v2.acts || []) {
-    for (const n of act.nodes || []) {
-      if (!firstId) firstId = n.id;
-      nodes[n.id] = n;
+function renderList(list) {
+  const container = document.getElementById('scenarioListV2');
+  const picker = document.getElementById('scenarioPicker');
+  if (picker) picker.innerHTML = '';
+  if (container) container.innerHTML = '';
+
+  list.forEach((item, i) => {
+    const id = item.id || item;
+    const title = item.title || item.id || String(item);
+
+    if (picker) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = title;
+      if (i === 0) opt.selected = true;
+      picker.appendChild(opt);
     }
-  }
-  return {
-    title: v2.title || "Scenario",
-    variables: v2.variables || {},
-    nodes,
-    startId: v2.startId || firstId || Object.keys(nodes)[0]
-  };
+
+    if (container) {
+      const el = document.createElement('div');
+      el.className = 'item text-white';
+      el.textContent = title;
+      el.dataset.id = id;
+      el.tabIndex = 0;
+      el.addEventListener('click', () => startScenario(id));
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') startScenario(id); });
+      container.appendChild(el);
+    }
+  });
+
+  if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-init().catch(console.error);
+async function startScenario(id) {
+  try {
+    const raw = await getJSON(`/data/${id}.v2.json`);
+    const flat = flattenScenario(raw);
+    ScenarioEngine.loadScenario(flat);
+    document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
+      el.classList.toggle('is-active', el.dataset.id === id);
+    });
+  } catch (e) {
+    console.error('[Amorvia] Failed to start scenario', id, e);
+    const dialog = document.getElementById('dialog');
+    if (dialog) dialog.textContent = `Failed to load scenario ${id}: ${e.message}`;
+  }
+}
+
+(async function init() {
+  try {
+    const scenarios = await loadIndex();
+    renderList(scenarios);
+    const first = (scenarios[0] && (scenarios[0].id || scenarios[0])) || null;
+    if (first) await startScenario(first);
+  } catch (e) {
+    console.error('[Amorvia] init error', e);
+    const dialog = document.getElementById('dialog');
+    if (dialog) dialog.textContent = `Init error: ${e.message}`;
+  }
+})();
+
+window.AmorviaApp = { startScenario };
