@@ -1,2 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://amorvia.eu/schema/scenario.v2.schema.json",
+  "title": "Amorvia Scenario v2 (lenient: steps OR nodes)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["version", "title", "acts"],
+  "properties": {
+    "version": { "type": "integer", "const": 2 },
+    "id": { "type": "string" },
+    "title": { "type": "string", "minLength": 1 },
+    "meters": { "type": "object" },
+    "acts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["title"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string", "minLength": 1 },
+          "start": { "type": "string" },
+
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                { "$ref": "#/$defs/stepObject" }
+              ]
+            }
+          },
+
+          "nodes": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/node" }
+          }
+        },
+        "anyOf": [
+          { "required": ["steps"] },
+          { "required": ["nodes"] }
+        ]
+      }
+    }
+  },
+
+  "$defs": {
+    "effects": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": -100, "maximum": 100 }
+    },
+
+    "choice": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["label", "to"],
+      "properties": {
+        "label": { "type": "string" },
+        "effects": { "$ref": "#/$defs/effects" },
+        "to": { "type": "string" }
+      }
+    },
+
+    "stepObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["line", "choice", "goto", "end"] },
+        "text": { "type": "string" },
+        "prompt": { "type": "string" },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/choice" }
+        },
+        "to": { "type": "string" },
+        "next": { "type": "string" }
+      }
+    },
+
+    "node": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["line", "choice", "goto", "end"] },
+        "text": { "type": "string" },
+        "prompt": { "type": "string" },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/choice" }
+        },
+        "to": { "type": "string" },
+        "next": { "type": "string" }
+      }
+    }
+  }
+}
 
 
