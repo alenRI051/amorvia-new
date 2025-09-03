@@ -4,6 +4,9 @@
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
+  "redirects": [
+    { "source": "/favicon.ico", "destination": "/favicon.png", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/manifest.json",
@@ -12,7 +15,7 @@
       ]
     },
     {
-      "source": "/data/(.*)\\.json",
+      "source": "/data/(.*)\.json",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
       ]
@@ -31,4 +34,3 @@
     }
   ]
 }
-
