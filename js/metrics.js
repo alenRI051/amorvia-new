@@ -1,4 +1,5 @@
-// /js/metrics.js — safe no-op stub
+// /js/metrics.js — safe no-op stub for Amorvia
+
 (function (global) {
   const log = (...args) => {
     if (location.search.includes('debug=metrics')) {
