@@ -5,6 +5,16 @@ const setText = (el, t) => { if (el) el.textContent = t ?? ""; };
 const clear = (el) => { if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); };
 const btn = (label) => { const b = document.createElement('button'); b.type='button'; b.className='button'; b.textContent=label; return b; };
 
+const getNodeText = (n) => n?.text ?? n?.say ?? n?.line ?? (n?.content && (n.content.text || n.content.say || n.content.line)) ?? "";
+
+const getChoices = (n) => {
+  const cand = n?.choices ?? n?.options ?? n?.actions ?? [];
+  return Array.isArray(cand) ? cand : [];
+};
+
+const getEffects = (c) => c?.effects ?? c?.vars ?? c?.delta ?? c?.impact ?? null;
+const getDest = (c) => c?.goto ?? c?.to ?? c?.next ?? c?.id ?? null;
+
 export const ScenarioEngine = {
   state: { title:"", nodes:{}, startId:"", currentId:"", meters:{} },
   loadScenario(graph){
@@ -22,7 +32,6 @@ export const ScenarioEngine = {
         this.state.meters[k] = Number.isFinite(n) ? n : 0;
       }
     }
-
     this.render();
   },
   start(startId){
@@ -58,22 +67,26 @@ export const ScenarioEngine = {
     const dialog = qs('#dialog'), choicesEl = qs('#choices'), titleEl = qs('#sceneTitle'), badge = qs('#actBadge');
     if (!node) { setText(dialog, "⚠️ No current node."); if (choicesEl) clear(choicesEl); return; }
     if (titleEl) setText(titleEl, this.state.title || "Scenario");
-    if (badge) setText(badge, "Act");
+    if (badge) setText(badge, node.act || "Act");
 
-    setText(dialog, node.text || "");
+    // Text
+    setText(dialog, getNodeText(node));
+
+    // Choices
     if (!choicesEl) return;
     clear(choicesEl);
 
-    const hasChoices = Array.isArray(node.choices) && node.choices.length > 0;
+    const hasChoices = getChoices(node).length > 0;
     const nodeDest = node.goto ?? node.to ?? node.next; // accept any
     const type = hasChoices ? "choice" : nodeDest ? "goto" : (node.type || "line");
 
     if (type === "choice" && hasChoices){
-      node.choices.forEach((c, i) => {
-        const b = btn(c.label || `Option ${i+1}`);
+      getChoices(node).forEach((c, i) => {
+        const label = c.label ?? c.text ?? c.title ?? `Option ${i+1}`;
+        const b = btn(label);
         b.addEventListener('click', () => {
-          this.applyEffects(c.effects);
-          const dest = c.goto ?? c.to ?? c.next;
+          this.applyEffects(getEffects(c));
+          const dest = getDest(c);
           if (dest) this.goto(dest);
         });
         choicesEl.appendChild(b);
@@ -93,6 +106,11 @@ export const ScenarioEngine = {
         }
       }
       const end = document.createElement('div'); end.textContent = "— End —"; choicesEl.appendChild(end);
+    }
+
+    // Debug current node to help verify keys quickly
+    if (window?.DEBUG_SCENARIO) {
+      console.debug('[ScenarioEngine] node', node);
     }
   }
 };
