@@ -21,12 +21,49 @@ header{padding:16px 16px 0}.muted{opacity:.7;font-weight:500}
 .av-tab{padding:6px 10px;border-radius:10px;border:1px solid #334155;background:#111827;color:#e5e7eb;cursor:pointer}
 .av-tab-active{background:#1f2937}
 .av-pane{margin-top:8px}
-/* Scenario list visibility hotfix */
+/* Scenario list visibility hotfix (keep) */
 #scenarioList,
 #scenarioList li,
 #scenarioList div,
 .scenario-list,
 .scenario-list li,
 .scenario-list div {
-  color: #f5f5f5 !important;  /* light text for dark backgrounds */
+  color: #f5f5f5 !important; /* light text for dark backgrounds */
 }
+
+/* Make sure links inside the list aren’t dark or default blue */
+#scenarioList a,
+.scenario-list a {
+  color: #f5f5f5 !important;
+  text-decoration: none;
+}
+#scenarioList a:hover,
+.scenario-list a:hover {
+  text-decoration: underline;
+}
+
+/* If list items use buttons */
+#scenarioList button,
+.scenario-list button {
+  color: #f5f5f5 !important;
+}
+
+/* If items contain SVG icons, ensure they’re visible */
+#scenarioList svg,
+.scenario-list svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* Optional: better contrast for hovered/selected items */
+#scenarioList .item:hover,
+.scenario-list .item:hover {
+  background: #1f2937; /* slightly lighter than #0f172a card */
+}
+#scenarioList .item.is-active,
+.scenario-list .item.is-active {
+  background: #111827;
+  outline: 1px solid #334155;
+  border-radius: 10px;
+}
+
