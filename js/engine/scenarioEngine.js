@@ -13,6 +13,16 @@ export const ScenarioEngine = {
     this.state.nodes = graph.nodes;
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
+
+    // NEW: initialize meters from scenario.variables (default 0)
+    this.state.meters = {};
+    if (graph.variables && typeof graph.variables === 'object') {
+      for (const [k, v] of Object.entries(graph.variables)) {
+        const n = Number(v);
+        this.state.meters[k] = Number.isFinite(n) ? n : 0;
+      }
+    }
+
     this.render();
   },
   start(startId){
@@ -35,7 +45,8 @@ export const ScenarioEngine = {
   },
   renderHUD(){
     const hud = qs('#hud'); if (!hud) return; clear(hud);
-    for (const [k,v] of Object.entries(this.state.meters)){
+    const entries = Object.entries(this.state.meters).sort(([a],[b]) => a.localeCompare(b));
+    for (const [k,v] of entries){
       const row = document.createElement('div'); row.className = 'meter row';
       const name = document.createElement('span'); name.textContent = k;
       const val = document.createElement('span'); val.textContent = String(v);
@@ -53,20 +64,24 @@ export const ScenarioEngine = {
     if (!choicesEl) return;
     clear(choicesEl);
 
-    const type = node.type || (Array.isArray(node.choices) ? "choice" : (node.to || node.next) ? "goto" : "line");
+    const hasChoices = Array.isArray(node.choices) && node.choices.length > 0;
+    const nodeDest = node.goto ?? node.to ?? node.next; // accept any
+    const type = hasChoices ? "choice" : nodeDest ? "goto" : (node.type || "line");
 
-    if (type === "choice" && Array.isArray(node.choices) && node.choices.length){
+    if (type === "choice" && hasChoices){
       node.choices.forEach((c, i) => {
         const b = btn(c.label || `Option ${i+1}`);
-        b.addEventListener('click', () => { this.applyEffects(c.effects); this.goto(c.to); });
+        b.addEventListener('click', () => {
+          this.applyEffects(c.effects);
+          const dest = c.goto ?? c.to ?? c.next;
+          if (dest) this.goto(dest);
+        });
         choicesEl.appendChild(b);
       });
-    } else if (type === "goto" && node.to) {
-      const b = btn("Continue"); b.addEventListener('click', () => this.goto(node.to)); choicesEl.appendChild(b);
-    } else if (node.next) {
-      const b = btn("Continue"); b.addEventListener('click', () => this.goto(node.next)); choicesEl.appendChild(b);
-    } else if (type === "end") {
-      const done = document.createElement('div'); done.textContent = "— End —"; choicesEl.appendChild(done);
+    } else if (nodeDest) {
+      const b = btn("Continue");
+      b.addEventListener('click', () => this.goto(nodeDest));
+      choicesEl.appendChild(b);
     } else {
       // attempt sequential guess aXsY -> aXs(Y+1)
       const m = /^a(\d+)s(\d+)$/.exec(node.id || "");
