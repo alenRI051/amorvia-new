@@ -1,1 +1,0 @@
-export function init(){ console.info('[Amorvia v1] stub loaded.'); }
