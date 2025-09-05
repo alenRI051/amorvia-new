@@ -2,12 +2,18 @@
   "version": 2,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/((?!api|sw\\.js|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/((?!api|sw\.js|.*\..*).*)", "destination": "/index.html" }
   ],
   "redirects": [
     { "source": "/favicon.ico", "destination": "/favicon.png", "permanent": true }
   ],
   "headers": [
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+      ]
+    },
     {
       "source": "/manifest.json",
       "headers": [
@@ -15,7 +21,7 @@
       ]
     },
     {
-      "source": "/data/(.*)\\.json",
+      "source": "/data/(.*)\.json",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
       ]
@@ -34,4 +40,3 @@
     }
   ]
 }
-

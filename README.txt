@@ -1,16 +1,17 @@
-Amorvia Index + Favicon Fix
-===========================
+Amorvia Deployment Fix
+======================
 
 This bundle contains:
-- index.html (fixed): correct metrics path, no stray metrics-autowire, includes /js/metrics.js
-- favicon.ico: placeholder icon so browsers stop 404'ing /favicon.ico
+- index.html (clean, no stray metrics-autowire, correct /js/metrics.js path)
+- vercel.json (SPA rewrite that excludes static files, plus no-store on index.html)
 
 Steps:
-1. Unzip at repo root (overwrites index.html, adds favicon.ico).
+1. Unzip at repo root (overwrites index.html and vercel.json).
 2. Commit & push:
-   git add index.html favicon.ico
-   git commit -m "fix: correct metrics path + add favicon.ico"
+   git add index.html vercel.json
+   git commit -m "fix: clean index.html + vercel.json no-store for index"
    git push
 3. Redeploy and test: https://amorvia.eu/?nosw=1&devcache=0
-   - Page should no longer be blank
-   - No 404 for metrics.js or favicon.ico
+   - Network: /js/bootstrap.js and /js/metrics.js load correctly
+   - Document (index.html) is always fresh (no CDN cache)
+   - No blank page
