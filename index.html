@@ -23,18 +23,6 @@
 
   <main id="main" class="wrap">
     <aside class="card panel">
-      <!-- v1 (hidden in this bundle, but kept for compatibility) -->
-      <div class="v1-only" hidden aria-hidden="true">
-        <label class="sr-only" for="search">Search scenarios</label>
-        <input id="search" class="input" placeholder="Search scenarios..." autocomplete="off"/>
-        <div id="scenarioList" class="list" aria-label="Scenarios"></div>
-        <div class="row mt8">
-          <button id="prevBtn" class="button" type="button">Prev</button>
-          <button id="nextBtn" class="button" type="button">Next</button>
-        </div>
-      </div>
-
-      <!-- v2 -->
       <div class="v2-only">
         <label for="scenarioPicker">Scenario</label>
         <select id="scenarioPicker" class="select"></select>
@@ -83,11 +71,9 @@
     </section>
   </main>
 
-  <!-- Your module bootstrap -->
+  <!-- Only these three scripts -->
   <script type="module" src="/js/bootstrap.js" defer></script>
-  <!-- Metrics stub -->
-  <script src="/js/metrics.js" defer></script>
-  <!-- SW register -->
-  <script src="/sw-register.js" defer></script>
+  <script type="module" src="/js/metrics.js" defer></script>
+  <script src="/js/sw-register.js" defer></script>
 </body>
 </html>
