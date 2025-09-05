@@ -24,11 +24,11 @@ export const ScenarioEngine = {
     this.state.startId = graph.startId;
     this.state.currentId = graph.startId;
 
-    // Initialize meters from scenario.variables (default 0)
+    // initialize meters from graph.meters (numbers only)
     this.state.meters = {};
-    if (graph.variables && typeof graph.variables === 'object') {
-      for (const [k, v] of Object.entries(graph.variables)) {
-        const n = Number(v);
+    if (graph.meters && typeof graph.meters === 'object') {
+      for (const [k, v] of Object.entries(graph.meters)) {
+        const n = Math.max(0, Math.min(100, Number(v)));
         this.state.meters[k] = Number.isFinite(n) ? n : 0;
       }
     }
