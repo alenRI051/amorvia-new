@@ -1,91 +1,53 @@
-// Ultra-robust v2 -> graph converter (ESM)
-// Accepts flexible v2 docs and returns { title, startId, nodes }
-export function ensureGraph(v2){
-  try{
-    // Already a graph?
-    if (v2 && v2.startId && v2.nodes && typeof v2.nodes === 'object'){
-      return { title: v2.title || "", startId: v2.startId, nodes: v2.nodes };
-    }
-    const acts = Array.isArray(v2?.acts) ? v2.acts : [];
-    const nodes = {};
-    let startId = "";
-
-    function addNode(n){
-      if (!n.id) throw new Error("node missing id");
-      nodes[n.id] = n;
-    }
-
-    function chainSteps(actIndex, steps){
-      let prevId = "";
-      for (let i=0;i<steps.length;i++){
-        const id = `a${actIndex+1}s${i+1}`;
-        if (!startId) startId = id;
-        const n = { id, type: "line", text: String(steps[i] ?? "") };
-        addNode(n);
-        if (prevId) nodes[prevId].next = id;
-        prevId = id;
-      }
-      return prevId; // last id
-    }
-
-    function copyNodes(actIndex, arr){
-      let localStart = "";
-      let lastId = "";
-      for (let i=0;i<arr.length;i++){
-        const src = arr[i] || {};
-        const id = src.id || `a${actIndex+1}s${i+1}`;
-        const dst = {
-          id,
-          type: src.type && ["line","choice","goto","end"].includes(src.type) ? src.type : undefined,
-          text: src.text || undefined,
-          next: src.next || undefined,
-          to: src.to || undefined,
-          choices: Array.isArray(src.choices) ? src.choices.map(c => ({
-            label: c.label || "Option",
-            to: c.to || id, // fallback to self if missing
-            effects: c.effects || undefined
-          })) : undefined
-        };
-        addNode(dst);
-        if (!localStart) localStart = id;
-        if (lastId && !nodes[lastId].next && !nodes[lastId].to && dst.id !== lastId){
-          nodes[lastId].next = id;
-        }
-        lastId = id;
-      }
-      if (!startId) startId = localStart;
-      return { localStart, lastId };
-    }
-
-    let lastOfPrev = "";
-    acts.forEach((a, idx) => {
-      if (Array.isArray(a?.nodes) && a.nodes.length){
-        const { localStart, lastId } = copyNodes(idx, a.nodes);
-        if (lastOfPrev && localStart && !nodes[lastOfPrev].next && !nodes[lastOfPrev].to){
-          nodes[lastOfPrev].to = localStart;
-        }
-        lastOfPrev = lastId || lastOfPrev;
-      } else if (Array.isArray(a?.steps) && a.steps.length){
-        const tail = chainSteps(idx, a.steps);
-        if (lastOfPrev && tail){
-          // Connect previous act tail to this act head if not already linked
-          const head = `a${idx+1}s1`;
-          if (!nodes[lastOfPrev].next && !nodes[lastOfPrev].to){
-            nodes[lastOfPrev].to = head;
-          }
-        }
-        lastOfPrev = tail || lastOfPrev;
-      }
-    });
-
-    if (!startId || !nodes[startId]){
-      // Fallback minimal
-      startId = "END";
-      nodes[startId] = { id: "END", type: "end", text: "— End —" };
-    }
-    return { title: v2?.title || "", startId, nodes };
-  }catch(e){
-    console.warn("[ensureGraph] failed, returning minimal", e);
-    return { title: v2?.title || "", startId: "END", nodes: { END: { id: "END", type: "end", text: "— End —" } } };
+// js/compat/v2-to-graph.js
+// Converts simple v2 "acts/steps" into a linear graph aXsY -> aXs(Y+1)
+export function v2ToGraph(v2) {
+  if (!v2 || !Array.isArray(v2.acts)) {
+    throw new Error("v2ToGraph: invalid v2 payload (missing acts)");
   }
+
+  const nodes = {};
+  let startId = null;
+
+  // normalize meters -> {name: number}
+  const meters = {};
+  if (v2.meters && typeof v2.meters === "object") {
+    for (const [key, def] of Object.entries(v2.meters)) {
+      const val =
+        typeof def === "number" ? def :
+        (def && typeof def.start === "number" ? def.start : 0);
+      meters[key] = clamp(val, 0, 100);
+    }
+  }
+
+  v2.acts.forEach((act, ai) => {
+    const a = ai + 1;
+    const steps = Array.isArray(act.steps) ? act.steps : [];
+    steps.forEach((text, si) => {
+      const s = si + 1;
+      const id = `a${a}s${s}`;
+      if (!startId) startId = id;
+
+      const next =
+        (si + 1 < steps.length) ? `a${a}s${s + 1}` :
+        (ai + 1 < v2.acts.length) ? `a${a + 1}s1` :
+        null;
+
+      nodes[id] = next
+        ? { id, text: String(text), next }
+        : { id, text: String(text), type: "end" };
+    });
+  });
+
+  return {
+    title: v2.title || v2.id || "Scenario",
+    startId: startId || "a1s1",
+    nodes,
+    meters
+  };
+}
+
+function clamp(n, lo, hi) {
+  n = Number(n);
+  if (!Number.isFinite(n)) n = 0;
+  return Math.max(lo, Math.min(hi, n));
 }
