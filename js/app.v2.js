@@ -1,6 +1,6 @@
 // app.v2.js — minimal v2 loader wired to ScenarioEngine + flattenScenario
+import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import { ScenarioEngine } from '/js/engine/scenarioEngine.js';
-import { flattenScenario } from '/js/flattenScenario.js';
 
 const devBust = location.search.includes('devcache=0') ? `?t=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
