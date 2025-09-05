@@ -1,4 +1,4 @@
-// app.v2.js — minimal v2 loader wired to ScenarioEngine + flattenScenario
+// app.v2.js — v2 loader wired to ScenarioEngine + v2ToGraph
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import { ScenarioEngine } from '/js/engine/scenarioEngine.js';
 
@@ -49,11 +49,18 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
+function toGraphIfNeeded(data) {
+  const isGraph = data && typeof data === 'object' && data.startId && data.nodes && typeof data.nodes === 'object';
+  return isGraph ? data : v2ToGraph(data);
+}
+
 async function startScenario(id) {
   try {
     const raw = await getJSON(`/data/${id}.v2.json`);
-    const flat = flattenScenario(raw);
-    ScenarioEngine.loadScenario(flat);
+    const graph = toGraphIfNeeded(raw);
+    ScenarioEngine.loadScenario(graph);
+    ScenarioEngine.start(graph.startId);
+
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
       el.classList.toggle('is-active', el.dataset.id === id);
     });
@@ -78,3 +85,4 @@ async function startScenario(id) {
 })();
 
 window.AmorviaApp = { startScenario };
+
