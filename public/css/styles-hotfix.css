@@ -1,0 +1,16 @@
+/* Scenario list visibility fix - strong specificity */
+#scenarioList, #scenarioList *,
+#scenarioListV2, #scenarioListV2 *,
+.list .item, .list .item *,
+.scenario-list, .scenario-list *, 
+.v2-only .list, .v2-only .list * {
+  color: #f5f5f5 !important;
+}
+
+/* Optional: item state */
+#scenarioListV2 .item.is-active {
+  background: #111827;
+  outline: 1px solid #334155;
+  border-radius: 10px;
+}
+#scenarioListV2 .item:hover { background: #1f2937; }
