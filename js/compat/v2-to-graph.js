@@ -1,5 +1,4 @@
 // js/compat/v2-to-graph.js
-// Converts simple v2 "acts/steps" into a linear graph aXsY -> aXs(Y+1)
 export function v2ToGraph(v2) {
   if (!v2 || !Array.isArray(v2.acts)) {
     throw new Error("v2ToGraph: invalid v2 payload (missing acts)");
@@ -8,7 +7,7 @@ export function v2ToGraph(v2) {
   const nodes = {};
   let startId = null;
 
-  // normalize meters -> {name: number}
+  // meters -> plain number map
   const meters = {};
   if (v2.meters && typeof v2.meters === "object") {
     for (const [key, def] of Object.entries(v2.meters)) {
@@ -22,19 +21,59 @@ export function v2ToGraph(v2) {
   v2.acts.forEach((act, ai) => {
     const a = ai + 1;
     const steps = Array.isArray(act.steps) ? act.steps : [];
-    steps.forEach((text, si) => {
+    steps.forEach((step, si) => {
       const s = si + 1;
       const id = `a${a}s${s}`;
       if (!startId) startId = id;
 
-      const next =
+      const nextId =
         (si + 1 < steps.length) ? `a${a}s${s + 1}` :
         (ai + 1 < v2.acts.length) ? `a${a + 1}s1` :
         null;
 
-      nodes[id] = next
-        ? { id, text: String(text), next }
-        : { id, text: String(text), type: "end" };
+      // normalize step
+      if (typeof step === "string") {
+        // Linear line with Continue
+        nodes[id] = nextId
+          ? { id, text: step, next: nextId }
+          : { id, text: step, type: "end" };
+      } else if (step && typeof step === "object") {
+        const text = String(step.text ?? "");
+        const choicesSrc = Array.isArray(step.choices) ? step.choices : null;
+
+        if (choicesSrc && choicesSrc.length) {
+          const choices = choicesSrc.map((ch, idx) => {
+            const label = String(ch.label ?? `Option ${idx + 1}`);
+            // support "effects" or "delta" for meter changes
+            const effects = ch.effects ?? ch.delta ?? null;
+
+            // resolve "to"
+            let to = ch.to ?? ch.goto ?? null;
+            if (to === "next" || to === true) to = nextId || null;
+            if (to === "end") to = null;
+            // allow referencing by short "a2s1", or if missing, fall back to nextId
+            if (!to && nextId) to = nextId;
+
+            return { label, to, effects };
+          });
+
+          // If all choices are null destination and there's no nextId, treat as end
+          const allNull = choices.every(c => !c.to);
+          nodes[id] = (allNull && !nextId)
+            ? { id, text, type: "end", choices }
+            : { id, text, choices };
+        } else {
+          // No choices array -> fallback to linear continue
+          nodes[id] = nextId
+            ? { id, text, next: nextId }
+            : { id, text, type: "end" };
+        }
+      } else {
+        // Unknown step type -> still render something
+        nodes[id] = nextId
+          ? { id, text: "", next: nextId }
+          : { id, text: "", type: "end" };
+      }
     });
   });
 
