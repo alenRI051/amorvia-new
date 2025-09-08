@@ -32,3 +32,40 @@
 .badge { background: #e8fff1; color: #14532d; border-color: #bde7cb; }
 /* Dialog text color for readability */
 #dialog { color: #f3f4f6; line-height: 1.55; }
+/* --- Contrast fixes (Lighthouse) --- */
+
+/* 1) Ensure strong base text color in v2 mode */
+body,
+body.mode-v2 {
+  background: #0b1220;          /* deep navy */
+  color: #f3f4f6;               /* near-white text (~12:1 contrast) */
+}
+
+/* Optional: high-contrast link colors */
+a { color: #93c5fd; }            /* sky-300 on dark = AA+ */
+a:visited { color: #a78bfa; }    /* violet-400 */
+
+/* 2) High-contrast, visible skip link */
+a.skip-link {
+  position: absolute;
+  left: 12px; top: 10px;
+  transform: translateY(-160%); /* hidden off-canvas until focused */
+  background: #111827;          /* slate-900 */
+  color: #ffffff;                /* white on slate-900 = AAA */
+  padding: 8px 12px;
+  border: 2px solid #f59e0b;    /* amber-500 ring for visibility */
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1;
+  z-index: 10000;
+}
+a.skip-link:focus {
+  transform: translateY(0);      /* slide into view */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245,158,11,.35);
+}
+
+/* (Safety) In case something overrides text color inside main content */
+#main, .panel, .dialog, .list, .toolbar, .stage {
+  color: #f3f4f6;
+}
