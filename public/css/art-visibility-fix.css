@@ -1,0 +1,7 @@
+/* art-visibility-fix.css — ensures characters visible above background */
+.canvas { position: relative; overflow: hidden; }
+.bg { position: absolute; inset: 0; z-index: 1; object-fit: cover; width: 100%; height: 100%; }
+.character { position: absolute; bottom: 0; z-index: 2; }
+.character.left { left: 6%; }
+.character.right { right: 6%; }
+.character img { display: block; width: 200px; height: auto; }
