@@ -5,42 +5,91 @@
   "meters": {
     "trust": {
       "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
+      "start": 50
     },
     "tension": {
       "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
+      "start": 20
     },
     "childStress": {
       "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
+      "start": 10
     }
   },
   "acts": [
     {
-      "title": "Act 1 — First Exchange",
+      "title": "Act 1 \u2014 First Exchange",
       "steps": [
         "You arrive to pick up your child, but your ex seems upset.",
-        "They start speaking in a confusing or emotional way.",
-        "You must choose whether to stay calm, ignore the behavior, or respond emotionally."
+        {
+          "text": "They start speaking emotionally. How do you respond?",
+          "choices": [
+            {
+              "label": "Stay calm",
+              "next": "next",
+              "effects": {
+                "trust": 5,
+                "tension": -5
+              }
+            },
+            {
+              "label": "Ignore it",
+              "next": "next",
+              "effects": {
+                "trust": -2
+              }
+            },
+            {
+              "label": "Respond emotionally",
+              "next": "next",
+              "effects": {
+                "tension": 10,
+                "childStress": 5
+              }
+            }
+          ]
+        },
+        "You must keep the focus on your child's well-being."
       ]
     },
     {
-      "title": "Act 2 — Escalation",
+      "title": "Act 2 \u2014 Escalation",
       "steps": [
         "The discussion grows tense, and your ex raises their voice.",
-        "Your child notices the tension and becomes unsettled.",
-        "Options appear: de-escalate with soothing words, suggest a short break, or argue back."
+        {
+          "text": "Your child notices the tension. Choose your next move:",
+          "choices": [
+            {
+              "label": "De-escalate with soothing words",
+              "next": "next",
+              "effects": {
+                "tension": -10,
+                "childStress": -5
+              }
+            },
+            {
+              "label": "Suggest a short break",
+              "next": "next",
+              "effects": {
+                "tension": -5
+              }
+            },
+            {
+              "label": "Argue back",
+              "next": "next",
+              "effects": {
+                "tension": 12,
+                "childStress": 8,
+                "trust": -6
+              }
+            }
+          ]
+        },
+        "You try to steer the interaction toward a constructive outcome."
       ]
     },
     {
-      "title": "Act 3 — Resolution",
+      "title": "Act 3 \u2014 Resolution",
       "steps": [
         "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
         "If you stayed calm, your child feels reassured.",
