@@ -1,0 +1,34 @@
+/* a11y-fixes.css — contrast & focus improvements */
+:root {
+  --fg: #e5e7eb;
+  --bg: #0b1220;
+  --panel: #0f172a;
+  --muted: #94a3b8;
+  --accent: #22c55e;
+  --border: #334155;
+  --focus: #f59e0b;
+}
+.button, .select, .input {
+  color: var(--fg);
+  background: #111827;
+  border: 1px solid var(--border);
+}
+.button:hover { filter: brightness(1.05); }
+.button:disabled { opacity: .6; }
+/* Ensure scenario list items readable on dark backgrounds */
+#scenarioList, #scenarioListV2, #scenarioList *, .scenario-list, .scenario-list * {
+  color: #f8fafc !important;
+}
+/* Visible focus ring for keyboard users */
+:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+.button:focus, .select:focus, .input:focus { box-shadow: 0 0 0 3px rgba(245,158,11,.35); }
+/* Skip link becomes visible when focused */
+.skip-link {
+  position: absolute; left: -9999px; top: 8px; background: #111827; color: #f8fafc;
+  padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);
+}
+.skip-link:focus { left: 12px; z-index: 9999; }
+/* Badge contrast */
+.badge { background: #e8fff1; color: #14532d; border-color: #bde7cb; }
+/* Dialog text color for readability */
+#dialog { color: #f3f4f6; line-height: 1.55; }

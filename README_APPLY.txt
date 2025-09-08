@@ -1,17 +1,21 @@
-Amorvia Final Polish Pack
-=========================
-
-Includes:
-- vercel.json: tuned cache headers (immutable for assets, no-cache for index/manifest/sw)
-- manifest.json: cleaned with any+maskable icons
-- docs/head-snippet.html: extra meta tags for SEO/social (og:*, twitter)
+Amorvia A11y 100 Pack
+=====================
+Files:
+  - public/css/a11y-fixes.css       (contrast, focus, skip-link visibility)
+  - public/js/a11y-autolabel.js     (landmarks, aria labels, alt text)
 
 How to apply:
-unzip -o amorvia-final-polish.zip -d .
+  1) Unzip into your repo root:
+     unzip -o amorvia-a11y-100-pack.zip -d .
 
-git add vercel.json public/manifest.json docs/head-snippet.html
-git commit -m "polish: final vercel headers, manifest icons, seo/social meta"
-git pull --rebase origin main
-git push
+  2) In public/index.html, include the CSS and JS:
+     <link rel="stylesheet" href="/css/a11y-fixes.css"/>
+     <script src="/js/a11y-autolabel.js" defer></script>
 
-Then add the snippet in <head> of index.html where you want OG/Twitter meta.
+  3) Commit & deploy:
+     git add public/css/a11y-fixes.css public/js/a11y-autolabel.js public/index.html
+     git commit -m "a11y: contrast + focus styles, aria helpers"
+     git pull --rebase origin main
+     git push
+
+  4) Re-run Lighthouse. Accessibility should tick up to 100.
