@@ -1,29 +1,12 @@
-/* Visibility + contrast on dark theme */
-html, body, #main { opacity: 1 !important; visibility: visible !important; }
-body { background:#0b1220 !important; color:#e5e7eb !important; }
-
-/* Scenario list readability */
-#scenarioListV2 .item { 
-  color:#f5f5f5; background:#111827; border:1px solid #334155;
-  border-radius:10px; padding:8px 10px; cursor:pointer;
-}
-#scenarioListV2 .item + .item { margin-top:6px; }
-#scenarioListV2 .item:hover { background:#1f2937; }
-#scenarioListV2 .item.is-active { outline:2px solid #60a5fa; }
-
-/* Buttons: focus & hover */
-.button { transition:transform .05s ease; }
-.button:focus-visible { outline:3px solid #60a5fa; outline-offset:2px; }
-.button:hover { transform: translateY(-1px); }
-
-/* Dialog readability */
-#dialog { line-height:1.6; font-size:1.05rem; }
-
-/* HUD layout */
-#hud .meter { gap:.5rem; padding:2px 8px; border-radius:8px; background:#0f172a; }
-#hud .meter span:first-child { opacity:.8; min-width:6.5rem; }
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * { animation:none !important; transition:none !important; }
+/* a11y utility: visually hidden but accessible */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
