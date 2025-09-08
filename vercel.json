@@ -12,19 +12,6 @@
   ],
   "headers": [
     {
-      "source": "/favicon.png",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "image/png"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=604800"
-        }
-      ]
-    },
-    {
       "source": "/(css|js|assets)/(.*)",
       "headers": [
         {
@@ -34,11 +21,11 @@
       ]
     },
     {
-      "source": "/data/(.*)\\.json",
+      "source": "/(index\\.html|manifest\\.json)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store"
+          "value": "no-cache"
         }
       ]
     },

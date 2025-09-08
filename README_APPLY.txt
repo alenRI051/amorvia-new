@@ -1,14 +1,17 @@
-Amorvia SEO + Accessibility Patch
-=================================
+Amorvia Final Polish Pack
+=========================
 
-- Adds <html lang="en">, meta description + keywords
-- Adds sr-only labels for form controls
-- Ensures img alt text present
-- Adds .sr-only CSS utility
+Includes:
+- vercel.json: tuned cache headers (immutable for assets, no-cache for index/manifest/sw)
+- manifest.json: cleaned with any+maskable icons
+- docs/head-snippet.html: extra meta tags for SEO/social (og:*, twitter)
 
 How to apply:
-unzip -o amorvia-seo-a11y-patch.zip -d .
-git add public/index.html public/css/styles-hotfix.css
-git commit -m "polish(a11y+seo): labels, lang, meta, sr-only"
+unzip -o amorvia-final-polish.zip -d .
+
+git add vercel.json public/manifest.json docs/head-snippet.html
+git commit -m "polish: final vercel headers, manifest icons, seo/social meta"
 git pull --rebase origin main
 git push
+
+Then add the snippet in <head> of index.html where you want OG/Twitter meta.
