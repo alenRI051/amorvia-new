@@ -1,17 +1,35 @@
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => self.clients.claim());
+const CACHE_NAME = 'amorvia-cache-v1';
+const SHELL = [
+  '/',
+  '/index.html',
+  '/css/styles.css',
+  '/css/styles-hotfix.css',
+  '/js/app.v2.js',
+  '/js/bootstrap.js',
+  '/js/engine/scenarioEngine.js',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
+];
 
-// Cache a tiny shell for offline friendliness (optional)
-const SHELL = ['/', '/index.html', '/css/styles.css', '/css/styles-hotfix.css'];
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open('shell-v1').then(c => c.addAll(SHELL)).catch(()=>{}));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.map(k => (k === CACHE_NAME ? null : caches.delete(k))))
+    )
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
-  const req = event.request;
-  // Never cache dynamic scenario data
-  if (req.url.includes('/data/')) return;
+  if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(req).then(cached => cached || fetch(req))
+    caches.match(event.request).then(resp => resp || fetch(event.request))
   );
 });
