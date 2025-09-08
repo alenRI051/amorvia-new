@@ -2,400 +2,133 @@
   "version": 2,
   "id": "lgbtq-relationship-challenges",
   "title": "LGBTQ+ Relationship Challenges",
+  "tags": [
+    "identity",
+    "family-dynamics",
+    "communication"
+  ],
+  "difficulty": "normal",
   "meters": {
-    "tension": {
-      "label": "Tension",
-      "min": 0,
-      "max": 100,
-      "start": 28
-    },
     "trust": {
       "label": "Trust",
+      "start": 50,
       "min": 0,
-      "max": 100,
-      "start": 50
+      "max": 100
+    },
+    "tension": {
+      "label": "Tension",
+      "start": 24,
+      "min": 0,
+      "max": 100
     },
     "childStress": {
       "label": "Child Stress",
+      "start": 10,
       "min": 0,
-      "max": 100,
-      "start": 18
+      "max": 100
     }
   },
   "acts": [
     {
-      "id": "act-1",
-      "title": "Act 1 - Disclosure",
-      "start": "l1",
-      "nodes": [
+      "title": "Act 1 — Labels & Names",
+      "steps": [
         {
-          "id": "l1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You consider how to share your relationship status.",
-          "next": "l2"
+          "id": "a1s1",
+          "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns."
         },
         {
-          "id": "l2",
-          "type": "choice",
-          "prompt": "Approach:",
+          "id": "a1s2",
+          "text": "You choose how to model language.",
           "choices": [
             {
-              "label": "Plan supportive context",
-              "to": "l3",
-              "effects": {
-                "trust": 5,
-                "tension": -3
-              }
-            },
-            {
-              "label": "Share spontaneously",
-              "to": "l4",
-              "effects": {
-                "tension": 4
-              }
-            },
-            {
-              "label": "Delay indefinitely",
-              "to": "l5",
-              "effects": {
-                "trust": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "l3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You align on wording.",
-          "next": "lend1"
-        },
-        {
-          "id": "l4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Reactions vary.",
-          "next": "lend1"
-        },
-        {
-          "id": "l5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Uncertainty lingers.",
-          "next": "lend1"
-        },
-        {
-          "id": "lend1",
-          "type": "end",
-          "summary": "End of Act 1."
-        }
-      ]
-    },
-    {
-      "id": "act-2",
-      "title": "Act 2 — Support Network",
-      "start": "l2n1",
-      "nodes": [
-        {
-          "id": "l2n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You consider who can support healthy conversations.",
-          "next": "l2n2"
-        },
-        {
-          "id": "l2n2",
-          "type": "choice",
-          "prompt": "Who do you involve?",
-          "choices": [
-            {
-              "label": "Trusted family ally",
-              "to": "l2n3",
+              "label": "Gently correct and model the name/pronouns",
               "effects": {
                 "trust": 4,
-                "tension": -4
-              }
+                "tension": -3
+              },
+              "to": "a1s3"
             },
             {
-              "label": "School counselor",
-              "to": "l2n4",
+              "label": "Avoid correcting to keep peace",
               "effects": {
-                "trust": 3
-              }
-            },
-            {
-              "label": "No one; keep private",
-              "to": "l2n5",
-              "effects": {
-                "tension": 2
-              }
+                "childStress": 3
+              },
+              "to": "a1s3"
             }
           ]
         },
         {
-          "id": "l2n3",
-          "type": "line",
-          "speaker": "ally",
-          "text": "They help set inclusive language.",
-          "next": "l2n6"
-        },
-        {
-          "id": "l2n4",
-          "type": "line",
-          "speaker": "counselor",
-          "text": "They propose age-appropriate framing.",
-          "next": "l2n6"
-        },
-        {
-          "id": "l2n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You proceed alone for now.",
-          "next": "l2n6"
-        },
-        {
-          "id": "l2n6",
-          "type": "choice",
-          "prompt": "Co-parent sync",
-          "choices": [
-            {
-              "label": "Share a brief joint statement",
-              "to": "l2n7",
-              "effects": {
-                "tension": -5,
-                "trust": 5
-              }
-            },
-            {
-              "label": "Inform separately",
-              "to": "l2n8",
-              "effects": {
-                "tension": 2
-              }
-            },
-            {
-              "label": "Delay again",
-              "to": "l2n9",
-              "effects": {
-                "trust": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "l2n7",
-          "type": "line",
-          "speaker": "ex",
-          "text": "You agree on kind, simple wording.",
-          "next": "l2end2"
-        },
-        {
-          "id": "l2n8",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Messages may conflict.",
-          "next": "l2end2"
-        },
-        {
-          "id": "l2n9",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Uncertainty extends.",
-          "next": "l2end2"
-        },
-        {
-          "id": "l2end2",
-          "type": "end",
-          "summary": "Support assembled to varying degrees."
+          "id": "a1s3",
+          "text": "Your child watches whose comfort you prioritize."
         }
       ]
     },
     {
-      "id": "act-3",
-      "title": "Act 3 — Disclosure Conversation",
-      "start": "l3n1",
-      "nodes": [
+      "title": "Act 2 — School Involvement",
+      "steps": [
         {
-          "id": "l3n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You plan the conversation with your child.",
-          "next": "l3n2"
+          "id": "a2s1",
+          "text": "Forms and portals have old data. The school asks for clarification."
         },
         {
-          "id": "l3n2",
-          "type": "choice",
-          "prompt": "Setting",
+          "id": "a2s2",
+          "text": "Pick an approach.",
           "choices": [
             {
-              "label": "Calm time, favorite activity",
-              "to": "l3n3",
+              "label": "Update records formally with correct info",
               "effects": {
-                "childStress": -4,
-                "trust": 4
-              }
+                "trust": 3,
+                "tension": -2
+              },
+              "to": "a2s3"
             },
             {
-              "label": "On the way to school",
-              "to": "l3n4",
+              "label": "Defer changes; handle ad-hoc",
               "effects": {
-                "childStress": 2
-              }
-            },
-            {
-              "label": "Unexpected announcement",
-              "to": "l3n5",
-              "effects": {
-                "childStress": 4,
-                "tension": 3
-              }
+                "tension": 2
+              },
+              "to": "a2s3"
             }
           ]
         },
         {
-          "id": "l3n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Conversation goes gently.",
-          "next": "l3n6"
-        },
-        {
-          "id": "l3n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Time feels rushed.",
-          "next": "l3n6"
-        },
-        {
-          "id": "l3n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "It lands awkwardly.",
-          "next": "l3n6"
-        },
-        {
-          "id": "l3n6",
-          "type": "choice",
-          "prompt": "Follow-up",
-          "choices": [
-            {
-              "label": "Invite questions anytime",
-              "to": "l3n7",
-              "effects": {
-                "trust": 3
-              }
-            },
-            {
-              "label": "Give a book or resource",
-              "to": "l3n8",
-              "effects": {
-                "trust": 2
-              }
-            },
-            {
-              "label": "Change the topic",
-              "to": "l3n9",
-              "effects": {
-                "trust": -2
-              }
-            }
-          ]
-        },
-        {
-          "id": "l3n7",
-          "type": "line",
-          "speaker": "child",
-          "text": "They ask one; you answer simply.",
-          "next": "l3end"
-        },
-        {
-          "id": "l3n8",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A resource supports the talk.",
-          "next": "l3end"
-        },
-        {
-          "id": "l3n9",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Openness is delayed.",
-          "next": "l3end"
-        },
-        {
-          "id": "l3end",
-          "type": "end",
-          "summary": "Disclosure handled with varying care."
+          "id": "a2s3",
+          "text": "Administration responds to your clarity."
         }
       ]
     },
     {
-      "id": "act-4",
-      "title": "Act 4 — Consolidation",
-      "start": "l4n1",
-      "nodes": [
+      "title": "Act 3 — Extended Family",
+      "steps": [
         {
-          "id": "l4n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You check in after a week.",
-          "next": "l4n2"
+          "id": "a3s1",
+          "text": "A grandparent refuses new language at a birthday gathering."
         },
         {
-          "id": "l4n2",
-          "type": "choice",
-          "prompt": "Community context",
+          "id": "a3s2",
+          "text": "You set a boundary.",
           "choices": [
             {
-              "label": "Loop in teacher/ally if needed",
-              "to": "l4n3",
+              "label": "Private ask: 'Use the name or pause the conversation.'",
               "effects": {
-                "trust": 3
-              }
+                "trust": 2,
+                "tension": -2
+              },
+              "to": "a3s3"
             },
             {
-              "label": "Keep within family",
-              "to": "l4n4",
+              "label": "Public confrontation",
               "effects": {
-                "tension": -1
-              }
-            },
-            {
-              "label": "Make it public on social",
-              "to": "l4n5",
-              "effects": {
-                "tension": 8,
-                "childStress": 4
-              }
+                "tension": 6,
+                "childStress": 5
+              },
+              "to": "a3s3"
             }
           ]
         },
         {
-          "id": "l4n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Support network is aligned.",
-          "next": "l4end"
-        },
-        {
-          "id": "l4n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Privacy maintained.",
-          "next": "l4end"
-        },
-        {
-          "id": "l4n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Unwanted attention appears.",
-          "next": "l4end"
-        },
-        {
-          "id": "l4end",
-          "type": "end",
-          "summary": "Plan stabilized. Scenario complete."
+          "id": "a3s3",
+          "text": "The day ends; the child tracks how safe it felt."
         }
       ]
     }

@@ -2,403 +2,147 @@
   "version": 2,
   "id": "step-parenting-conflicts",
   "title": "Step-Parenting Conflicts",
+  "tags": [
+    "consistency",
+    "roles",
+    "communication"
+  ],
+  "difficulty": "normal",
   "meters": {
-    "tension": {
-      "label": "Tension",
-      "min": 0,
-      "max": 100,
-      "start": 30
-    },
     "trust": {
       "label": "Trust",
+      "start": 52,
       "min": 0,
-      "max": 100,
-      "start": 45
+      "max": 100
+    },
+    "tension": {
+      "label": "Tension",
+      "start": 25,
+      "min": 0,
+      "max": 100
     },
     "childStress": {
       "label": "Child Stress",
+      "start": 12,
       "min": 0,
-      "max": 100,
-      "start": 20
+      "max": 100
     }
   },
   "acts": [
     {
-      "id": "act-1",
-      "title": "Act 1 - New Role",
-      "start": "s1",
-      "nodes": [
+      "title": "Act 1 — Mixed Messages",
+      "steps": [
         {
-          "id": "s1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Your partner takes a more active role; your ex is uneasy.",
-          "next": "s2"
+          "id": "a1s1",
+          "text": "Your partner (the step-parent) introduces a new homework rule that clashes with the one you agreed to with your ex."
         },
         {
-          "id": "s2",
-          "type": "choice",
-          "prompt": "Frame the role:",
+          "id": "a1s2",
+          "text": "Your child looks confused about which rule to follow.",
           "choices": [
             {
-              "label": "Supportive adult, not replacement",
-              "to": "s3",
+              "label": "Align privately with your partner first",
               "effects": {
-                "trust": 6,
-                "tension": -4
-              }
+                "trust": 3,
+                "tension": -2
+              },
+              "to": "a1s3"
             },
             {
-              "label": "Equal authority in your home",
-              "to": "s4",
+              "label": "Correct your partner in front of the child",
               "effects": {
-                "tension": 6
-              }
+                "tension": 6,
+                "childStress": 4
+              },
+              "to": "a1s3"
             },
             {
-              "label": "Let it evolve without labels",
-              "to": "s5",
-              "effects": {
-                "trust": 1,
-                "tension": -1
-              }
-            }
-          ]
-        },
-        {
-          "id": "s3",
-          "type": "line",
-          "speaker": "ex",
-          "text": "That helps; clarify discipline.",
-          "next": "send"
-        },
-        {
-          "id": "s4",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They push back about consistency.",
-          "next": "send"
-        },
-        {
-          "id": "s5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You agree to check-in.",
-          "next": "send"
-        },
-        {
-          "id": "send",
-          "type": "end",
-          "summary": "End of Act 1."
-        }
-      ]
-    },
-    {
-      "id": "act-2",
-      "title": "Act 2 — Boundaries and Roles",
-      "start": "s2n1",
-      "nodes": [
-        {
-          "id": "s2n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A homework dispute pops up while your partner is present.",
-          "next": "s2n2"
-        },
-        {
-          "id": "s2n2",
-          "type": "choice",
-          "prompt": "Who steps in?",
-          "choices": [
-            {
-              "label": "You lead; partner supports",
-              "to": "s2n3",
-              "effects": {
-                "tension": -4,
-                "trust": 4
-              }
-            },
-            {
-              "label": "Partner takes the lead",
-              "to": "s2n4",
-              "effects": {
-                "tension": 5,
-                "trust": -3
-              }
-            },
-            {
-              "label": "Let the child self-manage",
-              "to": "s2n5",
-              "effects": {
-                "childStress": -1,
-                "trust": -1
-              }
-            }
-          ]
-        },
-        {
-          "id": "s2n3",
-          "type": "line",
-          "speaker": "partner",
-          "text": "They back your cue and add encouragement.",
-          "next": "s2n6"
-        },
-        {
-          "id": "s2n4",
-          "type": "line",
-          "speaker": "ex",
-          "text": "Later, your ex questions authority boundaries.",
-          "next": "s2n6"
-        },
-        {
-          "id": "s2n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "It resolves but expectations blur.",
-          "next": "s2n6"
-        },
-        {
-          "id": "s2n6",
-          "type": "choice",
-          "prompt": "Alignment message to co-parent?",
-          "choices": [
-            {
-              "label": "Share a short roles statement",
-              "to": "s2n7",
-              "effects": {
-                "tension": -5,
-                "trust": 5
-              }
-            },
-            {
-              "label": "Skip for now",
-              "to": "s2n8",
-              "effects": {
-                "trust": -1
-              }
-            },
-            {
-              "label": "Assert partner as equal authority",
-              "to": "s2n9",
-              "effects": {
-                "tension": 7
-              }
-            }
-          ]
-        },
-        {
-          "id": "s2n7",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They acknowledge boundaries; ask for consistency.",
-          "next": "s2end2"
-        },
-        {
-          "id": "s2n8",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Uncertainty remains between homes.",
-          "next": "s2end2"
-        },
-        {
-          "id": "s2n9",
-          "type": "line",
-          "speaker": "ex",
-          "text": "Friction rises about decision rights.",
-          "next": "s2end2"
-        },
-        {
-          "id": "s2end2",
-          "type": "end",
-          "summary": "Roles clarified to varying degrees."
-        }
-      ]
-    },
-    {
-      "id": "act-3",
-      "title": "Act 3 — Incident at Exchange",
-      "start": "s3n1",
-      "nodes": [
-        {
-          "id": "s3n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "At pickup, your partner reminds the child about chores; ex overhears.",
-          "next": "s3n2"
-        },
-        {
-          "id": "s3n2",
-          "type": "choice",
-          "prompt": "Respond to the moment",
-          "choices": [
-            {
-              "label": "Step in and own the reminder",
-              "to": "s3n3",
-              "effects": {
-                "tension": -4,
-                "trust": 3
-              }
-            },
-            {
-              "label": "Let partner proceed",
-              "to": "s3n4",
-              "effects": {
-                "tension": 4
-              }
-            },
-            {
-              "label": "Apologize and change subject",
-              "to": "s3n5",
+              "label": "Let it slide tonight; plan a talk later",
               "effects": {
                 "trust": 1
-              }
+              },
+              "to": "a1s3"
             }
           ]
         },
         {
-          "id": "s3n3",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They accept your lead.",
-          "next": "s3n6"
-        },
-        {
-          "id": "s3n4",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They object to partner’s authority.",
-          "next": "s3n6"
-        },
-        {
-          "id": "s3n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Tension subsides but feels unresolved.",
-          "next": "s3n6"
-        },
-        {
-          "id": "s3n6",
-          "type": "choice",
-          "prompt": "Clarify roles for future exchanges?",
-          "choices": [
-            {
-              "label": "Exchange scripts (who speaks when)",
-              "to": "s3n7",
-              "effects": {
-                "tension": -5,
-                "trust": 4
-              }
-            },
-            {
-              "label": "Partner stays quiet at exchanges",
-              "to": "s3n8",
-              "effects": {
-                "tension": -3
-              }
-            },
-            {
-              "label": "No change",
-              "to": "s3n9",
-              "effects": {
-                "tension": 2
-              }
-            }
-          ]
-        },
-        {
-          "id": "s3n7",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Everyone knows the cues.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3n8",
-          "type": "line",
-          "speaker": "partner",
-          "text": "They agree to step back in that moment.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3n9",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You’ll adapt case-by-case.",
-          "next": "s3end"
-        },
-        {
-          "id": "s3end",
-          "type": "end",
-          "summary": "Exchange protocol clarified."
+          "id": "a1s3",
+          "text": "You choose how to manage the mismatch in the moment."
         }
       ]
     },
     {
-      "id": "act-4",
-      "title": "Act 4 — Family Rules Agreement",
-      "start": "s4n1",
-      "nodes": [
+      "title": "Act 2 — Co-Parent Sync",
+      "steps": [
         {
-          "id": "s4n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You propose a simple two-home rules list.",
-          "next": "s4n2"
+          "id": "a2s1",
+          "text": "You prepare a message to your ex to keep rules consistent across homes."
         },
         {
-          "id": "s4n2",
-          "type": "choice",
-          "prompt": "Draft approach",
+          "id": "a2s2",
+          "text": "Pick your tone.",
           "choices": [
             {
-              "label": "Three rules, kid-language",
-              "to": "s4n3",
+              "label": "Neutral: 'We noticed X; can we agree on Y?'",
               "effects": {
-                "childStress": -3,
-                "trust": 4
-              }
+                "trust": 4,
+                "tension": -3
+              },
+              "to": "a2s3"
             },
             {
-              "label": "Long, detailed policy",
-              "to": "s4n4",
+              "label": "Directive: 'We’re doing it this way now.'",
               "effects": {
-                "tension": 2
-              }
+                "tension": 5
+              },
+              "to": "a2s3"
             },
             {
-              "label": "Keep separate rules",
-              "to": "s4n5",
+              "label": "Avoid: Say nothing",
               "effects": {
-                "trust": -2
-              }
+                "childStress": 3
+              },
+              "to": "a2s3"
             }
           ]
         },
         {
-          "id": "s4n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Everyone can remember the basics.",
-          "next": "s4end"
+          "id": "a2s3",
+          "text": "Your ex responds based on your tone."
+        }
+      ]
+    },
+    {
+      "title": "Act 3 — Family Debrief",
+      "steps": [
+        {
+          "id": "a3s1",
+          "text": "You and your partner debrief privately about roles and who enforces what."
         },
         {
-          "id": "s4n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "It feels rigid; hard to maintain.",
-          "next": "s4end"
+          "id": "a3s2",
+          "text": "Decide how to frame it to your child.",
+          "choices": [
+            {
+              "label": "Unified message and clear who decides what",
+              "effects": {
+                "trust": 3,
+                "childStress": -3
+              },
+              "to": "a3s3"
+            },
+            {
+              "label": "Leave it fuzzy",
+              "effects": {
+                "childStress": 4
+              },
+              "to": "a3s3"
+            }
+          ]
         },
         {
-          "id": "s4n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Consistency remains a challenge.",
-          "next": "s4end"
-        },
-        {
-          "id": "s4end",
-          "type": "end",
-          "summary": "Agreement level set. Scenario complete."
+          "id": "a3s3",
+          "text": "The path you pick shapes tomorrow’s routine."
         }
       ]
     }

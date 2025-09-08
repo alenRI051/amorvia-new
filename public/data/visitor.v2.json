@@ -2,6 +2,12 @@
   "version": 2,
   "id": "visitor",
   "title": "Visitor",
+  "tags": [
+    "boundaries",
+    "safety",
+    "co-parenting"
+  ],
+  "difficulty": "normal",
   "meters": {
     "trust": {
       "label": "Trust",
@@ -24,27 +30,131 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Unexpected Knock",
+      "title": "Act 1 — Surprise Knock",
       "steps": [
-        "A surprise visitor arrives during your parenting time.",
-        "They ask to speak with your child briefly.",
-        "Decide: allow a short supervised chat, ask them to come later, or refuse."
+        {
+          "id": "a1s1",
+          "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child."
+        },
+        {
+          "id": "a1s2",
+          "text": "They say they ‘just want a quick chat’ and step closer to the doorway.",
+          "choices": [
+            {
+              "label": "Calmly step outside and close the door behind you",
+              "effects": {
+                "tension": -5,
+                "trust": 2
+              },
+              "to": "a1s3"
+            },
+            {
+              "label": "Let them in briefly",
+              "effects": {
+                "tension": 3,
+                "childStress": 5
+              },
+              "to": "a1s3"
+            },
+            {
+              "label": "Set a firm boundary: 'Now isn’t a good time. Please text to schedule.'",
+              "effects": {
+                "tension": -2,
+                "trust": 3
+              },
+              "to": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s3",
+          "text": "Your tone sets the stage for what happens next."
+        }
       ]
     },
     {
-      "title": "Act 2 — Boundaries",
+      "title": "Act 2 — Negotiation",
       "steps": [
-        "The visitor insists it’s urgent and pressures you.",
-        "Balance safety, legal boundaries, and the child’s curiosity.",
-        "Choose a boundary statement, call the other parent, or end the interaction."
+        {
+          "id": "a2s1",
+          "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening."
+        },
+        {
+          "id": "a2s2",
+          "text": "You weigh the options.",
+          "choices": [
+            {
+              "label": "Offer a video call instead",
+              "effects": {
+                "trust": 2,
+                "tension": -3
+              },
+              "to": "a2s3"
+            },
+            {
+              "label": "Suggest a specific time tomorrow",
+              "effects": {
+                "trust": 3,
+                "tension": -2
+              },
+              "to": "a2s3"
+            },
+            {
+              "label": "Decline without alternatives",
+              "effects": {
+                "tension": 5,
+                "childStress": 3
+              },
+              "to": "a2s3"
+            }
+          ]
+        },
+        {
+          "id": "a2s3",
+          "text": "You communicate the boundary and alternative."
+        }
       ]
     },
     {
-      "title": "Act 3 — Aftercare",
+      "title": "Act 3 — Resolution",
       "steps": [
-        "You check in with your child to process feelings.",
-        "Consider documenting the event for the parenting log.",
-        "Plan how to prevent surprise visits in the future."
+        {
+          "id": "a3s1",
+          "text": "They react to your boundary. Your child watches your emotional tone closely."
+        },
+        {
+          "id": "a3s2",
+          "text": "Choose your closing move.",
+          "choices": [
+            {
+              "label": "Thank them for understanding and follow up by text",
+              "effects": {
+                "trust": 4,
+                "tension": -4
+              },
+              "to": "a3s3"
+            },
+            {
+              "label": "Restate the boundary and end the conversation",
+              "effects": {
+                "tension": -2
+              },
+              "to": "a3s3"
+            },
+            {
+              "label": "Argue about past behavior",
+              "effects": {
+                "tension": 8,
+                "childStress": 6
+              },
+              "to": "a3s3"
+            }
+          ]
+        },
+        {
+          "id": "a3s3",
+          "text": "The visit ends. Your child mirrors your calm—or your stress."
+        }
       ]
     }
   ]

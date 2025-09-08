@@ -2,406 +2,141 @@
   "version": 2,
   "id": "cultural-or-religious-difference",
   "title": "Cultural or Religious Difference",
+  "tags": [
+    "traditions",
+    "respect",
+    "planning"
+  ],
+  "difficulty": "normal",
   "meters": {
-    "tension": {
-      "label": "Tension",
-      "min": 0,
-      "max": 100,
-      "start": 30
-    },
     "trust": {
       "label": "Trust",
+      "start": 50,
       "min": 0,
-      "max": 100,
-      "start": 50
+      "max": 100
+    },
+    "tension": {
+      "label": "Tension",
+      "start": 22,
+      "min": 0,
+      "max": 100
     },
     "childStress": {
       "label": "Child Stress",
+      "start": 10,
       "min": 0,
-      "max": 100,
-      "start": 15
+      "max": 100
     }
   },
   "acts": [
     {
-      "id": "act-1",
-      "title": "Act 1 - Traditions Clash",
-      "start": "c1",
-      "nodes": [
+      "title": "Act 1 — Upcoming Holiday",
+      "steps": [
         {
-          "id": "c1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "A holiday approaches with different traditions.",
-          "next": "c2"
+          "id": "a1s1",
+          "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently."
         },
         {
-          "id": "c2",
-          "type": "choice",
-          "prompt": "Frame the talk:",
+          "id": "a1s2",
+          "text": "You draft a plan.",
           "choices": [
             {
-              "label": "Curiosity + must-haves list",
-              "to": "c3",
+              "label": "Alternate years and share schedule now",
               "effects": {
-                "tension": -5,
-                "trust": 5
-              }
+                "trust": 4,
+                "tension": -3
+              },
+              "to": "a1s3"
             },
             {
-              "label": "Insist on your way",
-              "to": "c4",
+              "label": "Split the day between homes",
               "effects": {
-                "tension": 10,
-                "trust": -6
-              }
+                "trust": 2
+              },
+              "to": "a1s3"
             },
             {
-              "label": "Avoid and hope",
-              "to": "c5",
+              "label": "Insist your way is the right way",
               "effects": {
-                "tension": 2,
-                "trust": -1
-              }
+                "tension": 7,
+                "childStress": 5
+              },
+              "to": "a1s3"
             }
           ]
         },
         {
-          "id": "c3",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They share theirs; overlap appears.",
-          "next": "cend"
-        },
-        {
-          "id": "c4",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They feel dismissed.",
-          "next": "cend"
-        },
-        {
-          "id": "c5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Logistics get messy.",
-          "next": "cend"
-        },
-        {
-          "id": "cend",
-          "type": "end",
-          "summary": "End of Act 1."
+          "id": "a1s3",
+          "text": "Your message sets the tone."
         }
       ]
     },
     {
-      "id": "act-2",
-      "title": "Act 2 — Planning the Holiday",
-      "start": "c2n1",
-      "nodes": [
+      "title": "Act 2 — Symbols & Food",
+      "steps": [
         {
-          "id": "c2n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Logistics meeting to map the holiday schedule.",
-          "next": "c2n2"
+          "id": "a2s1",
+          "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home."
         },
         {
-          "id": "c2n2",
-          "type": "choice",
-          "prompt": "Negotiation frame",
+          "id": "a2s2",
+          "text": "You decide how to talk about differences.",
           "choices": [
             {
-              "label": "List non-negotiables + trade fairly",
-              "to": "c2n3",
+              "label": "Explain respectfully: 'Different homes, shared values of care.'",
               "effects": {
-                "tension": -6,
-                "trust": 5
-              }
+                "trust": 3,
+                "childStress": -2
+              },
+              "to": "a2s3"
             },
             {
-              "label": "Split time 50/50 without nuance",
-              "to": "c2n4",
+              "label": "Contrast critically",
+              "effects": {
+                "tension": 5,
+                "childStress": 4
+              },
+              "to": "a2s3"
+            }
+          ]
+        },
+        {
+          "id": "a2s3",
+          "text": "Your child internalizes your framing."
+        }
+      ]
+    },
+    {
+      "title": "Act 3 — Keepsakes",
+      "steps": [
+        {
+          "id": "a3s1",
+          "text": "The child wants to bring a keepsake between homes."
+        },
+        {
+          "id": "a3s2",
+          "text": "Decide on the boundary.",
+          "choices": [
+            {
+              "label": "Allow with care instructions and respect",
+              "effects": {
+                "trust": 2,
+                "tension": -2
+              },
+              "to": "a3s3"
+            },
+            {
+              "label": "Disallow; keep items in one home",
               "effects": {
                 "tension": 2
-              }
-            },
-            {
-              "label": "Push for majority time",
-              "to": "c2n5",
-              "effects": {
-                "tension": 10,
-                "trust": -6
-              }
+              },
+              "to": "a3s3"
             }
           ]
         },
         {
-          "id": "c2n3",
-          "type": "line",
-          "speaker": "ex",
-          "text": "You find overlap and swap smaller events.",
-          "next": "c2n6"
-        },
-        {
-          "id": "c2n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "It feels fair but mismatched to traditions.",
-          "next": "c2n6"
-        },
-        {
-          "id": "c2n5",
-          "type": "line",
-          "speaker": "ex",
-          "text": "They push back hard.",
-          "next": "c2n6"
-        },
-        {
-          "id": "c2n6",
-          "type": "choice",
-          "prompt": "Child’s involvement",
-          "choices": [
-            {
-              "label": "Share a kid-friendly plan",
-              "to": "c2n7",
-              "effects": {
-                "childStress": -3,
-                "trust": 2
-              }
-            },
-            {
-              "label": "Adults decide; tell child later",
-              "to": "c2n8",
-              "effects": {
-                "childStress": 1
-              }
-            },
-            {
-              "label": "Let child choose everything",
-              "to": "c2n9",
-              "effects": {
-                "childStress": 4
-              }
-            }
-          ]
-        },
-        {
-          "id": "c2n7",
-          "type": "line",
-          "speaker": "child",
-          "text": "They feel reassured by clarity.",
-          "next": "c2end2"
-        },
-        {
-          "id": "c2n8",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You’ll reveal after details settle.",
-          "next": "c2end2"
-        },
-        {
-          "id": "c2n9",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Pressure shifts to the child.",
-          "next": "c2end2"
-        },
-        {
-          "id": "c2end2",
-          "type": "end",
-          "summary": "A workable plan—or a fragile one."
-        }
-      ]
-    },
-    {
-      "id": "act-3",
-      "title": "Act 3 — Community Pressures",
-      "start": "c3n1",
-      "nodes": [
-        {
-          "id": "c3n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Relatives message competing expectations.",
-          "next": "c3n2"
-        },
-        {
-          "id": "c3n2",
-          "type": "choice",
-          "prompt": "Handle outside pressure",
-          "choices": [
-            {
-              "label": "Unified message: child-first schedule",
-              "to": "c3n3",
-              "effects": {
-                "tension": -5,
-                "trust": 4
-              }
-            },
-            {
-              "label": "Let families negotiate",
-              "to": "c3n4",
-              "effects": {
-                "tension": 3
-              }
-            },
-            {
-              "label": "Take sides publicly",
-              "to": "c3n5",
-              "effects": {
-                "tension": 8,
-                "trust": -6
-              }
-            }
-          ]
-        },
-        {
-          "id": "c3n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You reduce noise around the plan.",
-          "next": "c3n6"
-        },
-        {
-          "id": "c3n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Arguments move outside your control.",
-          "next": "c3n6"
-        },
-        {
-          "id": "c3n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Conflict escalates in the group chat.",
-          "next": "c3n6"
-        },
-        {
-          "id": "c3n6",
-          "type": "choice",
-          "prompt": "Traditions balance",
-          "choices": [
-            {
-              "label": "Keep core rituals from both sides",
-              "to": "c3n7",
-              "effects": {
-                "trust": 4,
-                "childStress": -2
-              }
-            },
-            {
-              "label": "Alternate yearly",
-              "to": "c3n8",
-              "effects": {
-                "tension": -2
-              }
-            },
-            {
-              "label": "One side dominates",
-              "to": "c3n9",
-              "effects": {
-                "tension": 6,
-                "trust": -4
-              }
-            }
-          ]
-        },
-        {
-          "id": "c3n7",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Child sees both cultures represented.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3n8",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Predictable rotation helps planning.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3n9",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Resentments grow.",
-          "next": "c3end"
-        },
-        {
-          "id": "c3end",
-          "type": "end",
-          "summary": "You manage outside expectations—more or less."
-        }
-      ]
-    },
-    {
-      "id": "act-4",
-      "title": "Act 4 — Holiday Outcome & Debrief",
-      "start": "c4n1",
-      "nodes": [
-        {
-          "id": "c4n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Holiday passes; time to reflect.",
-          "next": "c4n2"
-        },
-        {
-          "id": "c4n2",
-          "type": "choice",
-          "prompt": "Debrief approach",
-          "choices": [
-            {
-              "label": "Short review + note improvements",
-              "to": "c4n3",
-              "effects": {
-                "trust": 4,
-                "tension": -4
-              }
-            },
-            {
-              "label": "No debrief",
-              "to": "c4n4",
-              "effects": {
-                "tension": 1
-              }
-            },
-            {
-              "label": "Reopen every conflict",
-              "to": "c4n5",
-              "effects": {
-                "tension": 10,
-                "trust": -6
-              }
-            }
-          ]
-        },
-        {
-          "id": "c4n3",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "You capture what worked and fix one thing.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4n4",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Lessons may be missed.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4n5",
-          "type": "line",
-          "speaker": "narrator",
-          "text": "Old fights resurface.",
-          "next": "c4end"
-        },
-        {
-          "id": "c4end",
-          "type": "end",
-          "summary": "Traditions balanced with a plan for next time. Scenario complete."
+          "id": "a3s3",
+          "text": "You close the holiday plan."
         }
       ]
     }
