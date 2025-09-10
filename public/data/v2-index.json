@@ -154,6 +154,51 @@
         "childStress": 10
       },
       "acts": 1
+    },
+    {
+      "id": "step-parenting-conflicts",
+      "title": "Step-Parenting Conflicts",
+      "tags": [
+        "family",
+        "boundaries"
+      ],
+      "difficulty": "hard",
+      "meters": {
+        "trust": 50,
+        "tension": 20,
+        "childStress": 10
+      },
+      "acts": 3
+    },
+    {
+      "id": "cultural-or-religious-difference",
+      "title": "Cultural or Religious Difference",
+      "tags": [
+        "culture",
+        "values"
+      ],
+      "difficulty": "hard",
+      "meters": {
+        "trust": 50,
+        "tension": 20,
+        "childStress": 10
+      },
+      "acts": 3
+    },
+    {
+      "id": "lgbtq-relationship-challenges",
+      "title": "LGBTQ+ Relationship Challenges",
+      "tags": [
+        "identity",
+        "acceptance"
+      ],
+      "difficulty": "hard",
+      "meters": {
+        "trust": 50,
+        "tension": 20,
+        "childStress": 10
+      },
+      "acts": 3
     }
   ]
 }
