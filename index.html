@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="dark light"/>
   <title>Amorvia - Multi-Act</title>
   <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#0f172a"/>
@@ -12,21 +13,39 @@
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
-  <link rel="stylesheet" href="/css/styles-hotfix.css"/>
+  <link rel="stylesheet" href="/css/a11y-fixes.css"/>
 
   <!-- Fetch shim: /public/data -> /data, no-store, devcache=0 -->
   <script src="/js/patches/fetch-data-redirect.js"></script>
 </head>
-<body>
+<body class="mode-v2">
   <a class="skip-link" href="#main">Skip to content</a>
   <header><h1>Amorvia <span class="muted">- Multi-Act</span></h1></header>
 
   <main id="main" class="wrap">
     <aside class="card panel">
+      <!-- v1 (hidden in this bundle, but kept for compatibility) -->
+      <div class="v1-only" hidden aria-hidden="true">
+        <label class="sr-only" for="search">Search scenarios</label>
+        <input id="search" class="input" placeholder="Search scenarios..." autocomplete="off"/>
+        <div id="scenarioList" class="list" aria-label="Scenarios"></div>
+        <div class="row mt8">
+          <button id="prevBtn" class="button" type="button">Prev</button>
+          <button id="nextBtn" class="button" type="button">Next</button>
+        </div>
+      </div>
+
+      <!-- v2 -->
       <div class="v2-only">
         <label for="scenarioPicker">Scenario</label>
         <select id="scenarioPicker" class="select"></select>
-        <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
+        <!-- Keyboard-help and ARIA listbox for scenario list -->
+        <div id="scenarioListV2"
+             class="list v2-only"
+             role="listbox"
+             aria-labelledby="scenarioPicker"
+             aria-describedby="scenarioListHelp"></div>
+        <span id="scenarioListHelp" class="sr-only">Use arrow keys to move; Enter or Space to select.</span>
         <button id="restartAct" class="button mt8" type="button">Restart Act</button>
       </div>
     </aside>
@@ -66,15 +85,12 @@
         </div>
         <div id="dialog" class="mt8" aria-live="polite"></div>
         <div id="choices" class="choices row v2-only" aria-label="Choices"></div>
-        <div id="hud" class="hud row v2-only" role="status" aria-live="polite"></div>
+        <div id="hud" class="hud row v2-only" role="group" aria-label="Status meters"></div>
       </div>
     </section>
   </main>
 
-  <!-- Only these three scripts -->
   <script type="module" src="/js/bootstrap.js" defer></script>
-  <script type="module" src="/js/metrics.js" defer></script>
-  <script src="/js/sw-register.js" defer></script>
+  <script src="/sw-register.js" defer></script>
 </body>
 </html>
-

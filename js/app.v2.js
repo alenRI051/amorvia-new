@@ -1,4 +1,4 @@
-// app.v2.js — v2 loader wired to ScenarioEngine + v2ToGraph
+// v2 loader wired to ScenarioEngine + v2ToGraph (with ARIA & keyboard nav on list items)
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import { ScenarioEngine } from '/js/engine/scenarioEngine.js';
 
@@ -39,9 +39,18 @@ function renderList(list) {
       el.className = 'item text-white';
       el.textContent = title;
       el.dataset.id = id;
+      // ARIA option semantics
+      el.setAttribute('role','option');
+      el.setAttribute('aria-selected','false');
       el.tabIndex = 0;
+
       el.addEventListener('click', () => startScenario(id));
-      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') startScenario(id); });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startScenario(id); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); el.nextElementSibling?.focus?.(); }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); el.previousElementSibling?.focus?.(); }
+      });
+
       container.appendChild(el);
     }
   });
@@ -61,8 +70,11 @@ async function startScenario(id) {
     ScenarioEngine.loadScenario(graph);
     ScenarioEngine.start(graph.startId);
 
+    // reflect selection in listbox
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
-      el.classList.toggle('is-active', el.dataset.id === id);
+      const on = el.dataset.id === id;
+      el.classList.toggle('is-active', on);
+      el.setAttribute('aria-selected', String(on));
     });
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
@@ -85,4 +97,3 @@ async function startScenario(id) {
 })();
 
 window.AmorviaApp = { startScenario };
-

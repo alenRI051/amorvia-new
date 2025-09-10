@@ -1,0 +1,54 @@
+/* a11y-fixes.css — contrast & focus improvements */
+:root {
+  --fg: #e5e7eb;
+  --bg: #0b1220;
+  --panel: #0f172a;
+  --muted: #94a3b8;
+  --accent: #22c55e;
+  --border: #334155;
+  --focus: #f59e0b;
+}
+body, body.mode-v2 { background: #0b1220; color: #f3f4f6; }
+a { color: #93c5fd; } a:visited { color: #a78bfa; }
+.button, .select, .input { color: var(--fg); background: #111827; border: 1px solid var(--border); }
+.button:hover { filter: brightness(1.05); }
+.button:disabled { opacity: .6; }
+
+/* Scenario list colors on dark */
+#scenarioList, #scenarioListV2, #scenarioList *, .scenario-list, .scenario-list * { color: #f8fafc !important; }
+
+/* Focus */
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.item:focus-visible, .button:focus-visible, .select:focus-visible, .input:focus-visible { box-shadow: 0 0 0 3px rgba(245,158,11,.35); }
+
+/* Skip link */
+.skip-link {
+  position: absolute; left: 12px; top: 10px;
+  transform: translateY(-160%);
+  background: #111827; color: #ffffff;
+  padding: 8px 12px; border: 2px solid var(--focus); border-radius: 10px;
+  font-weight: 600; line-height: 1; z-index: 10000;
+}
+.skip-link:focus { transform: translateY(0); outline: none; box-shadow: 0 0 0 3px rgba(245,158,11,.35); }
+
+/* Scenario list items */
+#scenarioListV2 .item {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #111827;
+  margin: 2px 0;
+}
+#scenarioListV2 .item.is-active { background: #1f2937; border-color: #475569; }
+
+/* HUD meters */
+.hud { display: grid; gap: 8px; align-items: center; }
+.meter { display: grid; grid-template-columns: 120px 1fr auto; gap: 8px; align-items: center; }
+.meter-label { color: #cbd5e1; }
+.meter-bar { height: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 999px; overflow: hidden; }
+.meter-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #16a34a); }
+.meter-value { font-variant-numeric: tabular-nums; color: #e5e7eb; min-width: 2ch; text-align: right; }
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+#main, .panel, .dialog, .list, .toolbar, .stage { color: #f3f4f6; }
