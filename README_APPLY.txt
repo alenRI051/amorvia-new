@@ -1,18 +1,15 @@
-Amorvia High-Contrast Toggle Bundle
-===================================
-Generated: 2025-09-10T19:26:51.415524Z
+Amorvia Reset UI Bundle
+=======================
+Generated: 2025-09-10T19:33:23.310192Z
 
-This bundle adds a High Contrast toggle button and persistent mode:
-- Updates index.html (adds button)
-- Adds /js/addons/high-contrast.js
-- Extends /css/a11y-fixes.css with .hc rules
+Adds a toolbar button and Alt+R shortcut to clear UI prefs and reload.
+
+Files:
+- index.html (adds "Reset UI" button and includes reset-ui.js)
+- js/addons/reset-ui.js
 
 Apply:
-unzip -o amorvia-high-contrast-toggle-bundle.zip -d .
-git add index.html js/addons/high-contrast.js css/a11y-fixes.css
-git commit -m "feat(a11y): High Contrast toggle (persistent via localStorage)"
+unzip -o amorvia-reset-ui-bundle.zip -d .
+git add index.html js/addons/reset-ui.js
+git commit -m "feat(a11y): add Reset UI button (clears localStorage, Alt+R)"
 git push
-
-Usage:
-- Click "High Contrast" in the toolbar or press Alt+H to toggle.
-- Preference is saved in localStorage (key: amorvia:contrast).

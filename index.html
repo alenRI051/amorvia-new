@@ -71,13 +71,22 @@
           <option value="v2" selected>Branching v2</option>
         </select>
 
-        <!-- High Contrast toggle -->
+        <!-- High Contrast toggle (assumes you already added it) -->
         <button id="contrastToggle"
                 class="button"
                 type="button"
                 aria-pressed="false"
                 title="Toggle High Contrast (Alt+H)">
           High Contrast
+        </button>
+
+        <!-- Reset UI button -->
+        <button id="resetUiBtn"
+                class="button"
+                type="button"
+                title="Reset UI preferences and reload (Alt+R)"
+                aria-label="Reset UI preferences">
+          Reset UI
         </button>
       </div>
 
@@ -101,6 +110,7 @@
 
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script type="module" src="/js/addons/high-contrast.js" defer></script>
+  <script type="module" src="/js/addons/reset-ui.js" defer></script>
   <script src="/sw-register.js" defer></script>
 </body>
 </html>
