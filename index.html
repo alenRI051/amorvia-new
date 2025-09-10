@@ -70,6 +70,15 @@
           <option value="v1">Classic v1</option>
           <option value="v2" selected>Branching v2</option>
         </select>
+
+        <!-- High Contrast toggle -->
+        <button id="contrastToggle"
+                class="button"
+                type="button"
+                aria-pressed="false"
+                title="Toggle High Contrast (Alt+H)">
+          High Contrast
+        </button>
       </div>
 
       <div class="canvas">
@@ -91,6 +100,7 @@
   </main>
 
   <script type="module" src="/js/bootstrap.js" defer></script>
+  <script type="module" src="/js/addons/high-contrast.js" defer></script>
   <script src="/sw-register.js" defer></script>
 </body>
 </html>
