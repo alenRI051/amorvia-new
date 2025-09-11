@@ -1,67 +1,36 @@
-# Amorvia Toolbar: High Contrast + Reset UI
+# Amorvia A11y Toolbar — Extras Pack
 
-This drop-in pack adds two buttons to the top toolbar:
-- **High Contrast** — toggles a high-contrast theme for accessibility.
-- **Reset UI** — clears Amorvia UI preferences and reloads the page (fresh defaults).
-
-> Default behavior: **High Contrast is OFF on every new page load** (no persistence),
-even if a previous session enabled it.
+This pack adds:
+1) **Keyboard shortcuts** (Alt+H for High Contrast, Alt+R for Reset UI with confirm)
+2) **Custom events** you can hook to `/api/track`:
+   - `amorvia:hc-toggled` → `{ on: boolean }`
+   - `amorvia:reset`
 
 ## Files
 
 ```
-/js/addons/toolbar-buttons.js
-/js/addons/high-contrast-toggle.js
-/js/addons/reset-ui.js
-/public/css/high-contrast.css
+/js/addons/high-contrast-toggle.js   (updated to dispatch event)
+/js/addons/reset-ui.js               (updated to dispatch event)
+/js/addons/toolbar-buttons.js        (same as previous bundle)
+/js/addons/shortcuts-a11y.js         (NEW Alt+H / Alt+R)
+/public/css/high-contrast.css        (same as previous bundle)
+/docs/track-hooks.example.js         (example listeners)
 ```
 
-## Quick Install
+## Install
 
-1) Copy the files into your project keeping the same paths:
-```
-/js/addons/toolbar-buttons.js
-/js/addons/high-contrast-toggle.js
-/js/addons/reset-ui.js
-/public/css/high-contrast.css
-```
-
-2) Include the CSS in your HTML (usually in `index.html` or your main layout):
-```html
-<link rel="stylesheet" href="/public/css/high-contrast.css">
-```
-
-3) Include the scripts *after* your base UI loads (ideally near the end of `<body>` or after your app mounts):
+1) Copy these files to your project, preserving paths.
+2) Add **after** your existing addons (place near end of `<body>`):
 ```html
 <script src="/js/addons/high-contrast-toggle.js"></script>
 <script src="/js/addons/reset-ui.js"></script>
 <script src="/js/addons/toolbar-buttons.js"></script>
+<script src="/js/addons/shortcuts-a11y.js"></script>
 ```
-
-No other wiring is required — the buttons will auto‑mount to an existing top toolbar if found, or create a small top bar placeholder.
+3) (Optional) Wire tracking by importing `/docs/track-hooks.example.js` or copying its contents into your app init.
 
 ## Notes
 
-- **No persistence**: High contrast state is intentionally not stored. Each page load starts in normal mode.
-- **Reset scope**: The Reset button clears keys beginning with `amorvia:` plus a few safe, common UI keys, then performs a hard reload with a cache‑bust.
-- **Toolbar detection**: The script prefers to mount into an existing toolbar (`#topbar`, `.toolbar`, `header .toolbar`, `[data-amorvia-toolbar]`). If none found, it injects a minimal fixed header so you always see the buttons.
-- **Service Worker**: Since you have a SW in production, the reload uses a query param to help bust cache. If needed, also do a manual hard refresh (Ctrl/Cmd+Shift+R).
-
-## Customization
-
-- To change which `localStorage` keys are cleared by Reset, edit the allowlist in `reset-ui.js`.
-- To tweak styles, edit `public/css/high-contrast.css` and the small inline styles in `toolbar-buttons.js`.
-- To rename the buttons, edit `toolbar-buttons.js` labels.
-
-## Tested Selectors
-
-The toolbar injector checks (in order):
-- `#topbar`
-- `.toolbar`
-- `header .toolbar`
-- `[data-amorvia-toolbar]`
-- falls back to a minimal injected bar.
-
----
-
-Made for the Amorvia project 💙
+- Shortcuts ignore keystrokes when focus is in inputs/textarea/contentEditable.
+- Reset UI asks `confirm()` before running via the shortcut; toolbar button remains one-click.
+- Events are dispatched on `document`, so listeners can be registered anywhere.
