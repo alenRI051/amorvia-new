@@ -1,24 +1,67 @@
-# Lighthouse CI (Desktop) for Amorvia
+# Amorvia Toolbar: High Contrast + Reset UI
 
-This workflow runs Lighthouse against your production site and **always appends `?nosw=1`** to avoid Service Worker effects.
-It produces **JSON + HTML** reports as a build artifact.
+This drop-in pack adds two buttons to the top toolbar:
+- **High Contrast** — toggles a high-contrast theme for accessibility.
+- **Reset UI** — clears Amorvia UI preferences and reloads the page (fresh defaults).
 
-## What's included
-- `.github/workflows/lighthouse.yml` — triggers on push to `main`, on PRs, nightly, and manual dispatch.
-- `tools/run-lighthouse.sh` — runs Lighthouse via `npx` and saves reports to `./lighthouse/report.{json,html}`.
+> Default behavior: **High Contrast is OFF on every new page load** (no persistence),
+even if a previous session enabled it.
 
-## Change test URL
-By default, it tests `https://amorvia.eu/?nosw=1`. To test a different URL:
-- Edit the `SITE_URL` env in the workflow file, or
-- Override in a manual run by changing the `SITE_URL` env before dispatching.
+## Files
 
-## Local run
-You can also run locally (Chrome required):
-```bash
-bash tools/run-lighthouse.sh
-# Reports in ./lighthouse/
+```
+/js/addons/toolbar-buttons.js
+/js/addons/high-contrast-toggle.js
+/js/addons/reset-ui.js
+/public/css/high-contrast.css
 ```
 
+## Quick Install
+
+1) Copy the files into your project keeping the same paths:
+```
+/js/addons/toolbar-buttons.js
+/js/addons/high-contrast-toggle.js
+/js/addons/reset-ui.js
+/public/css/high-contrast.css
+```
+
+2) Include the CSS in your HTML (usually in `index.html` or your main layout):
+```html
+<link rel="stylesheet" href="/public/css/high-contrast.css">
+```
+
+3) Include the scripts *after* your base UI loads (ideally near the end of `<body>` or after your app mounts):
+```html
+<script src="/js/addons/high-contrast-toggle.js"></script>
+<script src="/js/addons/reset-ui.js"></script>
+<script src="/js/addons/toolbar-buttons.js"></script>
+```
+
+No other wiring is required — the buttons will auto‑mount to an existing top toolbar if found, or create a small top bar placeholder.
+
 ## Notes
-- `?nosw=1` assumes your app **skips SW registration** when this param is present (or when `navigator.webdriver` is true). If you haven’t added that yet, I can provide a tiny patch.
-- The workflow uses `npx` so you don't need to add devDependencies.
+
+- **No persistence**: High contrast state is intentionally not stored. Each page load starts in normal mode.
+- **Reset scope**: The Reset button clears keys beginning with `amorvia:` plus a few safe, common UI keys, then performs a hard reload with a cache‑bust.
+- **Toolbar detection**: The script prefers to mount into an existing toolbar (`#topbar`, `.toolbar`, `header .toolbar`, `[data-amorvia-toolbar]`). If none found, it injects a minimal fixed header so you always see the buttons.
+- **Service Worker**: Since you have a SW in production, the reload uses a query param to help bust cache. If needed, also do a manual hard refresh (Ctrl/Cmd+Shift+R).
+
+## Customization
+
+- To change which `localStorage` keys are cleared by Reset, edit the allowlist in `reset-ui.js`.
+- To tweak styles, edit `public/css/high-contrast.css` and the small inline styles in `toolbar-buttons.js`.
+- To rename the buttons, edit `toolbar-buttons.js` labels.
+
+## Tested Selectors
+
+The toolbar injector checks (in order):
+- `#topbar`
+- `.toolbar`
+- `header .toolbar`
+- `[data-amorvia-toolbar]`
+- falls back to a minimal injected bar.
+
+---
+
+Made for the Amorvia project 💙
