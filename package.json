@@ -1,12 +1,1 @@
-{
-  "name": "amorvia-static",
-  "version": "0.5.0",
-  "private": true,
-  "type": "module",
-  "description": "Static deploy of Amorvia on Vercel (public/ as output directory).",
-  "scripts": {
-    "test": "node tools/smoke.test.mjs",
-    "e2e": "node tools/smoke.test.mjs"
-  },
-  "devDependencies": {}
-}
+{ "name":"amorvia-api-track-starter","private":true,"type":"module","dependencies": {"@vercel/node":"^3.0.0"}}
