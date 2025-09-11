@@ -10,7 +10,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia – Multi-Act Relationship Simulator</title>
-  <meta name="description" content="Interactive relationship and co‑parenting scenarios with branching choices and real‑time feedback meters."/>
+  <meta name="description" content="Interactive relationship and co-parenting scenarios with branching choices and real-time feedback meters."/>
   <meta name="keywords" content="Amorvia, co-parenting, relationships, parenting, family, interactive, simulator, game"/>
   <link rel="canonical" href="https://amorvia.eu/"/>
 
@@ -26,6 +26,9 @@
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
   <link rel="stylesheet" href="/css/styles-hotfix.css"/>
+
+  <!-- Accessibility High Contrast (new) -->
+  <link rel="stylesheet" href="/public/css/high-contrast.css"/>
 
   <!-- Fetch shim: /public/data -> /data, no-store, devcache=0 -->
   <script src="/js/patches/fetch-data-redirect.js"></script>
@@ -105,5 +108,10 @@
   <script type="module" src="/js/bootstrap.js" defer></script>
   <!-- SW register -->
   <script src="/js/sw-register.js" defer></script>
+
+  <!-- Accessibility Addons (new) -->
+  <script src="/js/addons/high-contrast-toggle.js"></script>
+  <script src="/js/addons/reset-ui.js"></script>
+  <script src="/js/addons/toolbar-buttons.js"></script>
 </body>
 </html>
