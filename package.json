@@ -1,5 +1,5 @@
 {
-  "name": "amorvia-api-track-debug",
+  "name": "amorvia-api-track-esmfix",
   "private": true,
   "type": "module",
   "dependencies": {
