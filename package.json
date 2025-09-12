@@ -1,1 +1,8 @@
-{ "name":"amorvia-api-track-starter","private":true,"type":"module","dependencies": {"@vercel/node":"^3.0.0"}}
+{
+  "name": "amorvia-api-track-patched",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  }
+}

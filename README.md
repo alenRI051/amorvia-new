@@ -1,5 +1,20 @@
-# Amorvia `/api/track` — Starter Endpoint (Node/TS)
+# Amorvia `/api/track` — Patched Endpoint
 
-Minimal tracking endpoint for Vercel/Node environments with rate limit and JSONL logging.
+Patched version with:
+- Safe JSON body parsing
+- Crypto import fix (`import * as crypto from 'crypto'`)
+- Logger write wrapped in try/catch (prevents crash)
+- Returns 400 for invalid payloads
 
-See inline comments for details. Set `TRACK_SALT` and optional `TRACK_RATE_LIMIT`.
+Deploy on Vercel by dropping into repo root.
+
+Env vars:
+- `TRACK_SALT` (required)
+- `TRACK_RATE_LIMIT` (optional, default 60/5min)
+
+Files:
+- `api/track.ts`
+- `lib/rateLimit.ts`
+- `lib/logger.ts`
+- `package.json`
+- `tsconfig.json`
