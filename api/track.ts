@@ -65,7 +65,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     };
 
     console.log('[track] line ->', JSON.stringify(line));
-
+    console.log("[track] env TRACK_SALT length:", (process.env.TRACK_SALT || "").length);
+    console.log("[track] env TRACK_RATE_LIMIT:", process.env.TRACK_RATE_LIMIT);
+    
     try {
       await writeJsonl(line);
       console.log('[track] writeJsonl ok');
