@@ -1,8 +1,9 @@
 {
-  "name": "amorvia-api-track-esmfix",
+  "name": "amorvia-api-track-blob",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@vercel/node": "^3.0.0"
+    "@vercel/node": "^3.0.0",
+    "@vercel/blob": "^0.24.0"
   }
 }

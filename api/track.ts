@@ -1,8 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { rateLimit } from './_lib/rateLimit.js';
-import { writeJsonl } from './_lib/logger.js';
+import { writeJsonEvent } from './_lib/logger-blob.js';
 import * as crypto from 'crypto';
 
+/**
+ * /api/track using Vercel Blob for durable storage.
+ * Requires env var: BLOB_READ_WRITE_TOKEN
+ */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -12,6 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
 
   try {
+    // Body parsing (handles undefined, string, or object)
     let body: any = {};
     try {
       if (!req.body) {
@@ -29,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (!body || typeof body.event !== 'string' || !body.event.trim()) {
-      return res.status(400).json({ ok: false, error: 'Missing required \"event\"' });
+      return res.status(400).json({ ok: false, error: 'Missing required "event"' });
     }
 
     const ip = ((req.headers['x-forwarded-for'] as string) || '').split(',')[0] || '0.0.0.0';
@@ -50,9 +55,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       data: body.data
     };
 
-    try { await writeJsonl(line); } catch (err) { console.warn('[track] writeJsonl failed:', err); }
-
-    return res.status(200).json({ ok: true, remaining, reset });
+    // Write to Vercel Blob (one file per event)
+    try {
+      const pathname = await writeJsonEvent(line);
+      return res.status(200).json({ ok: true, remaining, reset, blobPath: pathname });
+    } catch (err: any) {
+      console.error('[track] blob write failed:', err?.message || err);
+      return res.status(500).json({ ok: false, error: 'Blob write failed' });
+    }
   } catch (err: any) {
     console.error('[track] handler error:', err);
     return res.status(500).json({ ok: false, error: 'Server error' });
