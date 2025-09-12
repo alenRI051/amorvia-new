@@ -1,20 +1,26 @@
-# Amorvia `/api/track` — Patched Endpoint
+# Amorvia `/api/track` — Debug Build
 
-Patched version with:
-- Safe JSON body parsing
-- Crypto import fix (`import * as crypto from 'crypto'`)
-- Logger write wrapped in try/catch (prevents crash)
-- Returns 400 for invalid payloads
+This build adds **robust body parsing** and **extra console logs** so you can see exactly what Vercel receives.
 
-Deploy on Vercel by dropping into repo root.
+## Deploy
+1. Drop files in repo root.
+2. Set env vars:
+   - `TRACK_SALT` (required)
+   - `TRACK_RATE_LIMIT` (optional, default 60/5min)
+3. Deploy and watch function logs while testing:
+   - Vercel dashboard → Functions → /api/track
 
-Env vars:
-- `TRACK_SALT` (required)
-- `TRACK_RATE_LIMIT` (optional, default 60/5min)
+## Client test
+Run in your browser console:
+```js
+fetch('/api/track', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ event: 'debug_test', data: { at: Date.now() } }),
+  keepalive: true
+}).then(r => r.json()).then(console.log).catch(console.error);
+```
 
-Files:
-- `api/track.ts`
-- `lib/rateLimit.ts`
-- `lib/logger.ts`
-- `package.json`
-- `tsconfig.json`
+## Notes
+- Logs show whether `req.body` was object/string/undefined and the final JSON line written.
+- Logging goes to `/tmp/amorvia-tracks-YYYY-MM-DD.jsonl` (ephemeral). Switch to Blob/Postgres for persistence later.
