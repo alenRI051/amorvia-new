@@ -57,6 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Write to Vercel Blob (one file per event)
     try {
+      console.log("[track] env token length:", (process.env.BLOB_READ_WRITE_TOKEN || "").length);
       const pathname = await writeJsonEvent(line);
       return res.status(200).json({ ok: true, remaining, reset, blobPath: pathname });
     } catch (err: any) {
