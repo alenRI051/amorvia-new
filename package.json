@@ -1,5 +1,5 @@
 {
-  "name": "amorvia-api-track-blob",
+  "name": "amorvia-api-track-blob-public",
   "private": true,
   "type": "module",
   "dependencies": {

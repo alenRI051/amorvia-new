@@ -3,10 +3,6 @@ import { rateLimit } from './_lib/rateLimit.js';
 import { writeJsonEvent } from './_lib/logger-blob.js';
 import * as crypto from 'crypto';
 
-/**
- * /api/track using Vercel Blob for durable storage.
- * Requires env var: BLOB_READ_WRITE_TOKEN
- */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -16,7 +12,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
 
   try {
-    // Body parsing (handles undefined, string, or object)
     let body: any = {};
     try {
       if (!req.body) {
@@ -55,11 +50,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       data: body.data
     };
 
-    // Write to Vercel Blob (one file per event)
     try {
-      console.log("[track] env token length:", (process.env.BLOB_READ_WRITE_TOKEN || "").length);
-      const pathname = await writeJsonEvent(line);
-      return res.status(200).json({ ok: true, remaining, reset, blobPath: pathname });
+      const out = await writeJsonEvent(line);
+      return res.status(200).json({ ok: true, remaining, reset, blobPath: out.pathname, url: out.url });
     } catch (err: any) {
       console.error('[track] blob write failed:', err?.message || err);
       return res.status(500).json({ ok: false, error: 'Blob write failed' });
