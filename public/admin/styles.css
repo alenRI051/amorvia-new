@@ -1,4 +1,5 @@
-*{box-sizing:border-box}body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1020;color:#e7ebf3}
+*{box-sizing:border-box}
+body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1020;color:#e7ebf3}
 header,footer{padding:16px 20px;background:#0f172a;border-bottom:1px solid #1e293b}
 h1{margin:0;font-size:20px}.muted{opacity:.7}
 main{padding:20px;max-width:1000px;margin:0 auto}
