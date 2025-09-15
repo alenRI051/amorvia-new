@@ -1,5 +1,18 @@
+# OS/Editor
+.DS_Store
+Thumbs.db
+*.log
 
-# temp from scenario bundle
+# Build caches
+.next/
+.vercel/
+node_modules/
+
+# Temporary zips and patches
 *.zip
-README_APPLY.txt
-public/data/v2-index.delta.json
+/mnt/data/
+/tmp/
+
+# Environment
+.env.local
+.env
