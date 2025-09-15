@@ -1,34 +1,52 @@
 /* Amorvia bootstrap + extras */
-const bgImg = document.getElementById('bgImg'); if (bgImg) bgImg.src = '/assets/backgrounds/room.svg';
 
+// Background + characters init
+const bgImg   = document.getElementById('bgImg');
+const leftImg = document.getElementById('leftImg');
+const rightImg= document.getElementById('rightImg');
+
+if (bgImg)   bgImg.src   = '/assets/backgrounds/room.svg';
+if (leftImg) leftImg.src = '/assets/characters/male_casual.svg';
+if (rightImg)rightImg.src= '/assets/characters/female_casual.svg';
+
+// Mode handling
 const getMode = () => localStorage.getItem('amorvia:mode') || 'v2';
 const setMode = (m) => localStorage.setItem('amorvia:mode', m);
 
 function applyModeToDOM(mode){
-  document.body.classList.remove('mode-v1','mode-v2');
-  document.body.classList.add(mode === 'v2' ? 'mode-v2' : 'mode-v1');
-  document.querySelectorAll('.v1-only').forEach(el => { const on = mode === 'v1'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
-  document.querySelectorAll('.v2-only').forEach(el => { const on = mode === 'v2'; el.hidden = !on; el.setAttribute('aria-hidden', String(!on)); });
+  document.body.classList.add(`mode-v1`, `mode-v2`);
+  document.body.classList.remove(`mode-v1`, `mode-v2`);
+  document.body.classList.add(`mode-${mode}`);
+  document.querySelectorAll('.v1-only').forEach(el => { el.hidden = (mode !== 'v1'); el.setAttribute('aria-hidden', String(mode !== 'v1')); });
+  document.querySelectorAll('.v2-only').forEach(el => { el.hidden = (mode !== 'v2'); el.setAttribute('aria-hidden', String(mode !== 'v2')); });
 }
 
 const modeSel = document.getElementById('modeSelect');
-if (modeSel){ modeSel.value = getMode(); applyModeToDOM(modeSel.value); modeSel.addEventListener('change', ()=>{ setMode(modeSel.value); location.reload(); }); }
+if (modeSel){
+  modeSel.value = getMode();
+  applyModeToDOM(modeSel.value);
+  modeSel.addEventListener('change', ()=>{ setMode(modeSel.value); location.reload(); });
+}
 else { applyModeToDOM(getMode()); }
 
+// Lazy-load scenario engine
 let loaded=false;
 async function loadChosenApp(){
-  if (loaded) return; loaded=true;
-  const mode = getMode();
+  if (loaded) return;
+  loaded=true;
   try{
+    const mode = getMode();
     if (mode === 'v2'){
-      await import('/js/app.v2.js?sig='+Date.now());
+      const m1 = await import('/js/app.v2.js?sig='+Date.now());
       await Promise.allSettled([
         import('/js/addons/extras-tabs.js?sig='+Date.now())
       ]);
-    }else{
-      const m = await import('/js/app.js?sig='+Date.now()); m?.init?.();
+    } else {
+      const m2 = await import('/js/app.js?sig='+Date.now());
     }
   }catch(e){ console.error('Failed to start app:', e); }
 }
+
 ['click','keydown','pointerdown'].forEach(evt=>window.addEventListener(evt,loadChosenApp,{once:true}));
 if ('requestIdleCallback' in window) requestIdleCallback(loadChosenApp,{timeout:2000}); else setTimeout(loadChosenApp,2000);
+
