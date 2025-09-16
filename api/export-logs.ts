@@ -3,6 +3,13 @@ import { list } from '@vercel/blob';
 import { fetch } from 'undici';
 import { requireAdmin } from './_lib/auth.js';
 
+// Minimal typing for list() return
+type BlobListPage = {
+  blobs: { url: string; pathname: string }[];
+  hasMore: boolean;
+  cursor?: string;
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
   if (!requireAdmin(req, res)) return;
@@ -16,8 +23,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const urls: string[] = [];
     let cursor: string | undefined = undefined;
+
     do {
-      const page = await list({ prefix, token, limit: 1000, cursor });
+      const page: BlobListPage = await list({ prefix, token, limit: 1000, cursor });
       for (const b of page.blobs) urls.push(b.url);
       cursor = page.hasMore ? page.cursor : undefined;
     } while (cursor);
@@ -34,6 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return r.ok ? r.text() : '';
         })
       );
+
       for (const r of results) {
         if (r.status !== 'fulfilled' || !r.value) continue;
         const text = (r.value || '').trim();
@@ -43,9 +52,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           try {
             const obj: any = JSON.parse(text);
             const esc = (s: unknown) => `"${(s ?? '').toString().replace(/"/g, '""')}"`;
-            rows.push([esc(obj.ts),esc(obj.event),esc(obj.ipHash),esc(obj.ua),
-                       esc(obj.referer),esc(obj.path),esc(JSON.stringify(obj.data))].join(','));
-          } catch {}
+            rows.push([
+              esc(obj.ts),
+              esc(obj.event),
+              esc(obj.ipHash),
+              esc(obj.ua),
+              esc(obj.referer),
+              esc(obj.path),
+              esc(JSON.stringify(obj.data)),
+            ].join(','));
+          } catch { /* skip malformed line */ }
         } else {
           jsonLines.push(text);
         }
