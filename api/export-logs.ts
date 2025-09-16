@@ -61,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               esc(obj.path),
               esc(JSON.stringify(obj.data)),
             ].join(','));
-          } catch { /* skip malformed line */ }
+          } catch { /* skip malformed */ }
         } else {
           jsonLines.push(text);
         }
