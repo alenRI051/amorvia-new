@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { list } from '@vercel/blob';
-import { requireAdmin } from './_lib/auth';
+import { fetch } from 'undici';                    // typed fetch in Node
+import { requireAdmin } from './_lib/auth.js';     // NOTE: .js extension for ESM
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
@@ -13,48 +14,58 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!token) return res.status(500).json({ ok: false, error: 'Missing BLOB_READ_WRITE_TOKEN' });
 
   try {
-    // Gather blob URLs by paging list()
+    // 1) Collect blob URLs via paginated list()
     const urls: string[] = [];
-    let cursor: string | undefined;
+    let cursor: string | undefined = undefined;
+
     do {
       const page = await list({ prefix, token, limit: 1000, cursor });
-      page.blobs.forEach(b => urls.push(b.url));
+      for (const b of page.blobs) urls.push(b.url);
       cursor = page.hasMore ? page.cursor : undefined;
     } while (cursor);
 
-    // Pull files (public URLs) in batches
+    // 2) Fetch files in batches
     const batchSize = 25;
     const jsonLines: string[] = [];
     const rows: string[] = ['ts,event,ipHash,ua,referer,path,data']; // CSV header
 
     for (let i = 0; i < urls.length; i += batchSize) {
       const slice = urls.slice(i, i + batchSize);
-      const results = await Promise.allSettled(slice.map(u => fetch(u).then(r => r.text())));
+      const results = await Promise.allSettled(
+        slice.map(async (u: string) => {
+          const r = await fetch(u);
+          return r.ok ? r.text() : '';
+        })
+      );
+
       for (const r of results) {
         if (r.status !== 'fulfilled' || !r.value) continue;
-        const text = r.value.trim();
+        const text = (r.value || '').trim();
         if (!text) continue;
 
         if (fmt === 'csv') {
           try {
             const obj = JSON.parse(text);
-            const esc = (s: any) => `"${(s ?? '').toString().replace(/"/g, '""')}"`;
+            const esc = (s: unknown) => `"${(s ?? '').toString().replace(/"/g, '""')}"`;
             rows.push([
               esc(obj.ts),
-              esc(obj.event),
-              esc(obj.ipHash),
-              esc(obj.ua),
-              esc(obj.referer),
-              esc(obj.path),
-              esc(JSON.stringify(obj.data))
+              esc((obj as any).event),
+              esc((obj as any).ipHash),
+              esc((obj as any).ua),
+              esc((obj as any).referer),
+              esc((obj as any).path),
+              esc(JSON.stringify((obj as any).data)),
             ].join(','));
-          } catch { /* ignore malformed */ }
+          } catch {
+            // skip malformed line
+          }
         } else {
           jsonLines.push(text);
         }
       }
     }
 
+    // 3) Send file
     if (fmt === 'csv') {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="amorvia-${date}.csv"`);
@@ -69,3 +80,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ ok: false, error: 'Export failed' });
   }
 }
+
