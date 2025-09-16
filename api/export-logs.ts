@@ -1,44 +1,35 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { list } from '@vercel/blob';
-import { requireAdmin } from './_lib/auth'; // note: no ".js" in TS
+import { requireAdmin } from './_lib/auth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
-  }
+  if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
   if (!requireAdmin(req, res)) return;
 
   const date = (req.query.date as string) || new Date().toISOString().slice(0, 10);
   const fmt = ((req.query.format as string) || 'jsonl').toLowerCase();
   const prefix = `events/${date}`;
-  const token = process.env.BLOB_READ_WRITE_TOKEN; // used for list()
-
-  if (!token) {
-    return res.status(500).json({ ok: false, error: 'Missing BLOB_READ_WRITE_TOKEN' });
-  }
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) return res.status(500).json({ ok: false, error: 'Missing BLOB_READ_WRITE_TOKEN' });
 
   try {
-    // 1) Collect all blob URLs via paginated list()
+    // Gather blob URLs by paging list()
     const urls: string[] = [];
-    let cursor: string | undefined = undefined;
-
+    let cursor: string | undefined;
     do {
       const page = await list({ prefix, token, limit: 1000, cursor });
       page.blobs.forEach(b => urls.push(b.url));
       cursor = page.hasMore ? page.cursor : undefined;
     } while (cursor);
 
-    // 2) Fetch each file body; public access means plain fetch works
+    // Pull files (public URLs) in batches
     const batchSize = 25;
     const jsonLines: string[] = [];
     const rows: string[] = ['ts,event,ipHash,ua,referer,path,data']; // CSV header
 
     for (let i = 0; i < urls.length; i += batchSize) {
       const slice = urls.slice(i, i + batchSize);
-      const results = await Promise.allSettled(
-        slice.map(u => fetch(u).then(r => r.text()))
-      );
-
+      const results = await Promise.allSettled(slice.map(u => fetch(u).then(r => r.text())));
       for (const r of results) {
         if (r.status !== 'fulfilled' || !r.value) continue;
         const text = r.value.trim();
@@ -57,16 +48,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               esc(obj.path),
               esc(JSON.stringify(obj.data))
             ].join(','));
-          } catch {
-            // skip malformed line
-          }
+          } catch { /* ignore malformed */ }
         } else {
           jsonLines.push(text);
         }
       }
     }
 
-    // 3) Send response
     if (fmt === 'csv') {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="amorvia-${date}.csv"`);
