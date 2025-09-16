@@ -13,9 +13,16 @@
   <meta name="description" content="Interactive relationship and co-parenting scenarios with branching choices and real-time feedback meters."/>
   <meta name="keywords" content="Amorvia, co-parenting, relationships, parenting, family, interactive, simulator, game"/>
   <link rel="canonical" href="https://amorvia.eu/"/>
-
   <meta name="theme-color" content="#0f172a"/>
   <link rel="manifest" href="/manifest.json"/>
+  <script>
+  // Remove manifest in non-production environments (e.g. Codespaces, localhost)
+  if (location.hostname !== 'amorvia.eu') {
+    const m = document.querySelector('link[rel="manifest"]');
+    if (m) m.remove();
+    console.log('[Manifest] removed in non-prod:', location.hostname);
+  }
+</script>
   <link rel="icon" href="/favicon.png" type="image/png"/>
   <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
   <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png"/>
