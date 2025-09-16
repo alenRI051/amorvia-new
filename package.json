@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx serve public"   
+    "start": "npx serve public"
   },
   "dependencies": {
+    "@vercel/blob": "^0.24.0",
     "@vercel/node": "^3.0.0",
-    "@vercel/blob": "^0.24.0"
+    "undici": "^7.16.0"
   }
 }

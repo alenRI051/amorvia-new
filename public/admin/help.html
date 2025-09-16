@@ -15,48 +15,31 @@
 <body>
   <header>
     <h1>Amorvia — <span class="muted">Admin Help</span></h1>
-    <p class="muted">How to list, export, and prune logs.</p>
+    <p class="muted">How to list, export, prune logs.</p>
   </header>
-
   <main>
     <section>
       <h2>Environment</h2>
       <ul>
         <li><code>TRACK_SALT</code> — required</li>
         <li><code>BLOB_READ_WRITE_TOKEN</code> — required</li>
-        <li><code>ADMIN_TOKEN</code> — recommended (protects admin APIs)</li>
+        <li><code>ADMIN_TOKEN</code> — recommended</li>
         <li><code>TRACK_RATE_LIMIT</code> — optional</li>
       </ul>
     </section>
-
     <section>
       <h2>Admin UI</h2>
       <p>Open <code>/admin/</code>. Set date → <b>List Logs</b> → <b>Export CSV</b> or JSONL.</p>
       <p>If you set <code>ADMIN_TOKEN</code>, paste it in the “Admin Token” field.</p>
     </section>
-
     <section>
-      <h2>Retention (Prune old logs)</h2>
-      <p>Endpoint: <code>/api/prune-logs</code></p>
-      <ul>
-        <li><code>days</code> — number of days to keep (older is deleted). Default: 30</li>
-        <li><code>dryRun</code> — set to <code>1</code> to see what would be deleted</li>
-      </ul>
+      <h2>Retention</h2>
+      <p>Use the Retention controls to preview and prune logs older than N days.</p>
       <pre><code>// Dry run (no delete)
 GET  /api/prune-logs?days=30&amp;dryRun=1
-
-// Delete (requires ADMIN_TOKEN header)
+// Delete (requires Admin Token header)
 DELETE /api/prune-logs?days=30
 Header: x-admin-token: &lt;ADMIN_TOKEN&gt;</code></pre>
-      <p class="tip">Tip: Run pruning on a schedule from your local machine or CI.</p>
-    </section>
-
-    <section>
-      <h2>Notes</h2>
-      <ul>
-        <li>Logs are stored under <code>events/YYYY-MM-DD/</code> in Vercel Blob.</li>
-        <li>Use <code>?nosw=1</code> in URLs during testing to bypass the service worker.</li>
-      </ul>
     </section>
   </main>
 </body>

@@ -4,15 +4,21 @@
   const btnList = document.getElementById('btnList');
   const btnExportJsonl = document.getElementById('btnExportJsonl');
   const btnExportCsv = document.getElementById('btnExportCsv');
+  const btnToday = document.getElementById('btnToday');
   const statusEl = document.getElementById('status');
   const tbody = document.querySelector('#table tbody');
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
 
+  const pruneDays = document.getElementById('pruneDays');
+  const pruneDry  = document.getElementById('pruneDry');
+  const btnPruneDry = document.getElementById('btnPruneDry');
+  const btnPruneGo  = document.getElementById('btnPruneGo');
+
   const today = new Date().toISOString().slice(0,10);
   dateEl.value = today;
 
-  let pages = []; // cursor history
+  let pages = [];
   let nextCursor = null;
 
   function setStatus(msg){ statusEl.textContent = msg || ''; }
@@ -72,6 +78,34 @@
     setStatus('Export complete.');
   }
 
+  async function pruneLogs(dryRun) {
+    const days = Math.max(1, parseInt(pruneDays.value || '30', 10));
+    const params = new URLSearchParams({ days: String(days) });
+    if (dryRun) params.set('dryRun', '1');
+
+    setStatus(dryRun ? `Previewing prune (keep ${days} days)…` : `Pruning logs older than ${days} days…`);
+
+    const res = await fetch(`/api/prune-logs?${params.toString()}`, {
+      method: dryRun ? 'GET' : 'DELETE',
+      headers: headers()
+    });
+
+    let json = null;
+    try { json = await res.json(); } catch {}
+    if (!res.ok || !json?.ok) {
+      setStatus(`Prune ${dryRun ? 'preview' : 'run'} failed: ${json?.error || res.status}`);
+      return;
+    }
+
+    if (dryRun) {
+      setStatus(`Would delete ${json.toDeleteCount} file(s). Sample:\n${(json.sample || []).join('\n')}`);
+    } else {
+      setStatus(`Deleted ${json.deletedCount}/${json.toDeleteCount} file(s). Kept last ${json.keptDays} day(s).`);
+      // optional refresh
+      listLogs(null);
+    }
+  }
+
   btnList.addEventListener('click', () => { pages = []; listLogs(null); });
   btnNext.addEventListener('click', () => { if (nextCursor){ pages.push(nextCursor); listLogs(nextCursor); } });
   btnPrev.addEventListener('click', () => {
@@ -80,6 +114,16 @@
   });
   btnExportJsonl.addEventListener('click', () => exportLogs('jsonl'));
   btnExportCsv.addEventListener('click', () => exportLogs('csv'));
+  btnPruneDry.addEventListener('click', () => pruneLogs(true));
+  btnPruneGo.addEventListener('click', async () => {
+    const days = Math.max(1, parseInt(pruneDays.value || '30', 10));
+    if (!confirm(`Delete logs older than ${days} day(s)? This cannot be undone.`)) return;
+    await pruneLogs(false);
+  });
+  btnToday.addEventListener('click', () => {
+    const t = new Date().toISOString().slice(0,10);
+    dateEl.value = t; pages = []; listLogs(null);
+  });
 
   listLogs(null);
 })();

@@ -9,9 +9,9 @@
 <body>
   <header>
     <h1>Amorvia — <span class="muted">Logs Admin</span></h1>
-    <p class="muted">Browse and export Blob-stored events.</p>
-    <a href="/admin/help.html" style="margin-left:12px;">Help</a>
-  </p>
+    <p class="muted">Browse and export Blob-stored events.
+      <a href="/admin/help.html" style="margin-left:12px;">Help</a>
+    </p>
   </header>
 
   <main>
@@ -28,7 +28,23 @@
         <button id="btnList">List Logs</button>
         <button id="btnExportJsonl">Export JSONL</button>
         <button id="btnExportCsv">Export CSV</button>
+        <button id="btnToday" class="secondary">Today</button>
       </div>
+
+      <!-- Retention / Prune -->
+      <fieldset style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;border:1px solid #1e293b;padding:8px 10px;border-radius:12px">
+        <legend class="muted" style="padding:0 6px">Retention</legend>
+        <label>Keep last (days)
+          <input id="pruneDays" type="number" min="1" value="30" />
+        </label>
+        <label style="display:flex;align-items:center;gap:6px">
+          <input id="pruneDry" type="checkbox" checked /> Dry run
+        </label>
+        <div class="actions">
+          <button id="btnPruneDry" class="secondary" type="button">Preview</button>
+          <button id="btnPruneGo"  type="button">Prune</button>
+        </div>
+      </fieldset>
     </section>
 
     <section id="status" class="status" aria-live="polite"></section>
@@ -55,10 +71,9 @@
   </main>
 
   <footer>
-    <small>Uses /api/list-logs and /api/export-logs. Provide ADMIN_TOKEN if enabled.</small>
+    <small>Uses /api/list-logs, /api/export-logs, /api/prune-logs. Provide ADMIN_TOKEN if enabled.</small>
   </footer>
 
   <script src="./admin.js"></script>
 </body>
 </html>
-
