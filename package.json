@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx serve public"   // optional: static-only preview
+    "start": "npx serve public"   
   },
   "dependencies": {
     "@vercel/node": "^3.0.0",
