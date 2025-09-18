@@ -1,12 +1,41 @@
-/* Amorvia visibility hotfix: ensure background image renders behind characters */
+/* Amorvia visibility + layering hotfix (v3) */
+
+/* Ensure canvas creates stacking context */
+.canvas {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Background image: full canvas, behind everything */
 .canvas img.bg {
   display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  position: absolute !important;
-  top: 0;
-  left: 0;
+  object-fit: cover !important;
   z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
+
+/* Characters above background */
+.canvas .character,
+.canvas .character img {
+  position: relative !important;
+  z-index: 1 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Panels (toolbar, dialog) above characters */
+.panel.toolbar,
+.panel.dialog {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Optional: pin characters at bottom edges */
+.canvas .character.left  { position: absolute !important; bottom: 0 !important; left: 0 !important; }
+.canvas .character.right { position: absolute !important; bottom: 0 !important; right: 0 !important; }
