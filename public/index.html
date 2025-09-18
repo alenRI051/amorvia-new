@@ -10,7 +10,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia – Multi-Act Relationship Simulator</title>
-  <meta name="description" content="Interactive relationship and co-parenting scenarios with branching choices and real-time feedback meters."/>
+  <meta name="description" content="Interactive relationship and co‑parenting scenarios with branching choices and real‑time feedback meters."/>
   <meta name="keywords" content="Amorvia, co-parenting, relationships, parenting, family, interactive, simulator, game"/>
   <link rel="canonical" href="https://amorvia.eu/"/>
 
@@ -34,7 +34,7 @@
   <!-- Guard: remove manifest outside production to avoid preview CORS -->
   <script>
     if (location.hostname !== 'amorvia.eu') {
-      const m = document.querySelector('link[rel="manifest"]');
+      const m = document.querySelector('link[rel=\"manifest\"]');
       if (m) m.remove();
       console.log('[Manifest] removed in non-prod:', location.hostname);
     }
@@ -93,17 +93,12 @@
       </div>
 
       <div class="canvas">
-        <!-- Option A fallback: default src set so localhost shows images even if JS fails -->
         <img id="bgImg" class="bg" alt="Background" decoding="async" loading="eager"
              src="/assets/backgrounds/room.svg">
-        <figure class="character left">
-          <img id="leftImg" alt="Left character" width="200" height="300" loading="eager"
-               src="/assets/characters/male_casual.svg"/>
-        </figure>
-        <figure class="character right">
-          <img id="rightImg" alt="Right character" width="200" height="300" loading="eager"
-               src="/assets/characters/female_casual.svg"/>
-        </figure>
+        <figure class="character left"><img id="leftImg" alt="Left character" width="200" height="300" loading="eager"
+             src="/assets/characters/male_casual.svg"/></figure>
+        <figure class="character right"><img id="rightImg" alt="Right character" width="200" height="300" loading="eager"
+             src="/assets/characters/female_casual.svg"/></figure>
       </div>
 
       <div class="panel dialog">
