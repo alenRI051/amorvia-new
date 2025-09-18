@@ -1,24 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- SEO & Social Preview -->
-<meta property="og:title" content="Amorvia — Multi-Act Relationship Simulator">
-<meta property="og:description" content="Interactive co-parenting scenarios with branching choices and feedback.">
-<meta property="og:url" content="https://amorvia.eu/">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia – Multi-Act Relationship Simulator</title>
-  <meta name="description" content="Interactive relationship and co‑parenting scenarios with branching choices and real‑time feedback meters."/>
-  <meta name="keywords" content="Amorvia, co-parenting, relationships, parenting, family, interactive, simulator, game"/>
-  <link rel="canonical" href="https://amorvia.eu/"/>
 
   <meta name="theme-color" content="#0f172a"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
-  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png"/>
 
   <!-- Styles -->
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
@@ -27,14 +16,14 @@
   <link rel="stylesheet" href="/css/addons.css"/>
   <link rel="stylesheet" href="/css/styles-hotfix.css"/>
 
-  <!-- Fetch shim: /public/data -> /data, no-store, devcache=0 -->
+  <!-- Patches -->
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
 
-  <!-- Guard: remove manifest outside production to avoid preview CORS -->
+  <!-- Non-prod: remove manifest to avoid preview CORS -->
   <script>
     if (location.hostname !== 'amorvia.eu') {
-      const m = document.querySelector('link[rel=\"manifest\"]');
+      const m = document.querySelector('link[rel="manifest"]');
       if (m) m.remove();
       console.log('[Manifest] removed in non-prod:', location.hostname);
     }
@@ -113,7 +102,7 @@
     </section>
   </main>
 
-  <!-- App bootstrap -->
+  <!-- App bootstrap (restores dynamic loader) -->
   <script type="module" src="/js/bootstrap.js" defer></script>
   <!-- SW register (guarded inside the file for non-prod) -->
   <script src="/js/sw-register.js" defer></script>
