@@ -1,4 +1,30 @@
-/* Characters above background, but not forced absolute */
+/* Amorvia visibility + layering hotfix (v4)
+   - Background behind everything (z-index:0)
+   - Characters above background (z-index:1) but remain in normal flow
+   - Panels above characters (z-index:2)
+*/
+
+/* Canvas creates stacking context */
+.canvas {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Background image */
+.canvas img.bg {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Characters stay in normal flow, layered above bg */
 .canvas .character,
 .canvas .character img {
   position: relative !important;
@@ -7,12 +33,19 @@
   visibility: visible !important;
 }
 
-/* Remove the bottom anchoring from v3 */
+/* Undo any absolute pinning from prior hotfixes */
 .canvas .character.left,
 .canvas .character.right {
   position: relative !important;
   bottom: auto !important;
   left: auto !important;
   right: auto !important;
+  top: auto !important;
 }
 
+/* Panels above everything else */
+.panel.toolbar,
+.panel.dialog {
+  position: relative !important;
+  z-index: 2 !important;
+}
