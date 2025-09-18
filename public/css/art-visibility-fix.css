@@ -1,26 +1,4 @@
-/* Amorvia visibility + layering hotfix (v3) */
-
-/* Ensure canvas creates stacking context */
-.canvas {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-/* Background image: full canvas, behind everything */
-.canvas img.bg {
-  display: block !important;
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Characters above background */
+/* Characters above background, but not forced absolute */
 .canvas .character,
 .canvas .character img {
   position: relative !important;
@@ -29,13 +7,12 @@
   visibility: visible !important;
 }
 
-/* Panels (toolbar, dialog) above characters */
-.panel.toolbar,
-.panel.dialog {
+/* Remove the bottom anchoring from v3 */
+.canvas .character.left,
+.canvas .character.right {
   position: relative !important;
-  z-index: 2 !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
 }
 
-/* Optional: pin characters at bottom edges */
-.canvas .character.left  { position: absolute !important; bottom: 0 !important; left: 0 !important; }
-.canvas .character.right { position: absolute !important; bottom: 0 !important; right: 0 !important; }
