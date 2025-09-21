@@ -26,12 +26,12 @@
 .canvas .character { position: relative !important; }
 .canvas .character img {
   position: absolute !important;
-  bottom: 0 !important;
+  bottom: 10 !important;
   width: 200px !important;
   height: auto !important;
   z-index: 1 !important;
 }
-.canvas .character.left img  { left: 30% !important; }
+.canvas .character.left img  { left: 14% !important; }
 .canvas .character.right img { right: 14% !important; }
 
 /* UI above */
