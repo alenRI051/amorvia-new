@@ -1,0 +1,3 @@
+/* hud-visibility.v9.6.7a.css — force HUD visible */
+#hud { display: grid !important; }
+#hud.v2-only { display: grid !important; }
