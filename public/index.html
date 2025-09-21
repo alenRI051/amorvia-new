@@ -8,9 +8,10 @@
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
-  <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
+  <!-- styles.css loaded last so it can win overrides -->
+  <link rel="stylesheet" href="/css/styles.css"/>
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
   <script>
@@ -23,7 +24,6 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Top bar (title + controls) -->
   <div id="topBar">
     <h1>Amorvia <span class="muted">- Multi-Act</span></h1>
     <div class="row" style="gap:.5rem;">
@@ -32,14 +32,13 @@
     </div>
   </div>
 
-  <!-- Scenario controls under title -->
   <div id="titleAndList" class="card panel">
     <div class="row" style="gap:.5rem; align-items:center;">
       <label class="sr-only" for="scenarioPicker">Scenario</label>
       <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
       <button id="restartAct" class="button" type="button">Restart Act</button>
     </div>
-    <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
+    <!-- The list will be mirrored here and given id="scenarioListV2" by dom-fixes.v9.4.js -->
   </div>
 
   <main id="main" class="wrap">
@@ -96,17 +95,13 @@
 
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script src="/js/sw-register.js" defer></script>
-  <!-- stripped: /js/addons/high-contrast-toggle.js -->
+  <!-- Keep useful addons; remove any old contrast/toolbar dom-fixes to avoid double wiring -->
   <script src="/js/addons/reset-ui.js"></script>
-  <!-- stripped: /js/addons/toolbar-buttons.js -->
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
 
-  <!-- Optional: if present in your repo -->
-  <script src="/js/shortcuts.v9.3.5.js" defer></script>
-  <script src="/js/dom-fixes.v9.3.9.js"></script>
-<script src="/js/ui-wiring.v9.3.9.js" defer></script>
-  <script src="/js/dom-fixes.v9.3.10.js"></script>
-  <script src="/js/dom-fixes.v9.3.11.js"></script>
+  <!-- v9.4 helpers -->
+  <script src="/js/dom-fixes.v9.4.js"></script>
+  <script src="/js/ui-wiring.v9.4.js" defer></script>
 </body>
 </html>

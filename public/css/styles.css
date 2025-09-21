@@ -1,5 +1,5 @@
 
-/* Amorvia styles.css v9.3.6 */
+/* Amorvia styles.css v9.4 (stabilized) */
 
 /* Top bar card */
 #topBar {
@@ -14,8 +14,10 @@
 #topBar .row { display:flex; gap:.5rem; align-items:center; }
 
 /* Scenario block under title */
-#titleAndList { position:relative; z-index:3; margin-bottom:1rem; padding:.5rem .75rem;
-  border:1px solid #ddd; border-radius:.5rem; background:#fff; }
+#titleAndList {
+  position:relative; z-index:3; margin-bottom:1rem; padding:.5rem .75rem;
+  border:1px solid #ddd; border-radius:.5rem; background:#fff;
+}
 #titleAndList .row { margin-bottom:.5rem; }
 #titleAndList .list { display:flex; flex-wrap:wrap; gap:.5rem; }
 
