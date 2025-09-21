@@ -1,3 +1,7 @@
 
 /* Hide any legacy metric spans we might tag */
 :root[data-hud-active="1"] .hud-text-metric{ display:none !important; }
+/* Hide any legacy meter text, just in case */
+:root[data-hud-active="1"] #dialog .hud-text-metric,
+:root[data-hud-active="1"] #dialog :is(.metric, .meters, .stats),
+:root[data-hud-active="1"] #dialog br + br { display:none !important; }
