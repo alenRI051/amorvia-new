@@ -7,13 +7,14 @@
   <meta name="theme-color" content="#0f172a"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
+  <!-- Base styles -->
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
-  <!-- styles.css loaded last so it can win overrides -->
   <link rel="stylesheet" href="/css/styles.css"/>
-  <link rel="stylesheet" href="/css/hud-fix.v9.6.4.css"/>
+  <!-- HUD styles (order matters: main HUD, then fix) -->
   <link rel="stylesheet" href="/css/hud.v9.6.3.css"/>
+  <link rel="stylesheet" href="/css/hud-fix.v9.6.4.css"/>
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
   <script>
@@ -95,25 +96,27 @@
     </section>
   </main>
 
+  <!-- Scripts -->
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script src="/js/sw-register.js" defer></script>
-  <!-- Keep useful addons; remove any old contrast/toolbar dom-fixes to avoid double wiring -->
+
+  <!-- Addons (keep) -->
   <script src="/js/addons/reset-ui.js"></script>
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
 
+  <!-- Telemetry -->
   <script>window.AMORVIA_TRACK_ENDPOINT = '/api/track';</script>
-<script src="/js/track-client.v9.5.1.js" defer></script>
-<script src="/js/telemetry.v9.5.3.js" defer></script>
-  
-<script src="/js/engine-patch.nometrics.v1.js" defer></script>  
-<link rel="stylesheet" href="/css/hud.v9.6.3.css"/>
-<script src="/js/hud.v9.6.3.js" defer></script>
-<script src="/js/hud-init.v9.6.2.js" defer></script>
+  <script src="/js/track-client.v9.5.1.js" defer></script>
+  <script src="/js/telemetry.v9.5.3.js" defer></script>
 
-<!-- v9.4 helpers -->
-<script src="/js/dom-fixes.v9.4.js"></script>
-<script src="/js/ui-wiring.v9.4.js" defer></script>
+  <!-- Engine no-metrics patch + HUD -->
+  <script src="/js/engine-patch.nometrics.v1.js" defer></script>
+  <script src="/js/hud.v9.6.3.js" defer></script>
+  <script src="/js/hud-init.v9.6.2.js" defer></script>
 
+  <!-- v9.4 helpers -->
+  <script src="/js/dom-fixes.v9.4.js"></script>
+  <script src="/js/ui-wiring.v9.4.js" defer></script>
 </body>
 </html>
