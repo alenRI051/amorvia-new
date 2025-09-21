@@ -1,44 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- SEO & Social Preview -->
-<meta property="og:title" content="Amorvia — Multi-Act Relationship Simulator">
-<meta property="og:description" content="Interactive co-parenting scenarios with branching choices and feedback.">
-<meta property="og:url" content="https://amorvia.eu/">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Amorvia – Multi-Act Relationship Simulator</title>
-  <meta name="description" content="Interactive relationship and co-parenting scenarios with branching choices and real-time feedback meters."/>
-  <meta name="keywords" content="Amorvia, co-parenting, relationships, parenting, family, interactive, simulator, game"/>
-  <link rel="canonical" href="https://amorvia.eu/"/>
-
   <meta name="theme-color" content="#0f172a"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
-  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
-  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png"/>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
   <link rel="stylesheet" href="/css/styles-hotfix.css"/>
-  <link rel="stylesheet" href="/css/high-contrast.css"/>
-
-  <!-- Fetch shim: /public/data -> /data, no-store, devcache=0 -->
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
+  <script>
+    if (location.hostname !== 'amorvia.eu') {
+      const m = document.querySelector('link[rel="manifest"]'); if (m) m.remove();
+      console.log('[Manifest] removed in non-prod:', location.hostname);
+    }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header><h1>Amorvia <span class="muted">- Multi-Act</span></h1></header>
 
+  <!-- v9.3.3 toolbar snippet -->
+  <div id="topToolbar" class="panel row" role="toolbar" aria-label="Amorvia controls" style="gap:.5rem">
+    <button id="highContrastBtn" class="button" type="button" aria-pressed="false">High contrast</button>
+    <button id="resetUiBtn" class="button" type="button">Reset UI</button>
+    <!-- Reuses existing #restartAct -->
+  </div>
+  <div id="titleAndList" aria-label="Title and scenario controls"></div>
+  <!-- /toolbar snippet -->
+
   <main id="main" class="wrap">
     <aside class="card panel">
-      <!-- v1 (hidden but kept) -->
       <div class="v1-only" hidden aria-hidden="true">
         <label class="sr-only" for="search">Search scenarios</label>
         <input id="search" class="input" placeholder="Search scenarios..." autocomplete="off"/>
@@ -48,8 +45,6 @@
           <button id="nextBtn" class="button" type="button">Next</button>
         </div>
       </div>
-
-      <!-- v2 -->
       <div class="v2-only">
         <label class="sr-only" for="scenarioPicker">Scenario</label>
         <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
@@ -57,42 +52,34 @@
         <button id="restartAct" class="button mt8" type="button">Restart Act</button>
       </div>
     </aside>
-
     <section class="card stage">
       <div class="panel toolbar row">
         <label class="sr-only" for="bgSelect">Background</label>
         <select id="bgSelect" class="select" aria-label="Background">
           <option value="/assets/backgrounds/room.svg">Room</option>
         </select>
-
         <label class="sr-only" for="leftSelect">Left character</label>
         <select id="leftSelect" class="select" aria-label="Left character">
           <option value="/assets/characters/male_casual.svg">Male - Casual</option>
         </select>
-
         <label class="sr-only" for="rightSelect">Right character</label>
         <select id="rightSelect" class="select" aria-label="Right character">
           <option value="/assets/characters/female_casual.svg">Female - Casual</option>
         </select>
-
         <div class="spacer"></div>
-
         <label class="sr-only" for="modeSelect">Mode</label>
         <select id="modeSelect" class="select" aria-label="Mode">
           <option value="v1">Classic v1</option>
           <option value="v2" selected>Branching v2</option>
         </select>
       </div>
-
       <div class="canvas">
-        <img id="bgImg" class="bg" alt="Background" decoding="async" loading="eager">
-        <figure class="character left"><img id="leftImg" alt="Left character" width="200" height="300" loading="eager"/></figure>
-        <figure class="character right"><img id="rightImg" alt="Right character" width="200" height="300" loading="eager"/></figure>
+        <img id="bgImg" class="bg" alt="Background" decoding="async" loading="eager" src="/assets/backgrounds/room.svg">
+        <figure class="character left"><img id="leftImg" alt="Left character" width="200" height="300" loading="eager" src="/assets/characters/male_casual.svg"/></figure>
+        <figure class="character right"><img id="rightImg" alt="Right character" width="200" height="300" loading="eager" src="/assets/characters/female_casual.svg"/></figure>
       </div>
-
       <div class="panel dialog">
-        <div class="row">
-          <span id="actBadge" class="badge" aria-live="polite">Act -</span>
+        <div class="row"><span id="actBadge" class="badge" aria-live="polite">Act -</span>
           <h2 id="sceneTitle" class="no-margin">Scenario</h2>
         </div>
         <div id="dialog" class="mt8" aria-live="polite"></div>
@@ -101,16 +88,17 @@
       </div>
     </section>
   </main>
-
-  <!-- App bootstrap -->
   <script type="module" src="/js/bootstrap.js" defer></script>
-  <!-- SW register -->
   <script src="/js/sw-register.js" defer></script>
-
-  <!-- Accessibility Addons -->
-  <script src="/js/addons/high-contrast-toggle.js"></script>
+  <!-- stripped: /js/addons/high-contrast-toggle.js -->
   <script src="/js/addons/reset-ui.js"></script>
-  <script src="/js/addons/toolbar-buttons.js"></script>
+  <!-- stripped: /js/addons/toolbar-buttons.js -->
   <script src="/js/addons/shortcuts-a11y.js"></script>
+  <script src="/js/addons/ui-fallbacks.js"></script>
+
+  <!-- v9.3.3 helpers -->
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/dom-fixes.v9.3.3.js"></script>
+  <script src="/js/ui-toggles.v9.3.3.js" defer></script>
 </body>
 </html>
