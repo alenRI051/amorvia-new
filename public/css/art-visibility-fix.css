@@ -1,17 +1,16 @@
-/* Amorvia v9: ensure canvas has height so bottom anchoring works */
+/* Amorvia v9.1: lower character positions and improve spacing under the title */
 
-/* Canvas sizing + stacking */
+/* Give the stage canvas more height so bottom anchoring sits lower */
 .canvas {
   position: relative !important;
   display: block !important;
   width: 100% !important;
-  /* Give it a sensible height so absolutely positioned children can anchor to bottom */
-  min-height: clamp(320px, 46vh, 640px) !important;
+  min-height: clamp(480px, 62vh, 760px) !important;
   overflow: visible !important;
   z-index: 0 !important;
 }
 
-/* Background behind */
+/* Background fills canvas and stays behind */
 .canvas img.bg {
   position: absolute !important;
   inset: 0 !important;
@@ -22,20 +21,35 @@
   pointer-events: none !important;
 }
 
-/* Characters anchored at bottom */
+/* Characters: anchor IMG; nudge slightly down to "sit" on the floor */
 .canvas .character { position: relative !important; }
 .canvas .character img {
   position: absolute !important;
-  bottom: 0 !important;
+  bottom: -8px !important; /* small offset down for better grounding */
   width: 200px !important;
   height: auto !important;
   z-index: 1 !important;
 }
-.canvas .character.left img  { left: 14% !important; }
-.canvas .character.right img { right: 14% !important; }
+.canvas .character.left img  { left: 16% !important; }
+.canvas .character.right img { right: 16% !important; }
 
-/* UI above */
+/* Keep UI above */
 .panel.toolbar, .panel.dialog {
   position: relative !important;
   z-index: 10 !important;
+}
+
+/* --- Spacing under the page title --- */
+header h1 {
+  margin-bottom: 12px !important;
+}
+
+/* Ensure the first toolbar row (with Scenario chips/selects) sits under the title */
+.stage .panel.toolbar {
+  margin-top: 6px !important;
+}
+
+/* Small top padding for main content if needed */
+main.wrap {
+  padding-top: 4px !important;
 }
