@@ -28,7 +28,12 @@
     const span = cE('span'); span.textContent = label;
     badge.appendChild(span);
 
-    const right = cE('div'); right.style.display='flex'; right.style.flexDirection='column'; right.style.alignItems='flex-end'; right.style.gap='.1rem';
+    const right = cE('div');
+    right.style.display='flex';
+    right.style.flexDirection='column';
+    right.style.alignItems='flex-end';
+    right.style.gap='.1rem';
+
     const val = cE('div','hud-val'); val.id = 'hud-'+key+'-val'; val.textContent = '0%';
     const sub = cE('div','hud-sub'); sub.innerHTML = '<span class="label">—</span><span class="trend">·</span>';
     right.appendChild(val); right.appendChild(sub);
