@@ -58,3 +58,36 @@
 @media (max-width: 900px) {
   #topBar { flex-direction:column; align-items:flex-start; gap:.5rem; }
 }
+/* Avoid clipping the HUD */
+.card.stage,
+.card.stage .panel.dialog,
+#dialog {
+  overflow: visible !important;
+}
+
+/* Make the dialog a column so HUD can sit below the text */
+.card.stage .panel.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding-bottom: .75rem;              /* room at the bottom */
+}
+
+/* Ensure HUD renders above any overlapping siblings */
+#hud {
+  position: relative;
+  z-index: 2;
+  margin-top: .25rem;
+}
+
+/* If a fixed height is set anywhere, release it */
+.card.stage .panel.dialog,
+#dialog {
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Small screens: stack safely */
+@media (max-width: 640px){
+  #hud { margin-bottom: .5rem; }
+}
