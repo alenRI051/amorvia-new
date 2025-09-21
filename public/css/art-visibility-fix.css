@@ -1,15 +1,18 @@
+/* Amorvia v9: ensure canvas has height so bottom anchoring works */
 
-/* Amorvia 'original' baseline layout */
-
-/* Canvas stacking context */
+/* Canvas sizing + stacking */
 .canvas {
   position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  /* Give it a sensible height so absolutely positioned children can anchor to bottom */
+  min-height: clamp(320px, 46vh, 640px) !important;
   overflow: visible !important;
+  z-index: 0 !important;
 }
 
-/* Background fills canvas and sits behind */
+/* Background behind */
 .canvas img.bg {
-  display: block !important;
   position: absolute !important;
   inset: 0 !important;
   width: 100% !important;
@@ -19,7 +22,7 @@
   pointer-events: none !important;
 }
 
-/* Characters: anchor the IMG itself at the bottom */
+/* Characters anchored at bottom */
 .canvas .character { position: relative !important; }
 .canvas .character img {
   position: absolute !important;
@@ -28,14 +31,11 @@
   height: auto !important;
   z-index: 1 !important;
 }
-
-/* Left/right placement */
-.canvas .character.left  img { left: 14% !important; }
+.canvas .character.left img  { left: 14% !important; }
 .canvas .character.right img { right: 14% !important; }
 
-/* UI above characters */
-.panel.toolbar,
-.panel.dialog {
+/* UI above */
+.panel.toolbar, .panel.dialog {
   position: relative !important;
   z-index: 10 !important;
 }
