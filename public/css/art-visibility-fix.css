@@ -5,7 +5,7 @@
 .canvas img.bg { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important;
   object-fit:cover !important; z-index:0 !important; pointer-events:none !important; }
 .canvas .character { position: relative !important; }
-.canvas .character img { position:absolute !important; bottom:10px !important; width:200px !important; height:auto !important; z-index:1 !important; }
+.canvas .character img { position:absolute !important; bottom:10 !important; width:200px !important; height:auto !important; z-index:1 !important; }
 .canvas .character.left img { left:16% !important; } .canvas .character.right img { right:16% !important; }
 header h1 { margin-bottom:16px !important; }
 .stage .panel.toolbar { position:relative !important; z-index:15 !important; margin-top:8px !important; padding-top:2px !important; }
