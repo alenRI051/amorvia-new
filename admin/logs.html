@@ -1,0 +1,56 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amorvia Admin — Logs (v9.3)</title>
+  <link rel="stylesheet" href="/public/css/amorvia-a11y.css" />
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 1rem; }
+    .row { border-bottom: 1px solid #ddd; padding: .5rem 0; }
+    .type { font-weight: 600; }
+    .payload { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <div class="amorvia-toolbar" style="position: static;">
+    <strong>Amorvia Admin — Logs</strong>
+    <div style="margin-left:auto"></div>
+    <label>Endpoint:
+      <input id="endpoint" size="40" value="/api/track" />
+    </label>
+    <button id="refresh">Refresh</button>
+  </div>
+  <div id="list"></div>
+
+  <script>
+    const $list = document.getElementById('list');
+    const $endpoint = document.getElementById('endpoint');
+    const $refresh = document.getElementById('refresh');
+
+    async function load() {
+      try {
+        const r = await fetch($endpoint.value);
+        const j = await r.json();
+        $list.innerHTML = '';
+        if (!j.ok) { $list.textContent = 'Error: ' + (j.error||'unknown'); return; }
+        j.events.slice().reverse().forEach(ev => {
+          const row = document.createElement('div');
+          row.className = 'row';
+          const dt = new Date(ev.ts).toLocaleString();
+          row.innerHTML = '<div class="type">' + ev.type + '</div>' +
+                          '<div class="time">' + dt + '</div>' +
+                          '<div class="payload">' + JSON.stringify(ev.payload, null, 2) + '</div>';
+          $list.appendChild(row);
+        });
+      } catch (e) {
+        $list.textContent = 'Fetch failed: ' + e;
+      }
+    }
+    $refresh.addEventListener('click', load);
+    setInterval(load, 5000);
+    load();
+  </script>
+</body>
+</html>

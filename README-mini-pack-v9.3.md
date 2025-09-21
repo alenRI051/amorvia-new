@@ -1,14 +1,14 @@
-# Amorvia Mini‑Pack v9.3 (layout + a11y + /api/track stub + /admin logs)
+# Amorvia Mini-Pack v9.3 (layout + a11y + /api/track stub + /admin logs)
 
 **Date:** 2025-09-21
 
-This mini‑pack contains:
+This mini-pack contains:
 - Toolbar buttons (High Contrast, Reset UI, Restart Act) and fixed stacking for characters vs. background.
-- High‑contrast CSS and UI reset on every page load (configurable).
-- Client‑side fix to ensure scenarios list sits under `Amorvia – Multiact Title`.
+- High-contrast CSS and UI reset on every page load (configurable).
+- Client-side fix to ensure scenarios list sits under `Amorvia – Multiact Title`.
 - `/api/track` stub (single file: `api/track.ts`) — avoids duplicate `.js/.ts` issue.
 - Minimal `/admin/logs` page to visualize events produced by the tracker (works with the stub or with a real backend later).
-- Service Worker cache‑bust helper.
+- Service Worker cache-bust helper.
 
 > Per project notes: This keeps `/api/track.ts` as the only file. When you wire a real endpoint, update `TRACK_ENDPOINT` in `public/js/track-client.js` or replace `api/track.ts` with backend logic.
 
@@ -80,6 +80,6 @@ Visit `/admin/logs.html` while developing to see events live. It polls every 5s.
 ## Changelog v9.3
 - Fix: characters always appear above background; scenarios list no longer hidden.
 - Add: Top toolbar with High Contrast / Reset UI / Restart Act.
-- Add: A11y high‑contrast theme and focus outlines.
-- Add: SW cache‑bust helper.
+- Add: A11y high-contrast theme and focus outlines.
+- Add: SW cache-bust helper.
 - Add: Minimal tracking and admin logs viewer.

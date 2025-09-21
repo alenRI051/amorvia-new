@@ -1,64 +1,25 @@
+
+// api/track.ts (v9.3)
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { rateLimit } from './_lib/rateLimit.js';
-import { writeJsonEvent } from './_lib/logger-blob.js';
-import * as crypto from 'crypto';
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+type Event = { type: string; payload?: any; ts: number };
+const bucket: Record<string, Event[]> = Object.create(null);
+function push(e: Event){ const day = new Date(e.ts || Date.now()).toISOString().slice(0,10); (bucket[day] ||= []).push(e); if (bucket[day].length>1000) bucket[day].splice(0, bucket[day].length-1000); }
+export default async function handler(req: VercelRequest, res: VercelResponse){
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
-
-  try {
-    let body: any = {};
+  if (req.method === 'POST'){
     try {
-      if (!req.body) {
-        const chunks: Buffer[] = [];
-        for await (const chunk of (req as any)) chunks.push(chunk as Buffer);
-        const raw = Buffer.concat(chunks).toString('utf8');
-        body = raw ? JSON.parse(raw) : {};
-      } else if (typeof req.body === 'string') {
-        body = JSON.parse(req.body);
-      } else {
-        body = req.body;
-      }
-    } catch {
-      return res.status(400).json({ ok: false, error: 'Invalid JSON body' });
-    }
-
-    if (!body || typeof body.event !== 'string' || !body.event.trim()) {
-      return res.status(400).json({ ok: false, error: 'Missing required "event"' });
-    }
-
-    const ip = ((req.headers['x-forwarded-for'] as string) || '').split(',')[0] || '0.0.0.0';
-    const limit = parseInt(process.env.TRACK_RATE_LIMIT || '60', 10);
-    const { allowed, remaining, reset } = rateLimit(ip, limit, 5 * 60 * 1000);
-    if (!allowed) return res.status(429).json({ ok: false, error: 'Rate limit exceeded', remaining, reset });
-
-    const salt = process.env.TRACK_SALT || 'dev-salt';
-    const ipHash = crypto.createHash('sha256').update(ip + ':' + salt).digest('hex').slice(0, 32);
-
-    const line = {
-      ts: new Date().toISOString(),
-      ipHash,
-      ua: (req.headers['user-agent'] as string) || '',
-      referer: (req.headers['referer'] as string) || '',
-      path: req.url,
-      event: body.event.trim(),
-      data: body.data
-    };
-
-    try {
-      const out = await writeJsonEvent(line);
-      return res.status(200).json({ ok: true, remaining, reset, blobPath: out.pathname, url: out.url });
-    } catch (err: any) {
-      console.error('[track] blob write failed:', err?.message || err);
-      return res.status(500).json({ ok: false, error: 'Blob write failed' });
-    }
-  } catch (err: any) {
-    console.error('[track] handler error:', err);
-    return res.status(500).json({ ok: false, error: 'Server error' });
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      const evt: Event = { type: String(body?.type || 'unknown'), payload: body?.payload || {}, ts: Number(body?.ts || Date.now()) };
+      push(evt); console.log('[track]', evt.type, evt.payload); return res.status(202).json({ ok:true });
+    } catch(e){ return res.status(400).json({ ok:false, error:'Bad JSON' }); }
   }
+  if (req.method === 'GET'){
+    const days = Object.keys(bucket).sort().reverse(); const out: Event[] = [];
+    for (const d of days){ out.push(...bucket[d].slice(-200)); if (out.length>=200) break; }
+    return res.status(200).json({ ok:true, events: out.slice(-200) });
+  }
+  return res.status(405).json({ ok:false, error:'Method not allowed' });
 }
