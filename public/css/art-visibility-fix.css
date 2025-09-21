@@ -1,13 +1,41 @@
+/* Amorvia v9: ensure canvas has height so bottom anchoring works */
 
-/* Amorvia v9.2 – layout + contrast + toolbar spacing */
-.canvas { position: relative !important; display:block !important; width:100% !important;
-  min-height: clamp(480px, 62vh, 760px) !important; overflow: visible !important; z-index:0 !important; }
-.canvas img.bg { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important;
-  object-fit:cover !important; z-index:0 !important; pointer-events:none !important; }
+/* Canvas sizing + stacking */
+.canvas {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  /* Give it a sensible height so absolutely positioned children can anchor to bottom */
+  min-height: clamp(320px, 46vh, 640px) !important;
+  overflow: visible !important;
+  z-index: 0 !important;
+}
+
+/* Background behind */
+.canvas img.bg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Characters anchored at bottom */
 .canvas .character { position: relative !important; }
-.canvas .character img { position:absolute !important; bottom:10px !important; width:200px !important; height:auto !important; z-index:1 !important; }
-.canvas .character.left img { left:16% !important; } .canvas .character.right img { right:16% !important; }
-header h1 { margin-bottom:16px !important; }
-.stage .panel.toolbar { position:relative !important; z-index:15 !important; margin-top:8px !important; padding-top:2px !important; }
-.panel.dialog { position:relative !important; z-index:10 !important; }
-html.high-contrast body { filter: contrast(115%) saturate(105%); }
+.canvas .character img {
+  position: absolute !important;
+  bottom: 0 !important;
+  width: 200px !important;
+  height: auto !important;
+  z-index: 1 !important;
+}
+.canvas .character.left img  { left: 14% !important; }
+.canvas .character.right img { right: 14% !important; }
+
+/* UI above */
+.panel.toolbar, .panel.dialog {
+  position: relative !important;
+  z-index: 10 !important;
+}
