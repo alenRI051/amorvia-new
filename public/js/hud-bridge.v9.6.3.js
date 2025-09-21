@@ -11,10 +11,11 @@
     let html = el.innerHTML;
     if (!html) return;
 
-    // Strip out lines with trust/tension/childStress
-    const cleaned = html.replace(/(?:trust|tension|child\s*stress|childStress)\s*[:=]\s*\d+\s*<br?>?/gi, '');
+    // Strip out lines with trust/tension/childStress (various formats, allow <br> or newline)
+    const rx = /(?:^|>|\\n)\\s*(trust|tension|child\\s*stress|childStress)\\s*[:=]\\s*\\d+\\s*(?:<br\\s*\\/?>|\\n)?/gi;
+    const cleaned = html.replace(rx, '');
     if (cleaned !== html) {
-      el.innerHTML = cleaned.replace(/(?:<br>\s*){2,}/g,'<br>');
+      el.innerHTML = cleaned.replace(/(?:<br>\\s*){2,}/g,'<br>');
     }
 
     // Always re-render HUD with last known values
@@ -37,11 +38,11 @@
   const orig = window.amorviaHudRender;
   window.amorviaHudRender = function(state){
     lastVals = {
-      trust: state.trust ?? lastVals.trust,
-      tension: state.tension ?? lastVals.tension,
-      childStress: state.childStress ?? state.stress ?? lastVals.childStress
+      trust: state && state.trust != null ? state.trust : lastVals.trust,
+      tension: state && state.tension != null ? state.tension : lastVals.tension,
+      childStress: state && (state.childStress != null ? state.childStress : (state.stress != null ? state.stress : lastVals.childStress))
     };
-    if (orig) return orig.apply(this, arguments);
+    if (typeof orig === 'function') return orig.apply(this, arguments);
   };
 
   document.readyState === 'loading'
