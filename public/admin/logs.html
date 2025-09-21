@@ -1,0 +1,67 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amorvia Admin — Logs (v9.5)</title>
+  <link rel="stylesheet" href="../css/admin-logs.v9.5.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Amorvia Admin — Logs (v9.5)</h1>
+      <div class="toolbar card">
+        <div class="row">
+          <div>
+            <label for="endpoint">Endpoint</label>
+            <input id="endpoint" type="text" size="40" value="/api/track" />
+          </div>
+          <div>
+            <label for="type">Type</label>
+            <select id="type"><option value="">All</option></select>
+          </div>
+          <div>
+            <label for="search">Contains</label>
+            <input id="search" type="search" placeholder="text in payload or type ( / to focus )" />
+          </div>
+          <div class="controls">
+            <button id="refresh">Refresh (R)</button>
+            <button id="pause">Pause (P)</button>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="from">From</label>
+            <input id="from" type="datetime-local" />
+          </div>
+          <div>
+            <label for="to">To</label>
+            <input id="to" type="datetime-local" />
+          </div>
+          <div>
+            <label for="limit">Limit</label>
+            <select id="limit">
+              <option>50</option><option>100</option><option selected>200</option><option>500</option><option>1000</option>
+            </select>
+          </div>
+          <div class="controls">
+            <button id="export-json">Export JSON</button>
+            <button id="export-csv">Export CSV</button>
+            <button id="copy">Copy</button>
+          </div>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="status" id="status" role="status" aria-live="polite">Idle.</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="list" class="list"></div>
+    <footer>Polling every 5s. Keyboard: <strong>R</strong> refresh, <strong>P</strong> pause/resume, <strong>/</strong> focus search.</footer>
+  </main>
+
+  <script src="../js/admin-logs.v9.5.js"></script>
+</body>
+</html>
