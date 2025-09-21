@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
-  <link rel="stylesheet" href="/css/styles-hotfix.css"/>
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
   <script>
@@ -24,16 +23,16 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Top bar with controls -->
+  <!-- Top bar (title + controls) -->
   <div id="topBar">
     <h1>Amorvia <span class="muted">- Multi-Act</span></h1>
-    <div class="row">
+    <div class="row" style="gap:.5rem;">
       <button id="highContrastBtn" class="button" type="button" aria-pressed="false">High contrast</button>
       <button id="resetUiBtn" class="button" type="button">Reset UI</button>
     </div>
   </div>
 
-  <!-- Scenario controls -->
+  <!-- Scenario controls under title -->
   <div id="titleAndList" class="card panel">
     <div class="row" style="gap:.5rem; align-items:center;">
       <label class="sr-only" for="scenarioPicker">Scenario</label>
@@ -103,8 +102,7 @@
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
 
-  <!-- v9.3.5 helpers -->
-  <link rel="stylesheet" href="/css/styles.css" />
-  <script src="/js/ui-toggles.v9.3.5.js" defer></script>
+  <!-- Optional: if present in your repo -->
+  <script src="/js/shortcuts.v9.3.5.js" defer></script>
 </body>
 </html>
