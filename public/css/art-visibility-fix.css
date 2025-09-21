@@ -1,41 +1,40 @@
+/* Amorvia v8: anchor character <img> directly to bottom, keep background behind */
 
-/* Amorvia v7: background restored + characters anchored and layered correctly */
-
-/* Canvas creates stacking context */
+/* Canvas stacking context */
 .canvas {
   position: relative !important;
   overflow: visible !important;
 }
 
-/* Background fills canvas and sits behind */
+/* Background */
 .canvas img.bg {
   display: block !important;
   position: absolute !important;
-  inset: 0 !important;             /* top/right/bottom/left: 0 */
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
   z-index: 0 !important;
-  pointer-events: none !important; /* never intercept clicks */
-  opacity: 1 !important;
-  visibility: visible !important;
+  pointer-events: none !important;
 }
 
-/* Characters: bottom anchored inside canvas, above background */
+/* Characters: anchor IMG itself */
 .canvas .character {
+  position: relative !important;   /* wrapper can stay relative */
+}
+.canvas .character img {
   position: absolute !important;
   bottom: 0 !important;
+  width: 200px !important;
+  height: auto !important;
   z-index: 1 !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
+.canvas .character.left img  { left: 14% !important; }
+.canvas .character.right img { right: 14% !important; }
 
-.canvas .character.left  { left: 14% !important; }
-.canvas .character.right { right: 14% !important; }
-
-.canvas .character img { display:block !important; }
-
-/* Panels above characters so the UI is always clickable */
+/* UI above canvas */
 .panel.toolbar,
 .panel.dialog {
   position: relative !important;
