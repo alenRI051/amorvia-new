@@ -1,0 +1,3 @@
+
+/* Hide any legacy metric spans we might tag */
+:root[data-hud-active="1"] .hud-text-metric{ display:none !important; }
