@@ -1,0 +1,2 @@
+/* hud-bridge.v9.6.8.css — extra safety to keep HUD visible */
+#hud{ display:grid !important; }
