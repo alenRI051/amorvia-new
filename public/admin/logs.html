@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Amorvia Admin — Logs (v9.5)</title>
+  <title>Amorvia Admin — Logs (v9.5.1)</title>
   <link rel="stylesheet" href="../css/admin-logs.v9.5.css" />
 </head>
 <body>
   <header>
     <div class="wrap">
-      <h1>Amorvia Admin — Logs (v9.5)</h1>
+      <h1>Amorvia Admin — Logs (v9.5.1)</h1>
       <div class="toolbar card">
         <div class="row">
           <div>
@@ -26,6 +26,7 @@
             <input id="search" type="search" placeholder="text in payload or type ( / to focus )" />
           </div>
           <div class="controls">
+            <label><input id="useLocal" type="checkbox" /> Use local buffer</label>
             <button id="refresh">Refresh (R)</button>
             <button id="pause">Pause (P)</button>
           </div>
@@ -49,6 +50,7 @@
             <button id="export-json">Export JSON</button>
             <button id="export-csv">Export CSV</button>
             <button id="copy">Copy</button>
+            <button id="sendTest">Send test event</button>
           </div>
         </div>
       </div>
@@ -62,6 +64,6 @@
     <footer>Polling every 5s. Keyboard: <strong>R</strong> refresh, <strong>P</strong> pause/resume, <strong>/</strong> focus search.</footer>
   </main>
 
-  <script src="../js/admin-logs.v9.5.js"></script>
+  <script src="../js/admin-logs.v9.5.1.js"></script>
 </body>
 </html>
