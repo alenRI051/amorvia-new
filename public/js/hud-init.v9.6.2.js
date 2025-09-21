@@ -2,7 +2,6 @@
 (function(){
   'use strict';
   function nowHud(engine){
-    // Try to read current values if engine exposes them
     try {
       if (engine && engine.hud && typeof engine.hud === 'object') return engine.hud;
       if (engine && engine.state && typeof engine.state === 'object') {
@@ -27,11 +26,7 @@
   function bind(){
     const eng = window.Amorvia || window.amorviaEngine;
     if (!eng || !window.amorviaHudRender) { setTimeout(bind, 200); return; }
-
-    // Show immediately
     showInitial(eng);
-
-    // Also show on restartAct / first scene
     const patch = (obj, fnName)=>{
       const fn = obj && obj[fnName];
       if (typeof fn !== 'function' || fn.__hudInitWrapped) return;

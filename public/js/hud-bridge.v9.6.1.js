@@ -35,15 +35,11 @@
   function cleanDialog(el){
     if (!el) return;
     const html = el.innerHTML;
-    // Fast path: if nothing matches, skip
     if (!/(trust|tension|child\s*stress|childStress)\s*[:=]\s*\d+/.test(html)) return;
-    // Split into lines on <br> boundaries, remove metric-only lines, then collapse extra <br>
-    const parts = html.split(/<br\s*\/?>(?![^]*<br)/i); // conservative split
     const filtered = html
       .split(/<br\s*\/?>(?=\s*|)/i)
-      .filter(line => !rxLine.test(line.replace(/<[^>]+>/g,'')))
+      .filter(line => !/^\s*(trust|tension|child\s*stress|childStress)\s*[:=]\s*\d+\s*$/i.test(line.replace(/<[^>]+>/g,'')))
       .join('<br>');
-    // Also strip any inline remnants
     const cleaned = filtered.replace(rxInline, '');
     if (cleaned !== html) el.innerHTML = cleaned.replace(/(?:<br>\s*){2,}/g,'<br>');
   }
@@ -53,7 +49,6 @@
     if (!host) { setTimeout(observeDialog, 300); return; }
     const mo = new MutationObserver(() => cleanDialog(host));
     mo.observe(host, { childList:true, subtree:true, characterData:true });
-    // initial pass
     cleanDialog(host);
   }
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', observeDialog) : observeDialog();
