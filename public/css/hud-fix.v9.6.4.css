@@ -1,0 +1,17 @@
+/* HUD fix v9.6.4 — ensures the HUD is fully visible */
+
+.card.stage .panel.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible !important;   /* stop cutting HUD */
+  height: auto !important;        /* release any fixed height */
+  max-height: none !important;
+  padding-bottom: 1rem;           /* space below text */
+}
+
+#hud {
+  position: relative;
+  z-index: 10;        /* draw above text/dialog */
+  margin-top: 0.5rem;
+}
