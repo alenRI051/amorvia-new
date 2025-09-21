@@ -26,7 +26,7 @@
 .canvas .character { position: relative !important; }
 .canvas .character img {
   position: absolute !important;
-  bottom: 0 !important;
+  bottom: 10 !important;
   width: 200px !important;
   height: auto !important;
   z-index: 1 !important;
