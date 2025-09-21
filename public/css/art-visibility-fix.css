@@ -31,7 +31,7 @@
   height: auto !important;
   z-index: 1 !important;
 }
-.canvas .character.left img  { left: 14% !important; }
+.canvas .character.left img  { left: 30% !important; }
 .canvas .character.right img { right: 14% !important; }
 
 /* UI above */
