@@ -1,30 +1,48 @@
 
-/* Amorvia styles.css v9.3.5 */
+/* Amorvia styles.css v9.3.6 */
 
-/* Title bar */
-#topBar { margin-bottom: 1rem; background: #f9f9f9; padding:.5rem 1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; }
-#topBar h1 { font-size:1.4rem; margin:0; }
-#topBar .row button { margin-left:.5rem; }
-
-/* Scenario controls */
-#titleAndList { background:#fafafa; border:1px solid #ddd; border-radius:8px; padding:.75rem 1rem; margin-bottom:1rem; }
-#titleAndList select, #titleAndList button { margin-right:.5rem; }
-#titleAndList .row { margin-bottom:.5rem; }
-
-/* Scenario tags */
-#scenarioListV2 .tag, #scenarioList .tag {
-  display:inline-block; padding:.25rem .5rem; margin:.25rem; 
-  border-radius:12px; background:#e8e8e8; font-size:.85rem;
+/* Top bar card */
+#topBar {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; margin-bottom:1rem;
+  padding:.5rem .75rem;
+  border:1px solid #ddd;
+  border-radius:.5rem;
+  background:#fafafa;
 }
+#topBar h1 { margin:0; font-size:1.5rem; line-height:1.2; }
+#topBar .row { display:flex; gap:.5rem; align-items:center; }
 
-/* Act + Scenario headers */
-#actBadge { font-weight:bold; margin-right:.5rem; }
-#sceneTitle { font-size:1.2rem; font-weight:600; }
+/* Scenario block under title */
+#titleAndList { position:relative; z-index:3; margin-bottom:1rem; padding:.5rem .75rem;
+  border:1px solid #ddd; border-radius:.5rem; background:#fff; }
+#titleAndList .row { margin-bottom:.5rem; }
+#titleAndList .list { display:flex; flex-wrap:wrap; gap:.5rem; }
+
+/* Tag / chip styling */
+#titleAndList .list a,
+#titleAndList .list button,
+#titleAndList .list .tag,
+#titleAndList .list .chip {
+  display:inline-flex; align-items:center; gap:.25rem;
+  padding:.3rem .65rem; border:1px solid rgba(0,0,0,.15);
+  border-radius:999px; font-size:.85rem; line-height:1.2;
+  text-decoration:none; background:rgba(255,255,255,.9);
+  color:inherit; cursor:pointer;
+}
+#titleAndList .list a:hover,
+#titleAndList .list button:hover { filter:brightness(0.97); }
+#titleAndList .list a:focus-visible,
+#titleAndList .list button:focus-visible { outline:2px solid #6ea8fe; outline-offset:2px; }
 
 /* Stage layering */
 .canvas { position: relative; }
 .canvas .bg { position: absolute; inset: 0; z-index: 1; }
 .canvas .character { position: absolute; bottom: 10px; z-index: 2; }
+
+/* Dialog/HUD emphasis */
+.panel.dialog .row h2 { font-size:1.25rem; }
+#actBadge.badge { font-weight:600; }
 
 /* High contrast */
 :root[data-contrast="1"] body { background:#fff !important; color:#000 !important; }
@@ -33,3 +51,8 @@
   background:#fff !important; color:#000 !important; border:2px solid #000 !important;
 }
 :root[data-contrast="1"] *:focus { outline:3px solid #ffbf00 !important; outline-offset:3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #topBar { flex-direction:column; align-items:flex-start; gap:.5rem; }
+}
