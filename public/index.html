@@ -24,23 +24,23 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Refined title bar with controls -->
-  <div id="topBar" class="panel row" style="align-items:center; justify-content:space-between; margin-bottom:1rem;">
-    <h1 style="margin:0;">Amorvia <span class="muted">- Multi-Act</span></h1>
-    <div class="row" style="gap:.5rem;">
+  <!-- Top bar with controls -->
+  <div id="topBar">
+    <h1>Amorvia <span class="muted">- Multi-Act</span></h1>
+    <div class="row">
       <button id="highContrastBtn" class="button" type="button" aria-pressed="false">High contrast</button>
       <button id="resetUiBtn" class="button" type="button">Reset UI</button>
     </div>
   </div>
 
-  <!-- Scenario controls under title -->
-  <div id="titleAndList" class="card panel" style="margin-bottom:1rem;">
+  <!-- Scenario controls -->
+  <div id="titleAndList" class="card panel">
     <div class="row" style="gap:.5rem; align-items:center;">
       <label class="sr-only" for="scenarioPicker">Scenario</label>
       <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
       <button id="restartAct" class="button" type="button">Restart Act</button>
     </div>
-    <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios" style="margin-top:.5rem;"></div>
+    <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
   </div>
 
   <main id="main" class="wrap">
@@ -103,8 +103,8 @@
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
 
-  <!-- v9.3.4 helpers -->
+  <!-- v9.3.5 helpers -->
   <link rel="stylesheet" href="/css/styles.css" />
-  <script src="/js/ui-toggles.v9.3.4.js" defer></script>
+  <script src="/js/ui-toggles.v9.3.5.js" defer></script>
 </body>
 </html>
