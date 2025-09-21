@@ -9,7 +9,7 @@
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
 
-  <!-- Styles -->
+  <!-- Styles (project styles assumed to exist) -->
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
   <link rel="stylesheet" href="/css/styles.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
@@ -82,7 +82,7 @@
       </div>
 
       <div class="canvas">
-        <!-- Ensure background and characters show even before app boot -->
+        <!-- Default art so page looks correct even before JS engine bootstraps -->
         <img id="bgImg" class="bg" alt="Background" decoding="async" loading="eager"
              src="/assets/backgrounds/room.svg">
         <figure class="character left">
@@ -107,9 +107,9 @@
     </section>
   </main>
 
-  <!-- App bootstrap (should already exist in your project) -->
+  <!-- App bootstrap (loads engine after idle/interaction) -->
   <script type="module" src="/js/bootstrap.js" defer></script>
-  <!-- SW register (guarded inside the file for non-prod) -->
+  <!-- SW register (guarded inside its own file for non-prod) -->
   <script src="/js/sw-register.js" defer></script>
 
   <!-- Accessibility Addons -->
