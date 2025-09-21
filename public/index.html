@@ -23,7 +23,26 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header><h1>Amorvia <span class="muted">- Multi-Act</span></h1></header>
+
+  <!-- Refined title bar with controls -->
+  <div id="topBar" class="panel row" style="align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <h1 style="margin:0;">Amorvia <span class="muted">- Multi-Act</span></h1>
+    <div class="row" style="gap:.5rem;">
+      <button id="highContrastBtn" class="button" type="button" aria-pressed="false">High contrast</button>
+      <button id="resetUiBtn" class="button" type="button">Reset UI</button>
+    </div>
+  </div>
+
+  <!-- Scenario controls under title -->
+  <div id="titleAndList" class="card panel" style="margin-bottom:1rem;">
+    <div class="row" style="gap:.5rem; align-items:center;">
+      <label class="sr-only" for="scenarioPicker">Scenario</label>
+      <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
+      <button id="restartAct" class="button" type="button">Restart Act</button>
+    </div>
+    <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios" style="margin-top:.5rem;"></div>
+  </div>
+
   <main id="main" class="wrap">
     <aside class="card panel">
       <div class="v1-only" hidden aria-hidden="true">
@@ -35,13 +54,10 @@
           <button id="nextBtn" class="button" type="button">Next</button>
         </div>
       </div>
-      <div class="v2-only">
-        <label class="sr-only" for="scenarioPicker">Scenario</label>
-        <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
-        <div id="scenarioListV2" class="list v2-only" aria-label="Scenarios"></div>
-        <button id="restartAct" class="button mt8" type="button">Restart Act</button>
-      </div>
+      <!-- v2 picker/list moved under title -->
+      <div class="v2-only" hidden aria-hidden="true"></div>
     </aside>
+
     <section class="card stage">
       <div class="panel toolbar row">
         <label class="sr-only" for="bgSelect">Background</label>
@@ -78,12 +94,17 @@
       </div>
     </section>
   </main>
+
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script src="/js/sw-register.js" defer></script>
-  <script src="/js/addons/high-contrast-toggle.js"></script>
+  <!-- stripped: /js/addons/high-contrast-toggle.js -->
   <script src="/js/addons/reset-ui.js"></script>
-  <script src="/js/addons/toolbar-buttons.js"></script>
+  <!-- stripped: /js/addons/toolbar-buttons.js -->
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
+
+  <!-- v9.3.4 helpers -->
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/ui-toggles.v9.3.4.js" defer></script>
 </body>
 </html>
