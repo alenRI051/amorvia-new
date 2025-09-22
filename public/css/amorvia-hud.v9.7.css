@@ -1,36 +1,114 @@
-/* amorvia-hud.v9.7.css */
-/* HUD v9.7 Polish Pack – visual refinements */
-#hud {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background: #f9fafb;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+/* Amorvia HUD v9.7 – polish pack (CSS)
+   - High Contrast mode
+   - Toolbar layout & safe defaults
+   - Scenario list alignment
+   - Character layering fixes
+   Namespace: .amorvia-hud
+*/
+
+:root {
+  --amorvia-toolbar-height: 44px;
+  --amorvia-toolbar-gap: 8px;
+  --amorvia-stack-gap: 12px;
+  --amorvia-border-radius: 12px;
+  --amorvia-z-toolbar: 1000;
+  --amorvia-z-hud: 990;
+  --amorvia-z-characters: 100;
+  --amorvia-z-background: 0;
+  --amorvia-characters-bottom: 10px; /* tweakable */
 }
-.hud-meter {
+
+body.amorvia-hud.hc, body.hc {
+  /* High-contrast mode base (adds only strong contrast primitives; keep colors theme-agnostic) */
+  filter: none !important;
+}
+
+body.amorvia-hud.hc *, body.hc * {
+  outline-color: currentColor;
+  outline-offset: 2px;
+}
+
+.amorvia-hud .sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* ===== Toolbar ===== */
+.amorvia-toolbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--amorvia-toolbar-height);
   display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
+  align-items: center;
+  gap: var(--amorvia-toolbar-gap);
+  padding: 6px 10px;
+  z-index: var(--amorvia-z-toolbar);
+  backdrop-filter: blur(6px);
 }
-.hud-meter label {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
+
+.amorvia-toolbar .toolbar-spacer { flex: 1; }
+
+.amorvia-toolbar .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--amorvia-border-radius);
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  user-select: none;
 }
-.hud-meter progress {
-  width: 100%;
-  height: 1rem;
-  appearance: none;
+
+.amorvia-toolbar .btn[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px currentColor;
 }
-.hud-meter progress::-webkit-progress-bar {
-  background: #e5e7eb;
-  border-radius: 0.5rem;
+
+/* Prefer a host app toolbar if present */
+#hud-toolbar .btn, .hud-toolbar .btn {
+  border-radius: var(--amorvia-border-radius);
 }
-.hud-meter progress::-webkit-progress-value {
-  border-radius: 0.5rem;
+
+/* ===== Scenario List Placement ===== */
+#scenario-title, .scenario-title, h1#main-title {
+  position: relative;
+  z-index: var(--amorvia-z-hud);
+  margin-bottom: var(--amorvia-stack-gap);
 }
-progress.trust::-webkit-progress-value { background: #3b82f6; }
-progress.tension::-webkit-progress-value { background: #f59e0b; }
-progress.childStress::-webkit-progress-value { background: #10b981; }
+
+#scenario-list, .scenario-list {
+  position: relative;
+  z-index: var(--amorvia-z-hud);
+  margin-top: 0; /* ensure it sits directly under title */
+}
+
+/* ===== Character Layering / Placement ===== */
+#characters, .characters, .scene-characters {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: var(--amorvia-characters-bottom);
+  z-index: var(--amorvia-z-characters);
+  pointer-events: none;
+}
+
+.background, .scene-background {
+  position: absolute;
+  inset: 0;
+  z-index: var(--amorvia-z-background);
+}
+
+/* ===== Utilities ===== */
+.hidden { display: none !important; }
+
+/* Ensure HUD elements don't fall behind canvases/backgrounds */
+.hud, .hud-layer, .ui-layer {
+  position: relative;
+  z-index: var(--amorvia-z-hud);
+}
