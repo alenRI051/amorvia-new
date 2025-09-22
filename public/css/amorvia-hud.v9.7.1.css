@@ -1,0 +1,48 @@
+
+/* Amorvia HUD v9.7.1 – patch (CSS)
+   - Same tokens as 9.7; minor tidy.
+*/
+:root {
+  --amorvia-toolbar-height: 44px;
+  --amorvia-toolbar-gap: 8px;
+  --amorvia-stack-gap: 12px;
+  --amorvia-border-radius: 12px;
+  --amorvia-z-toolbar: 1000;
+  --amorvia-z-hud: 990;
+  --amorvia-z-characters: 100;
+  --amorvia-z-background: 0;
+  --amorvia-characters-bottom: 10px;
+}
+
+body.amorvia-hud.hc, body.hc { filter: none !important; }
+body.amorvia-hud.hc *, body.hc * { outline-color: currentColor; outline-offset: 2px; }
+
+/* Reuse host toolbar; only style when it has .amorvia-toolbar */
+#hud-toolbar.amorvia-toolbar, .hud-toolbar.amorvia-toolbar {
+  position: sticky;
+  top: 0;
+  left: 0; right: 0;
+  height: var(--amorvia-toolbar-height);
+  display: flex; align-items: center; gap: var(--amorvia-toolbar-gap);
+  padding: 6px 10px;
+  z-index: var(--amorvia-z-toolbar);
+  backdrop-filter: blur(6px);
+}
+
+.amorvia-toolbar .toolbar-spacer { flex: 1; }
+.amorvia-toolbar .btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 6px 10px;
+  border-radius: var(--amorvia-border-radius);
+  border: 1px solid currentColor; background: transparent;
+  cursor: pointer; line-height: 1; user-select: none;
+}
+.amorvia-toolbar .btn[aria-pressed="true"] { box-shadow: inset 0 0 0 2px currentColor; }
+
+/* Scenario & layers */
+#scenario-title, .scenario-title, h1#main-title { position: relative; z-index: var(--amorvia-z-hud); margin-bottom: var(--amorvia-stack-gap); }
+#scenario-list, .scenario-list { position: relative; z-index: var(--amorvia-z-hud); margin-top: 0; }
+#characters, .characters, .scene-characters { position: absolute; left: 0; right: 0; bottom: var(--amorvia-characters-bottom); z-index: var(--amorvia-z-characters); pointer-events: none; }
+.background, .scene-background { position: absolute; inset: 0; z-index: var(--amorvia-z-background); }
+.hidden { display: none !important; }
+.hud, .hud-layer, .ui-layer { position: relative; z-index: var(--amorvia-z-hud); }
