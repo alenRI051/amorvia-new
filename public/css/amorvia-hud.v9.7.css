@@ -1,0 +1,36 @@
+/* amorvia-hud.v9.7.css */
+/* HUD v9.7 Polish Pack – visual refinements */
+#hud {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.hud-meter {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+}
+.hud-meter label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.hud-meter progress {
+  width: 100%;
+  height: 1rem;
+  appearance: none;
+}
+.hud-meter progress::-webkit-progress-bar {
+  background: #e5e7eb;
+  border-radius: 0.5rem;
+}
+.hud-meter progress::-webkit-progress-value {
+  border-radius: 0.5rem;
+}
+progress.trust::-webkit-progress-value { background: #3b82f6; }
+progress.tension::-webkit-progress-value { background: #f59e0b; }
+progress.childStress::-webkit-progress-value { background: #10b981; }
