@@ -4,7 +4,7 @@
 .stage .canvas {
   aspect-ratio: 16 / 9;
   width: 100%;
-  max-height: min(60vh, 560px);
+  max-height: 420px;
   margin-inline: auto;
   position: relative;
 }
