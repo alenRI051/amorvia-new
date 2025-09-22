@@ -1,0 +1,33 @@
+
+/* UI Scale + Stage Fit Pack */
+
+/* Stage auto-fit: keep a nice 16:9 aspect, but cap its height */
+.stage .canvas {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-height: min(60vh, 560px);
+  margin-inline: auto;
+  position: relative;
+}
+
+/* Make background/characters scale */
+.stage .canvas .bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stage .character img {
+  width: clamp(120px, 12vw, 220px);
+  height: auto;
+}
+
+/* Smooth scaling */
+.stage { transition: transform .2s ease; }
+
+/* Spacing polish */
+.card.panel { padding: 12px 14px; }
+.panel.toolbar.row { gap: 8px; }
+.panel.dialog { padding-top: 10px; }
+#hud.hud { gap: 12px; }
+#hud .meter .track { height: 12px; }
