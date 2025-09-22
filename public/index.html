@@ -12,13 +12,10 @@
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
   <link rel="stylesheet" href="/css/styles.css"/>
-  <!-- HUD styles (order matters: main HUD, then fix) -->
-  <link rel="stylesheet" href="/css/hud.v9.6.3.css"/>
-  <link rel="stylesheet" href="/css/hud-fix.v9.6.4.css"/>
-  <link rel="stylesheet" href="/css/hud-reposition.v9.6.5.css"/>
-  <link rel="stylesheet" href="/css/hud-visuals.v9.6.6.css"/>
-  <link rel="stylesheet" href="/css/hud-layout.v9.6.7.css"/>
-  <link rel="stylesheet" href="/css/hud-visibility.v9.6.7a.css"/>
+
+  <!-- Combined HUD v9.6.8 (replaces older HUD files) -->
+  <link rel="stylesheet" href="/css/amorvia-hud-combined.v9.6.8.css"/>
+
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
   <script>
@@ -45,7 +42,6 @@
       <select id="scenarioPicker" class="select" aria-label="Scenario picker"></select>
       <button id="restartAct" class="button" type="button">Restart Act</button>
     </div>
-    <!-- The list will be mirrored here and given id="scenarioListV2" by dom-fixes.v9.4.js -->
   </div>
 
   <main id="main" class="wrap">
@@ -59,7 +55,6 @@
           <button id="nextBtn" class="button" type="button">Next</button>
         </div>
       </div>
-      <!-- v2 picker/list moved under title -->
       <div class="v2-only" hidden aria-hidden="true"></div>
     </aside>
 
@@ -100,11 +95,11 @@
     </section>
   </main>
 
-  <!-- Scripts -->
+  <!-- Core -->
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script src="/js/sw-register.js" defer></script>
 
-  <!-- Addons (keep) -->
+  <!-- Addons -->
   <script src="/js/addons/reset-ui.js"></script>
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
@@ -114,15 +109,10 @@
   <script src="/js/track-client.v9.5.1.js" defer></script>
   <script src="/js/telemetry.v9.5.3.js" defer></script>
 
-  <!-- Engine no-metrics patch + HUD -->
-  <script src="/js/engine-patch.nometrics.v1.1.js" defer></script>
-  <script src="/js/hud.v9.6.3.js" defer></script>
-  <script src="/js/hud-init.v9.6.2.js" defer></script>
-  <script src="/js/hud-reposition.v9.6.5.js" defer></script>
-  <link rel="stylesheet" href="/css/hud-bridge.v9.6.8.css"/>
-  <script src="/js/hud-bridge.v9.6.8.js" defer></script>
+  <!-- Combined HUD v9.6.8 (single include) -->
+  <script src="/js/amorvia-hud-combined.v9.6.8.js" defer></script>
 
-  <!-- v9.4 helpers -->
+  <!-- Helpers -->
   <script src="/js/dom-fixes.v9.4.js"></script>
   <script src="/js/ui-wiring.v9.4.js" defer></script>
 </body>
