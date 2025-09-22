@@ -1,9 +1,8 @@
 
-// Amorvia HUD v9.7.1 – Polish Pack (auto-map)
-// Enhancements:
-//  • Parses classic tokens (trust50 / tension20 / childStress10) *or* first 3 numbers in #hud text
-//  • If engine pre-renders empty .meter divs, assigns data-key/label in order and updates widths
-//  • Public API: window.amorviaHudRender()
+// Amorvia HUD v9.7.2 – Always 3 Meters
+// - Builds on v9.7.1 auto-map
+// - Always renders Trust, Tension, Child Stress (defaults to 0% when missing)
+// - Upgrades engine-provided .meter divs and keeps layout stable
 (function () {
   const SEL_HUD = '#hud';
 
@@ -49,6 +48,12 @@
         if (nums[2] != null) out.childStress = nums[2];
       }
     }
+
+    // NEW: default any missing values to 0 to guarantee 3 meters
+    if (out.trust == null) out.trust = 0;
+    if (out.tension == null) out.tension = 0;
+    if (out.childStress == null) out.childStress = 0;
+
     return out;
   }
 
@@ -58,65 +63,75 @@
     hud.setAttribute('aria-live','polite');
   }
 
-  function assignKeysIfMissing(hud) {
-    const meters = qa('.meter', hud);
-    if (!meters.length) return;
-    meters.forEach((m,i) => {
-      const item = ORDER[i];
-      if (!item) return;
-      if (!m.getAttribute('data-key')) m.setAttribute('data-key', item.key);
-      if (!m.getAttribute('data-label')) m.setAttribute('data-label', item.label);
-      // Ensure internal structure (label/track/fill)
-      if (!m.querySelector('.label')) {
-        const label = document.createElement('div');
-        label.className = 'label';
-        label.innerHTML = `<span>${item.label}</span><span class="value">0%</span>`;
-        m.prepend(label);
+  function ensureStructure(m, item) {
+    if (!m.getAttribute('data-key')) m.setAttribute('data-key', item.key);
+    if (!m.getAttribute('data-label')) m.setAttribute('data-label', item.label);
+    if (!m.querySelector('.label')) {
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.innerHTML = `<span>${item.label}</span><span class="value">0%</span>`;
+      m.prepend(label);
+    } else {
+      // ensure there's a .value span
+      const lbl = m.querySelector('.label');
+      if (!lbl.querySelector('.value')) {
+        const v = document.createElement('span');
+        v.className = 'value'; v.textContent = '0%';
+        lbl.appendChild(v);
       }
-      if (!m.querySelector('.track')) {
-        const track = document.createElement('div'); track.className='track';
-        const fill = document.createElement('div');  fill.className='fill'; fill.style.width='0%';
-        track.appendChild(fill); m.appendChild(track);
-      }
-    });
+    }
+    if (!m.querySelector('.track')) {
+      const track = document.createElement('div'); track.className='track';
+      const fill = document.createElement('div');  fill.className='fill'; fill.style.width='0%';
+      track.appendChild(fill); m.appendChild(track);
+    }
   }
 
   function renderMeters(hud, values) {
     ensureAria(hud);
 
-    // If there are existing .meter nodes (engine-provided), upgrade them
-    const existing = qa('.meter', hud);
+    // If there are existing .meter nodes (engine-provided), upgrade them to 3
+    let existing = qa('.meter', hud);
     if (existing.length) {
-      assignKeysIfMissing(hud);
-      ORDER.forEach(({key}, i) => {
+      // Ensure we have exactly 3 meter nodes in correct order
+      if (existing.length < 3) {
+        for (let i = existing.length; i < 3; i++) {
+          const m = document.createElement('div'); m.className = 'meter';
+          hud.appendChild(m);
+        }
+        existing = qa('.meter', hud);
+      } else if (existing.length > 3) {
+        existing.slice(3).forEach(n => n.remove());
+        existing = qa('.meter', hud);
+      }
+
+      ORDER.forEach((item, i) => {
         const m = existing[i];
-        if (!m) return;
-        const v = values[key];
-        if (v==null) return;
+        ensureStructure(m, item);
+        const v = values[item.key];
         const fill = m.querySelector('.fill');
         const val  = m.querySelector('.value');
-        if (fill) fill.style.width = v + '%';
-        if (val)  val.textContent = v + '%';
+        if (fill) fill.style.width = clamp(v) + '%';
+        if (val)  val.textContent = clamp(v) + '%';
       });
       return true;
     }
 
-    // Fresh render from scratch
+    // Fresh render (always 3)
     hud.innerHTML = '';
-    ORDER.forEach(({key,label}) => {
-      const v = values[key];
-      if (v==null) return;
+    ORDER.forEach(item => {
+      const v = values[item.key];
       const meter = document.createElement('div');
       meter.className = 'meter';
-      meter.setAttribute('data-key', key);
-      meter.setAttribute('data-label', label);
+      meter.setAttribute('data-key', item.key);
+      meter.setAttribute('data-label', item.label);
 
       const labelEl = document.createElement('div');
       labelEl.className = 'label';
-      labelEl.innerHTML = `<span>${label}</span><span class="value">${v}%</span>`;
+      labelEl.innerHTML = `<span>${item.label}</span><span class="value">${clamp(v)}%</span>`;
 
       const track = document.createElement('div'); track.className='track';
-      const fill  = document.createElement('div'); fill.className='fill'; fill.style.width = v + '%';
+      const fill  = document.createElement('div'); fill.className='fill'; fill.style.width = clamp(v) + '%';
       track.appendChild(fill);
 
       meter.appendChild(labelEl);
@@ -131,14 +146,6 @@
     if (!hud) return false;
     const raw = (hud.innerText || hud.textContent || '').trim();
     const values = extractMetersFromString(raw);
-
-    // If nothing parsed but we have engine meters, still assign keys/labels
-    const hasAny = values.trust!=null || values.tension!=null || values.childStress!=null;
-    if (!hasAny && qa('.meter', hud).length) {
-      assignKeysIfMissing(hud);
-      return true;
-    }
-    if (!hasAny) return false;
     return renderMeters(hud, values);
   }
   window.amorviaHudRender = amorviaHudRender;
