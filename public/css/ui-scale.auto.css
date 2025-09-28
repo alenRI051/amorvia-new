@@ -1,20 +1,22 @@
 
-/* Auto UI Scale + Stage Fit (uses --stage-max-h variable) */
+/* Auto UI Scale + Stage Fit (Full Fix)
+   - Enforce hard height cap with height/min()
+   - Uses --stage-max-h set by JS
+*/
+:root { --stage-max-h: 460px; }
 
-:root {
-  --stage-max-h: 460px; /* default; JS can override */
-}
-
-/* Stage auto-fit: keep a nice 16:9 aspect */
 .stage .canvas {
   aspect-ratio: 16 / 9;
   width: 100%;
-  max-height: var(--stage-max-h);
+
+  /* Hard cap: smaller of --stage-max-h and 52vh */
+  height: min(var(--stage-max-h), 52vh);
+  max-height: min(var(--stage-max-h), 52vh);
+
   margin-inline: auto;
   position: relative;
 }
 
-/* Make background/characters scale */
 .stage .canvas .bg {
   width: 100%;
   height: 100%;
@@ -29,7 +31,7 @@
 /* Smooth scaling */
 .stage { transition: transform .2s ease; }
 
-/* Spacing polish */
+/* Compact spacing */
 .card.panel { padding: 12px 14px; }
 .panel.toolbar.row { gap: 8px; }
 .panel.dialog { padding-top: 10px; }
