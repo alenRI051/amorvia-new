@@ -1,12 +1,21 @@
-/* UI Scale + Stage Fit Pack */
 
-/* Stage auto-fit: keep a nice 16:9 aspect, but cap its height */
+/* UI Scale + Stage Fit Pack (with responsive breakpoints) */
+
+/* Stage auto-fit: keep a nice 16:9 aspect */
 .stage .canvas {
   aspect-ratio: 16 / 9;
   width: 100%;
-  max-height: 420px;
+  max-height: 460px; /* default for most screens */
   margin-inline: auto;
   position: relative;
+}
+
+/* Adapt for shorter screens */
+@media (max-height: 800px) {
+  .stage .canvas { max-height: 420px; }
+}
+@media (max-height: 700px) {
+  .stage .canvas { max-height: 380px; }
 }
 
 /* Make background/characters scale */
