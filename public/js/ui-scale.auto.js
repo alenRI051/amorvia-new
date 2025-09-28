@@ -1,5 +1,5 @@
 
-// Auto UI Scale + Stage Fit (Full Fix 3)
+// Auto UI Scale + Stage Fit (Full Fix 4)
 (function(){
   const KEY = 'amorvia:ui:scale';
   const q = (s,r=document)=>r.querySelector(s);
@@ -38,6 +38,18 @@
     document.documentElement.style.setProperty('--stage-max-h', (px|0) + 'px');
   }
 
+  function enforceCanvasCap(){
+    const canvas = document.querySelector('.stage .canvas');
+    if (!canvas) return;
+    const hVar = getComputedStyle(document.documentElement).getPropertyValue('--stage-max-h').trim();
+    const hPx = parseFloat(hVar) || 0;
+    const vhCap = Math.floor(vh() * 0.48);
+    const cap = Math.min(hPx || 9999, vhCap || 9999);
+    canvas.style.setProperty('height', cap + 'px', 'important');
+    canvas.style.setProperty('max-height', cap + 'px', 'important');
+    canvas.style.setProperty('overflow', 'hidden', 'important');
+  }
+
   function applyScaleKey(key){
     const s = SCALES[key] ?? 1;
     const stage = q('.stage');
@@ -54,6 +66,7 @@
       hud.style.fontSize = `calc(1rem * ${Math.min(1, s)})`;
     }
     try{ localStorage.setItem(KEY, key); }catch{}
+    enforceCanvasCap();
   }
 
   function mountSelector(){
@@ -80,12 +93,14 @@
     setStageMaxH(detectStageMaxH());
     mountSelector();
     applyScaleKey(currentScaleKey());
+    enforceCanvasCap();
     let t;
     window.addEventListener('resize', () => {
       clearTimeout(t);
       t = setTimeout(() => {
         setStageMaxH(detectStageMaxH());
         applyScaleKey(currentScaleKey());
+        enforceCanvasCap();
       }, 100);
     });
   }
