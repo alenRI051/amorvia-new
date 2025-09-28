@@ -1,5 +1,5 @@
 
-// Auto UI Scale + Stage Fit (Full Fix)
+// Auto UI Scale + Stage Fit (Full Fix 2)
 (function(){
   const KEY = 'amorvia:ui:scale';
   const q = (s,r=document)=>r.querySelector(s);
@@ -46,7 +46,6 @@
       stage.style.setProperty('--ui-scale', s);
       stage.style.transform = `scale(${s})`;
       stage.style.transformOrigin = 'top center';
-      // New: compute minHeight from CSS var
       const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--stage-max-h').trim();
       const basePx = parseFloat(cssVar) || 0;
       stage.style.minHeight = basePx ? Math.round(basePx * s) + 'px' : '';
