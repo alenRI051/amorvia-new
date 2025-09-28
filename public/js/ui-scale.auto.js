@@ -15,8 +15,8 @@
     // >= 1000: 600px; 900-999: 520px; 800-899: 460px; 700-799: 420px; <700: 380px
     if (h >= 1000) return 600;
     if (h >= 900)  return 520;
-    if (h >= 800)  return 460;
-    if (h >= 700)  return 420;
+    if (h >= 800)  return 430;
+    if (h >= 700)  return 400;
     return 380;
   }
 
