@@ -1,5 +1,5 @@
 
-// Auto UI Scale + Stage Fit (Full Fix 2)
+// Auto UI Scale + Stage Fit (Full Fix 3)
 (function(){
   const KEY = 'amorvia:ui:scale';
   const q = (s,r=document)=>r.querySelector(s);
