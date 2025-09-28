@@ -1,3 +1,4 @@
+
 // UI Scale Control Pack v1.1 (default 90% with smart overrides)
 (function () {
   const KEY = 'amorvia:ui:scale';
