@@ -10,3 +10,5 @@ function enforceCanvasCap(){
   canvas.style.setProperty('min-height', cap + 'px', 'important');
   canvas.style.setProperty('overflow', 'hidden', 'important');
 }
+document.addEventListener('DOMContentLoaded', enforceCanvasCap);
+window.addEventListener('resize', enforceCanvasCap);

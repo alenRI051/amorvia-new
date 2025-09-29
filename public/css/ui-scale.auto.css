@@ -9,5 +9,26 @@
   line-height: 0;
   height: min(var(--stage-max-h), 50vh) !important;
   max-height: min(var(--stage-max-h), 50vh) !important;
-  min-height: 0 !important; /* NEW: kill legacy min-height overrides */
+  min-height: 0 !important; /* kill legacy min-height overrides */
+}
+
+.stage .canvas > * {
+  position: absolute;
+  inset: 0;
+  max-height: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain;
+}
+
+.stage .canvas .bg {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  position: absolute;
+  inset: 0;
+}
+
+.stage .character img {
+  width: clamp(120px, 12vw, 240px);
+  height: auto;
 }
