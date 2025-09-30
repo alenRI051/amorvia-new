@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "fix:schemas": "node tools/migrate-steps-to-nodes.v2.mjs && node tools/normalize-text-and-ids.mjs && node tools/ensure-min-choices.v2.mjs && node tools/one-shot-fix.mjs && node tools/add-missing-node-ids.mjs",
+    "lint:schemas": "node validator.mjs",
+    "lint:schemas:ci": "node validator.mjs --ci"
+  }
+}

@@ -195,11 +195,57 @@
             {
               "id": "a3_c1",
               "label": "Validate feelings + restate child\u2011first plan.",
-              "to": "a3_outcomes"
+              "to": "a3_partner_ping"
             },
             {
               "id": "a3_c2",
               "label": "Blame and escalate.",
+              "to": "a3_partner_ping"
+            }
+          ]
+        },
+        {
+          "id": "a3_partner_ping",
+          "type": "line",
+          "text": "Late-night message from ex: 'Enjoy your new life.'",
+          "to": "a3_ping_choice"
+        },
+        {
+          "id": "a3_ping_choice",
+          "type": "choice",
+          "text": "How do you reply?",
+          "choices": [
+            {
+              "id": "a3_c3",
+              "label": "Calm, logistics-only reply.",
+              "to": "a3_child_regress"
+            },
+            {
+              "id": "a3_c4",
+              "label": "Engage and argue back.",
+              "to": "a3_child_regress"
+            }
+          ]
+        },
+        {
+          "id": "a3_child_regress",
+          "type": "line",
+          "text": "Bedtime wobble: your child is restless and clingy.",
+          "to": "a3_bedtime_choice"
+        },
+        {
+          "id": "a3_bedtime_choice",
+          "type": "choice",
+          "text": "What do you do?",
+          "choices": [
+            {
+              "id": "a3_c5",
+              "label": "Reassure and keep routine.",
+              "to": "a3_outcomes"
+            },
+            {
+              "id": "a3_c6",
+              "label": "Ignore it, hope it passes.",
               "to": "a3_outcomes"
             }
           ]
@@ -207,7 +253,7 @@
         {
           "id": "a3_outcomes",
           "type": "end",
-          "text": "Scenario outcomes handled here."
+          "text": "You can recalibrate pacing and communication based on what happened."
         }
       ]
     }
