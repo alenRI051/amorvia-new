@@ -1,82 +1,111 @@
-// Auto UI Scale + Stage Fit (Full Fix 6 + Fit-Page)
+// Auto UI Scale + Stage Fit (Full Fix 6 + Fit-Page, overflow-aware)
 (function () {
   const LS_FIT = 'amorvia:ui:fit';
   const vh = () => Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
 
-  // -------- utilities
+  // Utilities
   const q  = (s, r = document) => r.querySelector(s);
-  const qs = (s, r = document) => Array.from(r.querySelectorAll(s));
   const px = (v) => (v ? parseFloat(v) || 0 : 0);
 
-  const outerHeight = (el) => {
+  const outerH = (el) => {
     if (!el) return 0;
     const rect = el.getBoundingClientRect();
     const cs   = getComputedStyle(el);
     return rect.height + px(cs.marginTop) + px(cs.marginBottom);
   };
 
-  // -------- cap enforcement (fullfix6)
+  // Enforce canvas cap inline (fullfix6 base)
   function enforceCanvasCap(capPx) {
     const canvas = q('.stage .canvas');
     if (!canvas) return;
-
-    // If no explicit cap passed, use the normal fullfix6 cap (min of CSS var and 50vh)
     if (capPx == null) {
       const varPx = px(getComputedStyle(document.documentElement).getPropertyValue('--stage-max-h').trim());
       const fifty = Math.floor(vh() * 0.50);
       capPx = Math.min(varPx || 9999, fifty || 9999);
     }
-
-    // Inline styles win over most cascades
-    canvas.style.setProperty('height', capPx + 'px', 'important');
+    canvas.style.setProperty('height',     capPx + 'px', 'important');
     canvas.style.setProperty('max-height', capPx + 'px', 'important');
     canvas.style.setProperty('min-height', capPx + 'px', 'important');
     canvas.style.setProperty('overflow', 'hidden', 'important');
   }
 
-  // -------- fit page logic (shrinks canvas only when needed)
+  // Compute a first-pass fit cap from surrounding UI
   function computeFitCap() {
-    const canvas = q('.stage .canvas');
+    const canvas  = q('.stage .canvas');
     if (!canvas) return null;
 
-    // Baseline cap from fullfix6
-    const varPx = px(getComputedStyle(document.documentElement).getPropertyValue('--stage-max-h').trim());
-    const fifty = Math.floor(vh() * 0.50);
+    const varPx   = px(getComputedStyle(document.documentElement).getPropertyValue('--stage-max-h').trim());
+    const fifty   = Math.floor(vh() * 0.50);
     const baseCap = Math.min(varPx || 9999, fifty || 9999);
 
-    // What else is on the page?
-    const topBar   = q('#topBar');
-    const title    = q('#titleAndList');
-    const toolbar  = q('.stage .panel.toolbar, .stage .panel.toolbar.row') || q('.stage .panel.toolbar.row');
-    const dialog   = q('.stage .panel.dialog');
+    const topBar  = q('#topBar');
+    const title   = q('#titleAndList');
+    const toolbar = q('.stage .panel.toolbar.row') || q('.stage .panel.toolbar');
+    const dialog  = q('.stage .panel.dialog');
 
-    const used = outerHeight(topBar) + outerHeight(title) + outerHeight(toolbar) + outerHeight(dialog);
-    const pagePaddingAllowance = 16; // a little breathing room
+    // What’s used besides the canvas?
+    const used = outerH(topBar) + outerH(title) + outerH(toolbar) + outerH(dialog);
 
-    const availableForCanvas = Math.floor(vh() - used - pagePaddingAllowance);
+    // Small breathing room so we don’t end up 1px too tall
+    const safety = 12;
 
-    // Don’t let it go ridiculously small:
-    const MIN_CANVAS = 260; // you can raise/lower this
-    const fitCap = Math.max(MIN_CANVAS, Math.min(baseCap, availableForCanvas));
+    const available = Math.floor(vh() - used - safety);
 
-    return fitCap;
+    const MIN_CANVAS = 240; // allow smaller if needed to fit without scrolling
+    return Math.max(MIN_CANVAS, Math.min(baseCap, available));
+  }
+
+  // After enforcing, check page overflow and trim the cap accordingly
+  function overflowAwareFit(initialCap) {
+    const canvas = q('.stage .canvas');
+    if (!canvas) return;
+
+    let cap = initialCap;
+    enforceCanvasCap(cap);
+
+    const docH = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    const overflow = docH - vh();
+
+    if (overflow > 0) {
+      // Trim exactly the overflow + tiny buffer
+      const buffer = 8;
+      const MIN_CANVAS = 220;
+      cap = Math.max(MIN_CANVAS, cap - (overflow + buffer));
+      enforceCanvasCap(cap);
+
+      // Recheck once more (fonts/layout shifts)
+      requestAnimationFrame(() => {
+        const docH2 = Math.max(
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        const overflow2 = docH2 - vh();
+        if (overflow2 > 0) {
+          const cap2 = Math.max(MIN_CANVAS, cap - (overflow2 + buffer));
+          enforceCanvasCap(cap2);
+        }
+      });
+    }
   }
 
   function applyFitIfEnabled() {
     const enabled = localStorage.getItem(LS_FIT) === '1';
     if (!enabled) {
-      enforceCanvasCap(); // just the normal cap
+      enforceCanvasCap(); // normal behavior
       return;
     }
-    const fitCap = computeFitCap();
-    if (fitCap && isFinite(fitCap)) {
-      enforceCanvasCap(fitCap);
+    const firstPass = computeFitCap();
+    if (firstPass && isFinite(firstPass)) {
+      overflowAwareFit(firstPass);
     } else {
       enforceCanvasCap(); // fallback
     }
   }
 
-  // -------- toggle UI in toolbar
+  // Toggle in toolbar (unchanged)
   function mountFitToggle() {
     const host = q('.stage .panel.toolbar.row') || q('.stage .panel.toolbar') || q('#topBar');
     if (!host || q('#fitPageToggle', host)) return;
@@ -91,7 +120,6 @@
     cb.checked = localStorage.getItem(LS_FIT) === '1';
     cb.addEventListener('change', () => {
       localStorage.setItem(LS_FIT, cb.checked ? '1' : '0');
-      // Apply immediately
       requestAnimationFrame(applyFitIfEnabled);
     });
 
@@ -103,7 +131,6 @@
     host.appendChild(wrap);
   }
 
-  // -------- observe dialog height changes to re-fit when content grows/shrinks
   function observeDialog() {
     const dialog = q('.stage .panel.dialog');
     if (!dialog || window.__amorviaFitObserver) return;
@@ -112,7 +139,6 @@
     window.__amorviaFitObserver = ro;
   }
 
-  // -------- init
   function init() {
     mountFitToggle();
     observeDialog();
