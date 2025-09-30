@@ -1,10 +1,7 @@
 {
   "id": "dating-after-breakup-with-child-involved",
-  "version": "1.0.1",
-  "title": {
-    "en": "Dating After Breakup (With Child Involved)",
-    "hr": "Izlasci nakon prekida (s djetetom)"
-  },
+  "version": 2,
+  "title": "Dating After Breakup (With Child Involved)",
   "tags": [
     "co-parenting",
     "boundaries",
@@ -14,46 +11,31 @@
     "planning"
   ],
   "difficulty": "medium",
-  "description": {
-    "en": "Navigate early dating while co\u2011parenting: set expectations, protect the child's well\u2011being, and communicate with your ex respectfully.",
-    "hr": "Navigirajte ranim dejtanjem uz suroditeljstvo: postavite o\u010dekivanja, za\u0161titite dobrobit djeteta i komunicirajte s biv\u0161im/biv\u0161om uz po\u0161tovanje."
-  },
+  "description": "Navigate early dating while co\u2011parenting: set expectations, protect the child's well\u2011being, and communicate with your ex respectfully.",
   "meters": {
     "trust": {
       "min": 0,
       "max": 100,
       "start": 60,
-      "label": {
-        "en": "Co-parent Trust",
-        "hr": "Povjerenje suroditelja"
-      }
+      "label": "Co-parent Trust"
     },
     "tension": {
       "min": 0,
       "max": 100,
       "start": 30,
-      "label": {
-        "en": "Co-parent Tension",
-        "hr": "Napetost"
-      }
+      "label": "Co-parent Tension"
     },
     "childStress": {
       "min": 0,
       "max": 100,
       "start": 20,
-      "label": {
-        "en": "Child Stress",
-        "hr": "Stres djeteta"
-      }
+      "label": "Child Stress"
     }
   },
   "acts": [
     {
       "id": "act1",
-      "title": {
-        "en": "Act 1 \u2014 First Conversations",
-        "hr": "1. \u010din \u2014 Prvi razgovori"
-      },
+      "title": "Act 1 \u2014 First Conversations",
       "nodes": [
         {
           "id": "a1_start",
@@ -128,10 +110,7 @@
     },
     {
       "id": "act2",
-      "title": {
-        "en": "Act 2 \u2014 Boundaries & Introductions",
-        "hr": "2. \u010din \u2014 Granice i upoznavanja"
-      },
+      "title": "Act 2 \u2014 Boundaries & Introductions",
       "nodes": [
         {
           "id": "a2_start",
@@ -200,10 +179,7 @@
     },
     {
       "id": "act3",
-      "title": {
-        "en": "Act 3 \u2014 Friction & Repair",
-        "hr": "3. \u010din \u2014 Trenje i popravak"
-      },
+      "title": "Act 3 \u2014 Friction & Repair",
       "nodes": [
         {
           "id": "a3_start",
