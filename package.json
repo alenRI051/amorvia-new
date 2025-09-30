@@ -5,18 +5,12 @@
   "private": true,
   "scripts": {
     "lint:schemas": "node validator.mjs",
-    "lint:schemas:ci": "node validator.mjs --ci"
+    "lint:schemas:ci": "node validator.mjs --ci",
+    "fix:schemas": "node tools/migrate-steps-to-nodes.v2.mjs && node tools/normalize-text-and-ids.mjs && node tools/ensure-min-choices.v2.mjs && node tools/one-shot-fix.mjs && node tools/add-missing-node-ids.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",
     "globby": "^14.0.2",
     "ajv-formats": "^3.0.1"
-  },
-  {
-  "scripts": {
-    "fix:schemas": "node tools/migrate-steps-to-nodes.v2.mjs && node tools/normalize-text-and-ids.mjs && node tools/ensure-min-choices.v2.mjs && node tools/one-shot-fix.mjs && node tools/add-missing-node-ids.mjs",
-    "lint:schemas": "node validator.mjs",
-    "lint:schemas:ci": "node validator.mjs --ci"
   }
-}
 }
