@@ -1,0 +1,16 @@
+
+/* Compact top bar (force): keep only the first child under #titleAndList */
+#titleAndList > *:not(:first-child) { display: none !important; }
+
+/* Also hide known containers if they exist anywhere */
+#titleAndList [aria-label="Scenarios"],
+#titleAndList #scenarioList,
+#titleAndList .scenario-tabs,
+#titleAndList .list.scenarios,
+#titleAndList [role="tablist"],
+#titleAndList .tabs,
+#titleAndList .tabbar { display: none !important; }
+
+/* Tighten paddings a touch */
+#titleAndList.card.panel { padding: 10px 12px !important; }
+.stage .panel.toolbar { padding-top: 6px !important; padding-bottom: 6px !important; gap: 8px !important; }
