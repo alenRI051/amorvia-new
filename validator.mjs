@@ -3,6 +3,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { globby } from 'globby';
 import Ajv from 'ajv';
+import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 
 const args = new Set(process.argv.slice(2));
 const isCI = args.has('--ci');
@@ -15,10 +17,18 @@ async function loadJSON(p) {
   return JSON.parse(raw);
 }
 
+function makeAjvForSchema(schema) {
+  const schemaVer = (schema.$schema || '').toLowerCase();
+  const BaseAjv = schemaVer.includes('2020-12') ? Ajv2020 : Ajv;
+  const ajv = new BaseAjv({ strict: false, allErrors: true, allowUnionTypes: true });
+  addFormats(ajv);
+  return ajv;
+}
+
 (async () => {
   try {
     const schema = await loadJSON(SCHEMA_PATH);
-    const ajv = new Ajv({ strict: false, allErrors: true, allowUnionTypes: true });
+    const ajv = makeAjvForSchema(schema);
     const validate = ajv.compile(schema);
 
     const files = await globby([DATA_GLOB], { absolute: false });
@@ -38,7 +48,6 @@ async function loadJSON(p) {
           console.log(`  • ${err.instancePath || '(root)'} ${err.message}`);
           if (err.params) {
             const p = { ...err.params };
-            // avoid noisy long prints
             if (p.allowedValues && Array.isArray(p.allowedValues)) {
               p.allowedValues = p.allowedValues.slice(0, 6);
             }
@@ -57,7 +66,7 @@ async function loadJSON(p) {
       console.log(`\n[schema-lint] Success: all files valid.`);
     }
   } catch (e) {
-    console.error('[schema-lint] Error:', e.message);
+    console.error('[schema-lint] Error:', e.stack || e.message);
     process.exit(2);
   }
 })();

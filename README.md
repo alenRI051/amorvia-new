@@ -1,29 +1,19 @@
-# Amorvia Schema Lint Kit
+# Amorvia Schema Lint Kit (v2)
 
-Validates all scenario files against your v2 schema.
-
-## Requirements
-- Node.js 18+
-- Your repo structure:
-  - `public/schema/scenario.v2.schema.json`
-  - `public/data/*.v2.json`
+Fixes the 2020-12 meta-schema error by using Ajv's 2020 class automatically when your schema declares
+`$schema: "https://json-schema.org/draft/2020-12/schema"`.
 
 ## Install
 ```bash
 npm i
 ```
 
-## Run locally
+## Run
 ```bash
-npm run lint:schemas
-```
-- Shows each file and any validation issues.
-
-## CI-friendly (minimal output, nonzero exit on fail)
-```bash
-npm run lint:schemas:ci
+npm run lint:schemas        # verbose
+npm run lint:schemas:ci     # CI mode
 ```
 
-## Tips
-- The validator uses Ajv 8 with `strict:false` and `allowUnionTypes:true` to match your existing Ajv CLI flags.
-- If your schema uses `$ref`, make sure all referenced files are reachable from `public/schema/scenario.v2.schema.json` via relative paths.
+## Notes
+- Uses `ajv-formats` for common string formats.
+- Auto-selects Ajv (draft-07) or Ajv2020 based on your schema's `$schema` field.
