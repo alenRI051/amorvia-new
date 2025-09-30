@@ -1,0 +1,48 @@
+/* Compact mode styles (applies only when body has .ui-compact) */
+body.ui-compact #topBar {
+  padding-block: 6px;
+}
+
+body.ui-compact #titleAndList.card.panel {
+  padding: 8px 10px;
+}
+
+body.ui-compact .stage .panel.toolbar {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  gap: 6px;
+}
+
+body.ui-compact .stage .panel.dialog {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+body.ui-compact .choices {
+  margin-top: 8px;
+  gap: 6px;
+}
+
+body.ui-compact #hud.hud {
+  margin-top: 8px;
+}
+
+body.ui-compact .button,
+body.ui-compact button,
+body.ui-compact .select,
+body.ui-compact select,
+body.ui-compact .input,
+body.ui-compact input {
+  padding: 6px 10px;
+  min-height: 30px;
+}
+
+body.ui-compact h2.no-margin {
+  margin: 0;
+  line-height: 1.2;
+}
+
+body.ui-compact label, 
+body.ui-compact .badge {
+  line-height: 1.2;
+}
