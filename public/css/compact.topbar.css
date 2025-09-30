@@ -1,0 +1,18 @@
+/* Compact top bar: hide scenario chips/tabs */
+#titleAndList [aria-label="Scenarios"],
+#titleAndList #scenarioList,
+#titleAndList .scenario-tabs,
+#titleAndList .list.scenarios {
+  display: none !important;
+}
+
+#titleAndList .tabs,
+#titleAndList .tabbar,
+#titleAndList .row:has(button:nth-child(1)),
+#titleAndList .row:has([role="tablist"]) {
+  display: none !important;
+}
+
+/* Tighten spacing */
+#titleAndList.card.panel { padding: 10px 12px; }
+.stage .panel.toolbar { padding-top: 6px; padding-bottom: 6px; gap: 8px; }
