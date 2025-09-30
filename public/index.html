@@ -7,19 +7,28 @@
   <meta name="theme-color" content="#0f172a"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/favicon.png" type="image/png"/>
+
+  <!-- Base styles -->
   <link rel="stylesheet" href="/css/art-visibility-fix.css"/>
   <link rel="stylesheet" href="/css/ui.patch.css"/>
   <link rel="stylesheet" href="/css/addons.css"/>
   <link rel="stylesheet" href="/css/styles.css"/>
+
+  <!-- HUD v9.7 Polish Pack -->
   <link rel="stylesheet" href="/css/amorvia-hud.v9.7.css"/>
-  <link rel="stylesheet" href="/css/skip-link.patch.css"/>
+
+  <!-- Auto UI Scale + Stage Fit -->
   <link rel="stylesheet" href="/css/ui-scale.auto.css"/>
+
+  <!-- Compact top bar (hides scenario tabs) -->
+  <link rel="stylesheet" href="/css/compact.topbar.css"/>
+
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
-  <script src="/js/dev-tools.qa.v1.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <div id="topBar">
     <h1>Amorvia <span class="muted">- Multi-Act</span></h1>
     <div class="row" style="gap:.5rem;">
@@ -27,6 +36,7 @@
       <button id="resetUiBtn" class="button" type="button">Reset UI</button>
     </div>
   </div>
+
   <div id="titleAndList" class="card panel">
     <div class="row" style="gap:.5rem; align-items:center;">
       <label class="sr-only" for="scenarioPicker">Scenario</label>
@@ -34,6 +44,7 @@
       <button id="restartAct" class="button" type="button">Restart Act</button>
     </div>
   </div>
+
   <main id="main" class="wrap">
     <aside class="card panel">
       <div class="v1-only" hidden aria-hidden="true">
@@ -46,6 +57,7 @@
         </div>
       </div>
     </aside>
+
     <section class="card stage">
       <div class="panel toolbar row">
         <label class="sr-only" for="bgSelect">Background</label>
@@ -67,11 +79,13 @@
           <option value="v2" selected>Branching v2</option>
         </select>
       </div>
+
       <div class="canvas">
         <img id="bgImg" class="bg" alt="Background" src="/assets/backgrounds/room.svg"/>
         <figure class="character left"><img id="leftImg" alt="Left character" src="/assets/characters/male_casual.svg"/></figure>
         <figure class="character right"><img id="rightImg" alt="Right character" src="/assets/characters/female_casual.svg"/></figure>
       </div>
+
       <div class="panel dialog">
         <div class="row">
           <span id="actBadge" class="badge" aria-live="polite">Act -</span>
@@ -83,17 +97,30 @@
       </div>
     </section>
   </main>
+
+  <!-- Core -->
   <script type="module" src="/js/bootstrap.js" defer></script>
   <script src="/js/sw-register.js" defer></script>
+
+  <!-- Addons -->
   <script src="/js/addons/reset-ui.js"></script>
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
+
+  <!-- Telemetry -->
   <script>window.AMORVIA_TRACK_ENDPOINT = '/api/track';</script>
   <script src="/js/track-client.v9.5.1.js" defer></script>
   <script src="/js/telemetry.v9.5.3.js" defer></script>
+
+  <!-- HUD + Auto Scale -->
   <script src="/js/amorvia-hud.v9.7.js" defer></script>
   <script src="/js/ui-scale.auto.js" defer></script>
+
+  <!-- Helpers -->
   <script src="/js/dom-fixes.v9.4.js"></script>
   <script src="/js/ui-wiring.v9.4.js" defer></script>
+
+  <!-- Remove scenario tabs -->
+  <script src="/js/remove-scenario-tabs.v1.js" defer></script>
 </body>
 </html>
