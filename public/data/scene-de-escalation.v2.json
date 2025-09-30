@@ -25,10 +25,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "Use brief, concrete messages.",
-        "Avoid late-night heavy topics.",
-        "Confirm understanding in writing."
+      "nodes": [
+        {
+          "id": "auto_eoo7pg",
+          "type": "goto",
+          "text": "",
+          "to": "Use brief, concrete messages."
+        },
+        {
+          "id": "auto_64gq1z",
+          "type": "goto",
+          "text": "",
+          "to": "Avoid late-night heavy topics."
+        },
+        {
+          "id": "auto_1246yw",
+          "type": "goto",
+          "text": "",
+          "to": "Confirm understanding in writing."
+        }
       ]
     }
   ]

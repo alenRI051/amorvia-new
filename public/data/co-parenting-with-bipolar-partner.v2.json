@@ -18,82 +18,121 @@
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 First Exchange",
-      "steps": [
-        "You arrive to pick up your child, but your ex seems upset.",
+      "title": "Act 1 — First Exchange",
+      "nodes": [
+        {
+          "id": "auto_1mjl0f",
+          "type": "goto",
+          "text": "",
+          "to": "You arrive to pick up your child, but your ex seems upset."
+        },
         {
           "text": "They start speaking emotionally. How do you respond?",
           "choices": [
             {
               "label": "Stay calm",
-              "next": "next",
               "effects": {
                 "trust": 5,
                 "tension": -5
-              }
+              },
+              "to": "next"
             },
             {
               "label": "Ignore it",
-              "next": "next",
               "effects": {
                 "trust": -2
-              }
+              },
+              "to": "next"
             },
             {
               "label": "Respond emotionally",
-              "next": "next",
               "effects": {
                 "tension": 10,
                 "childStress": 5
-              }
+              },
+              "to": "next"
             }
-          ]
+          ],
+          "type": "line",
+          "id": "act0_node_1"
         },
-        "You must keep the focus on your child's well-being."
+        {
+          "id": "auto_x2cytm",
+          "type": "goto",
+          "text": "",
+          "to": "You must keep the focus on your child's well-being."
+        }
       ]
     },
     {
-      "title": "Act 2 \u2014 Escalation",
-      "steps": [
-        "The discussion grows tense, and your ex raises their voice.",
+      "title": "Act 2 — Escalation",
+      "nodes": [
+        {
+          "id": "auto_v2jpgj",
+          "type": "goto",
+          "text": "",
+          "to": "The discussion grows tense, and your ex raises their voice."
+        },
         {
           "text": "Your child notices the tension. Choose your next move:",
           "choices": [
             {
               "label": "De-escalate with soothing words",
-              "next": "next",
               "effects": {
                 "tension": -10,
                 "childStress": -5
-              }
+              },
+              "to": "next"
             },
             {
               "label": "Suggest a short break",
-              "next": "next",
               "effects": {
                 "tension": -5
-              }
+              },
+              "to": "next"
             },
             {
               "label": "Argue back",
-              "next": "next",
               "effects": {
                 "tension": 12,
                 "childStress": 8,
                 "trust": -6
-              }
+              },
+              "to": "next"
             }
-          ]
+          ],
+          "type": "line",
+          "id": "act1_node_1"
         },
-        "You try to steer the interaction toward a constructive outcome."
+        {
+          "id": "auto_paobv3",
+          "type": "goto",
+          "text": "",
+          "to": "You try to steer the interaction toward a constructive outcome."
+        }
       ]
     },
     {
-      "title": "Act 3 \u2014 Resolution",
-      "steps": [
-        "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse.",
-        "If you stayed calm, your child feels reassured.",
-        "If you escalated, the conflict lingers and your child feels stressed."
+      "title": "Act 3 — Resolution",
+      "nodes": [
+        {
+          "id": "auto_j1fqi5",
+          "type": "goto",
+          "text": "",
+          "to": "Depending on choices, you either reach a small compromise, leave things unresolved, or make the situation worse."
+        },
+        {
+          "id": "auto_0vuk6z",
+          "type": "goto",
+          "text": "",
+          "to": "If you stayed calm, your child feels reassured."
+        },
+        {
+          "id": "auto_3nvcvp",
+          "type": "goto",
+          "text": "",
+          "to": "If you escalated, the conflict lingers and your child feels stressed."
+        }
       ]
     }
   ]

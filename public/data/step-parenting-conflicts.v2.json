@@ -31,10 +31,11 @@
   "acts": [
     {
       "title": "Act 1 — Mixed Messages",
-      "steps": [
+      "nodes": [
         {
           "id": "a1s1",
-          "text": "Your partner (the step-parent) introduces a new homework rule that clashes with the one you agreed to with your ex."
+          "text": "Your partner (the step-parent) introduces a new homework rule that clashes with the one you agreed to with your ex.",
+          "type": "line"
         },
         {
           "id": "a1s2",
@@ -63,20 +64,23 @@
               },
               "to": "a1s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a1s3",
-          "text": "You choose how to manage the mismatch in the moment."
+          "text": "You choose how to manage the mismatch in the moment.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 2 — Co-Parent Sync",
-      "steps": [
+      "nodes": [
         {
           "id": "a2s1",
-          "text": "You prepare a message to your ex to keep rules consistent across homes."
+          "text": "You prepare a message to your ex to keep rules consistent across homes.",
+          "type": "line"
         },
         {
           "id": "a2s2",
@@ -104,20 +108,23 @@
               },
               "to": "a2s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a2s3",
-          "text": "Your ex responds based on your tone."
+          "text": "Your ex responds based on your tone.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 3 — Family Debrief",
-      "steps": [
+      "nodes": [
         {
           "id": "a3s1",
-          "text": "You and your partner debrief privately about roles and who enforces what."
+          "text": "You and your partner debrief privately about roles and who enforces what.",
+          "type": "line"
         },
         {
           "id": "a3s2",
@@ -138,11 +145,13 @@
               },
               "to": "a3s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a3s3",
-          "text": "The path you pick shapes tomorrow’s routine."
+          "text": "The path you pick shapes tomorrow’s routine.",
+          "type": "line"
         }
       ]
     }

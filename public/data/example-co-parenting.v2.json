@@ -19,14 +19,14 @@
   "acts": [
     {
       "id": "a1",
-      "title": "Act 1 \u2014 First Exchange",
+      "title": "Act 1 — First Exchange",
       "start": "n1",
       "nodes": [
         {
           "id": "n1",
           "type": "line",
           "text": "You arrive to pick up your child; your ex seems upset.",
-          "next": "n2"
+          "to": "n2"
         },
         {
           "id": "n2",
@@ -57,23 +57,25 @@
               },
               "to": "n4"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "n3",
           "type": "line",
           "text": "They soften a little and speak more clearly.",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "n4",
           "type": "line",
           "text": "They raise their voice; the air feels tense.",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
-          "type": "end"
+          "type": "end",
+          "text": ""
         }
       ]
     }

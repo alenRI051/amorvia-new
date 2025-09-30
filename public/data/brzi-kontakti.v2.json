@@ -25,10 +25,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "**CZSS**: socskrb.hr",
-        "**Obiteljski sud / odvjetnici**: lokalni kontakti",
-        "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa"
+      "nodes": [
+        {
+          "id": "auto_zgs44m",
+          "type": "goto",
+          "text": "",
+          "to": "**CZSS**: socskrb.hr"
+        },
+        {
+          "id": "auto_ys851q",
+          "type": "goto",
+          "text": "",
+          "to": "**Obiteljski sud / odvjetnici**: lokalni kontakti"
+        },
+        {
+          "id": "auto_tl7500",
+          "type": "goto",
+          "text": "",
+          "to": "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa"
+        }
       ]
     }
   ]

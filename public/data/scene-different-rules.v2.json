@@ -25,10 +25,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "**Unified rules**: One list for the household, reviewed weekly.",
-        "**Zones of control**: Each parent leads in specific domains.",
-        "**Coach mode**: Agree on consistent consequences and rewards."
+      "nodes": [
+        {
+          "id": "auto_lm13es",
+          "type": "goto",
+          "text": "",
+          "to": "**Unified rules**: One list for the household, reviewed weekly."
+        },
+        {
+          "id": "auto_z3r8cl",
+          "type": "goto",
+          "text": "",
+          "to": "**Zones of control**: Each parent leads in specific domains."
+        },
+        {
+          "id": "auto_6aekeh",
+          "type": "goto",
+          "text": "",
+          "to": "**Coach mode**: Agree on consistent consequences and rewards."
+        }
       ]
     }
   ]

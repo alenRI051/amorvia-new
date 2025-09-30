@@ -31,10 +31,11 @@
   "acts": [
     {
       "title": "Act 1 — Upcoming Holiday",
-      "steps": [
+      "nodes": [
         {
           "id": "a1s1",
-          "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently."
+          "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently.",
+          "type": "line"
         },
         {
           "id": "a1s2",
@@ -63,20 +64,23 @@
               },
               "to": "a1s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a1s3",
-          "text": "Your message sets the tone."
+          "text": "Your message sets the tone.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 2 — Symbols & Food",
-      "steps": [
+      "nodes": [
         {
           "id": "a2s1",
-          "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home."
+          "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home.",
+          "type": "line"
         },
         {
           "id": "a2s2",
@@ -98,20 +102,23 @@
               },
               "to": "a2s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a2s3",
-          "text": "Your child internalizes your framing."
+          "text": "Your child internalizes your framing.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 3 — Keepsakes",
-      "steps": [
+      "nodes": [
         {
           "id": "a3s1",
-          "text": "The child wants to bring a keepsake between homes."
+          "text": "The child wants to bring a keepsake between homes.",
+          "type": "line"
         },
         {
           "id": "a3s2",
@@ -132,11 +139,13 @@
               },
               "to": "a3s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a3s3",
-          "text": "You close the holiday plan."
+          "text": "You close the holiday plan.",
+          "type": "line"
         }
       ]
     }

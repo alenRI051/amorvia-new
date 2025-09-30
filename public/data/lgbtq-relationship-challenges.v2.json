@@ -31,10 +31,11 @@
   "acts": [
     {
       "title": "Act 1 — Labels & Names",
-      "steps": [
+      "nodes": [
         {
           "id": "a1s1",
-          "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns."
+          "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns.",
+          "type": "line"
         },
         {
           "id": "a1s2",
@@ -55,20 +56,23 @@
               },
               "to": "a1s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a1s3",
-          "text": "Your child watches whose comfort you prioritize."
+          "text": "Your child watches whose comfort you prioritize.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 2 — School Involvement",
-      "steps": [
+      "nodes": [
         {
           "id": "a2s1",
-          "text": "Forms and portals have old data. The school asks for clarification."
+          "text": "Forms and portals have old data. The school asks for clarification.",
+          "type": "line"
         },
         {
           "id": "a2s2",
@@ -89,20 +93,23 @@
               },
               "to": "a2s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a2s3",
-          "text": "Administration responds to your clarity."
+          "text": "Administration responds to your clarity.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 3 — Extended Family",
-      "steps": [
+      "nodes": [
         {
           "id": "a3s1",
-          "text": "A grandparent refuses new language at a birthday gathering."
+          "text": "A grandparent refuses new language at a birthday gathering.",
+          "type": "line"
         },
         {
           "id": "a3s2",
@@ -124,11 +131,13 @@
               },
               "to": "a3s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a3s3",
-          "text": "The day ends; the child tracks how safe it felt."
+          "text": "The day ends; the child tracks how safe it felt.",
+          "type": "line"
         }
       ]
     }

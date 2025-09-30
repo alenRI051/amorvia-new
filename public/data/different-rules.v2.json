@@ -18,10 +18,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "Unified rules list, reviewed weekly.",
-        "Zones of control by domain.",
-        "Coach mode with consistent consequences."
+      "nodes": [
+        {
+          "id": "auto_31rmuw",
+          "type": "goto",
+          "text": "",
+          "to": "Unified rules list, reviewed weekly."
+        },
+        {
+          "id": "auto_hn0bas",
+          "type": "goto",
+          "text": "",
+          "to": "Zones of control by domain."
+        },
+        {
+          "id": "auto_93nx6r",
+          "type": "goto",
+          "text": "",
+          "to": "Coach mode with consistent consequences."
+        }
       ]
     }
   ]

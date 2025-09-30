@@ -36,20 +36,27 @@
             {
               "label": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r",
               "to": "a4n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a4n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a4n1",
           "type": "line",
           "speaker": "narrator",
           "text": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r\\n\\r\\n# New scenario: Scene - First Agreements\\r\\nfirst_agreements = {\\r\\n \\\"version\\\": 2,\\r\\n \\\"id\\\": \\\"scene-first-agreements\\\",\\r\\n \\\"title\\\": \\\"Scene: First Agreements\\\",\\r\\n \\\"meters\\\": {\\r\\n \\\"tension\\\": {\\\"",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     }

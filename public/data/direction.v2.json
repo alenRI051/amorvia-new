@@ -25,10 +25,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "Non-human silhouettes with aura color shifts by mood.",
-        "Eye shape reflects emotional state.",
-        "Backgrounds: realistic interiors."
+      "nodes": [
+        {
+          "id": "auto_btl7s1",
+          "type": "goto",
+          "text": "",
+          "to": "Non-human silhouettes with aura color shifts by mood."
+        },
+        {
+          "id": "auto_kqp66e",
+          "type": "goto",
+          "text": "",
+          "to": "Eye shape reflects emotional state."
+        },
+        {
+          "id": "auto_if7dog",
+          "type": "goto",
+          "text": "",
+          "to": "Backgrounds: realistic interiors."
+        }
       ]
     }
   ]

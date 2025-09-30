@@ -36,20 +36,27 @@
             {
               "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expec",
               "to": "a1n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a1n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expectations with your ex.\\\",\\r\\n \\\"**Guided intro:** Short, neutral, child-focused activity f",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     }

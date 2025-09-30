@@ -36,20 +36,27 @@
             {
               "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-nig",
               "to": "a1n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a1n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-night heavy topics.\\\",\\r\\n \\\"Confirm understanding in writing.\\\"\\r\\n ]\\r",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     }

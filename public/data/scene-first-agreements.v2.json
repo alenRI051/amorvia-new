@@ -25,10 +25,25 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "**Mediation-first:** Seek a neutral mediator to draft a parenting plan.",
-        "**DIY plan:** Draft a plan and validate with a social worker.",
-        "**Lawyered:** Each side retains counsel for a formal agreement."
+      "nodes": [
+        {
+          "id": "auto_vohc45",
+          "type": "goto",
+          "text": "",
+          "to": "**Mediation-first:** Seek a neutral mediator to draft a parenting plan."
+        },
+        {
+          "id": "auto_wolcw0",
+          "type": "goto",
+          "text": "",
+          "to": "**DIY plan:** Draft a plan and validate with a social worker."
+        },
+        {
+          "id": "auto_cfzqwo",
+          "type": "goto",
+          "text": "",
+          "to": "**Lawyered:** Each side retains counsel for a formal agreement."
+        }
       ]
     }
   ]

@@ -36,20 +36,27 @@
             {
               "label": "of the co-parenting scenario, written in a way that allows the user to choose th",
               "to": "a1n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a1n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": "of the co-parenting scenario, written in a way that allows the user to choose their role (mother or father) while still staying close to real-life emotion \\u2014 with a touch of dark humor, irony, and empathy to keep *Amorvia*\\u",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     }

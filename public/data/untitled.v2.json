@@ -36,20 +36,27 @@
             {
               "label": ": Pathfinding, with choices leading to different tension-trust dynamics. \\n",
               "to": "a1n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a1n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": ": Pathfinding, with choices leading to different tension-trust dynamics. \\n",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     },
@@ -66,20 +73,27 @@
             {
               "label": ": Drafting, offering follow-ups based on plan scope.\\n",
               "to": "a2n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a2n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a2n1",
           "type": "line",
           "speaker": "narrator",
           "text": ": Drafting, offering follow-ups based on plan scope.\\n",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     },
@@ -96,20 +110,27 @@
             {
               "label": ": Sticking Points, resolving conflicts.\\n",
               "to": "a3n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a3n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a3n1",
           "type": "line",
           "speaker": "narrator",
           "text": ": Sticking Points, resolving conflicts.\\n",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     },
@@ -126,20 +147,27 @@
             {
               "label": ": Resolut",
               "to": "a4n1"
+            },
+            {
+              "id": "auto_continue",
+              "label": "Continue",
+              "to": "a4n1"
             }
-          ]
+          ],
+          "text": ""
         },
         {
           "id": "a4n1",
           "type": "line",
           "speaker": "narrator",
           "text": ": Resolut",
-          "next": "end"
+          "to": "end"
         },
         {
           "id": "end",
           "type": "end",
-          "summary": "End of act."
+          "summary": "End of act.",
+          "text": ""
         }
       ]
     }

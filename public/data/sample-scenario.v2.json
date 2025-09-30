@@ -4,8 +4,13 @@
   "acts": [
     {
       "title": "Act 1",
-      "steps": [
-        "You arrive to pick up your child; your ex seems upset.",
+      "nodes": [
+        {
+          "id": "auto_h22yax",
+          "type": "goto",
+          "text": "",
+          "to": "You arrive to pick up your child; your ex seems upset."
+        },
         {
           "type": "choice",
           "prompt": "How do you respond?",
@@ -14,17 +19,26 @@
               "label": "Stay calm",
               "effects": {
                 "tension": -5
-              }
+              },
+              "to": "auto_q0rmr2"
             },
             {
               "label": "Argue back",
               "effects": {
                 "tension": 10
-              }
+              },
+              "to": "auto_q0rmr2"
             }
-          ]
+          ],
+          "text": "",
+          "id": "act0_node_1"
         },
-        "You focus on your child's needs and keep the handoff short."
+        {
+          "id": "auto_q0rmr2",
+          "type": "goto",
+          "text": "",
+          "to": "You focus on your child's needs and keep the handoff short."
+        }
       ]
     }
   ]

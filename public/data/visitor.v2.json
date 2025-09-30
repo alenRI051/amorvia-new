@@ -31,10 +31,11 @@
   "acts": [
     {
       "title": "Act 1 — Surprise Knock",
-      "steps": [
+      "nodes": [
         {
           "id": "a1s1",
-          "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child."
+          "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
+          "type": "line"
         },
         {
           "id": "a1s2",
@@ -64,20 +65,23 @@
               },
               "to": "a1s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a1s3",
-          "text": "Your tone sets the stage for what happens next."
+          "text": "Your tone sets the stage for what happens next.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 2 — Negotiation",
-      "steps": [
+      "nodes": [
         {
           "id": "a2s1",
-          "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening."
+          "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening.",
+          "type": "line"
         },
         {
           "id": "a2s2",
@@ -107,20 +111,23 @@
               },
               "to": "a2s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a2s3",
-          "text": "You communicate the boundary and alternative."
+          "text": "You communicate the boundary and alternative.",
+          "type": "line"
         }
       ]
     },
     {
       "title": "Act 3 — Resolution",
-      "steps": [
+      "nodes": [
         {
           "id": "a3s1",
-          "text": "They react to your boundary. Your child watches your emotional tone closely."
+          "text": "They react to your boundary. Your child watches your emotional tone closely.",
+          "type": "line"
         },
         {
           "id": "a3s2",
@@ -149,11 +156,13 @@
               },
               "to": "a3s3"
             }
-          ]
+          ],
+          "type": "line"
         },
         {
           "id": "a3s3",
-          "text": "The visit ends. Your child mirrors your calm—or your stress."
+          "text": "The visit ends. Your child mirrors your calm—or your stress.",
+          "type": "line"
         }
       ]
     }
