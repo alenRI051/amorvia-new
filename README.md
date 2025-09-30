@@ -1,10 +1,29 @@
-# Amorvia `/api/track` — Blob (public) variant
+# Amorvia Schema Lint Kit
 
-Store requires `access: 'public'`. This build sets it explicitly and returns the public URL.
+Validates all scenario files against your v2 schema.
 
-Env vars:
-- BLOB_READ_WRITE_TOKEN (Read & Write token)
-- TRACK_SALT
-- TRACK_RATE_LIMIT (optional)
+## Requirements
+- Node.js 18+
+- Your repo structure:
+  - `public/schema/scenario.v2.schema.json`
+  - `public/data/*.v2.json`
 
-Security note: data is hashed for IP (`ipHash`) but files are public if you know URL. We randomize folder and file names to reduce guessability.
+## Install
+```bash
+npm i
+```
+
+## Run locally
+```bash
+npm run lint:schemas
+```
+- Shows each file and any validation issues.
+
+## CI-friendly (minimal output, nonzero exit on fail)
+```bash
+npm run lint:schemas:ci
+```
+
+## Tips
+- The validator uses Ajv 8 with `strict:false` and `allowUnionTypes:true` to match your existing Ajv CLI flags.
+- If your schema uses `$ref`, make sure all referenced files are reachable from `public/schema/scenario.v2.schema.json` via relative paths.

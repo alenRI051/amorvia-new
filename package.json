@@ -1,14 +1,14 @@
 {
-  "name": "amorvia-api-track-blob-public",
-  "private": true,
+  "name": "amorvia-schema-lint",
+  "version": "1.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
-    "start": "npx serve public",
-    "vdev": "vercel dev"
+    "lint:schemas": "node validator.mjs",
+    "lint:schemas:ci": "node validator.mjs --ci"
   },
   "dependencies": {
-    "@vercel/node": "^3.0.0",
-    "@vercel/blob": "^0.24.0",
-    "undici": "^6.0.0"
+    "ajv": "^8.17.1",
+    "globby": "^14.0.2"
   }
 }
