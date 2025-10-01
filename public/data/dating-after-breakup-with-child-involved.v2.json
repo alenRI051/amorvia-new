@@ -50,12 +50,12 @@
           "choices": [
             {
               "id": "a1_c1",
-              "label": "Be clear: co\u2011parenting comes first; no child introductions for now.",
+              "label": "Be clear: co\u2011parenting comes first; no child introductions for now. [Co-parent Trust +8, Co-parent Tension \u22124]",
               "to": "a1_share_policy"
             },
             {
               "id": "a1_c2",
-              "label": "Keep it vague and avoid the topic.",
+              "label": "Keep it vague and avoid the topic. [Co-parent Trust \u22126, Co-parent Tension +3]",
               "to": "a1_followup_vague"
             }
           ]
@@ -73,12 +73,12 @@
           "choices": [
             {
               "id": "a1_c3",
-              "label": "Yes \u2014 brief, factual message focused on co\u2011parent logistics.",
+              "label": "Yes \u2014 brief, factual message focused on co\u2011parent logistics. [Co-parent Trust +9, Co-parent Tension \u22126]",
               "to": "a1_ex_reacts"
             },
             {
               "id": "a1_c4",
-              "label": "No \u2014 keep it private for now.",
+              "label": "No \u2014 keep it private for now. [Co-parent Trust \u22123, Co-parent Tension +6]",
               "to": "a1_ex_reacts"
             }
           ]
@@ -90,12 +90,12 @@
           "choices": [
             {
               "id": "a1_c5",
-              "label": "Model respect: 'Yes, it's early.'",
+              "label": "Model respect: 'Yes, it's early.' [Co-parent Trust +10, Co-parent Tension \u22127]",
               "to": "a1_end"
             },
             {
               "id": "a1_c6",
-              "label": "Get defensive: 'It's none of your business.'",
+              "label": "Get defensive: 'It's none of your business.' [Co-parent Trust \u221212, Co-parent Tension +14]",
               "to": "a1_end"
             }
           ]
@@ -125,12 +125,12 @@
           "choices": [
             {
               "id": "a2_c1",
-              "label": "Wait 3\u20136 months of stability.",
+              "label": "Wait 3\u20136 months of stability. [Co-parent Trust +7, Child Stress \u22126]",
               "to": "a2_ex_coord"
             },
             {
               "id": "a2_c2",
-              "label": "Early casual meet this weekend.",
+              "label": "Early casual meet this weekend. [Co-parent Tension +4, Child Stress +10]",
               "to": "a2_ex_coord"
             }
           ]
@@ -142,12 +142,12 @@
           "choices": [
             {
               "id": "a2_c3",
-              "label": "Yes \u2014 propose simple guideline.",
+              "label": "Yes \u2014 propose simple guideline. [Co-parent Trust +8, Co-parent Tension \u22126]",
               "to": "a2_child_talk"
             },
             {
               "id": "a2_c4",
-              "label": "No \u2014 do it silently.",
+              "label": "No \u2014 do it silently. [Co-parent Trust \u22127, Co-parent Tension +9]",
               "to": "a2_child_talk"
             }
           ]
@@ -159,12 +159,12 @@
           "choices": [
             {
               "id": "a2_c5",
-              "label": "Simple script: 'This is my friend.'",
+              "label": "Simple script: 'This is my friend.' [Co-parent Trust +4, Child Stress \u22127]",
               "to": "a2_end"
             },
             {
               "id": "a2_c6",
-              "label": "No prep \u2014 hope for the best.",
+              "label": "No prep \u2014 hope for the best. [Co-parent Trust \u22123, Child Stress +9]",
               "to": "a2_end"
             }
           ]
@@ -194,12 +194,12 @@
           "choices": [
             {
               "id": "a3_c1",
-              "label": "Validate feelings + restate child\u2011first plan.",
+              "label": "Validate feelings + restate child\u2011first plan. [Co-parent Trust +11, Co-parent Tension \u22129, Child Stress \u22125]",
               "to": "a3_partner_ping"
             },
             {
               "id": "a3_c2",
-              "label": "Blame and escalate.",
+              "label": "Blame and escalate. [Co-parent Trust \u221214, Co-parent Tension +16, Child Stress +9]",
               "to": "a3_partner_ping"
             }
           ]
@@ -217,12 +217,12 @@
           "choices": [
             {
               "id": "a3_c3",
-              "label": "Calm, logistics-only reply.",
+              "label": "Calm, logistics-only reply. [Co-parent Trust +6, Co-parent Tension \u22125]",
               "to": "a3_child_regress"
             },
             {
               "id": "a3_c4",
-              "label": "Engage and argue back.",
+              "label": "Engage and argue back. [Co-parent Trust \u22128, Co-parent Tension +10]",
               "to": "a3_child_regress"
             }
           ]
@@ -240,12 +240,12 @@
           "choices": [
             {
               "id": "a3_c5",
-              "label": "Reassure and keep routine.",
+              "label": "Reassure and keep routine. [Child Stress \u22128]",
               "to": "a3_outcomes"
             },
             {
               "id": "a3_c6",
-              "label": "Ignore it, hope it passes.",
+              "label": "Ignore it, hope it passes. [Child Stress +9]",
               "to": "a3_outcomes"
             }
           ]
