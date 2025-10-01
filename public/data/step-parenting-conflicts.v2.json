@@ -33,6 +33,12 @@
       "title": "Act 1 — Mixed Messages",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "a1s1"
+        },
+        {
           "id": "a1s1",
           "text": "Your partner (the step-parent) introduces a new homework rule that clashes with the one you agreed to with your ex.",
           "type": "line"

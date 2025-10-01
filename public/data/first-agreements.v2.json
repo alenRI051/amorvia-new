@@ -29,6 +29,12 @@
       "start": "a4c1",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "a4c1"
+        },
+        {
           "id": "a4c1",
           "type": "choice",
           "prompt": "Choose a path",

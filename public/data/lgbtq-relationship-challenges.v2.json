@@ -33,6 +33,12 @@
       "title": "Act 1 — Labels & Names",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "a1s1"
+        },
+        {
           "id": "a1s1",
           "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns.",
           "type": "line"

@@ -33,6 +33,12 @@
       "title": "Act 1 — Surprise Knock",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "a1s1"
+        },
+        {
           "id": "a1s1",
           "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
           "type": "line"

@@ -23,6 +23,12 @@
       "start": "n1",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "n1"
+        },
+        {
           "id": "n1",
           "type": "line",
           "text": "You arrive to pick up your child; your ex seems upset.",

@@ -33,6 +33,12 @@
       "title": "Act 1 — Upcoming Holiday",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "a1s1"
+        },
+        {
           "id": "a1s1",
           "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently.",
           "type": "line"

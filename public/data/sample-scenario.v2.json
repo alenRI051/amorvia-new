@@ -6,6 +6,12 @@
       "title": "Act 1",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "auto_h22yax"
+        },
+        {
           "id": "auto_h22yax",
           "type": "goto",
           "text": "",

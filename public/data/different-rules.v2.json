@@ -20,6 +20,12 @@
       "title": "Act 1",
       "nodes": [
         {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "auto_31rmuw"
+        },
+        {
           "id": "auto_31rmuw",
           "type": "goto",
           "text": "",
