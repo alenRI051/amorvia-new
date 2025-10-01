@@ -1,6 +1,6 @@
 // v2 loader wired to global ScenarioEngine (LoadScenario + start)
 // ---------------------------------------------------------------
-// - Waits for engine to be ready (guards race with lazy bootstrap)
+// - Waits until the engine is actually ready (infinite poll)
 // - Derives a safe entry from v2 (act1 → start → resolve one goto)
 // - Converts to graph if needed via v2ToGraph
 // - Starts on a renderable node
@@ -16,19 +16,19 @@ if (window.__amorviaV2Booted) {
 }
 
 /* ----------------------- engine readiness ----------------------- */
-async function waitForEngine(retries = 40, delay = 75) {
-  for (let i = 0; i < retries; i++) {
-    const e = window.ScenarioEngine;
-    if (
-      e &&
-      typeof e.LoadScenario === 'function' &&
-      typeof e.start === 'function'
-    ) {
-      return e;
-    }
-    await new Promise(r => setTimeout(r, delay));
-  }
-  throw new Error('ScenarioEngine never became ready (expected LoadScenario + start).');
+// Infinite poll: resolves only when engine exposes the required methods.
+function waitForEngine() {
+  return new Promise(resolve => {
+    const check = () => {
+      const e = window.ScenarioEngine;
+      if (e && typeof e.LoadScenario === 'function' && typeof e.start === 'function') {
+        resolve(e);
+      } else {
+        setTimeout(check, 50); // keep polling until it’s there
+      }
+    };
+    check();
+  });
 }
 
 /* ----------------------- fetch helpers ----------------------- */
@@ -47,7 +47,7 @@ async function loadIndex() {
 }
 
 /* ----------------------- UI wiring ----------------------- */
-// Optional extra list: only used if #scenarioListV2 exists (the <select> is primary)
+// Optional extra list: used only if #scenarioListV2 exists (the <select> is primary)
 function renderList(list) {
   const container = document.getElementById('scenarioListV2');
   const picker = document.getElementById('scenarioPicker');
@@ -112,7 +112,7 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
-    // Wait until engine is definitely ready
+    // 0) Ensure engine is actually ready (handles race with lazy bootstrap)
     const engine = await waitForEngine();
 
     // 1) Fetch raw v2 JSON
@@ -189,3 +189,4 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
+
