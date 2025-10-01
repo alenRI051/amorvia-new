@@ -17,7 +17,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "co-parenting-with-bipolar-partner.v2.json"
+      "path": "data/co-parenting-with-bipolar-partner.v2.json"
     },
     {
       "id": "visitor",
@@ -34,7 +34,7 @@
         "childStress": 10
       },
       "acts": 3,
-      "path": "visitor.v2.json"
+      "path": "data/visitor.v2.json"
     },
     {
       "id": "dating-after-breakup-with-child-involved",
@@ -51,7 +51,7 @@
         "childStress": 10
       },
       "acts": 3,
-      "path": "dating-after-breakup-with-child-involved.v2.json"
+      "path": "data/dating-after-breakup-with-child-involved.v2.json"
     },
     {
       "id": "scene-first-agreements",
@@ -67,7 +67,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "scene-first-agreements.v2.json"
+      "path": "data/scene-first-agreements.v2.json"
     },
     {
       "id": "scene-new-introductions",
@@ -83,7 +83,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "scene-new-introductions.v2.json"
+      "path": "data/scene-new-introductions.v2.json"
     },
     {
       "id": "scene-different-rules",
@@ -99,7 +99,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "scene-different-rules.v2.json"
+      "path": "data/scene-different-rules.v2.json"
     },
     {
       "id": "scene-de-escalation",
@@ -115,7 +115,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "scene-de-escalation.v2.json"
+      "path": "data/scene-de-escalation.v2.json"
     },
     {
       "id": "brzi-kontakti",
@@ -131,7 +131,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "brzi-kontakti.v2.json"
+      "path": "data/brzi-kontakti.v2.json"
     },
     {
       "id": "direction",
@@ -147,7 +147,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "direction.v2.json"
+      "path": "data/direction.v2.json"
     },
     {
       "id": "to-do",
@@ -163,7 +163,7 @@
         "childStress": 10
       },
       "acts": 1,
-      "path": "to-do.v2.json"
+      "path": "data/to-do.v2.json"
     },
     {
       "id": "step-parenting-conflicts",
@@ -179,7 +179,7 @@
         "childStress": 10
       },
       "acts": 3,
-      "path": "step-parenting-conflicts.v2.json"
+      "path": "data/step-parenting-conflicts.v2.json"
     },
     {
       "id": "cultural-or-religious-difference",
@@ -195,7 +195,7 @@
         "childStress": 10
       },
       "acts": 3,
-      "path": "cultural-or-religious-difference.v2.json"
+      "path": "data/cultural-or-religious-difference.v2.json"
     },
     {
       "id": "lgbtq-relationship-challenges",
@@ -211,7 +211,7 @@
         "childStress": 10
       },
       "acts": 3,
-      "path": "lgbtq-relationship-challenges.v2.json"
+      "path": "data/lgbtq-relationship-challenges.v2.json"
     }
   ]
 }
