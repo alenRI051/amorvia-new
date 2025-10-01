@@ -1,65 +1,27 @@
-// v2 loader wired to ScenarioEngine with adaptive API detection
-// ------------------------------------------------------------------------
-import { v2ToGraph } from '/js/compat/v2-to-graph.js';
-import * as ImportedEngine from '/js/engine/scenarioEngine.js';
+// v2 loader wired to ScenarioEngine (LoadScenario + start)
+// -------------------------------------------------------
+// - Derives a safe entry from v2 (act1 → start → resolve one goto)
+// - Converts to graph if needed via v2ToGraph
+// - Ensures we start on a renderable node
+// - Works with the <select id="scenarioPicker"> and Restart button
 
-// One-shot guard
+import { v2ToGraph } from '/js/compat/v2-to-graph.js';
+
+// One-shot guard so we never double-boot
 if (window.__amorviaV2Booted) {
   console.warn('[Amorvia] app.v2 already booted, skipping.');
 } else {
   window.__amorviaV2Booted = true;
 }
 
-// Prefer global drop-in if present (you had a "[ScenarioEngine] drop-in engine ready" log)
-const EngSrc = (window.ScenarioEngine && typeof window.ScenarioEngine === 'object')
-  ? window.ScenarioEngine
-  : (ImportedEngine.ScenarioEngine || ImportedEngine.default || ImportedEngine);
-
-// Small helper to list function keys on an object (own + proto)
-function fnKeys(obj) {
-  const out = new Set();
-  let cur = obj;
-  while (cur && cur !== Object.prototype) {
-    for (const k of Object.getOwnPropertyNames(cur)) {
-      try { if (typeof obj[k] === 'function') out.add(k); } catch {}
-    }
-    cur = Object.getPrototypeOf(cur);
-  }
-  return [...out];
-}
-
-// Adaptive method resolver
-function resolveEngineAPI(engine) {
-  const keys = fnKeys(engine);
-
-  const pick = (candidates) => candidates.find(name => keys.includes(name) && typeof engine[name] === 'function');
-
-  const loadName = pick([
-    'loadScenario', 'load', 'init', 'initialize', 'setScenario'
-  ]);
-
-  const startName = pick([
-    'start', 'begin', 'run', 'goTo', 'goToNode', 'jump'
-  ]);
-
-  const setActName = pick([
-    'setAct2', 'setAct', 'selectAct', 'chooseAct'
-  ]);
-
-  const setNodeName = pick([
-    'setNode2', 'setNode', 'selectNode', 'chooseNode'
-  ]);
-
-  return { loadName, startName, setActName, setNodeName, keys };
-}
-
-const API = resolveEngineAPI(EngSrc);
-console.log('[Amorvia] ScenarioEngine methods detected:', API);
+// Prefer the global drop-in engine (your build exposes this)
+const ScenarioEngine = window.ScenarioEngine;
 
 // Dev cache-bust when ?devcache=0 is present
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
+// ----------------------- utils -----------------------
 async function getJSON(url) {
   const res = await fetch(url + devBust, noStore);
   if (!res.ok) throw new Error(`${url} ${res.status}`);
@@ -71,7 +33,7 @@ async function loadIndex() {
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
-// Optional v2 list (your UI already uses the <select>, so this is no-op unless #scenarioListV2 exists)
+// Optional v2 list (your UI mainly uses the <select>, this is a no-op unless #scenarioListV2 exists)
 function renderList(list) {
   const container = document.getElementById('scenarioListV2');
   const picker = document.getElementById('scenarioPicker');
@@ -111,13 +73,12 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-// v2 → graph (compat)
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes && typeof data.nodes === 'object';
   return looksGraph ? data : v2ToGraph(data);
 }
 
-// Derive safe entry from v2
+// From raw v2, pick act1 (or first act), then start (or first node), and resolve one goto hop
 function deriveEntryFromV2(raw) {
   const act = raw?.acts?.find(a => a.id === 'act1') || raw?.acts?.[0];
   if (!act || !Array.isArray(act.nodes) || act.nodes.length === 0) return { actId: null, nodeId: null };
@@ -133,50 +94,40 @@ function deriveEntryFromV2(raw) {
 function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
 function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
 
-// --- MAIN: start scenario with adaptive engine calls ---
+// ----------------------- core -----------------------
 async function startScenario(id) {
   try {
+    if (!ScenarioEngine || typeof ScenarioEngine.LoadScenario !== 'function' || typeof ScenarioEngine.start !== 'function') {
+      throw new Error('ScenarioEngine API not ready (expecting LoadScenario + start).');
+    }
+
+    // 1) Fetch raw v2 JSON
     const raw = await getJSON(`/data/${id}.v2.json`);
 
+    // 2) Derive a robust entry node from v2
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
+    // 3) Convert to graph if needed
     const graph = toGraphIfNeeded(raw);
 
-    // Load
-    if (API.loadName) {
-      EngSrc[API.loadName](graph);
+    // 4) Load into the engine (your engine expects graph shape here)
+    ScenarioEngine.LoadScenario(graph);
+
+    // 5) Ensure we start at a renderable node
+    if (!graph.startId || !graph.nodes?.[graph.startId]) {
+      graph.startId = entry.nodeId;              // fall back to derived entry
     } else {
-      throw new Error('No load method found on ScenarioEngine. Exposed keys: ' + API.keys.join(', '));
-    }
-
-    // Prefer single start(startId) if available & valid
-    let usedSingleStart = false;
-    if (API.startName) {
-      // ensure startId is valid and renderable (resolve one goto)
-      if (!graph.startId || !graph.nodes?.[graph.startId]) {
-        graph.startId = entry.nodeId;
-      } else {
-        const s = graph.nodes[graph.startId];
-        if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
-          graph.startId = s.to;
-        }
-      }
-      EngSrc[API.startName](graph.startId);
-      usedSingleStart = true;
-    }
-
-    // Otherwise fall back to (setAct, setNode) pairs
-    if (!usedSingleStart) {
-      if (API.setActName && API.setNodeName) {
-        EngSrc[API.setActName](entry.actId);
-        EngSrc[API.setNodeName](entry.nodeId);
-      } else {
-        throw new Error('No start or setAct/setNode methods found on ScenarioEngine. Keys: ' + API.keys.join(', '));
+      const s = graph.nodes[graph.startId];
+      if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
+        graph.startId = s.to;                    // resolve one goto hop
       }
     }
 
-    // Reflect selection
+    // 6) Kick off the scenario
+    ScenarioEngine.start(graph.startId);
+
+    // 7) Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
       const on = el.dataset.id === id;
       el.classList.toggle('is-active', on);
@@ -193,7 +144,7 @@ async function startScenario(id) {
   }
 }
 
-// Restart button wiring
+// Restart button (restarts currently selected or last-used)
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
@@ -204,14 +155,16 @@ async function startScenario(id) {
   });
 })();
 
-// Init
+// Init: load index, render picker/list, auto-start first (or last used)
 (async function init() {
   try {
     const scenarios = await loadIndex();
     renderList(scenarios);
+
     const last = recallLast();
     const first = (scenarios[0] && (scenarios[0].id || scenarios[0])) || null;
     const initial = last || first;
+
     if (initial) await startScenario(initial);
   } catch (e) {
     console.error('[Amorvia] init error', e);
@@ -220,5 +173,5 @@ async function startScenario(id) {
   }
 })();
 
-// Debug
-window.AmorviaApp = { startScenario, _api: API, _engineKeys: fnKeys(EngSrc) };
+// Debug helper
+window.AmorviaApp = { startScenario };
