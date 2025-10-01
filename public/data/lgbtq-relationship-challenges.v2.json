@@ -30,7 +30,7 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Labels & Names",
+      "title": "Act 1 \u2014 Labels & Names",
       "nodes": [
         {
           "id": "start",
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "title": "Act 2 — School Involvement",
+      "title": "Act 2 \u2014 School Involvement",
       "nodes": [
         {
           "id": "a2s1",
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "title": "Act 3 — Extended Family",
+      "title": "Act 3 \u2014 Extended Family",
       "nodes": [
         {
           "id": "a3s1",

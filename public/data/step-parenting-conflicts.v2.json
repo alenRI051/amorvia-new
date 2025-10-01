@@ -30,7 +30,7 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Mixed Messages",
+      "title": "Act 1 \u2014 Mixed Messages",
       "nodes": [
         {
           "id": "start",
@@ -81,7 +81,7 @@
       ]
     },
     {
-      "title": "Act 2 — Co-Parent Sync",
+      "title": "Act 2 \u2014 Co-Parent Sync",
       "nodes": [
         {
           "id": "a2s1",
@@ -101,7 +101,7 @@
               "to": "a2s3"
             },
             {
-              "label": "Directive: 'We’re doing it this way now.'",
+              "label": "Directive: 'We\u2019re doing it this way now.'",
               "effects": {
                 "tension": 5
               },
@@ -125,7 +125,7 @@
       ]
     },
     {
-      "title": "Act 3 — Family Debrief",
+      "title": "Act 3 \u2014 Family Debrief",
       "nodes": [
         {
           "id": "a3s1",
@@ -156,7 +156,7 @@
         },
         {
           "id": "a3s3",
-          "text": "The path you pick shapes tomorrow’s routine.",
+          "text": "The path you pick shapes tomorrow\u2019s routine.",
           "type": "line"
         }
       ]

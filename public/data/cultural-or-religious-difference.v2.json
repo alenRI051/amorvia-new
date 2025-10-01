@@ -30,7 +30,7 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Upcoming Holiday",
+      "title": "Act 1 \u2014 Upcoming Holiday",
       "nodes": [
         {
           "id": "start",
@@ -81,11 +81,11 @@
       ]
     },
     {
-      "title": "Act 2 — Symbols & Food",
+      "title": "Act 2 \u2014 Symbols & Food",
       "nodes": [
         {
           "id": "a2s1",
-          "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home.",
+          "text": "Your child asks questions about ceremonies, symbols, and what\u2019s \u2018allowed\u2019 in each home.",
           "type": "line"
         },
         {
@@ -119,7 +119,7 @@
       ]
     },
     {
-      "title": "Act 3 — Keepsakes",
+      "title": "Act 3 \u2014 Keepsakes",
       "nodes": [
         {
           "id": "a3s1",

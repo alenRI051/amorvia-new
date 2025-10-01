@@ -42,7 +42,7 @@
           "id": "auto_bki60w",
           "type": "goto",
           "text": "",
-          "to": "Color contrast ≥ 4.5:1."
+          "to": "Color contrast \u2265 4.5:1."
         },
         {
           "id": "auto_9omnz3",

@@ -30,7 +30,7 @@
   },
   "acts": [
     {
-      "title": "Act 1 — Surprise Knock",
+      "title": "Act 1 \u2014 Surprise Knock",
       "nodes": [
         {
           "id": "start",
@@ -40,12 +40,12 @@
         },
         {
           "id": "a1s1",
-          "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
+          "text": "There\u2019s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
           "type": "line"
         },
         {
           "id": "a1s2",
-          "text": "They say they ‘just want a quick chat’ and step closer to the doorway.",
+          "text": "They say they \u2018just want a quick chat\u2019 and step closer to the doorway.",
           "choices": [
             {
               "label": "Calmly step outside and close the door behind you",
@@ -64,7 +64,7 @@
               "to": "a1s3"
             },
             {
-              "label": "Set a firm boundary: 'Now isn’t a good time. Please text to schedule.'",
+              "label": "Set a firm boundary: 'Now isn\u2019t a good time. Please text to schedule.'",
               "effects": {
                 "tension": -2,
                 "trust": 3
@@ -82,11 +82,11 @@
       ]
     },
     {
-      "title": "Act 2 — Negotiation",
+      "title": "Act 2 \u2014 Negotiation",
       "nodes": [
         {
           "id": "a2s1",
-          "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening.",
+          "text": "They ask to see your child \u2018just for a minute\u2019. Your child is in the living room listening.",
           "type": "line"
         },
         {
@@ -128,7 +128,7 @@
       ]
     },
     {
-      "title": "Act 3 — Resolution",
+      "title": "Act 3 \u2014 Resolution",
       "nodes": [
         {
           "id": "a3s1",
@@ -167,7 +167,7 @@
         },
         {
           "id": "a3s3",
-          "text": "The visit ends. Your child mirrors your calm—or your stress.",
+          "text": "The visit ends. Your child mirrors your calm\u2014or your stress.",
           "type": "line"
         }
       ]
