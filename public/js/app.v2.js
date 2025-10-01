@@ -1,9 +1,10 @@
-// v2 loader wired to ScenarioEngine (LoadScenario + start)
-// -------------------------------------------------------
+// v2 loader wired to global ScenarioEngine (LoadScenario + start)
+// ---------------------------------------------------------------
+// - Waits for engine to be ready (guards race with lazy bootstrap)
 // - Derives a safe entry from v2 (act1 → start → resolve one goto)
 // - Converts to graph if needed via v2ToGraph
-// - Ensures we start on a renderable node
-// - Works with the <select id="scenarioPicker"> and Restart button
+// - Starts on a renderable node
+// - Works with <select id="scenarioPicker"> and the Restart button
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 
@@ -14,14 +15,26 @@ if (window.__amorviaV2Booted) {
   window.__amorviaV2Booted = true;
 }
 
-// Prefer the global drop-in engine (your build exposes this)
-const ScenarioEngine = window.ScenarioEngine;
+/* ----------------------- engine readiness ----------------------- */
+async function waitForEngine(retries = 40, delay = 75) {
+  for (let i = 0; i < retries; i++) {
+    const e = window.ScenarioEngine;
+    if (
+      e &&
+      typeof e.LoadScenario === 'function' &&
+      typeof e.start === 'function'
+    ) {
+      return e;
+    }
+    await new Promise(r => setTimeout(r, delay));
+  }
+  throw new Error('ScenarioEngine never became ready (expected LoadScenario + start).');
+}
 
-// Dev cache-bust when ?devcache=0 is present
+/* ----------------------- fetch helpers ----------------------- */
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
-// ----------------------- utils -----------------------
 async function getJSON(url) {
   const res = await fetch(url + devBust, noStore);
   if (!res.ok) throw new Error(`${url} ${res.status}`);
@@ -33,7 +46,8 @@ async function loadIndex() {
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
-// Optional v2 list (your UI mainly uses the <select>, this is a no-op unless #scenarioListV2 exists)
+/* ----------------------- UI wiring ----------------------- */
+// Optional extra list: only used if #scenarioListV2 exists (the <select> is primary)
 function renderList(list) {
   const container = document.getElementById('scenarioListV2');
   const picker = document.getElementById('scenarioPicker');
@@ -73,12 +87,13 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
+/* ----------------------- format helpers ----------------------- */
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes && typeof data.nodes === 'object';
   return looksGraph ? data : v2ToGraph(data);
 }
 
-// From raw v2, pick act1 (or first act), then start (or first node), and resolve one goto hop
+// From raw v2, pick act1 (or first act), then start (or first node), and follow one goto hop
 function deriveEntryFromV2(raw) {
   const act = raw?.acts?.find(a => a.id === 'act1') || raw?.acts?.[0];
   if (!act || !Array.isArray(act.nodes) || act.nodes.length === 0) return { actId: null, nodeId: null };
@@ -94,12 +109,11 @@ function deriveEntryFromV2(raw) {
 function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
 function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
 
-// ----------------------- core -----------------------
+/* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
-    if (!ScenarioEngine || typeof ScenarioEngine.LoadScenario !== 'function' || typeof ScenarioEngine.start !== 'function') {
-      throw new Error('ScenarioEngine API not ready (expecting LoadScenario + start).');
-    }
+    // Wait until engine is definitely ready
+    const engine = await waitForEngine();
 
     // 1) Fetch raw v2 JSON
     const raw = await getJSON(`/data/${id}.v2.json`);
@@ -111,21 +125,21 @@ async function startScenario(id) {
     // 3) Convert to graph if needed
     const graph = toGraphIfNeeded(raw);
 
-    // 4) Load into the engine (your engine expects graph shape here)
-    ScenarioEngine.LoadScenario(graph);
+    // 4) Load into the engine
+    engine.LoadScenario(graph);
 
     // 5) Ensure we start at a renderable node
     if (!graph.startId || !graph.nodes?.[graph.startId]) {
-      graph.startId = entry.nodeId;              // fall back to derived entry
+      graph.startId = entry.nodeId; // fall back to derived entry
     } else {
       const s = graph.nodes[graph.startId];
       if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
-        graph.startId = s.to;                    // resolve one goto hop
+        graph.startId = s.to;        // resolve one goto hop
       }
     }
 
     // 6) Kick off the scenario
-    ScenarioEngine.start(graph.startId);
+    engine.start(graph.startId);
 
     // 7) Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -144,7 +158,7 @@ async function startScenario(id) {
   }
 }
 
-// Restart button (restarts currently selected or last-used)
+/* ----------------------- restart button ----------------------- */
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
@@ -155,7 +169,7 @@ async function startScenario(id) {
   });
 })();
 
-// Init: load index, render picker/list, auto-start first (or last used)
+/* ----------------------- init ----------------------- */
 (async function init() {
   try {
     const scenarios = await loadIndex();
