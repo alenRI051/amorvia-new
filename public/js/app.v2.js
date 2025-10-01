@@ -97,28 +97,59 @@ async function startScenario(id) {
     // 1) Fetch raw v2 JSON
     const raw = await getJSON(`/data/${id}.v2.json`);
 
-    // 2) Compute a robust entry point from v2
-    const entry = deriveEntryFromV2(raw);
+    // 2) Compute robust entry (act1 -> start -> follow one goto hop)
+    const act = raw.acts?.find(a => a.id === 'act1') || raw.acts?.[0];
+    if (!act || !Array.isArray(act.nodes) || act.nodes.length === 0) {
+      throw new Error('Scenario has no nodes in its first act.');
+    }
+    let node = act.nodes.find(n => n.id === 'start') || act.nodes[0];
+    if (node?.type?.toLowerCase() === 'goto' && node.to) {
+      const hop = act.nodes.find(n => n.id === node.to);
+      if (hop) node = hop;
+    }
+    const actId = act.id;
+    const nodeId = node.id;
 
-    // 3) Convert to graph (if needed)
-    const graph = toGraphIfNeeded(raw);
+    // 3) Try to load via whichever API is available
+    //    (some builds expect raw v2; others a graph)
+    const looksGraph = raw && raw.startId && raw.nodes && typeof raw.nodes === 'object';
+    const graph = looksGraph ? raw : v2ToGraph(raw);
 
-    // 4) Ensure graph.startId exists & points to a real node
-    if (!graph.startId || !graph.nodes?.[graph.startId]) {
-      graph.startId = entry.nodeId || Object.keys(graph.nodes || {})[0];
+    // Load scenario
+    if (typeof ScenarioEngine.loadScenario === 'function') {
+      ScenarioEngine.loadScenario(graph);
+    } else if (typeof ScenarioEngine.load === 'function') {
+      // your earlier console showed this exists
+      ScenarioEngine.load(raw);
+    } else if (typeof ScenarioEngine.init === 'function') {
+      ScenarioEngine.init(graph);
+    } else {
+      throw new Error('No known ScenarioEngine.load* method found.');
     }
 
-    // 5) If startId is a goto, hop once to land on a renderable node
-    const sNode = graph.nodes?.[graph.startId];
-    if (sNode && sNode.type?.toLowerCase() === 'goto' && sNode.to && graph.nodes?.[sNode.to]) {
-      graph.startId = sNode.to;
+    // Start / set act+node using whatever is available
+    if (typeof ScenarioEngine.start === 'function' && graph.startId && graph.nodes?.[graph.startId]) {
+      // prefer start() if present
+      const s = graph.nodes[graph.startId];
+      const startId = (s && s.type?.toLowerCase() === 'goto' && s.to && graph.nodes[s.to]) ? s.to : graph.startId;
+      ScenarioEngine.start(startId);
+    } else if (typeof ScenarioEngine.setAct2 === 'function' && typeof ScenarioEngine.setNode2 === 'function') {
+      // the API you used in console
+      ScenarioEngine.setAct2(actId);
+      ScenarioEngine.setNode2(nodeId);
+    } else if (typeof ScenarioEngine.setAct === 'function' && typeof ScenarioEngine.setNode === 'function') {
+      ScenarioEngine.setAct(actId);
+      ScenarioEngine.setNode(nodeId);
+    } else {
+      // last-resort: try a single call that accepts both
+      if (typeof ScenarioEngine.goTo === 'function') {
+        ScenarioEngine.goTo({ actId, nodeId });
+      } else {
+        throw new Error('No known ScenarioEngine start/set methods found.');
+      }
     }
 
-    // 6) Load & start the engine
-    ScenarioEngine.loadScenario(graph);
-    ScenarioEngine.start(graph.startId);
-
-    // 7) Reflect selection in UI
+    // UI reflection
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
       const on = el.dataset.id === id;
       el.classList.toggle('is-active', on);
@@ -127,7 +158,7 @@ async function startScenario(id) {
     const picker = document.getElementById('scenarioPicker');
     if (picker) picker.value = id;
 
-    rememberLast(id);
+    try { localStorage.setItem('amorvia:lastScenario', id); } catch {}
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
     const dialog = document.getElementById('dialog');
