@@ -41,7 +41,17 @@
           "choices": [
             {
               "label": "of the co-parenting scenario, written in a way that allows the user to choose th",
-              "to": "a1n1"
+              "to": "a1n1",
+              "effects": [
+                {
+                  "meter": "trust",
+                  "delta": 5
+                },
+                {
+                  "meter": "tension",
+                  "delta": -3
+                }
+              ]
             },
             {
               "id": "auto_continue",
