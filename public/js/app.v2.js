@@ -143,7 +143,7 @@ async function startScenario(id) {
 
     // Start
     startFn.call(Eng, startId);
-    console.log('[Amorvia] started at', startId, graph.nodes?.[startId]);
+    console.log('[Amorvia] started at', startId, Engine.currentNode ? Engine.currentNode() : null);
 
     // Reflect in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
