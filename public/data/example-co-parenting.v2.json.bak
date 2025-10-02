@@ -19,7 +19,7 @@
   "acts": [
     {
       "id": "a1",
-      "title": "Act 1 — First Exchange",
+      "title": "Act 1 \u2014 First Exchange",
       "start": "n1",
       "nodes": [
         {
@@ -41,56 +41,26 @@
           "choices": [
             {
               "label": "Stay calm and validate",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": 6
-                },
-                {
-                  "meter": "tension",
-                  "delta": -5
-                },
-                {
-                  "meter": "childStress",
-                  "delta": -2
-                }
-              ],
+              "effects": {
+                "tension": -10,
+                "trust": 5
+              },
               "to": "n3"
             },
             {
               "label": "Ignore and take the child",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": -8
-                },
-                {
-                  "meter": "tension",
-                  "delta": 10
-                },
-                {
-                  "meter": "childStress",
-                  "delta": 6
-                }
-              ],
+              "effects": {
+                "tension": 5,
+                "trust": -5
+              },
               "to": "n4"
             },
             {
               "label": "Snap back",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": -10
-                },
-                {
-                  "meter": "tension",
-                  "delta": 12
-                },
-                {
-                  "meter": "childStress",
-                  "delta": 5
-                }
-              ],
+              "effects": {
+                "tension": 15,
+                "childStress": 10
+              },
               "to": "n4"
             }
           ],

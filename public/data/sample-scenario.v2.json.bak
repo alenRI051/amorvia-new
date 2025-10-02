@@ -23,34 +23,16 @@
           "choices": [
             {
               "label": "Stay calm",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": 4
-                },
-                {
-                  "meter": "tension",
-                  "delta": -3
-                }
-              ],
+              "effects": {
+                "tension": -5
+              },
               "to": "auto_q0rmr2"
             },
             {
               "label": "Argue back",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": -6
-                },
-                {
-                  "meter": "tension",
-                  "delta": 8
-                },
-                {
-                  "meter": "childStress",
-                  "delta": 3
-                }
-              ],
+              "effects": {
+                "tension": 10
+              },
               "to": "auto_q0rmr2"
             }
           ],

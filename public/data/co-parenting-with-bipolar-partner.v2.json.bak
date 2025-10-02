@@ -33,7 +33,7 @@
   "acts": [
     {
       "id": "act1",
-      "title": "Act 1 — Handover Chat",
+      "title": "Act 1 \u2014 Handover Chat",
       "nodes": [
         {
           "id": "start",
@@ -55,36 +55,12 @@
             {
               "id": "a1_c1",
               "label": "Brief, factual summary; ask about medication schedule.",
-              "to": "a1_line2",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": 6
-                },
-                {
-                  "meter": "tension",
-                  "delta": -4
-                }
-              ]
+              "to": "a1_line2"
             },
             {
               "id": "a1_c2",
               "label": "Vent about frustrations from the week.",
-              "to": "a1_line2",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": -8
-                },
-                {
-                  "meter": "tension",
-                  "delta": 10
-                },
-                {
-                  "meter": "childStress",
-                  "delta": 4
-                }
-              ]
+              "to": "a1_line2"
             }
           ]
         },
