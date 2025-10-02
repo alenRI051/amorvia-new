@@ -4,7 +4,7 @@
 // - Loads raw v2 first, falls back to graph if needed
 // - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes)
 // - Starts on a safe node (resolves one goto hop)
-// - Works with <select id="scenarioPicker"> and the Restart button
+// - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -18,7 +18,6 @@ if (window.__amorviaV2Booted) {
 
 /* ----------------------- resolve engine ----------------------- */
 function resolveEngineObject() {
-  // Prefer explicit export if present, else module, else global
   return (
     ImportedEngine?.ScenarioEngine ||
     ImportedEngine?.default ||
@@ -60,12 +59,10 @@ async function loadIndex() {
 }
 
 /* ----------------------- nodes extraction ----------------------- */
-// Build a { id: node } map from whatever shape we get.
-// Supports: graph.nodes (array or object), raw.acts[*].nodes, raw.nodes.
 function extractNodesMap({ raw, graph }) {
   let map = {};
 
-  // Case A: graph.nodes exists
+  // graph.nodes
   if (graph?.nodes) {
     if (Array.isArray(graph.nodes)) {
       for (const n of graph.nodes) if (n?.id) map[n.id] = n;
@@ -74,7 +71,7 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // Case B: raw.acts[*].nodes (merge across all acts)
+  // raw.acts[*].nodes
   if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       if (Array.isArray(act?.nodes)) {
@@ -83,7 +80,7 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // Case C: raw.nodes (object or array)
+  // raw.nodes
   if ((!map || !Object.keys(map).length) && raw?.nodes) {
     if (Array.isArray(raw.nodes)) {
       for (const n of raw.nodes) if (n?.id) map[n.id] = n;
@@ -156,10 +153,120 @@ function deriveEntryFromV2(raw) {
 function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
 function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
 
+/* ----------------------- meter hint helpers ----------------------- */
+// Map internal keys → full names
+const METER_LABELS = {
+  trust: 'Trust',
+  tension: 'Tension',
+  childStress: 'Child Stress',
+};
+
+// Extract meter deltas from a choice in a tolerant way.
+// Supports shapes like:
+// - choice.effects: [{meter:'trust', delta:+5}, {key:'tension', amount:-2}, ...]
+// - choice.meters:  {trust:+5, tension:-2}
+// - choice.effect / choice.delta singletons
+function getChoiceDeltas(choice) {
+  const totals = { trust: 0, tension: 0, childStress: 0 };
+
+  const add = (k, v) => {
+    const key = String(k || '').trim();
+    if (!key) return;
+    const norm =
+      key in totals ? key :
+      key.toLowerCase() === 'childstress' ? 'childStress' :
+      key.toLowerCase();
+    if (norm in totals) {
+      const n = Number(v);
+      if (!Number.isNaN(n) && n !== 0) totals[norm] += n;
+    }
+  };
+
+  // meters object
+  if (choice && typeof choice.meters === 'object') {
+    for (const [k, v] of Object.entries(choice.meters)) add(k, v);
+  }
+
+  // effects array
+  if (Array.isArray(choice?.effects)) {
+    for (const e of choice.effects) {
+      if (!e) continue;
+      add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
+    }
+  }
+
+  // singletons
+  if (choice?.meter || choice?.key) add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
+
+  return totals;
+}
+
+function formatHint(totals) {
+  const parts = [];
+  for (const k of Object.keys(METER_LABELS)) {
+    const v = totals[k];
+    if (!v) continue;
+    const sign = v > 0 ? '+' : '';
+    parts.push(`${sign}${v} ${METER_LABELS[k]}`);
+  }
+  return parts.length ? ` (${parts.join(', ')})` : '';
+}
+
+// Decorate visible choice buttons in #choices based on current node’s choices.
+// Uses order mapping (1:1 with scenario choices). Avoids double-appending.
+function decorateVisibleChoices(Eng) {
+  try {
+    const container = document.getElementById('choices');
+    if (!container) return;
+
+    const node =
+      (typeof Eng.currentNode === 'function')
+        ? Eng.currentNode()
+        : Eng.state?.nodes?.[Eng.state?.currentId];
+
+    if (!node || !Array.isArray(node.choices) || !node.choices.length) return;
+
+    const buttons = Array.from(container.querySelectorAll('button, [role="button"]'));
+    if (!buttons.length) return;
+
+    node.choices.forEach((ch, idx) => {
+      const btn = buttons[idx];
+      if (!btn) return;
+      if (btn.dataset.hinted === '1') return; // already decorated
+
+      // Base label: prefer explicit label, else keep button text
+      const base = ch.label ?? btn.textContent ?? '';
+      const hint = formatHint(getChoiceDeltas(ch));
+
+      // Only append if we actually have a hint
+      const newText = hint ? `${base}${hint}` : base;
+      btn.textContent = newText;
+      btn.dataset.hinted = '1';
+      btn.title = newText; // a11y hover
+    });
+  } catch (err) {
+    console.warn('[Amorvia] decorateVisibleChoices failed:', err);
+  }
+}
+
+// Schedule decoration after the engine likely finished rendering the node.
+function scheduleDecorate(Eng) {
+  // micro + macro task to catch different render strategies
+  setTimeout(() => decorateVisibleChoices(Eng), 0);
+  setTimeout(() => decorateVisibleChoices(Eng), 50);
+}
+
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
+
+    // Monkey-patch goto() once so every navigation re-decorates.
+    if (!Eng.__gotoDecorated && typeof Eng.goto === 'function') {
+      const _goto = Eng.goto.bind(Eng);
+      Eng.goto = (to) => { const r = _goto(to); scheduleDecorate(Eng); return r; };
+      Eng.__gotoDecorated = true;
+    }
 
     // Fetch + compute robust entry
     const raw = await getJSON(`/data/${id}.v2.json`);
@@ -186,7 +293,7 @@ async function startScenario(id) {
       nodesMap = extractNodesMap({ raw, graph });
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
-      } else {
+    } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
           graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
           graph_nodes_arr: Array.isArray(graph?.nodes),
@@ -243,7 +350,9 @@ async function startScenario(id) {
                 const nn = (typeof Eng.currentNode === 'function')
                   ? Eng.currentNode()
                   : Eng.state.nodes[to];
-                if (dialog) dialog.textContent = nn?.text || '';
+                const dialogEl = document.getElementById('dialog');
+                if (dialogEl) dialogEl.textContent = nn?.text || '';
+                scheduleDecorate(Eng);
               }
             });
             choices.appendChild(b);
@@ -251,6 +360,9 @@ async function startScenario(id) {
         }
       }
     }
+
+    // Always decorate visible choices after a start
+    scheduleDecorate(Eng);
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -298,4 +410,3 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
-
