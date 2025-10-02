@@ -46,7 +46,13 @@
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a1n1"
+              "to": "a1n1",
+              "effects": [
+                {
+                  "meter": "tension",
+                  "delta": 0
+                }
+              ]
             }
           ],
           "text": ""

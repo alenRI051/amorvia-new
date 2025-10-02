@@ -41,24 +41,12 @@
           "choices": [
             {
               "label": ": Pathfinding, with choices leading to different tension-trust dynamics. \\n",
-              "to": "a1n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a1n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a1n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a1n1"
             }
           ],
           "text": ""
@@ -90,24 +78,12 @@
           "choices": [
             {
               "label": ": Drafting, offering follow-ups based on plan scope.\\n",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a2n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a2n1"
             }
           ],
           "text": ""
@@ -139,24 +115,12 @@
           "choices": [
             {
               "label": ": Sticking Points, resolving conflicts.\\n",
-              "to": "a3n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a3n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a3n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a3n1"
             }
           ],
           "text": ""
@@ -188,24 +152,12 @@
           "choices": [
             {
               "label": ": Resolut",
-              "to": "a4n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a4n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a4n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a4n1"
             }
           ],
           "text": ""

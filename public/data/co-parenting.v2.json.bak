@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "cultural",
-  "title": "Cultural",
+  "id": "co-parenting",
+  "title": "Co-Parenting",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -24,50 +24,38 @@
   },
   "acts": [
     {
-      "id": "act-2",
-      "title": "Act 2",
-      "start": "a2c1",
+      "id": "act-1",
+      "title": "Act 1",
+      "start": "a1c1",
       "nodes": [
         {
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a2c1"
+          "to": "a1c1"
         },
         {
-          "id": "a2c1",
+          "id": "a1c1",
           "type": "choice",
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can sel",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "label": "of the co-parenting scenario, written in a way that allows the user to choose th",
+              "to": "a1n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a1n1"
             }
           ],
           "text": ""
         },
         {
-          "id": "a2n1",
+          "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can select what kind of message to send: \\n - Scientific data \\n - A cultural artifact (art, music, story) \\n - A decis",
+          "text": "of the co-parenting scenario, written in a way that allows the user to choose their role (mother or father) while still staying close to real-life emotion \\u2014 with a touch of dark humor, irony, and empathy to keep *Amorvia*\\u",
           "to": "end"
         },
         {

@@ -41,24 +41,12 @@
           "choices": [
             {
               "label": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can sel",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a2n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a2n1"
             }
           ],
           "text": ""

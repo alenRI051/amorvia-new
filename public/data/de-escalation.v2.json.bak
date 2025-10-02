@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "id": "cultural",
-  "title": "Cultural",
+  "id": "de-escalation",
+  "title": "Scene: De-Escalation",
   "meters": {
     "tension": {
       "label": "Tension",
@@ -24,50 +24,38 @@
   },
   "acts": [
     {
-      "id": "act-2",
-      "title": "Act 2",
-      "start": "a2c1",
+      "id": "act-1",
+      "title": "Act 1",
+      "start": "a1c1",
       "nodes": [
         {
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a2c1"
+          "to": "a1c1"
         },
         {
-          "id": "a2c1",
+          "id": "a1c1",
           "type": "choice",
           "prompt": "Choose a path",
           "choices": [
             {
-              "label": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can sel",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-nig",
+              "to": "a1n1"
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a2n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ]
+              "to": "a1n1"
             }
           ],
           "text": ""
         },
         {
-          "id": "a2n1",
+          "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
-          "text": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can select what kind of message to send: \\n - Scientific data \\n - A cultural artifact (art, music, story) \\n - A decis",
+          "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-night heavy topics.\\\",\\r\\n \\\"Confirm understanding in writing.\\\"\\r\\n ]\\r",
           "to": "end"
         },
         {

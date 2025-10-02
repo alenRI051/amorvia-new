@@ -41,12 +41,24 @@
           "choices": [
             {
               "label": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"**Slow lane:** Wait 3\\u20136 months and discuss expec",
-              "to": "a1n1"
+              "to": "a1n1",
+              "effects": [
+                {
+                  "meter": "tension",
+                  "delta": 0
+                }
+              ]
             },
             {
               "id": "auto_continue",
               "label": "Continue",
-              "to": "a1n1"
+              "to": "a1n1",
+              "effects": [
+                {
+                  "meter": "tension",
+                  "delta": 0
+                }
+              ]
             }
           ],
           "text": ""
