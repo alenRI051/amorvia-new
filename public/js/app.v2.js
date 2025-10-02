@@ -131,39 +131,35 @@ async function startScenario(id) {
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
-    // 3) Try loading GRAPH first
-    let graph = toGraphIfNeeded(raw);
-    loadFn.call(Eng, graph);
-
-    // 4) If engine has no nodes after load, fall back to RAW v2
-    let nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
-    if (!nodeKeys || nodeKeys.length === 0) {
-      // fallback: load raw v2
+    // 3) Try loading RAW v2 FIRST (your engine expects this)
+    let loadedVia = 'v2';
+    try {
       loadFn.call(Eng, raw);
-      // after fallback, rebuild nodeKeys
-      nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
-      // ensure we still have a graph object for startId derivation
-      graph = toGraphIfNeeded(raw);
+    } catch (e) {
+      console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
+      // fallback: convert to graph and try again
+      const graphAlt = toGraphIfNeeded(raw);
+      loadFn.call(Eng, graphAlt);
+      loadedVia = 'graph';
     }
 
-    // 5) Choose a safe startId (prefer graph.startId, else entry.nodeId, else first available)
-    let startId = graph.startId || entry.nodeId || nodeKeys[0];
-    // resolve one goto hop if present in graph
-    const s = graph.nodes?.[startId];
-    if (s && typeof s.type === 'string' && s.type.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
-      startId = s.to;
+    // 4) Now that engine is loaded, collect available nodes
+    const nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
+    if (!nodeKeys.length) {
+      throw new Error('Engine has no nodes after load (' + loadedVia + ').');
     }
-    // if startId still not in engine state, pick first engine node
-    if (Eng.state?.nodes && !Eng.state.nodes[startId]) {
-      startId = nodeKeys[0];
-    }
+
+    // 5) Choose a safe startId:
+    //    Prefer the raw v2 entry node (it definitely exists), otherwise first node in engine state.
+    let startId = entry.nodeId;
+    if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
 
     // 6) Start the engine
     startFn.call(Eng, startId);
 
-    // 7) Debug: log actual current node from the engine (method!)
-    const cur = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state?.nodes?.[Eng.state?.currentId];
-    console.log('[Amorvia] started at', startId, cur);
+    // 7) Debug: log actual current node via method()
+    const cur = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state.nodes[Eng.state.currentId];
+    console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
 
     // 8) Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
