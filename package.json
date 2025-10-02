@@ -13,7 +13,7 @@
     "choices:hint": "node tools/rehint-choices.v2.mjs",
     "choices:hint:write": "node tools/rehint-choices.v2.mjs --write --backup",
     "choices:apply-map": "node tools/apply-effects-map.v2.mjs",
-    "choices:apply-map:write": "node tools/apply-effects-map.v2.mjs --write --backup"
+    "choices:apply-map:write": "node tools/apply-effects-map.v2.mjs --write --backup",
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup"
   },
@@ -23,4 +23,3 @@
     "globby": "^14.0.2"
   }
 }
-
