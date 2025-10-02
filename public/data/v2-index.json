@@ -40,17 +40,19 @@
       "id": "dating-after-breakup-with-child-involved",
       "title": "Dating After Breakup (With Child Involved)",
       "tags": [
+        "co-parenting",
         "dating",
+        "boundaries",
         "communication",
-        "boundaries"
+        "child-wellbeing"
       ],
-      "difficulty": "normal",
+      "difficulty": "medium",
       "meters": {
         "trust": 50,
         "tension": 20,
         "childStress": 10
       },
-      "acts": 4,
+      "acts": 5,
       "path": "data/dating-after-breakup-with-child-involved.v2.json"
     },
     {
