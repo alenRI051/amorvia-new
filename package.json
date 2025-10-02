@@ -7,6 +7,8 @@
     "lint:schemas": "node validator.mjs",
     "lint:schemas:ci": "node validator.mjs --ci",
     "fix:schemas": "node tools/migrate-steps-to-nodes.v2.mjs && node tools/normalize-text-and-ids.mjs && node tools/ensure-min-choices.v2.mjs && node tools/one-shot-fix.mjs && node tools/add-missing-node-ids.mjs",
+    "choices:extract": "node tools/extract-effects-from-labels.v2.mjs",
+    "choices:extract:write": "node tools/extract-effects-from-labels.v2.mjs --write --backup",
     "choices:scan": "node tools/scan-choice-effects.v2.mjs",
     "choices:hint": "node tools/rehint-choices.v2.mjs",
     "choices:hint:write": "node tools/rehint-choices.v2.mjs --write --backup"
