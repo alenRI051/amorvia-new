@@ -12,6 +12,8 @@
   ],
   "startAct": "act1",
   "start": "a1n1",
+  "startNode": "a1n1",
+  "entryNode": "a1n1",
   "acts": [
     {
       "id": "act1",
