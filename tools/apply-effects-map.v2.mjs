@@ -1,4 +1,9 @@
 // tools/apply-effects-map.v2.mjs
+// Apply curated effects to specific choice nodes across v2 scenario files.
+// - Idempotent: won't overwrite existing structured effects.
+// - Use: `npm run choices:apply-map` (dry run)
+//        `npm run choices:apply-map:write` (persist + .bak)
+
 import { globby } from 'globby';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -8,11 +13,30 @@ const BACKUP = process.argv.includes('--backup');
 
 const DATA = 'public/data/*.v2.json';
 
-// --- EFFECTS MAP --------------------------------------------------
-// file -> nodeId -> [ { idx: 0-based choice index, effects:[{meter,delta}...] }, ... ]
+// ------------------------------------------------------------------
+// EFFECTS MAP
+// file -> nodeId -> [ { idx: <0-based choice index>, effects:[{meter,delta}...] }, ... ]
+//
+// NOTES:
+// • We only inject effects if a choice currently has NO structured meters/effects.
+// • Extend this map as you finalize more content.
+// ------------------------------------------------------------------
 const PATCHES = {
+  // --- Option B: meaningful deltas for the last outstanding warning ---
+  // co-parenting.v2.json – node a1c1, choice#1 (index 0)
+  // Intended: constructive, plan-forward option -> builds trust, reduces tension.
+  'co-parenting.v2.json': {
+    'a1c1': [
+      { idx: 0, effects: [
+        { meter: 'trust',   delta: 5 },
+        { meter: 'tension', delta: -3 }
+      ] }
+      // choice#2 was already handled by the neutral filler (tension:0) earlier
+    ]
+  },
+
+  // --- Previously suggested safe patches you can keep/adjust as needed ---
   'co-parenting-with-bipolar-partner.v2.json': {
-    // Node id inferred from your scan: a1_choice1
     'a1_choice1': [
       // 1) "Brief, factual summary; ask about medication schedule."
       { idx: 0, effects: [
@@ -29,7 +53,6 @@ const PATCHES = {
   },
 
   'example-co-parenting.v2.json': {
-    // Node id from your scan: n2
     'n2': [
       // 1) "Stay calm and validate"
       { idx: 0, effects: [
@@ -53,7 +76,6 @@ const PATCHES = {
   },
 
   'sample-scenario.v2.json': {
-    // Node id from your scan: act0_node_1
     'act0_node_1': [
       // 1) "Stay calm"
       { idx: 0, effects: [
@@ -67,11 +89,11 @@ const PATCHES = {
         { meter: 'childStress', delta: 3 }
       ]}
     ]
-  },
-
-  // --- Extend here as you author more decisions ---
+  }
 };
 
+// ------------------------------------------------------------------
+// Helpers
 // ------------------------------------------------------------------
 function* iterChoiceNodes(json) {
   const acts = Array.isArray(json?.acts) ? json.acts : [];
@@ -85,6 +107,17 @@ function* iterChoiceNodes(json) {
   }
 }
 
+function hasStructured(ch) {
+  if (!ch || typeof ch !== 'object') return false;
+  if (ch.meters && Object.keys(ch.meters).length) return true;
+  if (Array.isArray(ch.effects) && ch.effects.length) return true;
+  if ((ch.meter || ch.key) && (ch.delta ?? ch.amount ?? ch.value)) return true;
+  return false;
+}
+
+// ------------------------------------------------------------------
+// Main
+// ------------------------------------------------------------------
 const files = await globby(DATA);
 let filesPatched = 0;
 let mutations = 0;
@@ -102,6 +135,7 @@ for (const filepath of files) {
   }
 
   let changed = false;
+
   for (const node of iterChoiceNodes(json)) {
     const nodePlan = plan[node.id];
     if (!nodePlan) continue;
@@ -110,16 +144,12 @@ for (const filepath of files) {
       const ch = node.choices[patch.idx];
       if (!ch) continue;
 
-      const alreadyStructured =
-        (ch.meters && Object.keys(ch.meters).length) ||
-        (Array.isArray(ch.effects) && ch.effects.length) ||
-        ((ch.meter || ch.key) && (ch.delta ?? ch.amount ?? ch.value));
-      if (alreadyStructured) continue;
+      if (hasStructured(ch)) continue; // respect existing authored data
 
       ch.effects = patch.effects;
       mutations += 1;
       changed = true;
-      console.log(`• ${base} node=${node.id} choice#${patch.idx+1} → effects:`, patch.effects);
+      console.log(`• ${base} node=${node.id} choice#${patch.idx + 1} → effects:`, patch.effects);
     }
   }
 
