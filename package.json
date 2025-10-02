@@ -12,6 +12,9 @@
     "choices:scan": "node tools/scan-choice-effects.v2.mjs",
     "choices:hint": "node tools/rehint-choices.v2.mjs",
     "choices:hint:write": "node tools/rehint-choices.v2.mjs --write --backup"
+    "choices:apply-map": "node tools/apply-effects-map.v2.mjs",
+    "choices:apply-map:write": "node tools/apply-effects-map.v2.mjs --write --backup"
+   } 
   },
   "dependencies": {
     "ajv": "^8.17.1",
