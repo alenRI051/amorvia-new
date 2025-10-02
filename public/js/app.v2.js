@@ -1,10 +1,10 @@
-// v2 loader wired to ScenarioEngine (module-first, global fallback)
-// ---------------------------------------------------------------
-// - Resolves engine from import OR window.ScenarioEngine (no race/poll)
-// - Derives a safe entry from v2 (act1 → start → resolve one goto)
+// v2 loader wired to ScenarioEngine (supports loadScenario OR LoadScenario + start)
+// -------------------------------------------------------------------------------
+// - Waits until engine exposes { loadScenario|LoadScenario, start }
+// - Derives a safe entry from v2 (act1 → start → resolve one goto hop)
 // - Converts to graph if needed via v2ToGraph
 // - Starts on a renderable node
-// - Works with <select id="scenarioPicker"> and Restart button
+// - Works with <select id="scenarioPicker"> and the Restart button
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -16,28 +16,33 @@ if (window.__amorviaV2Booted) {
   window.__amorviaV2Booted = true;
 }
 
-/* ----------------------- resolve engine once ----------------------- */
-const Engine =
-  // prefer explicit export if present
-  (ImportedEngine && (ImportedEngine.ScenarioEngine || ImportedEngine.default)) ||
-  // else the whole module might be the engine
-  ImportedEngine ||
-  // as last resort use the global (drop-in)
-  window.ScenarioEngine;
-
-if (!Engine) {
-  console.error('[Amorvia] ScenarioEngine module/global not found.');
+/* ----------------------- resolve engine ----------------------- */
+function resolveEngineObject() {
+  // Prefer explicit export if present, else module, else global
+  return (
+    ImportedEngine?.ScenarioEngine ||
+    ImportedEngine?.default ||
+    ImportedEngine ||
+    window.ScenarioEngine
+  );
 }
 
-// verify method names (your build uses LoadScenario + start)
-const hasLoadScenario = typeof Engine?.LoadScenario === 'function';
-const hasStart = typeof Engine?.start === 'function';
-console.log('[Amorvia] Engine resolved:', {
-  via: Engine === window.ScenarioEngine ? 'global' : 'module',
-  hasLoadScenario,
-  hasStart,
-  keys: Engine ? Object.keys(Engine) : []
-});
+// Poll until engine exposes the methods we need
+function waitForEngine() {
+  return new Promise((resolve) => {
+    const check = () => {
+      const Eng = resolveEngineObject();
+      const loadFn = Eng?.loadScenario || Eng?.LoadScenario;
+      const startFn = Eng?.start;
+      if (Eng && typeof loadFn === 'function' && typeof startFn === 'function') {
+        resolve({ Eng, loadFn, startFn });
+      } else {
+        setTimeout(check, 50);
+      }
+    };
+    check();
+  });
+}
 
 /* ----------------------- fetch helpers ----------------------- */
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
@@ -118,33 +123,26 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
-    if (!hasLoadScenario || !hasStart) {
-      throw new Error('ScenarioEngine API not ready (need LoadScenario + start). Keys: ' + (Engine ? Object.keys(Engine) : []));
-    }
+    const { Eng, loadFn, startFn } = await waitForEngine();
 
     const raw = await getJSON(`/data/${id}.v2.json`);
-
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
     const graph = toGraphIfNeeded(raw);
 
-    // Load (your engine expects graph shape here)
-    Engine.LoadScenario(graph);
+    // Load scenario (works with either loadScenario or LoadScenario)
+    loadFn.call(Eng, graph);
 
-    // Choose a safe startId (resolve one goto hop)
-    let startId = graph.startId;
-    if (!startId || !graph.nodes?.[startId]) {
-      startId = entry.nodeId;
-    } else {
-      const s = graph.nodes[startId];
-      if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
-        startId = s.to;
-      }
+    // Choose a safe startId and resolve a single goto hop
+    let startId = graph.startId || entry.nodeId;
+    const s = graph.nodes?.[startId];
+    if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
+      startId = s.to;
     }
 
     // Start
-    Engine.start(startId);
+    startFn.call(Eng, startId);
     console.log('[Amorvia] started at', startId, graph.nodes?.[startId]);
 
     // Reflect in UI
