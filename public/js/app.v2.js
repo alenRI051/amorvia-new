@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------------
 // - Waits until engine exposes { loadScenario|LoadScenario, start }
 // - Loads raw v2 first, falls back to graph if needed
-// - Hydrates engine.state.nodes from ALL acts if the engine doesn’t
+// - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes)
 // - Starts on a safe node (resolves one goto hop)
 // - Works with <select id="scenarioPicker"> and the Restart button
 
@@ -61,42 +61,38 @@ async function loadIndex() {
 
 /* ----------------------- nodes extraction ----------------------- */
 // Build a { id: node } map from whatever shape we get.
-// Scans ALL acts in raw v2 and also supports graph nodes (object OR array).
+// Supports: graph.nodes (array or object), raw.acts[*].nodes, raw.nodes.
 function extractNodesMap({ raw, graph }) {
-  // Case A: graph.nodes is an object
-  if (graph && graph.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)) {
-    return graph.nodes;
+  let map = {};
+
+  // Case A: graph.nodes exists
+  if (graph?.nodes) {
+    if (Array.isArray(graph.nodes)) {
+      for (const n of graph.nodes) if (n?.id) map[n.id] = n;
+    } else if (typeof graph.nodes === 'object') {
+      map = { ...graph.nodes };
+    }
   }
 
-  // Case B: graph.nodes is an array
-  if (graph && Array.isArray(graph.nodes)) {
-    const map = {};
-    for (const n of graph.nodes) if (n?.id) map[n.id] = n;
-    if (Object.keys(map).length) return map;
-  }
-
-  // Case C: raw v2 -> collect ALL acts' nodes (not just the first act)
-  if (Array.isArray(raw?.acts)) {
-    const map = {};
+  // Case B: raw.acts[*].nodes (merge across all acts)
+  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       if (Array.isArray(act?.nodes)) {
         for (const n of act.nodes) if (n?.id) map[n.id] = n;
       }
     }
-    if (Object.keys(map).length) return map;
   }
 
-  // Case D: raw.nodes as object or array
-  if (raw?.nodes) {
+  // Case C: raw.nodes (object or array)
+  if ((!map || !Object.keys(map).length) && raw?.nodes) {
     if (Array.isArray(raw.nodes)) {
-      const map = {};
       for (const n of raw.nodes) if (n?.id) map[n.id] = n;
-      if (Object.keys(map).length) return map;
+    } else if (typeof raw.nodes === 'object') {
+      map = { ...raw.nodes };
     }
-    if (typeof raw.nodes === 'object') return raw.nodes;
   }
 
-  return {};
+  return map;
 }
 
 /* ----------------------- UI wiring ----------------------- */
@@ -141,7 +137,7 @@ function renderList(list) {
 
 /* ----------------------- format helpers ----------------------- */
 function toGraphIfNeeded(data) {
-  const looksGraph = data && typeof data === 'object' && data.startId && data.nodes && typeof data.nodes === 'object';
+  const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
   return looksGraph ? data : v2ToGraph(data);
 }
 
@@ -183,7 +179,7 @@ async function startScenario(id) {
     }
     if (!graph) graph = toGraphIfNeeded(raw);
 
-    // Ensure state and nodes map
+    // Ensure state and nodes map (hydrate ourselves if engine didn't)
     if (!Eng.state) Eng.state = {};
     let nodesMap = Eng.state.nodes;
     if (!nodesMap || !Object.keys(nodesMap).length) {
@@ -206,9 +202,8 @@ async function startScenario(id) {
     const nodeKeys = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
     if (!Eng.state.nodes[startId]) {
-      // try graph.startId
+      // try graph.startId, then resolve one goto hop, else first key
       startId = graph.startId || startId || nodeKeys[0];
-      // resolve one goto hop against our nodes map
       let s = Eng.state.nodes[startId];
       if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
         startId = s.to;
@@ -303,3 +298,4 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
+
