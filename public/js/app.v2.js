@@ -123,45 +123,99 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
-    // 1) Resolve engine (supports loadScenario or LoadScenario)
     const { Eng, loadFn, startFn } = await waitForEngine();
-
-    // 2) Fetch v2 JSON and compute a robust entry
     const raw = await getJSON(`/data/${id}.v2.json`);
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
-    // 3) Try loading RAW v2 FIRST (your engine expects this)
+    // Try RAW first; if engine rejects, try GRAPH.
     let loadedVia = 'v2';
+    let graph = null;
     try {
       loadFn.call(Eng, raw);
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
-      // fallback: convert to graph and try again
-      const graphAlt = toGraphIfNeeded(raw);
-      loadFn.call(Eng, graphAlt);
+      graph = toGraphIfNeeded(raw);
+      loadFn.call(Eng, graph);
       loadedVia = 'graph';
     }
+    if (!graph) graph = toGraphIfNeeded(raw);
 
-    // 4) Now that engine is loaded, collect available nodes
-    const nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
-    if (!nodeKeys.length) {
-      throw new Error('Engine has no nodes after load (' + loadedVia + ').');
+    // --- Force-hydrate engine.state.nodes if engine didn't populate it ---
+    if (!Eng.state) Eng.state = {};
+    const hasNodes =
+      Eng.state.nodes && Object.keys(Eng.state.nodes).length > 0;
+
+    if (!hasNodes) {
+      // Prefer graph.nodes (object map). If absent, build a map from first act.
+      let nodesMap = null;
+      if (graph?.nodes && typeof graph.nodes === 'object') {
+        nodesMap = graph.nodes;
+      } else if (Array.isArray(raw?.acts?.[0]?.nodes)) {
+        nodesMap = {};
+        for (const n of raw.acts[0].nodes) nodesMap[n.id] = n;
+      }
+      if (!nodesMap || !Object.keys(nodesMap).length) {
+        throw new Error('Unable to build nodes map for engine.');
+      }
+      Eng.state.nodes = nodesMap;
     }
 
-    // 5) Choose a safe startId:
-    //    Prefer the raw v2 entry node (it definitely exists), otherwise first node in engine state.
+    // Decide a safe startId that exists in state.nodes
     let startId = entry.nodeId;
-    if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
+    if (!Eng.state.nodes[startId]) {
+      // fall back to graph.startId (resolve one goto hop)
+      startId = graph.startId || startId;
+      let s = Eng.state.nodes[startId];
+      if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
+        startId = s.to;
+      }
+      if (!Eng.state.nodes[startId]) {
+        // final fallback: first key in nodes
+        startId = Object.keys(Eng.state.nodes)[0];
+      }
+    }
 
-    // 6) Start the engine
+    // Make sure engine points to the chosen node, then start
+    Eng.state.currentId = startId;
     startFn.call(Eng, startId);
 
-    // 7) Debug: log actual current node via method()
-    const cur = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state.nodes[Eng.state.currentId];
+    // Debug: show actual node from engine’s view
+    const cur = (typeof Eng.currentNode === 'function')
+      ? Eng.currentNode()
+      : Eng.state.nodes[Eng.state.currentId];
     console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
 
-    // 8) Reflect selection in UI
+    // --- Minimal render fallback if engine didn’t draw anything ---
+    if (!cur || (!cur.text && cur.type?.toLowerCase() !== 'choice')) {
+      const dialog = document.getElementById('dialog');
+      const choices = document.getElementById('choices');
+      if (dialog) dialog.textContent = cur?.text || '(…)';
+      if (choices) {
+        choices.innerHTML = '';
+        if (Array.isArray(cur?.choices)) {
+          cur.choices.forEach(ch => {
+            const b = document.createElement('button');
+            b.className = 'button';
+            b.textContent = ch.label || ch.id || '…';
+            b.addEventListener('click', () => {
+              const to = ch.to || ch.goto || ch.next;
+              if (to && Eng.state.nodes[to]) {
+                Eng.state.currentId = to;
+                if (typeof Eng.goto === 'function') Eng.goto(to);
+                const nn = (typeof Eng.currentNode === 'function')
+                  ? Eng.currentNode()
+                  : Eng.state.nodes[to];
+                if (dialog) dialog.textContent = nn?.text || '';
+              }
+            });
+            choices.appendChild(b);
+          });
+        }
+      }
+    }
+
+    // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
       const on = el.dataset.id === id;
       el.classList.toggle('is-active', on);
