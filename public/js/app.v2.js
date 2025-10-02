@@ -123,29 +123,49 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
+    // 1) Resolve engine (supports loadScenario or LoadScenario)
     const { Eng, loadFn, startFn } = await waitForEngine();
 
+    // 2) Fetch v2 JSON and compute a robust entry
     const raw = await getJSON(`/data/${id}.v2.json`);
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
-    const graph = toGraphIfNeeded(raw);
-
-    // Load scenario (works with either loadScenario or LoadScenario)
+    // 3) Try loading GRAPH first
+    let graph = toGraphIfNeeded(raw);
     loadFn.call(Eng, graph);
 
-    // Choose a safe startId and resolve a single goto hop
-    let startId = graph.startId || entry.nodeId;
-    const s = graph.nodes?.[startId];
-    if (s?.type?.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
-      startId = s.to;
+    // 4) If engine has no nodes after load, fall back to RAW v2
+    let nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
+    if (!nodeKeys || nodeKeys.length === 0) {
+      // fallback: load raw v2
+      loadFn.call(Eng, raw);
+      // after fallback, rebuild nodeKeys
+      nodeKeys = (Eng.state && Eng.state.nodes) ? Object.keys(Eng.state.nodes) : [];
+      // ensure we still have a graph object for startId derivation
+      graph = toGraphIfNeeded(raw);
     }
 
-    // Start
-    startFn.call(Eng, startId);
-    console.log('[Amorvia] started at', startId, Engine.currentNode ? Engine.currentNode() : null);
+    // 5) Choose a safe startId (prefer graph.startId, else entry.nodeId, else first available)
+    let startId = graph.startId || entry.nodeId || nodeKeys[0];
+    // resolve one goto hop if present in graph
+    const s = graph.nodes?.[startId];
+    if (s && typeof s.type === 'string' && s.type.toLowerCase() === 'goto' && s.to && graph.nodes?.[s.to]) {
+      startId = s.to;
+    }
+    // if startId still not in engine state, pick first engine node
+    if (Eng.state?.nodes && !Eng.state.nodes[startId]) {
+      startId = nodeKeys[0];
+    }
 
-    // Reflect in UI
+    // 6) Start the engine
+    startFn.call(Eng, startId);
+
+    // 7) Debug: log actual current node from the engine (method!)
+    const cur = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state?.nodes?.[Eng.state?.currentId];
+    console.log('[Amorvia] started at', startId, cur);
+
+    // 8) Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
       const on = el.dataset.id === id;
       el.classList.toggle('is-active', on);
@@ -154,7 +174,7 @@ async function startScenario(id) {
     const picker = document.getElementById('scenarioPicker');
     if (picker) picker.value = id;
 
-    rememberLast(id);
+    try { localStorage.setItem('amorvia:lastScenario', id); } catch {}
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
     const dialog = document.getElementById('dialog');
