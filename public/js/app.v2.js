@@ -58,6 +58,36 @@ async function loadIndex() {
   const idx = await getJSON('/data/v2-index.json');
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
+// Build a { id: node } map from whatever shape we get.
+function extractNodesMap({ raw, graph }) {
+  // Case A: graph.nodes is an object
+  if (graph && graph.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)) {
+    return graph.nodes;
+  }
+  // Case B: graph.nodes is an array
+  if (graph && Array.isArray(graph.nodes)) {
+    const map = {};
+    for (const n of graph.nodes) if (n?.id) map[n.id] = n;
+    if (Object.keys(map).length) return map;
+  }
+  // Case C: raw v2 -> acts[0].nodes is an array
+  if (raw?.acts?.length && Array.isArray(raw.acts[0].nodes)) {
+    const map = {};
+    for (const n of raw.acts[0].nodes) if (n?.id) map[n.id] = n;
+    if (Object.keys(map).length) return map;
+  }
+  // Case D: raw.nodes as object or array
+  if (raw?.nodes) {
+    if (Array.isArray(raw.nodes)) {
+      const map = {};
+      for (const n of raw.nodes) if (n?.id) map[n.id] = n;
+      if (Object.keys(map).length) return map;
+    }
+    if (typeof raw.nodes === 'object') return raw.nodes;
+  }
+  // Give the caller an empty map instead of throwing; we’ll log and bail gracefully.
+  return {};
+}
 
 /* ----------------------- UI wiring ----------------------- */
 function renderList(list) {
@@ -128,7 +158,7 @@ async function startScenario(id) {
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
-    // Try RAW first; if engine rejects, try GRAPH.
+    // Try RAW first; fallback to GRAPH if engine rejects it.
     let loadedVia = 'v2';
     let graph = null;
     try {
@@ -141,52 +171,54 @@ async function startScenario(id) {
     }
     if (!graph) graph = toGraphIfNeeded(raw);
 
-    // --- Force-hydrate engine.state.nodes if engine didn't populate it ---
+    // Ensure Eng.state exists
     if (!Eng.state) Eng.state = {};
-    const hasNodes =
-      Eng.state.nodes && Object.keys(Eng.state.nodes).length > 0;
 
-    if (!hasNodes) {
-      // Prefer graph.nodes (object map). If absent, build a map from first act.
-      let nodesMap = null;
-      if (graph?.nodes && typeof graph.nodes === 'object') {
-        nodesMap = graph.nodes;
-      } else if (Array.isArray(raw?.acts?.[0]?.nodes)) {
-        nodesMap = {};
-        for (const n of raw.acts[0].nodes) nodesMap[n.id] = n;
+    // --- FORCE-HYDRATE nodes map from any supported shape ---
+    let nodesMap = Eng.state.nodes;
+    if (!nodesMap || !Object.keys(nodesMap).length) {
+      nodesMap = extractNodesMap({ raw, graph });
+      if (Object.keys(nodesMap).length) {
+        Eng.state.nodes = nodesMap;
+      } else {
+        console.error('[Amorvia] could not build nodes map. Shapes:', {
+          hasGraphNodesObj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
+          hasGraphNodesArr: Array.isArray(graph?.nodes),
+          hasRawAct0NodesArr: Array.isArray(raw?.acts?.[0]?.nodes),
+          hasRawNodesObj: !!(raw?.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)),
+          hasRawNodesArr: Array.isArray(raw?.nodes)
+        });
+        throw new Error('Engine has no nodes after load; unable to extract nodes map.');
       }
-      if (!nodesMap || !Object.keys(nodesMap).length) {
-        throw new Error('Unable to build nodes map for engine.');
-      }
-      Eng.state.nodes = nodesMap;
     }
 
-    // Decide a safe startId that exists in state.nodes
+    // --- Pick a safe start id that actually exists in nodes map ---
+    const nodeKeys = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
+
+    // if entry not present, try graph.startId, resolve goto once
     if (!Eng.state.nodes[startId]) {
-      // fall back to graph.startId (resolve one goto hop)
-      startId = graph.startId || startId;
-      let s = Eng.state.nodes[startId];
+      startId = graph.startId || startId || nodeKeys[0];
+      const s = Eng.state.nodes[startId];
       if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
         startId = s.to;
       }
-      if (!Eng.state.nodes[startId]) {
-        // final fallback: first key in nodes
-        startId = Object.keys(Eng.state.nodes)[0];
-      }
+      if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
     }
 
-    // Make sure engine points to the chosen node, then start
+    // Set engine pointer then start
     Eng.state.currentId = startId;
     startFn.call(Eng, startId);
 
-    // Debug: show actual node from engine’s view
+    // Debug: log the actual active node via method()
     const cur = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
       : Eng.state.nodes[Eng.state.currentId];
-    console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
 
-    // --- Minimal render fallback if engine didn’t draw anything ---
+    console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
+    console.log('[Amorvia] node keys:', nodeKeys.slice(0, 10), nodeKeys.length > 10 ? `(+${nodeKeys.length-10} more)` : '');
+
+    // --- Minimal fallback render if engine didn’t draw ---
     if (!cur || (!cur.text && cur.type?.toLowerCase() !== 'choice')) {
       const dialog = document.getElementById('dialog');
       const choices = document.getElementById('choices');
