@@ -11,6 +11,7 @@
     { "id": "childStress", "label": "Child Stress", "min": -10, "max": 10, "start": 0 }
   ],
   "startAct": "act1",
+  "start": "a1n1",
   "acts": [
     {
       "id": "act1",
