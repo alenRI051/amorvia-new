@@ -12,5 +12,12 @@
     "ajv": "^8.17.1",
     "globby": "^14.0.2",
     "ajv-formats": "^3.0.1"
+  },
+  {
+  "scripts": {
+    "choices:scan": "node tools/scan-choice-effects.v2.mjs",
+    "choices:hint": "node tools/rehint-choices.v2.mjs",
+    "choices:hint:write": "node tools/rehint-choices.v2.mjs --write --backup"
   }
 }
+
