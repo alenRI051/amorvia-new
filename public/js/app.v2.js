@@ -1,9 +1,9 @@
 // v2 loader wired to ScenarioEngine (supports loadScenario OR LoadScenario + start)
 // -------------------------------------------------------------------------------
 // - Waits until engine exposes { loadScenario|LoadScenario, start }
-// - Derives a safe entry from v2 (act1 → start → resolve one goto hop)
-// - Converts to graph if needed via v2ToGraph
-// - Starts on a renderable node
+// - Loads raw v2 first, falls back to graph if needed
+// - Hydrates engine.state.nodes from ALL acts if the engine doesn’t
+// - Starts on a safe node (resolves one goto hop)
 // - Works with <select id="scenarioPicker"> and the Restart button
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
@@ -58,24 +58,34 @@ async function loadIndex() {
   const idx = await getJSON('/data/v2-index.json');
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
+
+/* ----------------------- nodes extraction ----------------------- */
 // Build a { id: node } map from whatever shape we get.
+// Scans ALL acts in raw v2 and also supports graph nodes (object OR array).
 function extractNodesMap({ raw, graph }) {
   // Case A: graph.nodes is an object
   if (graph && graph.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)) {
     return graph.nodes;
   }
+
   // Case B: graph.nodes is an array
   if (graph && Array.isArray(graph.nodes)) {
     const map = {};
     for (const n of graph.nodes) if (n?.id) map[n.id] = n;
     if (Object.keys(map).length) return map;
   }
-  // Case C: raw v2 -> acts[0].nodes is an array
-  if (raw?.acts?.length && Array.isArray(raw.acts[0].nodes)) {
+
+  // Case C: raw v2 -> collect ALL acts' nodes (not just the first act)
+  if (Array.isArray(raw?.acts)) {
     const map = {};
-    for (const n of raw.acts[0].nodes) if (n?.id) map[n.id] = n;
+    for (const act of raw.acts) {
+      if (Array.isArray(act?.nodes)) {
+        for (const n of act.nodes) if (n?.id) map[n.id] = n;
+      }
+    }
     if (Object.keys(map).length) return map;
   }
+
   // Case D: raw.nodes as object or array
   if (raw?.nodes) {
     if (Array.isArray(raw.nodes)) {
@@ -85,7 +95,7 @@ function extractNodesMap({ raw, graph }) {
     }
     if (typeof raw.nodes === 'object') return raw.nodes;
   }
-  // Give the caller an empty map instead of throwing; we’ll log and bail gracefully.
+
   return {};
 }
 
@@ -154,11 +164,13 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
+
+    // Fetch + compute robust entry
     const raw = await getJSON(`/data/${id}.v2.json`);
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
-    // Try RAW first; fallback to GRAPH if engine rejects it.
+    // Try raw v2 first; fallback to graph if rejected
     let loadedVia = 'v2';
     let graph = null;
     try {
@@ -171,10 +183,8 @@ async function startScenario(id) {
     }
     if (!graph) graph = toGraphIfNeeded(raw);
 
-    // Ensure Eng.state exists
+    // Ensure state and nodes map
     if (!Eng.state) Eng.state = {};
-
-    // --- FORCE-HYDRATE nodes map from any supported shape ---
     let nodesMap = Eng.state.nodes;
     if (!nodesMap || !Object.keys(nodesMap).length) {
       nodesMap = extractNodesMap({ raw, graph });
@@ -182,24 +192,24 @@ async function startScenario(id) {
         Eng.state.nodes = nodesMap;
       } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
-          hasGraphNodesObj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
-          hasGraphNodesArr: Array.isArray(graph?.nodes),
-          hasRawAct0NodesArr: Array.isArray(raw?.acts?.[0]?.nodes),
-          hasRawNodesObj: !!(raw?.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)),
-          hasRawNodesArr: Array.isArray(raw?.nodes)
+          graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
+          graph_nodes_arr: Array.isArray(graph?.nodes),
+          raw_acts: Array.isArray(raw?.acts) ? raw.acts.length : 0,
+          raw_nodes_obj: !!(raw?.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)),
+          raw_nodes_arr: Array.isArray(raw?.nodes)
         });
         throw new Error('Engine has no nodes after load; unable to extract nodes map.');
       }
     }
 
-    // --- Pick a safe start id that actually exists in nodes map ---
+    // Pick a start id that DEFINITELY exists in nodes map
     const nodeKeys = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
-
-    // if entry not present, try graph.startId, resolve goto once
     if (!Eng.state.nodes[startId]) {
+      // try graph.startId
       startId = graph.startId || startId || nodeKeys[0];
-      const s = Eng.state.nodes[startId];
+      // resolve one goto hop against our nodes map
+      let s = Eng.state.nodes[startId];
       if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
         startId = s.to;
       }
@@ -210,15 +220,15 @@ async function startScenario(id) {
     Eng.state.currentId = startId;
     startFn.call(Eng, startId);
 
-    // Debug: log the actual active node via method()
+    // Debug: log actual node
     const cur = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
       : Eng.state.nodes[Eng.state.currentId];
 
     console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
-    console.log('[Amorvia] node keys:', nodeKeys.slice(0, 10), nodeKeys.length > 10 ? `(+${nodeKeys.length-10} more)` : '');
+    console.log('[Amorvia] node keys (first 10):', nodeKeys.slice(0, 10));
 
-    // --- Minimal fallback render if engine didn’t draw ---
+    // Fallback render if engine didn’t draw
     if (!cur || (!cur.text && cur.type?.toLowerCase() !== 'choice')) {
       const dialog = document.getElementById('dialog');
       const choices = document.getElementById('choices');
