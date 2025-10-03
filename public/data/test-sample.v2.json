@@ -11,7 +11,8 @@
     { "id": "childStress", "label": "Child Stress", "min": -10, "max": 10, "start": 0 }
   ],
   "startAct": "act1",
-  "start": "a1_line1", "entry": { "actId": "act1", "nodeId": "a1_line1" }
+  "start": "a1_line1",
+  "entry": { "actId": "act1", "nodeId": "a1_line1" },
   "startNode": "a1_line1",
   "entryNode": "a1_line1",
   "acts": [
