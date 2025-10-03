@@ -2,7 +2,7 @@
   "id": "test-sample",
   "version": "2.0",
   "title": "Test Sample Scenario",
-  "description": "Minimal test to confirm array-based steps work with the engine.",
+  "description": "Minimal test matching engine expectations (steps as object map).",
   "tags": ["test", "sample"],
   "difficulty": "easy",
   "meters": [
@@ -12,15 +12,17 @@
   ],
   "startAct": "act1",
   "start": "a1_line1",
+  "startNode": "a1_line1",
+  "entryNode": "a1_line1",
   "acts": [
     {
       "id": "act1",
       "title": "Minimal Act",
       "start": "a1_line1",
-      "steps": [
-        {
+      "steps": {
+        "a1_line1": {
           "id": "a1_line1",
-          "text": "This is a minimal test node. If you see this, the engine supports array-based steps.",
+          "text": "If you see this, object-map steps + explicit entry works.",
           "choices": [
             {
               "id": "A",
@@ -30,19 +32,14 @@
             }
           ]
         },
-        {
+        "a1_end": {
           "id": "a1_end",
           "text": "End of minimal test.",
           "choices": [
-            {
-              "id": "E",
-              "label": "Finish",
-              "effects": [],
-              "next": null
-            }
+            { "id": "E", "label": "Finish", "effects": [], "next": null }
           ]
         }
-      ]
+      }
     }
   ]
 }
