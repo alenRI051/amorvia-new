@@ -3,6 +3,15 @@
   "generatedAt": "2025-10-01T00:00:00Z",
   "scenarios": [
     {
+  "id": "test-sample",
+  "title": "Test Sample Scenario",
+  "tags": ["test", "sample"],
+  "difficulty": "easy",
+  "meters": { "trust": 50, "tension": 20, "childStress": 10 },
+  "acts": 1,
+  "path": "data/test-sample.v2.json"
+    },
+    {
       "id": "co-parenting-with-bipolar-partner",
       "title": "Co-Parenting with Bipolar Partner",
       "tags": [
