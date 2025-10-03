@@ -132,5 +132,38 @@
   <script src="/js/patches/derive-entry-robust.patch.js" defer></script>
   <script src="/js/patches/fetch-normalize-entry.patch.js" defer></script>
   <script src="/js/patches/fetch-normalize-entry.v2.patch.js" defer></script>
+
+    <!-- Preflight Patches (MUST run before bootstrap/app) -->
+  <script src="/js/patches/fetch-normalize-entry.v2.patch.js"></script>
+  <script src="/js/patches/derive-entry-robust.patch.js"></script>
+
+  <!-- Core -->
+  <script type="module" src="/js/bootstrap.js" defer></script>
+  <script src="/js/sw-register.js" defer></script>
+
+  <!-- Addons -->
+  <script src="/js/addons/reset-ui.js"></script>
+  <script src="/js/addons/shortcuts-a11y.js"></script>
+  <script src="/js/addons/ui-fallbacks.js"></script>
+
+  <!-- Telemetry -->
+  <script>window.AMORVIA_TRACK_ENDPOINT = '/api/track';</script>
+  <script src="/js/track-client.v9.5.1.js" defer></script>
+  <script src="/js/telemetry.v9.5.3.js" defer></script>
+
+  <!-- HUD + Stage Fit -->
+  <script src="/js/amorvia-hud.v9.7.js" defer></script>
+  <script src="/js/ui-scale.auto.js" defer></script>
+
+  <!-- Helpers -->
+  <script src="/js/dom-fixes.v9.4.js"></script>
+  <script src="/js/ui-wiring.v9.4.js" defer></script>
+
+  <!-- Other Patches (safe to load after core) -->
+  <script src="/js/remove-scenario-tabs.v2.js" defer></script>
+  <script src="/js/compact.ui.toggle.v1.js" defer></script>
+  <script src="/js/dev-tools.qa.v1.js" defer></script>
+  <script src="/js/patches/scenario-entry-fix.js" defer></script>
+  <script src="/js/patches/start-fallback.patch.js" defer></script>
 </body>
 </html>
