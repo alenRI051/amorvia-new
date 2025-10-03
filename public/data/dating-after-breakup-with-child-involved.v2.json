@@ -11,548 +11,134 @@
     { "id": "childStress", "label": "Child Stress", "min": -10, "max": 10, "start": 0 }
   ],
   "startAct": "act1",
-  "start": "a1n1",
-  "startNode": "a1n1",
-  "entryNode": "a1n1",
+  "start": "a1_line1",
+  "startNode": "a1_line1",
+  "entryNode": "a1_line1",
   "acts": [
     {
       "id": "act1",
       "title": "The First Conversation",
-      "start": "a1n1",
-      "nodes": {
-        "a1n1": {
+      "start": "a1_line1",
+      "steps": [
+        {
+          "id": "a1_line1",
           "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.",
           "choices": [
-            {
-              "id": "A",
-              "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co‑parenting stable.\" [trust+1|tension+1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": 1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a1n2A"
-            },
-            {
-              "id": "B",
-              "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\" [trust-1|tension+0]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a1n2B"
-            },
-            {
-              "id": "C",
-              "label": "Deflect: change the subject to logistics. [trust-1|tension+1]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "tension", "delta": 1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a1n2C"
-            }
+            { "id": "A", "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co‑parenting stable.\" [trust+1|tension+1]", "effects": [{"meter":"trust","delta":1},{"meter":"tension","delta":1},{"meter":"childStress","delta":0}], "next": "a1_line2A" },
+            { "id": "B", "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\" [trust-1|tension+0]", "effects": [{"meter":"trust","delta":-1},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}], "next": "a1_line2B" },
+            { "id": "C", "label": "Deflect: change the subject to logistics. [trust-1|tension+1]", "effects": [{"meter":"trust","delta":-1},{"meter":"tension","delta":1},{"meter":"childStress","delta":0}], "next": "a1_line2C" }
           ]
         },
-        "a1n2A": {
+        {
+          "id": "a1_line2A",
           "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
           "choices": [
-            {
-              "id": "A1",
-              "label": "Affirm shared priority: \"Our child's well‑being is the priority. Let's agree on pacing and communication.\" [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            },
-            {
-              "id": "A2",
-              "label": "Brush it off: \"It's my life; I know what I'm doing.\" [trust-2|tension+2]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "tension", "delta": 2 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            }
+            { "id": "A1", "label": "Affirm shared priority: \"Our child's well‑being is the priority. Let's agree on pacing and communication.\" [trust+1|tension-1]", "effects": [{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}], "next": "a2_line1" },
+            { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\" [trust-2|tension+2]", "effects": [{"meter":"trust","delta":-2},{"meter":"tension","delta":2},{"meter":"childStress","delta":0}], "next": "a2_line1" }
           ]
         },
-        "a1n2B": {
+        {
+          "id": "a1_line2B",
           "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
           "choices": [
-            {
-              "id": "B1",
-              "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\" [trust+0|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            },
-            {
-              "id": "B2",
-              "label": "Stay guarded: \"I don't owe details about my private life.\" [trust-2|tension+2]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "tension", "delta": 2 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            }
+            { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\" [trust+0|tension-1]", "effects": [{"meter":"trust","delta":0},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}], "next": "a2_line1" },
+            { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\" [trust-2|tension+2]", "effects": [{"meter":"trust","delta":-2},{"meter":"tension","delta":2},{"meter":"childStress","delta":0}], "next": "a2_line1" }
           ]
         },
-        "a1n2C": {
+        {
+          "id": "a1_line2C",
           "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
           "choices": [
-            {
-              "id": "C1",
-              "label": "Follow up later with a message clarifying intent. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            },
-            {
-              "id": "C2",
-              "label": "Leave it be. [trust-1|tension+0]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a2n1"
-            }
+            { "id": "C1", "label": "Follow up later with a message clarifying intent. [trust+1|tension-1]", "effects": [{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}], "next": "a2_line1" },
+            { "id": "C2", "label": "Leave it be. [trust-1|tension+0]", "effects": [{"meter":"trust","delta":-1},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}], "next": "a2_line1" }
           ]
         }
-      }
+      ]
     },
-
     {
       "id": "act2",
       "title": "Introducing to the Child",
-      "start": "a2n1",
-      "nodes": {
-        "a2n1": {
-          "text": "Your child asks about \"mommy's/daddy's friend\" after seeing a photo on your phone.",
-          "choices": [
-            {
-              "id": "A",
-              "label": "Age‑appropriate honesty and reassurance. [trust+1|childStress-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "childStress", "delta": -1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a2n2A"
-            },
-            {
-              "id": "B",
-              "label": "Wait until the relationship is serious. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "childStress", "delta": 0 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a2n2B"
-            },
-            {
-              "id": "C",
-              "label": "Casual intro without prep. [trust-1|childStress+2]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "childStress", "delta": 2 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a2n2C"
-            }
-          ]
-        },
-        "a2n2A": {
-          "text": "You tell your child: \"This is my friend. Grown‑ups sometimes meet new people, but you are always my number one.\" The child nods and returns to play.",
-          "choices": [
-            {
-              "id": "A1",
-              "label": "Share your plan with your ex to keep consistency. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n1"
-            },
-            {
-              "id": "A2",
-              "label": "Keep it between you and the child for now. [trust-1|tension+0]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n1"
-            }
-          ]
-        },
-        "a2n2B": {
-          "text": "You decide not to introduce anyone yet. You note to revisit if the relationship deepens.",
-          "choices": [
-            {
-              "id": "B1",
-              "label": "Tell your ex about your approach to avoid surprises. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n1"
-            },
-            {
-              "id": "B2",
-              "label": "Say nothing. [trust-1|tension+0]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n1"
-            }
-          ]
-        },
-        "a2n2C": {
-          "text": "You introduce your partner spontaneously. Your child becomes quiet and clingy for the rest of the day.",
-          "choices": [
-            {
-              "id": "C1",
-              "label": "Repair: slow the pace and offer reassurance. [trust+1|childStress-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "childStress", "delta": -1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a3n1"
-            },
-            {
-              "id": "C2",
-              "label": "Minimize: \"You'll get used to it.\" [trust-1|childStress+1]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "childStress", "delta": 1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a3n1"
-            }
-          ]
-        }
-      }
+      "start": "a2_line1",
+      "steps": [
+        {"id":"a2_line1","text":"Your child asks about \"mommy's/daddy's friend\" after seeing a photo on your phone.","choices":[
+          {"id":"A","label":"Age‑appropriate honesty and reassurance. [trust+1|childStress-1]","effects":[{"meter":"trust","delta":1},{"meter":"childStress","delta":-1},{"meter":"tension","delta":0}],"next":"a2_line2A"},
+          {"id":"B","label":"Wait until the relationship is serious. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"childStress","delta":0},{"meter":"tension","delta":0}],"next":"a2_line2B"},
+          {"id":"C","label":"Casual intro without prep. [trust-1|childStress+2]","effects":[{"meter":"trust","delta":-1},{"meter":"childStress","delta":2},{"meter":"tension","delta":0}],"next":"a2_line2C"}
+        ]},
+        {"id":"a2_line2A","text":"You tell your child: \"This is my friend. Grown‑ups sometimes meet new people, but you are always my number one.\" The child nods and returns to play.","choices":[
+          {"id":"A1","label":"Share your plan with your ex to keep consistency. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a3_line1"},
+          {"id":"A2","label":"Keep it between you and the child for now. [trust-1|tension+0]","effects":[{"meter":"trust","delta":-1},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"a3_line1"}
+        ]},
+        {"id":"a2_line2B","text":"You decide not to introduce anyone yet. You note to revisit if the relationship deepens.","choices":[
+          {"id":"B1","label":"Tell your ex about your approach to avoid surprises. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a3_line1"},
+          {"id":"B2","label":"Say nothing. [trust-1|tension+0]","effects":[{"meter":"trust","delta":-1},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"a3_line1"}
+        ]},
+        {"id":"a2_line2C","text":"You introduce your partner spontaneously. Your child becomes quiet and clingy for the rest of the day.","choices":[
+          {"id":"C1","label":"Repair: slow the pace and offer reassurance. [trust+1|childStress-1]","effects":[{"meter":"trust","delta":1},{"meter":"childStress","delta":-1},{"meter":"tension","delta":0}],"next":"a3_line1"},
+          {"id":"C2","label":"Minimize: \"You'll get used to it.\" [trust-1|childStress+1]","effects":[{"meter":"trust","delta":-1},{"meter":"childStress","delta":1},{"meter":"tension","delta":0}],"next":"a3_line1"}
+        ]}
+      ]
     },
-
     {
       "id": "act3",
       "title": "Conflict with Ex",
-      "start": "a3n1",
-      "nodes": {
-        "a3n1": {
-          "text": "Your ex hears about the introduction and messages: \"I feel excluded. This affects our child and I need to be involved.\"",
-          "choices": [
-            {
-              "id": "A",
-              "label": "Reassure and collaborate on ground rules. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n2A"
-            },
-            {
-              "id": "B",
-              "label": "Defensive stance: \"It's my decision.\" [trust-2|tension+2]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "tension", "delta": 2 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n2B"
-            },
-            {
-              "id": "C",
-              "label": "Suggest neutral input (e.g., mediation/CZSS). [trust+0|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a3n2C"
-            }
-          ]
-        },
-        "a3n2A": {
-          "text": "You propose shared guidelines: pace introductions, avoid overnights initially, and share context before milestones.",
-          "choices": [
-            {
-              "id": "A1",
-              "label": "Write down draft rules to revisit later. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            },
-            {
-              "id": "A2",
-              "label": "Agree verbally only. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            }
-          ]
-        },
-        "a3n2B": {
-          "text": "The exchange escalates. Co‑parenting chat becomes edgy and unproductive.",
-          "choices": [
-            {
-              "id": "B1",
-              "label": "De‑escalate: pause and schedule a time to talk. [trust+0|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            },
-            {
-              "id": "B2",
-              "label": "Push harder to \"win\" the point. [trust-2|tension+2]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "tension", "delta": 2 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            }
-          ]
-        },
-        "a3n2C": {
-          "text": "You suggest neutral guidance to reduce bias. Your ex agrees to hear recommendations.",
-          "choices": [
-            {
-              "id": "C1",
-              "label": "Share a summary of best practices from family services. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            },
-            {
-              "id": "C2",
-              "label": "Let them research and circle back. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a4n1"
-            }
-          ]
-        }
-      }
+      "start": "a3_line1",
+      "steps": [
+        {"id":"a3_line1","text":"Your ex hears about the introduction and messages: \"I feel excluded. This affects our child and I need to be involved.\"","choices":[
+          {"id":"A","label":"Reassure and collaborate on ground rules. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a3_line2A"},
+          {"id":"B","label":"Defensive stance: \"It's my decision.\" [trust-2|tension+2]","effects":[{"meter":"trust","delta":-2},{"meter":"tension","delta":2},{"meter":"childStress","delta":0}],"next":"a3_line2B"},
+          {"id":"C","label":"Suggest neutral input (e.g., mediation/CZSS). [trust+0|tension-1]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a3_line2C"}
+        ]},
+        {"id":"a3_line2A","text":"You propose shared guidelines: pace introductions, avoid overnights initially, and share context before milestones.","choices":[
+          {"id":"A1","label":"Write down draft rules to revisit later. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a4_line1"},
+          {"id":"A2","label":"Agree verbally only. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"a4_line1"}
+        ]},
+        {"id":"a3_line2B","text":"The exchange escalates. Co‑parenting chat becomes edgy and unproductive.","choices":[
+          {"id":"B1","label":"De‑escalate: pause and schedule a time to talk. [trust+0|tension-1]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a4_line1"},
+          {"id":"B2","label":"Push harder to \"win\" the point. [trust-2|tension+2]","effects":[{"meter":"trust","delta":-2},{"meter":"tension","delta":2},{"meter":"childStress","delta":0}],"next":"a4_line1"}
+        ]},
+        {"id":"a3_line2C","text":"You suggest neutral guidance to reduce bias. Your ex agrees to hear recommendations.","choices":[
+          {"id":"C1","label":"Share a summary of best practices from family services. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a4_line1"},
+          {"id":"C2","label":"Let them research and circle back. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"a4_line1"}
+        ]}
+      ]
     },
-
     {
       "id": "act4",
       "title": "Balancing Time",
-      "start": "a4n1",
-      "nodes": {
-        "a4n1": {
-          "text": "A long‑planned date conflicts with your child's school event. Your partner is excited; your child has been talking about the event all week.",
-          "choices": [
-            {
-              "id": "A",
-              "label": "Prioritize child and reschedule the date. [trust+1|childStress-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "childStress", "delta": -1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a4n2A"
-            },
-            {
-              "id": "B",
-              "label": "Split time: attend the event, late dinner after. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "childStress", "delta": 0 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a4n2B"
-            },
-            {
-              "id": "C",
-              "label": "Prioritize the date and skip the event. [trust-1|childStress+2]",
-              "effects": [
-                { "meter": "trust", "delta": -1 },
-                { "meter": "childStress", "delta": 2 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a4n2C"
-            }
-          ]
-        },
-        "a4n2A": {
-          "text": "You attend the event. Your partner is disappointed but appreciates your clarity when you explain why.",
-          "choices": [
-            {
-              "id": "A1",
-              "label": "Propose a new date and share your parenting values. [trust+1|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 1 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a5n1"
-            }
-          ]
-        },
-        "a4n2B": {
-          "text": "You make both work with careful planning. It's a long day, but your child smiles and your partner feels considered.",
-          "choices": [
-            {
-              "id": "B1",
-              "label": "Reflect on pacing and energy for future weekends. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "a5n1"
-            }
-          ]
-        },
-        "a4n2C": {
-          "text": "You skip the event. Your child is quiet that evening. The next day, the ex asks what happened.",
-          "choices": [
-            {
-              "id": "C1",
-              "label": "Own it and repair: plan a make‑up moment with the child. [trust+0|childStress-1]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "childStress", "delta": -1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a5n1"
-            },
-            {
-              "id": "C2",
-              "label": "Defend the choice: \"Adults come first sometimes.\" [trust-2|childStress+1]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "childStress", "delta": 1 },
-                { "meter": "tension", "delta": 0 }
-              ],
-              "next": "a5n1"
-            }
-          ]
-        }
-      }
+      "start": "a4_line1",
+      "steps": [
+        {"id":"a4_line1","text":"A long‑planned date conflicts with your child's school event. Your partner is excited; your child has been talking about the event all week.","choices":[
+          {"id":"A","label":"Prioritize child and reschedule the date. [trust+1|childStress-1]","effects":[{"meter":"trust","delta":1},{"meter":"childStress","delta":-1},{"meter":"tension","delta":0}],"next":"a4_line2A"},
+          {"id":"B","label":"Split time: attend the event, late dinner after. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"childStress","delta":0},{"meter":"tension","delta":0}],"next":"a4_line2B"},
+          {"id":"C","label":"Prioritize the date and skip the event. [trust-1|childStress+2]","effects":[{"meter":"trust","delta":-1},{"meter":"childStress","delta":2},{"meter":"tension","delta":0}],"next":"a4_line2C"}
+        ]},
+        {"id":"a4_line2A","text":"You attend the event. Your partner is disappointed but appreciates your clarity when you explain why.","choices":[
+          {"id":"A1","label":"Propose a new date and share your parenting values. [trust+1|tension-1]","effects":[{"meter":"trust","delta":1},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"a5_line1"}
+        ]},
+        {"id":"a4_line2B","text":"You make both work with careful planning. It's a long day, but your child smiles and your partner feels considered.","choices":[
+          {"id":"B1","label":"Reflect on pacing and energy for future weekends. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"a5_line1"}
+        ]},
+        {"id":"a4_line2C","text":"You skip the event. Your child is quiet that evening. The next day, the ex asks what happened.","choices":[
+          {"id":"C1","label":"Own it and repair: plan a make‑up moment with the child. [trust+0|childStress-1]","effects":[{"meter":"trust","delta":0},{"meter":"childStress","delta":-1},{"meter":"tension","delta":0}],"next":"a5_line1"},
+          {"id":"C2","label":"Defend the choice: \"Adults come first sometimes.\" [trust-2|childStress+1]","effects":[{"meter":"trust","delta":-2},{"meter":"childStress","delta":1},{"meter":"tension","delta":0}],"next":"a5_line1"}
+        ]}
+      ]
     },
-
     {
       "id": "act5",
       "title": "Long‑Term Outlook",
-      "start": "a5n1",
-      "nodes": {
-        "a5n1": {
-          "text": "You and your ex check in after a few weeks. How will you handle dating and co‑parenting going forward?",
-          "choices": [
-            {
-              "id": "A",
-              "label": "Agree on written ground rules (timing, overnights, updates). [trust+2|tension-1]",
-              "effects": [
-                { "meter": "trust", "delta": 2 },
-                { "meter": "tension", "delta": -1 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "endA"
-            },
-            {
-              "id": "B",
-              "label": "Keep it flexible and informal. [neutral]",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "endB"
-            },
-            {
-              "id": "C",
-              "label": "Declare dating separate from co‑parenting: no involvement. [trust-2|tension+2]",
-              "effects": [
-                { "meter": "trust", "delta": -2 },
-                { "meter": "tension", "delta": 2 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": "endC"
-            }
-          ]
-        },
-        "endA": {
-          "text": "You formalize simple ground rules. Communication is clearer; your child adapts with reassurance.",
-          "choices": [
-            {
-              "id": "E1",
-              "label": "Finish scenario.",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": null
-            }
-          ]
-        },
-        "endB": {
-          "text": "You keep it informal. It works while things are calm, but future surprises may test the arrangement.",
-          "choices": [
-            {
-              "id": "E2",
-              "label": "Finish scenario.",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": null
-            }
-          ]
-        },
-        "endC": {
-          "text": "You wall off topics. Conflicts keep resurfacing around transitions and expectations.",
-          "choices": [
-            {
-              "id": "E3",
-              "label": "Finish scenario.",
-              "effects": [
-                { "meter": "trust", "delta": 0 },
-                { "meter": "tension", "delta": 0 },
-                { "meter": "childStress", "delta": 0 }
-              ],
-              "next": null
-            }
-          ]
-        }
-      }
+      "start": "a5_line1",
+      "steps": [
+        {"id":"a5_line1","text":"You and your ex check in after a few weeks. How will you handle dating and co‑parenting going forward?","choices":[
+          {"id":"A","label":"Agree on written ground rules (timing, overnights, updates). [trust+2|tension-1]","effects":[{"meter":"trust","delta":2},{"meter":"tension","delta":-1},{"meter":"childStress","delta":0}],"next":"endA"},
+          {"id":"B","label":"Keep it flexible and informal. [neutral]","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":"endB"},
+          {"id":"C","label":"Declare dating separate from co‑parenting: no involvement. [trust-2|tension+2]","effects":[{"meter":"trust","delta":-2},{"meter":"tension","delta":2},{"meter":"childStress","delta":0}],"next":"endC"}
+        ]},
+        {"id":"endA","text":"You formalize simple ground rules. Communication is clearer; your child adapts with reassurance.","choices":[{"id":"E1","label":"Finish scenario.","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":null}]},
+        {"id":"endB","text":"You keep it informal. It works while things are calm, but future surprises may test the arrangement.","choices":[{"id":"E2","label":"Finish scenario.","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":null}]},
+        {"id":"endC","text":"You wall off topics. Conflicts keep resurfacing around transitions and expectations.","choices":[{"id":"E3","label":"Finish scenario.","effects":[{"meter":"trust","delta":0},{"meter":"tension","delta":0},{"meter":"childStress","delta":0}],"next":null}]}
+      ]
     }
   ]
 }
