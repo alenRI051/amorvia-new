@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "id": "sample-scenario",
   "title": "Sample v2 Scenario",
   "acts": [
     {
