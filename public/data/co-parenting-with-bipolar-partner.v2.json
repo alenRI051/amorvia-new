@@ -135,7 +135,8 @@
         }
       },
       "start": "start"
-    }
+    },
+    "start": "a1_line1"
   ],
   "startAct": "act1",
   "start": "a1_line1",
