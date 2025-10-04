@@ -1,249 +1,195 @@
 {
   "id": "dating-after-breakup-with-child-involved",
-  "version": "2.0",
+  "version": 2,
   "title": "Dating After Breakup (With Child Involved)",
   "description": "Navigate dating after a breakup while co-parenting: timing introductions, setting boundaries with an ex, and keeping the child's well-being first.",
-  "tags": [
-    "co-parenting",
-    "dating",
-    "boundaries",
-    "communication",
-    "child-wellbeing"
-  ],
+  "tags": ["co-parenting", "dating", "boundaries", "communication", "child-wellbeing"],
   "difficulty": "medium",
-  "meters": [
+  "meters": {
+    "trust": { "min": 0, "max": 100, "start": 50, "label": "Trust" },
+    "tension": { "min": 0, "max": 100, "start": 20, "label": "Tension" },
+    "childStress": { "min": 0, "max": 100, "start": 10, "label": "Child Stress" }
+  },
+  "acts": [
     {
-      "id": "trust",
-      "label": "Trust",
-      "min": -10,
-      "max": 10,
-      "start": 0
-    },
-    {
-      "id": "tension",
-      "label": "Tension",
-      "min": -10,
-      "max": 10,
-      "start": 0
-    },
-    {
-      "id": "childStress",
-      "label": "Child Stress",
-      "min": -10,
-      "max": 10,
-      "start": 0
+      "id": "act1",
+      "title": "Act 1 — First Disclosure",
+      "start": "a1_line1",
+      "steps": {
+        "a1_line1": {
+          "id": "a1_line1",
+          "type": "choice",
+          "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.",
+          "choices": [
+            {
+              "id": "A",
+              "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co-parenting stable.\"",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1_line2A"
+            },
+            {
+              "id": "B",
+              "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\"",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1_line2B"
+            },
+            {
+              "id": "C",
+              "label": "Deflect: change the subject to logistics.",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1_line2C"
+            }
+          ]
+        },
+        "a1_line2A": {
+          "id": "a1_line2A",
+          "type": "choice",
+          "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
+          "choices": [
+            {
+              "id": "A1",
+              "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 }
+              ],
+              "next": "a1_end"
+            },
+            {
+              "id": "A2",
+              "label": "Brush it off: \"It's my life; I know what I'm doing.\"",
+              "effects": [
+                { "meter": "trust", "delta": -2 },
+                { "meter": "tension", "delta": 2 }
+              ],
+              "next": "a1_end"
+            }
+          ]
+        },
+        "a1_line2B": {
+          "id": "a1_line2B",
+          "type": "choice",
+          "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
+          "choices": [
+            {
+              "id": "B1",
+              "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": -1 }
+              ],
+              "next": "a1_end"
+            },
+            {
+              "id": "B2",
+              "label": "Stay guarded: \"I don't owe details about my private life.\"",
+              "effects": [
+                { "meter": "trust", "delta": -2 },
+                { "meter": "tension", "delta": 2 }
+              ],
+              "next": "a1_end"
+            }
+          ]
+        },
+        "a1_line2C": {
+          "id": "a1_line2C",
+          "type": "choice",
+          "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
+          "choices": [
+            {
+              "id": "C1",
+              "label": "Follow up later with a message clarifying intent.",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 }
+              ],
+              "next": "a1_end"
+            },
+            {
+              "id": "C2",
+              "label": "Leave it be.",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 0 }
+              ],
+              "next": "a1_end"
+            }
+          ]
+        },
+        "a1_end": {
+          "id": "a1_end",
+          "type": "end",
+          "text": "End of Act 1.",
+          "choices": [
+            { "id": "E", "label": "Finish", "effects": [], "next": null }
+          ]
+        }
+      },
+      "nodes": [
+        {
+          "id": "a1_line1",
+          "type": "choice",
+          "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.",
+          "choices": [
+            { "id": "A", "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co-parenting stable.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2A" },
+            { "id": "B", "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\"", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2B" },
+            { "id": "C", "label": "Deflect: change the subject to logistics.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2C" }
+          ]
+        },
+        {
+          "id": "a1_line2A",
+          "type": "choice",
+          "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
+          "choices": [
+            { "id": "A1", "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
+            { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_end" }
+          ]
+        },
+        {
+          "id": "a1_line2B",
+          "type": "choice",
+          "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
+          "choices": [
+            { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"", "effects": [{ "meter": "trust", "delta": 0 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
+            { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_end" }
+          ]
+        },
+        {
+          "id": "a1_line2C",
+          "type": "choice",
+          "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
+          "choices": [
+            { "id": "C1", "label": "Follow up later with a message clarifying intent.", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
+            { "id": "C2", "label": "Leave it be.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }], "next": "a1_end" }
+          ]
+        },
+        {
+          "id": "a1_end",
+          "type": "end",
+          "text": "End of Act 1.",
+          "choices": [
+            { "id": "E", "label": "Finish", "effects": [], "next": null }
+          ]
+        }
+      ]
     }
   ],
   "startAct": "act1",
   "start": "a1_line1",
   "startNode": "a1_line1",
   "entryNode": "a1_line1",
-  "acts": [
-    {
-      "id": "a1_line1",
-    "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.",
-    "choices": [
-      {
-        "id": "A",
-        "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co‑parenting stable.\" [trust+1|tension+1]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": 1
-          },
-          {
-            "meter": "tension",
-            "delta": 1
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a1_line2A"
-      },
-      {
-        "id": "B",
-        "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\" [trust-1|tension+0]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": -1
-          },
-          {
-            "meter": "tension",
-            "delta": 0
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a1_line2B"
-      },
-      {
-        "id": "C",
-        "label": "Deflect: change the subject to logistics. [trust-1|tension+1]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": -1
-          },
-          {
-            "meter": "tension",
-            "delta": 1
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a1_line2C"
-      }
-    ]
-  },
-  {
-    "id": "a1_line2A",
-    "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
-    "choices": [
-      {
-        "id": "A1",
-        "label": "Affirm shared priority: \"Our child's well‑being is the priority. Let's agree on pacing and communication.\" [trust+1|tension-1]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": 1
-          },
-          {
-            "meter": "tension",
-            "delta": -1
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      },
-      {
-        "id": "A2",
-        "label": "Brush it off: \"It's my life; I know what I'm doing.\" [trust-2|tension+2]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": -2
-          },
-          {
-            "meter": "tension",
-            "delta": 2
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      }
-    ]
-  },
-  {
-    "id": "a1_line2B",
-    "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
-    "choices": [
-      {
-        "id": "B1",
-        "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\" [trust+0|tension-1]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": 0
-          },
-          {
-            "meter": "tension",
-            "delta": -1
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      },
-      {
-        "id": "B2",
-        "label": "Stay guarded: \"I don't owe details about my private life.\" [trust-2|tension+2]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": -2
-          },
-          {
-            "meter": "tension",
-            "delta": 2
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      }
-    ]
-  },
-  {
-    "id": "a1_line2C",
-    "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
-    "choices": [
-      {
-        "id": "C1",
-        "label": "Follow up later with a message clarifying intent. [trust+1|tension-1]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": 1
-          },
-          {
-            "meter": "tension",
-            "delta": -1
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      },
-      {
-        "id": "C2",
-        "label": "Leave it be. [trust-1|tension+0]",
-        "effects": [
-          {
-            "meter": "trust",
-            "delta": -1
-          },
-          {
-            "meter": "tension",
-            "delta": 0
-          },
-          {
-            "meter": "childStress",
-            "delta": 0
-          }
-        ],
-        "next": "a2_line1"
-      }
-    ]
-  },
-  {
-    "id": "act1_end",
-    "text": "Scenario segment ends here.",
-    "choices": [
-      {
-        "id": "E",
-        "label": "Finish",
-        "effects": [],
-        "next": null
-      }
-    ]
-  }
-]
+  "entry": { "actId": "act1", "nodeId": "a1_line1" }
+}
+
