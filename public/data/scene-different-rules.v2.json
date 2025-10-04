@@ -25,32 +25,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_lm13es"
         },
-        {
+        "auto_lm13es": {
           "id": "auto_lm13es",
           "type": "goto",
           "text": "",
           "to": "**Unified rules**: One list for the household, reviewed weekly."
         },
-        {
+        "auto_z3r8cl": {
           "id": "auto_z3r8cl",
           "type": "goto",
           "text": "",
           "to": "**Zones of control**: Each parent leads in specific domains."
         },
-        {
+        "auto_6aekeh": {
           "id": "auto_6aekeh",
           "type": "goto",
           "text": "",
           "to": "**Coach mode**: Agree on consistent consequences and rewards."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

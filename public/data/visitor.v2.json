@@ -30,22 +30,23 @@
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 Surprise Knock",
-      "nodes": [
-        {
+      "title": "Act 1 — Surprise Knock",
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1s1"
         },
-        {
+        "a1s1": {
           "id": "a1s1",
-          "text": "There\u2019s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
+          "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
           "type": "line"
         },
-        {
+        "a1s2": {
           "id": "a1s2",
-          "text": "They say they \u2018just want a quick chat\u2019 and step closer to the doorway.",
+          "text": "They say they ‘just want a quick chat’ and step closer to the doorway.",
           "choices": [
             {
               "label": "Calmly step outside and close the door behind you",
@@ -64,7 +65,7 @@
               "to": "a1s3"
             },
             {
-              "label": "Set a firm boundary: 'Now isn\u2019t a good time. Please text to schedule.'",
+              "label": "Set a firm boundary: 'Now isn’t a good time. Please text to schedule.'",
               "effects": {
                 "tension": -2,
                 "trust": 3
@@ -74,22 +75,24 @@
           ],
           "type": "line"
         },
-        {
+        "a1s3": {
           "id": "a1s3",
           "text": "Your tone sets the stage for what happens next.",
           "type": "line"
         }
-      ]
+      },
+      "start": "start"
     },
     {
-      "title": "Act 2 \u2014 Negotiation",
-      "nodes": [
-        {
+      "title": "Act 2 — Negotiation",
+      "id": "act2",
+      "steps": {
+        "a2s1": {
           "id": "a2s1",
-          "text": "They ask to see your child \u2018just for a minute\u2019. Your child is in the living room listening.",
+          "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening.",
           "type": "line"
         },
-        {
+        "a2s2": {
           "id": "a2s2",
           "text": "You weigh the options.",
           "choices": [
@@ -120,22 +123,24 @@
           ],
           "type": "line"
         },
-        {
+        "a2s3": {
           "id": "a2s3",
           "text": "You communicate the boundary and alternative.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a2s1"
     },
     {
-      "title": "Act 3 \u2014 Resolution",
-      "nodes": [
-        {
+      "title": "Act 3 — Resolution",
+      "id": "act3",
+      "steps": {
+        "a3s1": {
           "id": "a3s1",
           "text": "They react to your boundary. Your child watches your emotional tone closely.",
           "type": "line"
         },
-        {
+        "a3s2": {
           "id": "a3s2",
           "text": "Choose your closing move.",
           "choices": [
@@ -165,12 +170,21 @@
           ],
           "type": "line"
         },
-        {
+        "a3s3": {
           "id": "a3s3",
-          "text": "The visit ends. Your child mirrors your calm\u2014or your stress.",
+          "text": "The visit ends. Your child mirrors your calm—or your stress.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a3s1"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

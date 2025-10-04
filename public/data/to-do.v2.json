@@ -25,32 +25,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_smwzqh"
         },
-        {
+        "auto_smwzqh": {
           "id": "auto_smwzqh",
           "type": "goto",
           "text": "",
           "to": "Images: next/image where applicable."
         },
-        {
+        "auto_bki60w": {
           "id": "auto_bki60w",
           "type": "goto",
           "text": "",
-          "to": "Color contrast \u2265 4.5:1."
+          "to": "Color contrast ≥ 4.5:1."
         },
-        {
+        "auto_9omnz3": {
           "id": "auto_9omnz3",
           "type": "goto",
           "text": "",
           "to": "Landmarks & labels for controls."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

@@ -27,14 +27,14 @@
       "id": "act-1",
       "title": "Act 1",
       "start": "a1c1",
-      "nodes": [
-        {
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1c1"
         },
-        {
+        "a1c1": {
           "id": "a1c1",
           "type": "choice",
           "prompt": "Choose a path",
@@ -67,20 +67,28 @@
           ],
           "text": ""
         },
-        {
+        "a1n1": {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": "of the co-parenting scenario, written in a way that allows the user to choose their role (mother or father) while still staying close to real-life emotion \\u2014 with a touch of dark humor, irony, and empathy to keep *Amorvia*\\u",
           "to": "end"
         },
-        {
+        "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
           "text": ""
         }
-      ]
+      }
     }
-  ]
+  ],
+  "startAct": "act-1",
+  "start": "a1c1",
+  "startNode": "a1c1",
+  "entryNode": "a1c1",
+  "entry": {
+    "actId": "act-1",
+    "nodeId": "a1c1"
+  }
 }

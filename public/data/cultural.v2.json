@@ -27,14 +27,14 @@
       "id": "act-2",
       "title": "Act 2",
       "start": "a2c1",
-      "nodes": [
-        {
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a2c1"
         },
-        {
+        "a2c1": {
           "id": "a2c1",
           "type": "choice",
           "prompt": "Choose a path",
@@ -63,20 +63,28 @@
           ],
           "text": ""
         },
-        {
+        "a2n1": {
           "id": "a2n1",
           "type": "line",
           "speaker": "narrator",
           "text": "\\u2013 First Contact Attempt** \\n- If the player chooses to engage, they can select what kind of message to send: \\n - Scientific data \\n - A cultural artifact (art, music, story) \\n - A decis",
           "to": "end"
         },
-        {
+        "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
           "text": ""
         }
-      ]
+      }
     }
-  ]
+  ],
+  "startAct": "act-2",
+  "start": "a2c1",
+  "startNode": "a2c1",
+  "entryNode": "a2c1",
+  "entry": {
+    "actId": "act-2",
+    "nodeId": "a2c1"
+  }
 }

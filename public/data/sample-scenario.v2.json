@@ -4,20 +4,21 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_h22yax"
         },
-        {
+        "auto_h22yax": {
           "id": "auto_h22yax",
           "type": "goto",
           "text": "",
           "to": "You arrive to pick up your child; your ex seems upset."
         },
-        {
+        "act0_node_1": {
           "type": "choice",
           "prompt": "How do you respond?",
           "choices": [
@@ -57,13 +58,22 @@
           "text": "",
           "id": "act0_node_1"
         },
-        {
+        "auto_q0rmr2": {
           "id": "auto_q0rmr2",
           "type": "goto",
           "text": "",
           "to": "You focus on your child's needs and keep the handoff short."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

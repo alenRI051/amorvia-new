@@ -27,14 +27,14 @@
       "id": "act-1",
       "title": "Act 1",
       "start": "a1c1",
-      "nodes": [
-        {
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1c1"
         },
-        {
+        "a1c1": {
           "id": "a1c1",
           "type": "choice",
           "prompt": "Choose a path",
@@ -63,20 +63,28 @@
           ],
           "text": ""
         },
-        {
+        "a1n1": {
           "id": "a1n1",
           "type": "line",
           "speaker": "narrator",
           "text": "\\u2013 The First Step Back into Dating**\\n- **Setting:** A friend invites you to a casua",
           "to": "end"
         },
-        {
+        "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
           "text": ""
         }
-      ]
+      }
     }
-  ]
+  ],
+  "startAct": "act-1",
+  "start": "a1c1",
+  "startNode": "a1c1",
+  "entryNode": "a1c1",
+  "entry": {
+    "actId": "act-1",
+    "nodeId": "a1c1"
+  }
 }

@@ -18,32 +18,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_31rmuw"
         },
-        {
+        "auto_31rmuw": {
           "id": "auto_31rmuw",
           "type": "goto",
           "text": "",
           "to": "Unified rules list, reviewed weekly."
         },
-        {
+        "auto_hn0bas": {
           "id": "auto_hn0bas",
           "type": "goto",
           "text": "",
           "to": "Zones of control by domain."
         },
-        {
+        "auto_93nx6r": {
           "id": "auto_93nx6r",
           "type": "goto",
           "text": "",
           "to": "Coach mode with consistent consequences."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

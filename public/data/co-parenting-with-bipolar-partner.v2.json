@@ -34,20 +34,20 @@
     {
       "id": "act1",
       "title": "Act 1 — Handover Chat",
-      "nodes": [
-        {
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1_line1"
         },
-        {
+        "a1_line1": {
           "id": "a1_line1",
           "type": "line",
           "text": "Handover day. Your co-parent looks tired but alert: 'How was the week?'",
           "to": "a1_choice1"
         },
-        {
+        "a1_choice1": {
           "id": "a1_choice1",
           "type": "choice",
           "text": "How do you respond?",
@@ -88,18 +88,27 @@
             }
           ]
         },
-        {
+        "a1_line2": {
           "id": "a1_line2",
           "type": "line",
           "text": "They nod. You both confirm pickup time for Sunday.",
           "to": "a1_end"
         },
-        {
+        "a1_end": {
           "id": "a1_end",
           "type": "end",
           "text": "End of Act 1."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

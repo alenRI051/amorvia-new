@@ -25,32 +25,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_vohc45"
         },
-        {
+        "auto_vohc45": {
           "id": "auto_vohc45",
           "type": "goto",
           "text": "",
           "to": "**Mediation-first:** Seek a neutral mediator to draft a parenting plan."
         },
-        {
+        "auto_wolcw0": {
           "id": "auto_wolcw0",
           "type": "goto",
           "text": "",
           "to": "**DIY plan:** Draft a plan and validate with a social worker."
         },
-        {
+        "auto_cfzqwo": {
           "id": "auto_cfzqwo",
           "type": "goto",
           "text": "",
           "to": "**Lawyered:** Each side retains counsel for a formal agreement."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

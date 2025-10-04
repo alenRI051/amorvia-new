@@ -25,32 +25,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_zgs44m"
         },
-        {
+        "auto_zgs44m": {
           "id": "auto_zgs44m",
           "type": "goto",
           "text": "",
           "to": "**CZSS**: socskrb.hr"
         },
-        {
+        "auto_ys851q": {
           "id": "auto_ys851q",
           "type": "goto",
           "text": "",
           "to": "**Obiteljski sud / odvjetnici**: lokalni kontakti"
         },
-        {
+        "auto_tl7500": {
           "id": "auto_tl7500",
           "type": "goto",
           "text": "",
-          "to": "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosu\u0111a"
+          "to": "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa"
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

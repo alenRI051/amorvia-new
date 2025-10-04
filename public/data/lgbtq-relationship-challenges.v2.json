@@ -30,20 +30,21 @@
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 Labels & Names",
-      "nodes": [
-        {
+      "title": "Act 1 — Labels & Names",
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1s1"
         },
-        {
+        "a1s1": {
           "id": "a1s1",
           "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns.",
           "type": "line"
         },
-        {
+        "a1s2": {
           "id": "a1s2",
           "text": "You choose how to model language.",
           "choices": [
@@ -65,22 +66,24 @@
           ],
           "type": "line"
         },
-        {
+        "a1s3": {
           "id": "a1s3",
           "text": "Your child watches whose comfort you prioritize.",
           "type": "line"
         }
-      ]
+      },
+      "start": "start"
     },
     {
-      "title": "Act 2 \u2014 School Involvement",
-      "nodes": [
-        {
+      "title": "Act 2 — School Involvement",
+      "id": "act2",
+      "steps": {
+        "a2s1": {
           "id": "a2s1",
           "text": "Forms and portals have old data. The school asks for clarification.",
           "type": "line"
         },
-        {
+        "a2s2": {
           "id": "a2s2",
           "text": "Pick an approach.",
           "choices": [
@@ -102,22 +105,24 @@
           ],
           "type": "line"
         },
-        {
+        "a2s3": {
           "id": "a2s3",
           "text": "Administration responds to your clarity.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a2s1"
     },
     {
-      "title": "Act 3 \u2014 Extended Family",
-      "nodes": [
-        {
+      "title": "Act 3 — Extended Family",
+      "id": "act3",
+      "steps": {
+        "a3s1": {
           "id": "a3s1",
           "text": "A grandparent refuses new language at a birthday gathering.",
           "type": "line"
         },
-        {
+        "a3s2": {
           "id": "a3s2",
           "text": "You set a boundary.",
           "choices": [
@@ -140,12 +145,21 @@
           ],
           "type": "line"
         },
-        {
+        "a3s3": {
           "id": "a3s3",
           "text": "The day ends; the child tracks how safe it felt.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a3s1"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

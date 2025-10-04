@@ -30,20 +30,21 @@
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 Mixed Messages",
-      "nodes": [
-        {
+      "title": "Act 1 — Mixed Messages",
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1s1"
         },
-        {
+        "a1s1": {
           "id": "a1s1",
           "text": "Your partner (the step-parent) introduces a new homework rule that clashes with the one you agreed to with your ex.",
           "type": "line"
         },
-        {
+        "a1s2": {
           "id": "a1s2",
           "text": "Your child looks confused about which rule to follow.",
           "choices": [
@@ -73,22 +74,24 @@
           ],
           "type": "line"
         },
-        {
+        "a1s3": {
           "id": "a1s3",
           "text": "You choose how to manage the mismatch in the moment.",
           "type": "line"
         }
-      ]
+      },
+      "start": "start"
     },
     {
-      "title": "Act 2 \u2014 Co-Parent Sync",
-      "nodes": [
-        {
+      "title": "Act 2 — Co-Parent Sync",
+      "id": "act2",
+      "steps": {
+        "a2s1": {
           "id": "a2s1",
           "text": "You prepare a message to your ex to keep rules consistent across homes.",
           "type": "line"
         },
-        {
+        "a2s2": {
           "id": "a2s2",
           "text": "Pick your tone.",
           "choices": [
@@ -101,7 +104,7 @@
               "to": "a2s3"
             },
             {
-              "label": "Directive: 'We\u2019re doing it this way now.'",
+              "label": "Directive: 'We’re doing it this way now.'",
               "effects": {
                 "tension": 5
               },
@@ -117,22 +120,24 @@
           ],
           "type": "line"
         },
-        {
+        "a2s3": {
           "id": "a2s3",
           "text": "Your ex responds based on your tone.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a2s1"
     },
     {
-      "title": "Act 3 \u2014 Family Debrief",
-      "nodes": [
-        {
+      "title": "Act 3 — Family Debrief",
+      "id": "act3",
+      "steps": {
+        "a3s1": {
           "id": "a3s1",
           "text": "You and your partner debrief privately about roles and who enforces what.",
           "type": "line"
         },
-        {
+        "a3s2": {
           "id": "a3s2",
           "text": "Decide how to frame it to your child.",
           "choices": [
@@ -154,12 +159,21 @@
           ],
           "type": "line"
         },
-        {
+        "a3s3": {
           "id": "a3s3",
-          "text": "The path you pick shapes tomorrow\u2019s routine.",
+          "text": "The path you pick shapes tomorrow’s routine.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a3s1"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

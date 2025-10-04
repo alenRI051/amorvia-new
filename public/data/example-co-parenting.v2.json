@@ -21,20 +21,20 @@
       "id": "a1",
       "title": "Act 1 — First Exchange",
       "start": "n1",
-      "nodes": [
-        {
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "n1"
         },
-        {
+        "n1": {
           "id": "n1",
           "type": "line",
           "text": "You arrive to pick up your child; your ex seems upset.",
           "to": "n2"
         },
-        {
+        "n2": {
           "id": "n2",
           "type": "choice",
           "prompt": "How do you respond?",
@@ -96,24 +96,32 @@
           ],
           "text": ""
         },
-        {
+        "n3": {
           "id": "n3",
           "type": "line",
           "text": "They soften a little and speak more clearly.",
           "to": "end"
         },
-        {
+        "n4": {
           "id": "n4",
           "type": "line",
           "text": "They raise their voice; the air feels tense.",
           "to": "end"
         },
-        {
+        "end": {
           "id": "end",
           "type": "end",
           "text": ""
         }
-      ]
+      }
     }
-  ]
+  ],
+  "startAct": "a1",
+  "start": "n1",
+  "startNode": "n1",
+  "entryNode": "n1",
+  "entry": {
+    "actId": "a1",
+    "nodeId": "n1"
+  }
 }

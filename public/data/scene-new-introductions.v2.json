@@ -25,32 +25,42 @@
   "acts": [
     {
       "title": "Act 1",
-      "nodes": [
-        {
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "auto_e285qb"
         },
-        {
+        "auto_e285qb": {
           "id": "auto_e285qb",
           "type": "goto",
           "text": "",
-          "to": "**Slow lane:** Wait 3\u20136 months and discuss expectations with your ex."
+          "to": "**Slow lane:** Wait 3–6 months and discuss expectations with your ex."
         },
-        {
+        "auto_as9w8u": {
           "id": "auto_as9w8u",
           "type": "goto",
           "text": "",
           "to": "**Guided intro:** Short, neutral, child-focused activity first."
         },
-        {
+        "auto_kozuq8": {
           "id": "auto_kozuq8",
           "type": "goto",
           "text": "",
           "to": "**Not yet:** Prioritize child's stability; revisit in Act 3."
         }
-      ]
+      },
+      "start": "start"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }

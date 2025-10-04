@@ -30,20 +30,21 @@
   },
   "acts": [
     {
-      "title": "Act 1 \u2014 Upcoming Holiday",
-      "nodes": [
-        {
+      "title": "Act 1 — Upcoming Holiday",
+      "id": "act1",
+      "steps": {
+        "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1s1"
         },
-        {
+        "a1s1": {
           "id": "a1s1",
           "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently.",
           "type": "line"
         },
-        {
+        "a1s2": {
           "id": "a1s2",
           "text": "You draft a plan.",
           "choices": [
@@ -73,22 +74,24 @@
           ],
           "type": "line"
         },
-        {
+        "a1s3": {
           "id": "a1s3",
           "text": "Your message sets the tone.",
           "type": "line"
         }
-      ]
+      },
+      "start": "start"
     },
     {
-      "title": "Act 2 \u2014 Symbols & Food",
-      "nodes": [
-        {
+      "title": "Act 2 — Symbols & Food",
+      "id": "act2",
+      "steps": {
+        "a2s1": {
           "id": "a2s1",
-          "text": "Your child asks questions about ceremonies, symbols, and what\u2019s \u2018allowed\u2019 in each home.",
+          "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home.",
           "type": "line"
         },
-        {
+        "a2s2": {
           "id": "a2s2",
           "text": "You decide how to talk about differences.",
           "choices": [
@@ -111,22 +114,24 @@
           ],
           "type": "line"
         },
-        {
+        "a2s3": {
           "id": "a2s3",
           "text": "Your child internalizes your framing.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a2s1"
     },
     {
-      "title": "Act 3 \u2014 Keepsakes",
-      "nodes": [
-        {
+      "title": "Act 3 — Keepsakes",
+      "id": "act3",
+      "steps": {
+        "a3s1": {
           "id": "a3s1",
           "text": "The child wants to bring a keepsake between homes.",
           "type": "line"
         },
-        {
+        "a3s2": {
           "id": "a3s2",
           "text": "Decide on the boundary.",
           "choices": [
@@ -148,12 +153,21 @@
           ],
           "type": "line"
         },
-        {
+        "a3s3": {
           "id": "a3s3",
           "text": "You close the holiday plan.",
           "type": "line"
         }
-      ]
+      },
+      "start": "a3s1"
     }
-  ]
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
 }
