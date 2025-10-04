@@ -24,7 +24,9 @@
   <link rel="stylesheet" href="/css/compact.ui.v1.css"/>
 
   <!-- MUST run before bootstrap: ensures entry fields + nodes[] are present -->
-  <script src="/js/patches/fetch-normalize-entry.v2.patch.js"></script>
+  <!-- MUST run before bootstrap; note ?v=2 to bypass old cached bytes -->
+  <script src="/js/patches/fetch-normalize-entry.v2.patch.js?v=2"></script>
+
 
   <!-- Optional helpers -->
   <script src="/js/patches/fetch-data-redirect.js"></script>
