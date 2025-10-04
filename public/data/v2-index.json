@@ -3,15 +3,6 @@
   "generatedAt": "2025-10-01T00:00:00Z",
   "scenarios": [
     {
-  "id": "test-sample",
-  "title": "Test Sample Scenario",
-  "tags": ["test", "sample"],
-  "difficulty": "easy",
-  "meters": { "trust": 50, "tension": 20, "childStress": 10 },
-  "acts": 1,
-  "path": "data/test-sample.v2.json"
-    },
-    {
       "id": "co-parenting-with-bipolar-partner",
       "title": "Co-Parenting with Bipolar Partner",
       "tags": [
@@ -20,11 +11,6 @@
         "de-escalation"
       ],
       "difficulty": "hard",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 3,
       "path": "data/co-parenting-with-bipolar-partner.v2.json"
     },
@@ -37,11 +23,6 @@
         "co-parenting"
       ],
       "difficulty": "normal",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 3,
       "path": "data/visitor.v2.json"
     },
@@ -56,11 +37,6 @@
         "child-wellbeing"
       ],
       "difficulty": "medium",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 5,
       "path": "data/dating-after-breakup-with-child-involved.v2.json"
     },
@@ -72,11 +48,6 @@
         "planning"
       ],
       "difficulty": "easy",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/scene-first-agreements.v2.json"
     },
@@ -88,11 +59,6 @@
         "child-focus"
       ],
       "difficulty": "easy",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/scene-new-introductions.v2.json"
     },
@@ -104,11 +70,6 @@
         "household-rules"
       ],
       "difficulty": "easy",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/scene-different-rules.v2.json"
     },
@@ -120,11 +81,6 @@
         "communication"
       ],
       "difficulty": "easy",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/scene-de-escalation.v2.json"
     },
@@ -136,11 +92,6 @@
         "croatian"
       ],
       "difficulty": "info",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/brzi-kontakti.v2.json"
     },
@@ -152,11 +103,6 @@
         "direction"
       ],
       "difficulty": "info",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/direction.v2.json"
     },
@@ -168,11 +114,6 @@
         "a11y"
       ],
       "difficulty": "info",
-      "meters": {
-        "trust": 50,
-        "tension": 20,
-        "childStress": 10
-      },
       "acts": 1,
       "path": "data/to-do.v2.json"
     }
