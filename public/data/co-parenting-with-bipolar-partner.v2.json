@@ -138,11 +138,11 @@
     }
   ],
   "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
+  "start": "a1_line1",
+  "startNode": "a1_line1",
+  "entryNode": "a1_line1",
   "entry": {
     "actId": "act1",
-    "nodeId": "start"
+    "nodeId": "a1_line1"
   }
 }
