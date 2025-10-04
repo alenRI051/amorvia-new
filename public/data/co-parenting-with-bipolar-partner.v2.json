@@ -2,66 +2,33 @@
   "id": "co-parenting-with-bipolar-partner",
   "version": 2,
   "title": "Co-Parenting with Bipolar Partner",
-  "tags": [
-    "co-parenting",
-    "communication",
-    "boundaries",
-    "stability"
-  ],
+  "tags": ["co-parenting", "communication", "boundaries", "stability"],
   "difficulty": "medium",
   "description": "Practice stable, respectful communication and child-first boundaries when your co-parent lives with bipolar disorder.",
   "meters": {
-    "trust": {
-      "min": 0,
-      "max": 100,
-      "start": 50,
-      "label": "Co-parent Trust"
-    },
-    "tension": {
-      "min": 0,
-      "max": 100,
-      "start": 20,
-      "label": "Co-parent Tension"
-    },
-    "childStress": {
-      "min": 0,
-      "max": 100,
-      "start": 10,
-      "label": "Child Stress"
-    }
+    "trust": { "min": 0, "max": 100, "start": 50, "label": "Co-parent Trust" },
+    "tension": { "min": 0, "max": 100, "start": 20, "label": "Co-parent Tension" },
+    "childStress": { "min": 0, "max": 100, "start": 10, "label": "Child Stress" }
   },
   "acts": [
     {
       "id": "act1",
       "title": "Act 1 — Handover Chat",
+      "start": "a1_line1",
       "steps": {
         "start": {
           "id": "start",
           "type": "goto",
           "text": "",
           "to": "a1_line1",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "a1_end"
-            }
-          ]
+          "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a1_end" }]
         },
         "a1_line1": {
           "id": "a1_line1",
           "type": "line",
           "text": "Handover day. Your co-parent looks tired but alert: 'How was the week?'",
           "to": "a1_choice1",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "a1_end"
-            }
-          ]
+          "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a1_end" }]
         },
         "a1_choice1": {
           "id": "a1_choice1",
@@ -72,16 +39,7 @@
               "id": "a1_c1",
               "label": "Brief, factual summary; ask about medication schedule.",
               "to": "a1_line2",
-              "effects": [
-                {
-                  "meter": "trust",
-                  "delta": 6
-                },
-                {
-                  "meter": "tension",
-                  "delta": -4
-                }
-              ],
+              "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }],
               "next": "a1_end"
             },
             {
@@ -89,18 +47,9 @@
               "label": "Vent about frustrations from the week.",
               "to": "a1_line2",
               "effects": [
-                {
-                  "meter": "trust",
-                  "delta": -8
-                },
-                {
-                  "meter": "tension",
-                  "delta": 10
-                },
-                {
-                  "meter": "childStress",
-                  "delta": 4
-                }
+                { "meter": "trust", "delta": -8 },
+                { "meter": "tension", "delta": 10 },
+                { "meter": "childStress", "delta": 4 }
               ],
               "next": "a1_end"
             }
@@ -111,39 +60,20 @@
           "type": "line",
           "text": "They nod. You both confirm pickup time for Sunday.",
           "to": "a1_end",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "a1_end"
-            }
-          ]
+          "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a1_end" }]
         },
         "a1_end": {
           "id": "a1_end",
           "type": "end",
           "text": "End of Act 1.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "a1_end"
-            }
-          ]
+          "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a1_end" }]
         }
-      },
-      "start": "start"
-    },
-    "start": "a1_line1"
+      }
+    }
   ],
   "startAct": "act1",
   "start": "a1_line1",
   "startNode": "a1_line1",
   "entryNode": "a1_line1",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "a1_line1"
-  }
+  "entry": { "actId": "act1", "nodeId": "a1_line1" }
 }
