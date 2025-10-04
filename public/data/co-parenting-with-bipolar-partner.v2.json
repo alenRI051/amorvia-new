@@ -39,13 +39,29 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1_line1"
+          "to": "a1_line1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "a1_end"
+            }
+          ]
         },
         "a1_line1": {
           "id": "a1_line1",
           "type": "line",
           "text": "Handover day. Your co-parent looks tired but alert: 'How was the week?'",
-          "to": "a1_choice1"
+          "to": "a1_choice1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "a1_end"
+            }
+          ]
         },
         "a1_choice1": {
           "id": "a1_choice1",
@@ -65,7 +81,8 @@
                   "meter": "tension",
                   "delta": -4
                 }
-              ]
+              ],
+              "next": "a1_end"
             },
             {
               "id": "a1_c2",
@@ -84,7 +101,8 @@
                   "meter": "childStress",
                   "delta": 4
                 }
-              ]
+              ],
+              "next": "a1_end"
             }
           ]
         },
@@ -92,12 +110,28 @@
           "id": "a1_line2",
           "type": "line",
           "text": "They nod. You both confirm pickup time for Sunday.",
-          "to": "a1_end"
+          "to": "a1_end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "a1_end"
+            }
+          ]
         },
         "a1_end": {
           "id": "a1_end",
           "type": "end",
-          "text": "End of Act 1."
+          "text": "End of Act 1.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "a1_end"
+            }
+          ]
         }
       },
       "start": "start"

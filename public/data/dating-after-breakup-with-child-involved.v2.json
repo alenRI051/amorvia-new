@@ -238,6 +238,18 @@
               "next": "a2_line1"
             }
           ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       }
     },
@@ -438,6 +450,18 @@
                 }
               ],
               "next": "a3_line1"
+            }
+          ]
+        },
+        "act2_end": {
+          "id": "act2_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
             }
           ]
         }
@@ -642,6 +666,18 @@
               "next": "a4_line1"
             }
           ]
+        },
+        "act3_end": {
+          "id": "act3_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       }
     },
@@ -804,6 +840,18 @@
                 }
               ],
               "next": "a5_line1"
+            }
+          ]
+        },
+        "act4_end": {
+          "id": "act4_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
             }
           ]
         }

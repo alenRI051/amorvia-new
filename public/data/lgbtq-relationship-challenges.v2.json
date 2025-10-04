@@ -37,12 +37,28 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1s1"
+          "to": "a1s1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s1": {
           "id": "a1s1",
           "text": "A caregiver is transitioning or coming out; relatives use inconsistent names and pronouns.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s2": {
           "id": "a1s2",
@@ -54,14 +70,18 @@
                 "trust": 4,
                 "tension": -3
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s20",
+              "next": "act1_end"
             },
             {
               "label": "Avoid correcting to keep peace",
               "effects": {
                 "childStress": 3
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s21",
+              "next": "act1_end"
             }
           ],
           "type": "line"
@@ -69,7 +89,27 @@
         "a1s3": {
           "id": "a1s3",
           "text": "Your child watches whose comfort you prioritize.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "start"
@@ -81,7 +121,15 @@
         "a2s1": {
           "id": "a2s1",
           "text": "Forms and portals have old data. The school asks for clarification.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
         },
         "a2s2": {
           "id": "a2s2",
@@ -93,14 +141,18 @@
                 "trust": 3,
                 "tension": -2
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s20",
+              "next": "act2_end"
             },
             {
               "label": "Defer changes; handle ad-hoc",
               "effects": {
                 "tension": 2
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s21",
+              "next": "act2_end"
             }
           ],
           "type": "line"
@@ -108,7 +160,27 @@
         "a2s3": {
           "id": "a2s3",
           "text": "Administration responds to your clarity.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
+        },
+        "act2_end": {
+          "id": "act2_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a2s1"
@@ -120,7 +192,15 @@
         "a3s1": {
           "id": "a3s1",
           "text": "A grandparent refuses new language at a birthday gathering.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
         },
         "a3s2": {
           "id": "a3s2",
@@ -132,7 +212,9 @@
                 "trust": 2,
                 "tension": -2
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s20",
+              "next": "act3_end"
             },
             {
               "label": "Public confrontation",
@@ -140,7 +222,9 @@
                 "tension": 6,
                 "childStress": 5
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s21",
+              "next": "act3_end"
             }
           ],
           "type": "line"
@@ -148,7 +232,27 @@
         "a3s3": {
           "id": "a3s3",
           "text": "The day ends; the child tracks how safe it felt.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
+        },
+        "act3_end": {
+          "id": "act3_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a3s1"

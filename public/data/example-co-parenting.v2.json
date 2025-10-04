@@ -26,13 +26,29 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "n1"
+          "to": "n1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "n1": {
           "id": "n1",
           "type": "line",
           "text": "You arrive to pick up your child; your ex seems upset.",
-          "to": "n2"
+          "to": "n2",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "n2": {
           "id": "n2",
@@ -55,7 +71,9 @@
                   "delta": -2
                 }
               ],
-              "to": "n3"
+              "to": "n3",
+              "id": "auto_c_n20",
+              "next": "end"
             },
             {
               "label": "Ignore and take the child",
@@ -73,7 +91,9 @@
                   "delta": 6
                 }
               ],
-              "to": "n4"
+              "to": "n4",
+              "id": "auto_c_n21",
+              "next": "end"
             },
             {
               "label": "Snap back",
@@ -91,7 +111,9 @@
                   "delta": 5
                 }
               ],
-              "to": "n4"
+              "to": "n4",
+              "id": "auto_c_n22",
+              "next": "end"
             }
           ],
           "text": ""
@@ -100,18 +122,42 @@
           "id": "n3",
           "type": "line",
           "text": "They soften a little and speak more clearly.",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "n4": {
           "id": "n4",
           "type": "line",
           "text": "They raise their voice; the air feels tense.",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     }

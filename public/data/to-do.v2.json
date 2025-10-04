@@ -31,25 +31,69 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "auto_smwzqh"
+          "to": "auto_smwzqh",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_smwzqh": {
           "id": "auto_smwzqh",
           "type": "goto",
           "text": "",
-          "to": "Images: next/image where applicable."
+          "to": "Images: next/image where applicable.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_bki60w": {
           "id": "auto_bki60w",
           "type": "goto",
           "text": "",
-          "to": "Color contrast ≥ 4.5:1."
+          "to": "Color contrast ≥ 4.5:1.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_9omnz3": {
           "id": "auto_9omnz3",
           "type": "goto",
           "text": "",
-          "to": "Landmarks & labels for controls."
+          "to": "Landmarks & labels for controls.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "start"

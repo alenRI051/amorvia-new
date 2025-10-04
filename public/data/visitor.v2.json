@@ -37,12 +37,28 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1s1"
+          "to": "a1s1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s1": {
           "id": "a1s1",
           "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s2": {
           "id": "a1s2",
@@ -54,7 +70,9 @@
                 "tension": -5,
                 "trust": 2
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s20",
+              "next": "act1_end"
             },
             {
               "label": "Let them in briefly",
@@ -62,7 +80,9 @@
                 "tension": 3,
                 "childStress": 5
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s21",
+              "next": "act1_end"
             },
             {
               "label": "Set a firm boundary: 'Now isn’t a good time. Please text to schedule.'",
@@ -70,7 +90,9 @@
                 "tension": -2,
                 "trust": 3
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s22",
+              "next": "act1_end"
             }
           ],
           "type": "line"
@@ -78,7 +100,27 @@
         "a1s3": {
           "id": "a1s3",
           "text": "Your tone sets the stage for what happens next.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "start"
@@ -90,7 +132,15 @@
         "a2s1": {
           "id": "a2s1",
           "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
         },
         "a2s2": {
           "id": "a2s2",
@@ -102,7 +152,9 @@
                 "trust": 2,
                 "tension": -3
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s20",
+              "next": "act2_end"
             },
             {
               "label": "Suggest a specific time tomorrow",
@@ -110,7 +162,9 @@
                 "trust": 3,
                 "tension": -2
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s21",
+              "next": "act2_end"
             },
             {
               "label": "Decline without alternatives",
@@ -118,7 +172,9 @@
                 "tension": 5,
                 "childStress": 3
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s22",
+              "next": "act2_end"
             }
           ],
           "type": "line"
@@ -126,7 +182,27 @@
         "a2s3": {
           "id": "a2s3",
           "text": "You communicate the boundary and alternative.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
+        },
+        "act2_end": {
+          "id": "act2_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a2s1"
@@ -138,7 +214,15 @@
         "a3s1": {
           "id": "a3s1",
           "text": "They react to your boundary. Your child watches your emotional tone closely.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
         },
         "a3s2": {
           "id": "a3s2",
@@ -150,14 +234,18 @@
                 "trust": 4,
                 "tension": -4
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s20",
+              "next": "act3_end"
             },
             {
               "label": "Restate the boundary and end the conversation",
               "effects": {
                 "tension": -2
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s21",
+              "next": "act3_end"
             },
             {
               "label": "Argue about past behavior",
@@ -165,7 +253,9 @@
                 "tension": 8,
                 "childStress": 6
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s22",
+              "next": "act3_end"
             }
           ],
           "type": "line"
@@ -173,7 +263,27 @@
         "a3s3": {
           "id": "a3s3",
           "text": "The visit ends. Your child mirrors your calm—or your stress.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
+        },
+        "act3_end": {
+          "id": "act3_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a3s1"

@@ -24,25 +24,69 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "auto_31rmuw"
+          "to": "auto_31rmuw",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_31rmuw": {
           "id": "auto_31rmuw",
           "type": "goto",
           "text": "",
-          "to": "Unified rules list, reviewed weekly."
+          "to": "Unified rules list, reviewed weekly.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_hn0bas": {
           "id": "auto_hn0bas",
           "type": "goto",
           "text": "",
-          "to": "Zones of control by domain."
+          "to": "Zones of control by domain.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "auto_93nx6r": {
           "id": "auto_93nx6r",
           "type": "goto",
           "text": "",
-          "to": "Coach mode with consistent consequences."
+          "to": "Coach mode with consistent consequences.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "start"

@@ -32,7 +32,15 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1c1"
+          "to": "a1c1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "a1c1": {
           "id": "a1c1",
@@ -47,7 +55,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a1c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -58,7 +68,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -68,13 +79,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": ": Pathfinding, with choices leading to different tension-trust dynamics. \\n",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     },
@@ -96,7 +123,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a2c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -107,7 +136,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -117,13 +147,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": ": Drafting, offering follow-ups based on plan scope.\\n",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     },
@@ -145,7 +191,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a3c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -156,7 +204,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -166,13 +215,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": ": Sticking Points, resolving conflicts.\\n",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     },
@@ -194,7 +259,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a4c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -205,7 +272,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -215,13 +283,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": ": Resolut",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     }

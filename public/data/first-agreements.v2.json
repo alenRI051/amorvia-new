@@ -32,7 +32,15 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a4c1"
+          "to": "a4c1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "a4c1": {
           "id": "a4c1",
@@ -47,7 +55,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a4c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -58,7 +68,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -68,13 +79,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r\\n\\r\\n# New scenario: Scene - First Agreements\\r\\nfirst_agreements = {\\r\\n \\\"version\\\": 2,\\r\\n \\\"id\\\": \\\"scene-first-agreements\\\",\\r\\n \\\"title\\\": \\\"Scene: First Agreements\\\",\\r\\n \\\"meters\\\": {\\r\\n \\\"tension\\\": {\\\"",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     }

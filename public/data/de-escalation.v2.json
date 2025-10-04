@@ -32,7 +32,15 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1c1"
+          "to": "a1c1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "a1c1": {
           "id": "a1c1",
@@ -47,7 +55,9 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "id": "auto_c_a1c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -58,7 +68,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -68,13 +79,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": "\\\",\\r\\n \\\"steps\\\": [\\r\\n \\\"Use brief, concrete messages.\\\",\\r\\n \\\"Avoid late-night heavy topics.\\\",\\r\\n \\\"Confirm understanding in writing.\\\"\\r\\n ]\\r",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     }

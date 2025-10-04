@@ -37,12 +37,28 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1s1"
+          "to": "a1s1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s1": {
           "id": "a1s1",
           "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
         },
         "a1s2": {
           "id": "a1s2",
@@ -54,14 +70,18 @@
                 "trust": 4,
                 "tension": -3
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s20",
+              "next": "act1_end"
             },
             {
               "label": "Split the day between homes",
               "effects": {
                 "trust": 2
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s21",
+              "next": "act1_end"
             },
             {
               "label": "Insist your way is the right way",
@@ -69,7 +89,9 @@
                 "tension": 7,
                 "childStress": 5
               },
-              "to": "a1s3"
+              "to": "a1s3",
+              "id": "auto_c_a1s22",
+              "next": "act1_end"
             }
           ],
           "type": "line"
@@ -77,7 +99,27 @@
         "a1s3": {
           "id": "a1s3",
           "text": "Your message sets the tone.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "start"
@@ -89,7 +131,15 @@
         "a2s1": {
           "id": "a2s1",
           "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
         },
         "a2s2": {
           "id": "a2s2",
@@ -101,7 +151,9 @@
                 "trust": 3,
                 "childStress": -2
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s20",
+              "next": "act2_end"
             },
             {
               "label": "Contrast critically",
@@ -109,7 +161,9 @@
                 "tension": 5,
                 "childStress": 4
               },
-              "to": "a2s3"
+              "to": "a2s3",
+              "id": "auto_c_a2s21",
+              "next": "act2_end"
             }
           ],
           "type": "line"
@@ -117,7 +171,27 @@
         "a2s3": {
           "id": "a2s3",
           "text": "Your child internalizes your framing.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act2_end"
+            }
+          ]
+        },
+        "act2_end": {
+          "id": "act2_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a2s1"
@@ -129,7 +203,15 @@
         "a3s1": {
           "id": "a3s1",
           "text": "The child wants to bring a keepsake between homes.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
         },
         "a3s2": {
           "id": "a3s2",
@@ -141,14 +223,18 @@
                 "trust": 2,
                 "tension": -2
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s20",
+              "next": "act3_end"
             },
             {
               "label": "Disallow; keep items in one home",
               "effects": {
                 "tension": 2
               },
-              "to": "a3s3"
+              "to": "a3s3",
+              "id": "auto_c_a3s21",
+              "next": "act3_end"
             }
           ],
           "type": "line"
@@ -156,7 +242,27 @@
         "a3s3": {
           "id": "a3s3",
           "text": "You close the holiday plan.",
-          "type": "line"
+          "type": "line",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act3_end"
+            }
+          ]
+        },
+        "act3_end": {
+          "id": "act3_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
         }
       },
       "start": "a3s1"

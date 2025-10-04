@@ -32,7 +32,15 @@
           "id": "start",
           "type": "goto",
           "text": "",
-          "to": "a1c1"
+          "to": "a1c1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "a1c1": {
           "id": "a1c1",
@@ -51,7 +59,9 @@
                   "meter": "tension",
                   "delta": -3
                 }
-              ]
+              ],
+              "id": "auto_c_a1c10",
+              "next": "end"
             },
             {
               "id": "auto_continue",
@@ -62,7 +72,8 @@
                   "meter": "tension",
                   "delta": 0
                 }
-              ]
+              ],
+              "next": "end"
             }
           ],
           "text": ""
@@ -72,13 +83,29 @@
           "type": "line",
           "speaker": "narrator",
           "text": "of the co-parenting scenario, written in a way that allows the user to choose their role (mother or father) while still staying close to real-life emotion \\u2014 with a touch of dark humor, irony, and empathy to keep *Amorvia*\\u",
-          "to": "end"
+          "to": "end",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         },
         "end": {
           "id": "end",
           "type": "end",
           "summary": "End of act.",
-          "text": ""
+          "text": "",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "end"
+            }
+          ]
         }
       }
     }
