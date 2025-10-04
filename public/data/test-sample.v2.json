@@ -2,7 +2,7 @@
   "id": "test-sample",
   "version": "2.0",
   "title": "Test Sample Scenario",
-  "description": "Minimal test matching engine expectations (steps as object map).",
+  "description": "Universal shape: steps[] + nodes[] + explicit entry.",
   "tags": ["test", "sample"],
   "difficulty": "easy",
   "meters": [
@@ -12,18 +12,18 @@
   ],
   "startAct": "act1",
   "start": "a1_line1",
-  "entry": { "actId": "act1", "nodeId": "a1_line1" },
   "startNode": "a1_line1",
   "entryNode": "a1_line1",
+  "entry": { "actId": "act1", "nodeId": "a1_line1" },
   "acts": [
     {
       "id": "act1",
       "title": "Minimal Act",
       "start": "a1_line1",
-      "steps": {
-        "a1_line1": {
+      "steps": [
+        {
           "id": "a1_line1",
-          "text": "If you see this, object-map steps + explicit entry works.",
+          "text": "If you see this, array steps + explicit entry works.",
           "choices": [
             {
               "id": "A",
@@ -33,14 +33,35 @@
             }
           ]
         },
-        "a1_end": {
+        {
           "id": "a1_end",
           "text": "End of minimal test.",
           "choices": [
             { "id": "E", "label": "Finish", "effects": [], "next": null }
           ]
         }
-      }
+      ],
+      "nodes": [
+        {
+          "id": "a1_line1",
+          "text": "If you see this, array nodes also present.",
+          "choices": [
+            {
+              "id": "A",
+              "label": "Choice A [trust+1]",
+              "effects": [{ "meter": "trust", "delta": 1 }],
+              "next": "a1_end"
+            }
+          ]
+        },
+        {
+          "id": "a1_end",
+          "text": "End of minimal test.",
+          "choices": [
+            { "id": "E", "label": "Finish", "effects": [], "next": null }
+          ]
+        }
+      ]
     }
   ]
 }
