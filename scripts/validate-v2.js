@@ -1,9 +1,9 @@
+// /scripts/validate-v2.js  (ESM compatible)
 // Validate Amorvia v2 scenarios + v2-index.json
 // Usage: node scripts/validate-v2.js
-// Exits with code 1 if any errors are found.
 
 import { readdirSync, readFileSync, statSync } from "fs";
-import { join, resolve } from "path";
+import { join, resolve, sep } from "path";
 
 const ROOT = resolve(".");
 const DATA_DIR = join(ROOT, "public", "data");
@@ -35,14 +35,16 @@ if (!Array.isArray(index.scenarios)) {
 }
 
 // --- collect scenarios on disk --------------------------------------------
-const allScenarioFiles = readdirSync(DATA_DIR).filter(f => f.endsWith(".v2.json") && f !== "v2-index.json");
+const allScenarioFiles = readdirSync(DATA_DIR).filter(
+  (f) => f.endsWith(".v2.json") && f !== "v2-index.json"
+);
 
 // --- validations -----------------------------------------------------------
 let failed = false;
 const DIFFICULTIES = new Set(["easy", "normal", "medium", "hard", "info"]);
 
 function validateScenarioFile(absPath) {
-  const name = absPath.replace(`${DATA_DIR}${require('path').sep}`, "");
+  const name = absPath.replace(`${DATA_DIR}${sep}`, "");
   let j;
   try { j = JSON.parse(readFileSync(absPath, "utf8")); }
   catch (e) { err(`${name}: invalid JSON (${e.message})`); failed = true; return; }
