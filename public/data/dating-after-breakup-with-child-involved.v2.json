@@ -65,7 +65,7 @@
                 { "meter": "trust", "delta": 1 },
                 { "meter": "tension", "delta": -1 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             },
             {
               "id": "A2",
@@ -74,7 +74,7 @@
                 { "meter": "trust", "delta": -2 },
                 { "meter": "tension", "delta": 2 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             }
           ]
         },
@@ -90,7 +90,7 @@
                 { "meter": "trust", "delta": 0 },
                 { "meter": "tension", "delta": -1 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             },
             {
               "id": "B2",
@@ -99,7 +99,7 @@
                 { "meter": "trust", "delta": -2 },
                 { "meter": "tension", "delta": 2 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             }
           ]
         },
@@ -115,7 +115,7 @@
                 { "meter": "trust", "delta": 1 },
                 { "meter": "tension", "delta": -1 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             },
             {
               "id": "C2",
@@ -124,7 +124,7 @@
                 { "meter": "trust", "delta": -1 },
                 { "meter": "tension", "delta": 0 }
               ],
-              "next": "a1_end"
+              "next": "act2:a2_line1"
             }
           ]
         },
@@ -153,8 +153,8 @@
           "type": "choice",
           "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
           "choices": [
-            { "id": "A1", "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
-            { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_end" }
+            { "id": "A1", "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "act2:a2_line1" },
+            { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "act2:a2_line1" }
           ]
         },
         {
@@ -162,8 +162,8 @@
           "type": "choice",
           "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
           "choices": [
-            { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"", "effects": [{ "meter": "trust", "delta": 0 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
-            { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_end" }
+            { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"", "effects": [{ "meter": "trust", "delta": 0 }, { "meter": "tension", "delta": -1 }], "next": "act2:a2_line1" },
+            { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "act2:a2_line1" }
           ]
         },
         {
@@ -171,8 +171,8 @@
           "type": "choice",
           "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
           "choices": [
-            { "id": "C1", "label": "Follow up later with a message clarifying intent.", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_end" },
-            { "id": "C2", "label": "Leave it be.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }], "next": "a1_end" }
+            { "id": "C1", "label": "Follow up later with a message clarifying intent.", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "act2:a2_line1" },
+            { "id": "C2", "label": "Leave it be.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }], "next": "act2:a2_line1" }
           ]
         },
         {
@@ -184,6 +184,61 @@
           ]
         }
       ]
+    },
+    {
+      "id": "act2",
+      "title": "Act 2 — First Conversation About New Partner",
+      "start": "a2_line1",
+      "steps": {
+        "a2_line1": {
+          "id": "a2_line1",
+          "type": "line",
+          "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.",
+          "to": "a2_choice1",
+          "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }]
+        },
+        "a2_choice1": {
+          "id": "a2_choice1",
+          "type": "choice",
+          "text": "How do you open the topic?",
+          "choices": [
+            { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
+            { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
+            { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
+          ]
+        },
+        "a2_line2a": { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        "a2_line2b": { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        "a2_line2c": { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        "a2_choice2": {
+          "id": "a2_choice2",
+          "type": "choice",
+          "text": "Set a boundary about pacing and info:",
+          "choices": [
+            { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_end" },
+            { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_end" },
+            { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_end" }
+          ]
+        },
+        "a2_end": { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
+      },
+      "nodes": [
+        { "id": "a2_line1", "type": "line", "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.", "to": "a2_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }] },
+        { "id": "a2_choice1", "type": "choice", "text": "How do you open the topic?", "choices": [
+          { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
+          { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
+          { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
+        ]},
+        { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
+        { "id": "a2_choice2", "type": "choice", "text": "Set a boundary about pacing and info:", "choices": [
+          { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_end" },
+          { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_end" },
+          { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_end" }
+        ]},
+        { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
+      ]
     }
   ],
   "startAct": "act1",
@@ -192,59 +247,3 @@
   "entryNode": "a1_line1",
   "entry": { "actId": "act1", "nodeId": "a1_line1" }
 }
-{
-  "id": "act2",
-  "title": "Act 2 — First Conversation About New Partner",
-  "start": "a2_line1",
-  "steps": {
-    "a2_line1": {
-      "id": "a2_line1",
-      "type": "line",
-      "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.",
-      "to": "a2_choice1",
-      "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }]
-    },
-    "a2_choice1": {
-      "id": "a2_choice1",
-      "type": "choice",
-      "text": "How do you open the topic?",
-      "choices": [
-        { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
-        { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
-        { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
-      ]
-    },
-    "a2_line2a": { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    "a2_line2b": { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    "a2_line2c": { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    "a2_choice2": {
-      "id": "a2_choice2",
-      "type": "choice",
-      "text": "Set a boundary about pacing and info:",
-      "choices": [
-        { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_end" },
-        { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_end" },
-        { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_end" }
-      ]
-    },
-    "a2_end": { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
-  },
-  "nodes": [
-    { "id": "a2_line1", "type": "line", "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.", "to": "a2_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }] },
-    { "id": "a2_choice1", "type": "choice", "text": "How do you open the topic?", "choices": [
-      { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
-      { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
-      { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
-    ]},
-    { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-    { "id": "a2_choice2", "type": "choice", "text": "Set a boundary about pacing and info:", "choices": [
-      { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_end" },
-      { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_end" },
-      { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_end", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_end" }
-    ]},
-    { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
-  ]
-}
-
