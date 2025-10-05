@@ -1,7 +1,5 @@
-// cypress.config.js (CommonJS)
-const { defineConfig } = require('cypress');
-
-module.exports = defineConfig({
+// cypress.config.js  (no require/import)
+module.exports = {
   e2e: {
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.cy.js',
@@ -9,9 +7,6 @@ module.exports = defineConfig({
     video: false,
     screenshotOnRunFailure: true,
     chromeWebSecurity: false,
-    retries: {
-      runMode: 1,
-      openMode: 0,
-    },
+    retries: { runMode: 1, openMode: 0 },
   },
-});
+};
