@@ -53,7 +53,6 @@
             }
           ]
         },
-
         "a1_line2A": {
           "id": "a1_line2A",
           "type": "choice",
@@ -79,7 +78,6 @@
             }
           ]
         },
-
         "a1_line2B": {
           "id": "a1_line2B",
           "type": "choice",
@@ -105,7 +103,6 @@
             }
           ]
         },
-
         "a1_line2C": {
           "id": "a1_line2C",
           "type": "choice",
@@ -131,7 +128,6 @@
             }
           ]
         },
-
         "a1_end": {
           "id": "a1_end",
           "type": "end",
@@ -140,9 +136,6 @@
             { "id": "E", "label": "Finish", "effects": [], "next": null }
           ]
         },
-
-        /* ---------- Former Act 2 steps (now within act1) ---------- */
-
         "a2_line1": {
           "id": "a2_line1",
           "type": "line",
@@ -152,7 +145,6 @@
             { "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }
           ]
         },
-
         "a2_choice1": {
           "id": "a2_choice1",
           "type": "choice",
@@ -190,7 +182,6 @@
             }
           ]
         },
-
         "a2_line2a": {
           "id": "a2_line2a",
           "type": "line",
@@ -200,7 +191,6 @@
             { "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }
           ]
         },
-
         "a2_line2b": {
           "id": "a2_line2b",
           "type": "line",
@@ -210,7 +200,6 @@
             { "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }
           ]
         },
-
         "a2_line2c": {
           "id": "a2_line2c",
           "type": "line",
@@ -220,7 +209,6 @@
             { "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }
           ]
         },
-
         "a2_choice2": {
           "id": "a2_choice2",
           "type": "choice",
@@ -259,7 +247,6 @@
             }
           ]
         },
-
         "a2_end": {
           "id": "a2_end",
           "type": "end",
