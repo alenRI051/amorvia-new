@@ -1,7 +1,5 @@
-// @ts-check
-import { defineConfig } from "cypress";
-
-export default defineConfig({
+// cypress.config.js (ESM, no imports needed)
+export default {
   e2e: {
     baseUrl: "http://localhost:3000",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
@@ -14,8 +12,7 @@ export default defineConfig({
     retries: { runMode: 1, openMode: 0 },
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
-      // hook plugins here if needed
       return config;
     },
   },
-});
+};
