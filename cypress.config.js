@@ -1,22 +1,21 @@
-const { defineConfig } = require("cypress");
+// @ts-check
+import { defineConfig } from "cypress";
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:3000",     // where `npm run dev` serves /public
+    baseUrl: "http://localhost:3000",
+    specPattern: "cypress/e2e/**/*.cy.{js,ts}",
     supportFile: "cypress/support/e2e.js",
-    fixturesFolder: "cypress/fixtures",
     video: false,
+    screenshotsFolder: "cypress/screenshots",
+    downloadsFolder: "cypress/downloads",
     defaultCommandTimeout: 10000,
-    viewportWidth: 1280,
-    viewportHeight: 800,
+    requestTimeout: 10000,
+    retries: { runMode: 1, openMode: 0 },
     chromeWebSecurity: false,
-    retries: {
-      runMode: 1,
-      openMode: 0
-    },
     setupNodeEvents(on, config) {
-      // You can hook reporters or logging here later if needed
+      // hook plugins here if needed
       return config;
-    }
-  }
+    },
+  },
 });
