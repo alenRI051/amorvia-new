@@ -1,63 +1,46 @@
-// cypress/e2e/dating_after_breakup.cy.js
-
 describe('Dating After Breakup (With Child Involved)', () => {
-  beforeEach(() => {
-    cy.clearLocalStorage();
-    cy.bootScenario('dating-after-breakup-with-child-involved');
-  });
+  const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
 
   it('Path A → Stable plan ending', () => {
+    cy.bootScenario(SCENARIO_ID);
+
     // Act 1
-    cy.pick(/be open/i);              // A
-    cy.pick(/affirm shared priority/i); // A1
+    cy.pickChoice(/be open/i);
+    cy.pickChoice(/affirm shared priority/i);
 
-    // Should transition into Act 2 start (choices visible again)
-    cy.get('#choices', { timeout: 20000 })
-      .find('button, [role="button"]')
-      .should('have.length.greaterThan', 0);
-
+    // App should auto-jump to Act 2 (per your wiring). If not, ensure boot logic does.
     // Act 2
-    cy.pick(/neutral.*heads-up/i);    // a2_c1
-    cy.pick(/90-day.*no intros/i);    // a2_c2a
+    cy.pickChoice(/neutral.*heads-up/i);
+    cy.pickChoice(/90-day no intros/i);
 
-    // End of Act 2 (end node might present a single Finish/Continue)
-    cy.contains('button, [role="button"]', /finish|continue/i, { timeout: 10000 }).click();
-
-    // Act 3 start should show choices again (wired by your v2 script)
-    cy.get('#choices', { timeout: 20000 })
-      .find('button, [role="button"]')
-      .should('have.length.greaterThan', 0);
-
-    // (If you have Act 3, continue assertions here or just ensure we reached it)
+    cy.expectEnd();
   });
 
   it('Path B → Fragile truce ending', () => {
+    cy.bootScenario(SCENARIO_ID);
+
     // Act 1
-    cy.pick(/not ready to discuss/i); // B
-    cy.pick(/share when.*relevant/i); // B1
+    cy.pickChoice(/not ready to discuss/i);
+    cy.pickChoice(/share when it's relevant/i);
 
     // Act 2
-    cy.pick(/avoid the topic/i);      // a2_c3
-    cy.pick(/ask what helps them feel safe/i); // a2_c2c
+    cy.pickChoice(/avoid the topic/i);
+    cy.pickChoice(/intros soon/i);
 
-    cy.contains('button, [role="button"]', /finish|continue/i, { timeout: 10000 }).click();
-    cy.get('#choices', { timeout: 20000 })
-      .find('button, [role="button"]')
-      .should('have.length.greaterThan', 0);
+    cy.expectEnd();
   });
 
   it('Path C → Separate lanes ending', () => {
+    cy.bootScenario(SCENARIO_ID);
+
     // Act 1
-    cy.pick(/deflect/i);              // C
-    cy.pick(/leave it be/i);          // C2
+    cy.pickChoice(/deflect/i);
+    cy.pickChoice(/leave it be/i);
 
     // Act 2
-    cy.pick(/share lots of details/i); // a2_c2
-    cy.pick(/intros soon/i);           // a2_c2b
+    cy.pickChoice(/share lots of details/i);
+    cy.pickChoice(/ask what helps/i);
 
-    cy.contains('button, [role="button"]', /finish|continue/i, { timeout: 10000 }).click();
-    cy.get('#choices', { timeout: 20000 })
-      .find('button, [role="button"]')
-      .should('have.length.greaterThan', 0);
+    cy.expectEnd();
   });
 });
