@@ -20,15 +20,12 @@
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
 
-    // Changed: use http-server (you have it) instead of "npx serve"
     "dev": "http-server -p 3000 public",
 
-    // E2E helpers
     "test:e2e": "xvfb-run -a cypress run --browser electron",
     "test:e2e:open": "xvfb-run -a cypress open",
     "serve:static": "http-server -p 3000 .",
 
-    // New: quick setup after a fresh Codespace
     "setup:dev": "bash tools/setup-dev.sh"
   },
   "dependencies": {
