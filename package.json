@@ -18,7 +18,9 @@
     "choices:apply-map": "node tools/apply-effects-map.v2.mjs",
     "choices:apply-map:write": "node tools/apply-effects-map.v2.mjs --write --backup",
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
-    "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup"
+    "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open"
   },
   "dependencies": {
     "ajv": "^8.17.1",
