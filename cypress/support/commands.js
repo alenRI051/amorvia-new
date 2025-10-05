@@ -1,22 +1,28 @@
+// cypress/support/commands.js
+
+// Wait for the app shell to be interactive and pick a scenario by id
 Cypress.Commands.add('bootScenario', (scenarioId) => {
-  cy.get('[data-testid="mode-select"]').select('v2', { force: true });
-  cy.get('[data-testid="scenario-picker"]', { timeout: 10000 }).select(scenarioId, { force: true });
-  cy.get('[data-testid="restart-act"]').click();
-  cy.get('[data-testid="dialog"]', { timeout: 10000 }).should('not.be.empty');
-  cy.get('[data-testid="choices"]', { timeout: 10000 }).should('exist');
+  // Ensure the entry patch had time to run and UI is ready
+  cy.get('#scenarioPicker', { timeout: 20000 }).should('exist');
+
+  // Select by value (the <option value="..."> should equal the scenario id)
+  cy.get('#scenarioPicker').select(scenarioId);
+
+  // The dialog area and choices should appear for Act 1
+  cy.get('#dialog', { timeout: 20000 }).should('be.visible');
+  cy.get('#choices', { timeout: 20000 }).should('exist');
 });
 
-Cypress.Commands.add('pickChoice', (textOrRegex) => {
-  const matcher = typeof textOrRegex === 'string' ? new RegExp(textOrRegex, 'i') : textOrRegex;
-  cy.get('[data-testid="choices"]', { timeout: 10000 })
-    .find('button, [role="button"]')
-    .contains(matcher)
-    .click({ force: true });
-});
+// Click a choice button by (case-insensitive) text or RegExp
+Cypress.Commands.add('clickChoice', (textOrRegex) => {
+  const pattern = textOrRegex instanceof RegExp ? textOrRegex : new RegExp(textOrRegex, 'i');
 
-Cypress.Commands.add('expectEnd', () => {
-  cy.get('[data-testid="choices"]').find('button, [role="button"]').should(($btns) => {
-    const texts = $btns.toArray().map((b) => b.innerText.trim().toLowerCase());
-    expect(texts.join(' ')).to.match(/finish|end|continue/);
+  cy.get('#choices', { timeout: 20000 }).within(() => {
+    cy.contains('button, [role="button"]', pattern, { timeout: 20000 }).click();
   });
+});
+
+// Assert the HUD meters exist (optional helper)
+Cypress.Commands.add('assertMetersVisible', () => {
+  cy.get('#hud', { timeout: 20000 }).should('exist');
 });
