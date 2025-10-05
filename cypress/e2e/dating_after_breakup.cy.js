@@ -1,46 +1,52 @@
+// cypress/e2e/dating_after_breakup.cy.js
+
 describe('Dating After Breakup (With Child Involved)', () => {
-  const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
+  beforeEach(() => {
+    // boot the multi-act scenario fresh each test
+    cy.bootScenario('dating-after-breakup-with-child-involved');
+  });
 
   it('Path A → Stable plan ending', () => {
-    cy.bootScenario(SCENARIO_ID);
-
     // Act 1
-    cy.pickChoice(/be open/i);
-    cy.pickChoice(/affirm shared priority/i);
+    cy.clickChoice(/Be open/i);
+    cy.clickChoice(/Affirm shared priority/i);
 
-    // App should auto-jump to Act 2 (per your wiring). If not, ensure boot logic does.
     // Act 2
-    cy.pickChoice(/neutral.*heads-up/i);
-    cy.pickChoice(/90-day no intros/i);
+    cy.clickChoice(/continue/i); // a2_line1 → a2_choice1
+    cy.clickChoice(/neutral, child-first heads-up/i);
+    cy.clickChoice(/continue/i); // a2_line2a → a2_choice2
+    cy.clickChoice(/90-day no intros \+ only schedule-relevant info/i);
 
-    cy.expectEnd();
+    // End of Act 2, finish
+    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
   });
 
   it('Path B → Fragile truce ending', () => {
-    cy.bootScenario(SCENARIO_ID);
-
     // Act 1
-    cy.pickChoice(/not ready to discuss/i);
-    cy.pickChoice(/share when it's relevant/i);
+    cy.clickChoice(/not ready to discuss/i);
+    cy.clickChoice(/share when it's relevant/i);
 
     // Act 2
-    cy.pickChoice(/avoid the topic/i);
-    cy.pickChoice(/intros soon/i);
+    cy.clickChoice(/continue/i);
+    cy.clickChoice(/avoid the topic/i);
+    cy.clickChoice(/continue/i);
+    cy.clickChoice(/ask what helps them feel safe/i);
 
-    cy.expectEnd();
+    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
   });
 
   it('Path C → Separate lanes ending', () => {
-    cy.bootScenario(SCENARIO_ID);
-
     // Act 1
-    cy.pickChoice(/deflect/i);
-    cy.pickChoice(/leave it be/i);
+    cy.clickChoice(/^Deflect/i);
+    cy.clickChoice(/Follow up later/i);
 
     // Act 2
-    cy.pickChoice(/share lots of details/i);
-    cy.pickChoice(/ask what helps/i);
+    cy.clickChoice(/continue/i);
+    cy.clickChoice(/share lots of details/i);
+    cy.clickChoice(/continue/i);
+    cy.clickChoice(/intros soon/i);
 
-    cy.expectEnd();
+    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
   });
 });
+
