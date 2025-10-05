@@ -20,15 +20,17 @@
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
     "dev": "npx serve public",
-    "test:e2e": "npx cypress run",
-    "test:e2e:open": "npx cypress open",
-    "serve:static": "http-server -p 3000 .",
     "test:e2e": "xvfb-run -a cypress run --browser electron",
-    "test:e2e:open": "xvfb-run -a cypress open"
+    "test:e2e:open": "xvfb-run -a cypress open",
+    "serve:static": "http-server -p 3000 ."
   },
   "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "globby": "^14.0.2"
+  },
+  "devDependencies": {
+    "cypress": "^15.3.0",
+    "http-server": "^14.1.1"
   }
 }
