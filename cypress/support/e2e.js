@@ -1,10 +1,17 @@
+// cypress/support/e2e.js
 import './commands';
 
-// Boot a fresh app for every test
-beforeEach(() => {
+// Start the static server once for this spec; stop when done.
+before(() => {
   cy.task('startServer');
-  cy.clearCookies();
+});
+
+after(() => {
+  cy.task('stopServer');
+});
+
+// For each test: clean state and (re)open the app’s root.
+beforeEach(() => {
   cy.clearLocalStorage();
-  // disable SW + cache like you do manually
-  cy.visit('/index.html?nosw=1&devcache=0');
+  cy.visit('/');
 });
