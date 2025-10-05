@@ -20,8 +20,8 @@
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
     "dev": "npx serve public",
-    "test:e2e": "cypress run",
-    "test:e2e:open": "cypress open"
+    "test:e2e": "npx cypress run",
+    "test:e2e:open": "npx cypress open"
   },
   "dependencies": {
     "ajv": "^8.17.1",
