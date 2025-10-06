@@ -19,22 +19,22 @@
     "choices:apply-map:write": "node tools/apply-effects-map.v2.mjs --write --backup",
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
-
     "dev": "http-server -p 3000 public",
-
     "test:e2e": "xvfb-run -a cypress run --browser electron",
     "test:e2e:open": "xvfb-run -a cypress open",
     "serve:static": "http-server -p 3000 .",
-
     "setup:dev": "bash tools/setup-dev.sh"
   },
   "dependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "globby": "^14.0.2"
+    "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
+    "chalk": "^5.6.2",
     "cypress": "^15.3.0",
-    "http-server": "^14.1.1"
+    "execa": "^9.6.0",
+    "globby": "^15.0.0",
+    "http-server": "^14.1.1",
+    "minimist": "^1.2.8"
   }
 }
