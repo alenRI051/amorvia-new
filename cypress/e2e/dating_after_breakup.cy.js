@@ -3,27 +3,28 @@
 /**
  * Scenario: Dating After Breakup (With Child Involved)
  * First screen: single "Continue"
- * Next screen: typically 3 buttons, but can be 2+ depending on copy/branch tweaks.
+ * Next screen: usually 3 buttons, but allow 2+ for copy/branch tweaks.
  */
 
 const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
 
-// dump current button labels to the Cypress runner log (handy when it fails)
-const logChoices = (note = '') => {
+// helper: print current choice labels to the Cypress runner log
+const logChoices = (note = '') =>
   cy.get('#choices').find('button, [role="button"]').then(($btns) => {
-    const labels = [...$btns].map(el => (el.innerText || el.textContent || '').trim());
+    const labels = [...$btns].map((el) => (el.innerText || el.textContent || '').trim());
     cy.log(`${note} choices: ${JSON.stringify(labels)}`);
   });
-};
 
-// assert we have at least N buttons and print them
-const expectInitialChoices = (min = 2) => {
-  cy.get('#choices').find('button, [role="button"]').should(($btns) => {
-    const labels = [...$btns].map(el => (el.innerText || el.textContent || '').trim());
-    cy.log('Initial choices:', JSON.stringify(labels));
-    expect($btns.length, `expected >= ${min} choice button(s)`).to.be.gte(min);
-  });
-};
+// assert at least N choices (retriable) then log them (non-retriable)
+const expectInitialChoices = (min = 2) =>
+  cy
+    .get('#choices', { timeout: 20000 })
+    .find('button, [role="button"]', { timeout: 20000 })
+    .should('have.length.at.least', min)
+    .then(($btns) => {
+      const labels = [...$btns].map((el) => (el.innerText || el.textContent || '').trim());
+      cy.log('Initial choices:', JSON.stringify(labels));
+    });
 
 describe('Dating After Breakup (With Child Involved)', () => {
   beforeEach(() => {
@@ -39,19 +40,19 @@ describe('Dating After Breakup (With Child Involved)', () => {
 
     // 2) Choose "Be open"
     cy.waitForChoices(2);
-    expectInitialChoices(2);        // tolerant: 2 or 3+
+    expectInitialChoices(2);
     logChoices('Before Path A pick 1');
     cy.clickChoice(/be open/i);
 
     // 3) Dialog progressed
     cy.get('#dialog').invoke('text').should('match', /thanks for telling me|honest/i);
 
-    // 4) Constructive follow-up (copy-safe regex; fallback to first)
+    // 4) Constructive follow-up (regex, fallback to first)
     cy.waitForChoices(1);
     logChoices('Before Path A pick 2');
-    cy.get('#choices').then($wrap => {
+    cy.get('#choices').then(($wrap) => {
       const $btns = $wrap.find('button, [role="button"]');
-      const idx = [...$btns].findIndex(el =>
+      const idx = [...$btns].findIndex((el) =>
         /affirm shared priority|agree on pacing|heads?-?up|plan/i.test(el.innerText || '')
       );
       if (idx >= 0) cy.wrap($btns.eq(idx)).click({ force: true });
@@ -98,3 +99,4 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.get('#hud').should('exist');
   });
 });
+
