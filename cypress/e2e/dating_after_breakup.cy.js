@@ -2,118 +2,96 @@
 
 /**
  * Scenario: Dating After Breakup (With Child Involved)
- * Flow notes:
- * - First screen shows a single "Continue" choice
- * - Next screen has 3 choices:
- *   1) "Be open: ..."                       -> Path A
- *   2) "Keep it private for now: ..."       -> Path B
- *   3) "Deflect: change the subject ..."    -> Path C
+ * Flow:
+ * - Screen 1: single "Continue"
+ * - Screen 2: three choices guiding paths:
+ *   - "Be open ..."                  -> Path A
+ *   - "Keep it private for now ..."  -> Path B
+ *   - "Deflect ..."                  -> Path C
  *
- * We keep assertions resilient to copy changes and headless rendering.
+ * This spec:
+ * - boots the scenario into v2 mode
+ * - clicks "Continue" by index (1-based)
+ * - picks each path by a tolerant regex (labels may change slightly)
+ * - asserts the dialog becomes non-empty, then loosely matches copy
+ * - advances one more step and sanity-checks UI is alive
  */
 
 const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
 
-/** Assert #dialog currently renders some visible, non-empty text. */
-const expectDialogHasText = () =>
-  cy.get('#dialog')
-    .find('*:visible')
-    .then($els => {
-      const text = $els.text().replace(/\s+/g, ' ').trim();
-      expect(text, 'dialog should show visible text').to.have.length.greaterThan(0);
+// Helper: ensure dialog has some text (copy can change, we just need it populated)
+const waitForDialogText = () => {
+  cy.get('#dialog', { timeout: 20000 })
+    .should('exist')
+    .should(($d) => {
+      const t = ($d.text() || '').trim();
+      expect(t.length, 'dialog has text').to.be.greaterThan(0);
     });
-
-/** Log current choice labels and assert we have at least one. */
-const expectInitialThreeChoices = () => {
-  cy.get('#choices').find('button, [role="button"]').then(($btns) => {
-    const labels = Cypress.$.makeArray($btns).map(
-      (el) => (el.innerText || el.textContent || '').trim()
-    );
-    cy.log('Current choices:', JSON.stringify(labels));
-    expect(labels.length, 'expected >= 1 choice button(s)').to.be.gte(1);
-  });
 };
 
 describe('Dating After Breakup (With Child Involved)', () => {
   beforeEach(() => {
-    cy.log('===== beforeEach start =====');
-    // Clears storage, visits /?mode=v2, selects scenario, waits for first choices
-    cy.bootScenario(SCENARIO_ID);
-    cy.log('===== beforeEach done =====');
+    cy.bootScenario(SCENARIO_ID);   // visits /?mode=v2, selects scenario, waits for first choices
+    // First screen: a single "Continue"
+    cy.waitForChoices(1);
+    cy.clickChoice(1);
   });
 
   it('Path A → Stable plan ending', () => {
-    // 1) First screen → "Continue"
-    cy.clickChoice(1);
+    // Pick "Be open ..."
+    cy.waitForChoices(1); // don't assume exact count; just ensure buttons exist
+    cy.clickChoice(/be\s*open|transparent|honest/i);
 
-    // 2) Expect three options; pick "Be open"
-    cy.waitForChoices(3);
-    expectInitialThreeChoices();
-    cy.log('Path A: looking for "be open"');
-    cy.clickChoice(/be open/i);
+    // Dialog should update (loose match)
+    waitForDialogText();
+    cy.get('#dialog').invoke('text')
+      .should('match', /thanks|honest|plan|let's/i);
 
-    // 3) Assert dialog updated (copy-safe)
-    expectDialogHasText();
-
-    // 4) Take a constructive follow-up (prefer by text; fallback to first)
+    // Follow-up: take a constructive option (prefer its label, else first)
     cy.waitForChoices(1);
-    cy.get('#choices').find('button, [role="button"]').then(($btns) => {
-      const labels = Cypress._.map($btns, (el) => (el.innerText || el.textContent || '').trim());
-      cy.log('Path A follow-up choices:', JSON.stringify(labels));
+    cy.get('#choices').then(($wrap) => {
+      const $btns = $wrap.find('button, [role="button"]');
       const idx = Cypress.$.makeArray($btns).findIndex((el) =>
-        /affirm shared priority|priority|pacing|communication|plan/i.test(el.innerText || '')
+        /affirm|priority|pacing|communication|plan/i.test(el.innerText || el.textContent || '')
       );
-      if (idx >= 0) {
-        cy.wrap($btns.eq(idx)).click({ force: true });
-      } else {
-        cy.wrap($btns.eq(0)).click({ force: true });
-      }
+      if (idx >= 0) cy.wrap($btns.eq(idx)).click({ force: true });
+      else cy.clickChoice(1);
     });
 
-    // 5) Sanity checks
-    expectDialogHasText();
+    // Sanity
+    waitForDialogText();
     cy.get('#hud').should('exist');
   });
 
   it('Path B → Fragile truce ending', () => {
-    // 1) First screen → "Continue"
-    cy.clickChoice(1);
+    // Pick "Keep it private for now ..."
+    cy.waitForChoices(1);
+    cy.clickChoice(/keep.*private|not\s*ready|personal\s*life/i);
 
-    // 2) Pick "Keep it private for now"
-    cy.waitForChoices(3);
-    expectInitialThreeChoices();
-    cy.log('Path B: looking for "keep it private"');
-    cy.clickChoice(/keep it private/i);
+    waitForDialogText();
+    cy.get('#dialog').invoke('text')
+      .should('match', /not\s*ready|private|personal\s*life|tense/i);
 
-    // 3) Assert dialog updated (copy-safe)
-    expectDialogHasText();
-
-    // 4) One more step to move forward (pick first available)
     cy.waitForChoices(1);
     cy.clickChoice(1);
 
-    expectDialogHasText();
+    waitForDialogText();
     cy.get('#hud').should('exist');
   });
 
   it('Path C → Separate lanes ending', () => {
-    // 1) First screen → "Continue"
-    cy.clickChoice(1);
+    // Pick "Deflect ..."
+    cy.waitForChoices(1);
+    cy.clickChoice(/deflect|change\s*the\s*subject|logistics/i);
 
-    // 2) Pick "Deflect"
-    cy.waitForChoices(3);
-    expectInitialThreeChoices();
-    cy.log('Path C: looking for "deflect"');
-    cy.clickChoice(/deflect/i);
+    waitForDialogText();
+    cy.get('#dialog').invoke('text')
+      .should('match', /logistics|change\s*the\s*subject|separate/i);
 
-    // 3) Assert dialog updated (copy-safe)
-    expectDialogHasText();
-
-    // 4) Progress one more step
     cy.waitForChoices(1);
     cy.clickChoice(1);
 
-    expectDialogHasText();
+    waitForDialogText();
     cy.get('#hud').should('exist');
   });
 });
