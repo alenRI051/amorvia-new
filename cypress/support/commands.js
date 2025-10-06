@@ -143,3 +143,18 @@ Cypress.Commands.add('bootScenario', (scenarioId) => {
   // Wait for first choices to appear
   cy.waitForChoices(1);
 });
+
+// Find (but don't click) a choice by label (string/regex) or by index
+Cypress.Commands.add('findChoice', (target) => {
+  cy.get('#choices', { timeout: 20000 }).should('be.visible');
+
+  if (typeof target === 'number') {
+    const idx = target >= 1 ? target - 1 : target; // allow 1-based
+    return cy.get('#choices').find('button, [role="button"]', { timeout: 20000 }).eq(idx);
+  }
+
+  const matcher = target instanceof RegExp ? target : new RegExp(`^\\s*${target}\\s*$`, 'i');
+
+  return cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
+    .filter((_, el) => matcher.test(el.innerText || el.textContent || ''));
+});
