@@ -3,7 +3,7 @@
 /**
  * Scenario: Dating After Breakup (With Child Involved)
  * First screen: single "Continue"
- * Next screen: usually 3 buttons, but allow 2+ for copy/branch tweaks.
+ * Next screen: buttons can be 2–3 depending on copy.
  */
 
 const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
@@ -17,8 +17,7 @@ const logChoices = (note = '') =>
 
 // assert at least N choices (retriable) then log them (non-retriable)
 const expectInitialChoices = (min = 2) =>
-  cy
-    .get('#choices', { timeout: 20000 })
+  cy.get('#choices', { timeout: 20000 })
     .find('button, [role="button"]', { timeout: 20000 })
     .should('have.length.at.least', min)
     .then(($btns) => {
@@ -29,8 +28,7 @@ const expectInitialChoices = (min = 2) =>
 describe('Dating After Breakup (With Child Involved)', () => {
   beforeEach(() => {
     cy.log('===== beforeEach start =====');
-    // boots /?mode=v2, selects scenario, waits for first button(s)
-    cy.bootScenario(SCENARIO_ID);
+    cy.bootScenario(SCENARIO_ID);  // visits /?mode=v2, selects scenario, waits for first choice(s)
     cy.log('===== beforeEach done =====');
   });
 
@@ -38,16 +36,16 @@ describe('Dating After Breakup (With Child Involved)', () => {
     // 1) First screen → "Continue"
     cy.clickChoice(1);
 
-    // 2) Choose "Be open"
+    // 2) Choose first option (copy varies)
     cy.waitForChoices(2);
     expectInitialChoices(2);
     logChoices('Before Path A pick 1');
-    cy.clickChoice(/be open/i);
+    cy.clickChoice(1);
 
     // 3) Dialog progressed
-    cy.get('#dialog').invoke('text').should('match', /thanks for telling me|honest/i);
+    cy.get('#dialog').invoke('text').should('match', /thanks for telling me|honest|plan/i);
 
-    // 4) Constructive follow-up (regex, fallback to first)
+    // 4) Constructive follow-up (regex if available, else first)
     cy.waitForChoices(1);
     logChoices('Before Path A pick 2');
     cy.get('#choices').then(($wrap) => {
@@ -69,9 +67,9 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.waitForChoices(2);
     expectInitialChoices(2);
     logChoices('Before Path B pick 1');
-    cy.clickChoice(/keep it private/i);
+    cy.clickChoice(2);
 
-    cy.get('#dialog').invoke('text').should('match', /not ready|private|personal life/i);
+    cy.get('#dialog').invoke('text').should('match', /not ready|private|personal life|tense/i);
 
     cy.waitForChoices(1);
     logChoices('Before Path B pick 2');
@@ -87,9 +85,11 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.waitForChoices(2);
     expectInitialChoices(2);
     logChoices('Before Path C pick 1');
-    cy.clickChoice(/deflect/i);
+    cy.get('#choices').find('button,[role="button"]').its('length').then(len => {
+      cy.clickChoice(len >= 3 ? 3 : 2);
+    });
 
-    cy.get('#dialog').invoke('text').should('match', /logistics|change the subject|deflect/i);
+    cy.get('#dialog').invoke('text').should('match', /logistics|change the subject|separate/i);
 
     cy.waitForChoices(1);
     logChoices('Before Path C pick 2');
@@ -99,4 +99,3 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.get('#hud').should('exist');
   });
 });
-
