@@ -17,7 +17,8 @@ Cypress.Commands.add('clickChoice', (target) => {
   if (typeof target === 'number') {
     // Accept 1-based index (common in test specs) or 0-based
     const idx = target >= 1 ? target - 1 : target;
-    cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
+    cy.get('#choices')
+      .find('button, [role="button"]', { timeout: 20000 })
       .eq(idx)
       .click({ force: true });
     return;
@@ -26,10 +27,13 @@ Cypress.Commands.add('clickChoice', (target) => {
   // String or RegExp label
   const matcher = target instanceof RegExp ? target : new RegExp(`^\\s*${target}\\s*$`, 'i');
 
-  cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
+  cy.get('#choices')
+    .find('button, [role="button"]', { timeout: 20000 })
     .should('have.length.greaterThan', 0)
     .then(($btns) => {
-      const idx = Cypress.$.makeArray($btns).findIndex((el) => matcher.test(el.innerText || el.textContent || ''));
+      const idx = Cypress.$.makeArray($btns).findIndex((el) =>
+        matcher.test(el.innerText || el.textContent || '')
+      );
       expect(idx, `button matching ${matcher}`).to.be.gte(0);
       cy.wrap($btns[idx]).click({ force: true });
     });
@@ -37,45 +41,60 @@ Cypress.Commands.add('clickChoice', (target) => {
 
 // Safe select by visible text or value (no .catch on Cypress chains!)
 Cypress.Commands.add('safeSelect', (selector, target, options = {}) => {
-  cy.get(selector, { timeout: 20000 }).should('be.visible').then($sel => {
-    const el = $sel[0];
-    const opts = Array.from(el.options);
-    const hasByText  = opts.some(o => (o.text || '').trim().match(new RegExp(`^${target}$`, 'i')));
-    const hasByValue = opts.some(o => (o.value || '').trim() === target);
+  cy.get(selector, { timeout: 20000 })
+    .should('be.visible')
+    .then(($sel) => {
+      const el = $sel[0];
+      const opts = Array.from(el.options);
+      const hasByText = opts.some((o) =>
+        (o.text || '').trim().match(new RegExp(`^${target}$`, 'i'))
+      );
+      const hasByValue = opts.some((o) => (o.value || '').trim() === target);
 
-    // debug dump
-    const available = opts.map(o => o.text.trim() || o.value).join(' | ');
-    cy.log(`safeSelect("${selector}", "${target}") available: [${available}]`);
+      // debug dump
+      const available = opts.map((o) => (o.text || '').trim() || o.value).join(' | ');
+      cy.log(`safeSelect("${selector}", "${target}") available: [${available}]`);
 
-    if (!hasByText && !hasByValue) {
-      throw new Error(`Option "${target}" not found in ${selector}`);
-    }
+      if (!hasByText && !hasByValue) {
+        throw new Error(`Option "${target}" not found in ${selector}`);
+      }
 
-    // force helps in headless / overlay cases
-    cy.wrap($sel).select(target, { force: true, ...options });
-  });
+      cy.wrap($sel).select(target, { force: true, ...options });
+    });
 });
 
 // Force UI into v2 mode so `.v2-only` content (choices, HUD) is visible
 Cypress.Commands.add('ensureV2Mode', () => {
-  // If the app respects ?mode=v2, we also visit with that query param (harmless if ignored)
+  // Visit with mode hint (harmless if the app ignores it)
   cy.location().then((loc) => {
     if (!/\bmode=v2\b/.test(loc.search)) {
       cy.visit(`/?mode=v2`);
     }
   });
 
-  cy.get('#modeSelect', { timeout: 20000 }).then(($sel) => {
-    // In case the app uses a select to switch modes, set it explicitly
-    const hasV2Option = Array.from($sel[0].options).some((o) => /v2/i.test(o.value) || /Branching v2/i.test(o.text));
-    if (hasV2Option) {
-      cy.wrap($sel).select('v2', { force: true }).catch(() => {
-        cy.wrap($sel).select('Branching v2', { force: true });
-      });
-    }
+  // If the app exposes a mode select, set it explicitly (without .catch)
+  cy.get('body').then(($body) => {
+    const hasModeSelect = $body.find('#modeSelect').length > 0;
+    if (!hasModeSelect) return;
+
+    cy.get('#modeSelect', { timeout: 20000 }).then(($sel) => {
+      const opts = Array.from($sel[0].options);
+      const labels = opts.map((o) => (o.text || '').trim() || o.value);
+      cy.log(`Mode options: [${labels.join(' | ')}]`);
+
+      const hasValueV2 = opts.some((o) => (o.value || '').trim() === 'v2');
+      const textV2 = opts.find((o) => /Branching v2/i.test(o.text || ''))?.text;
+
+      if (hasValueV2) {
+        cy.wrap($sel).select('v2', { force: true });
+      } else if (textV2) {
+        cy.wrap($sel).select(textV2, { force: true });
+      } else {
+        cy.log('No explicit v2 option found; relying on query param.');
+      }
+    });
   });
 
-  // Assert v2-only area becomes visible
   cy.get('#choices', { timeout: 20000 }).should('be.visible');
 });
 
@@ -91,23 +110,36 @@ Cypress.Commands.add('bootScenario', (scenarioId) => {
   // Make sure v2 mode is on
   cy.ensureV2Mode();
 
-  // If your app supports selecting via the picker, do it.
-  // Otherwise, if your app picks the first scenario by default,
-  // you can skip this and rely on the app’s own auto-boot.
-  cy.get('#scenarioPicker', { timeout: 20000 }).then(($sel) => {
-    const hasScenario = Array.from($sel[0].options).some((o) =>
-      (o.value || '').includes(scenarioId) || (o.text || '').toLowerCase().includes(scenarioId.replace(/-/g, ' '))
-    );
-
-    if (hasScenario) {
-      cy.wrap($sel).select(scenarioId, { force: true }).catch(() => {
-        // fallback: try selecting by visible text
-        cy.wrap($sel).select(scenarioId.replace(/-/g, ' '), { force: true });
-      });
+  // If your app supports selecting via the picker, do it (without .catch)
+  cy.get('body').then(($body) => {
+    const hasPicker = $body.find('#scenarioPicker').length > 0;
+    if (!hasPicker) {
+      cy.log('No #scenarioPicker found; assuming app auto-loads the scenario.');
+      return;
     }
+
+    cy.get('#scenarioPicker', { timeout: 20000 }).then(($sel) => {
+      const el = $sel[0];
+      const opts = Array.from(el.options);
+      const labels = opts.map((o) => (o.text || '').trim() || o.value);
+      cy.log(`Scenario options: [${labels.join(' | ')}]`);
+
+      const labelGuess = scenarioId.replace(/-/g, ' ').trim();
+      const hasByValue = opts.some((o) => (o.value || '').includes(scenarioId));
+      const hasByExactLabel = opts.some((o) =>
+        (o.text || '').trim().toLowerCase() === labelGuess.toLowerCase()
+      );
+
+      if (hasByValue) {
+        cy.wrap($sel).select(scenarioId, { force: true });
+      } else if (hasByExactLabel) {
+        cy.safeSelect('#scenarioPicker', labelGuess);
+      } else {
+        cy.log(`Scenario "${scenarioId}" not found by value or label; proceeding anyway.`);
+      }
+    });
   });
 
   // Wait for first choices to appear
   cy.waitForChoices(1);
 });
-
