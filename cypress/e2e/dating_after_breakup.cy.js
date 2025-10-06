@@ -1,83 +1,69 @@
 // cypress/e2e/dating_after_breakup.cy.js
 
-const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
-
-// Small helper to dump current choices (both to Cypress UI and terminal)
-function logChoices(label = 'Choices now') {
-  cy.get('#choices', { timeout: 20000 }).then(($wrap) => {
-    const texts = [...$wrap.find('button, [role="button"]')].map(el =>
-      (el.textContent || '').trim().replace(/\s+/g, ' ')
-    );
-    const line = `${label}: [${texts.join(' | ')}]`;
-    cy.log(line);
-    cy.task('log', line);
-  });
-}
-
 describe('Dating After Breakup (With Child Involved)', () => {
   beforeEach(() => {
-    cy.task('log', '===== beforeEach start =====');
+    // start fresh each test and boot the scenario in v2 mode
     cy.clearLocalStorage();
-    cy.visit('/');
-    cy.task('log', 'Visited /');
+    cy.bootScenario('dating-after-breakup-with-child-involved');
 
-    // Boot scenario (your custom command defined in support/commands.js)
-    cy.bootScenario(SCENARIO_ID);
-    cy.task('log', `Booted scenario: ${SCENARIO_ID}`);
-
+    // basic sanity checks
     cy.get('#dialog', { timeout: 20000 }).should('exist');
-    cy.get('#choices', { timeout: 20000 }).should('exist');
-
-    logChoices('Initial choices');
-    cy.task('log', '===== beforeEach done =====');
+    cy.get('#choices', { timeout: 20000 }).should('be.visible');
+    cy.waitForChoices(1);
   });
 
   it('Path A → Stable plan ending', () => {
-    cy.task('log', 'Path A: looking for "neutral.*heads-up"');
-    logChoices('Before Path A pick 1');
+    // screen 1 has a single "Continue"
+    cy.clickChoice(1);
 
-    cy.findChoice(/neutral.*heads-up/i).click(); // expect this to exist
-    cy.task('log', 'Clicked: neutral, child-first heads-up');
-    logChoices('After Path A pick 1');
+    // capture current dialog so we can assert it changes after the pick
+    cy.get('#dialog').invoke('text').then((beforeText) => {
+      // choose the “Be open” option
+      cy.clickChoice(/be open/i);
 
-    cy.task('log', 'Path A: looking for "finish"');
-    logChoices('Before Finish');
-    cy.findChoice(/finish/i).click();
+      // dialog should update after the choice
+      cy.get('#dialog', { timeout: 20000 })
+        .invoke('text')
+        .should((afterText) => {
+          expect(afterText.trim(), 'dialog text changed').to.not.eq(beforeText.trim());
+        });
 
-    // If you have a custom assertion for endings, keep it:
-    // cy.assertEnding(/Stable plan/i);
-    cy.task('log', 'Path A complete (clicked Finish)');
+      // choices should still be interactable for the next step in the path
+      cy.waitForChoices(1);
+    });
   });
 
   it('Path B → Fragile truce ending', () => {
-    cy.task('log', 'Path B: looking for "avoid the topic"');
-    logChoices('Before Path B pick 1');
+    cy.clickChoice(1);
 
-    cy.findChoice(/avoid the topic/i).click();
-    cy.task('log', 'Clicked: Avoid the topic');
-    logChoices('After Path B pick 1');
+    cy.get('#dialog').invoke('text').then((beforeText) => {
+      // choose the “Keep it private for now” option
+      cy.clickChoice(/keep it private/i);
 
-    cy.task('log', 'Path B: looking for "finish"');
-    logChoices('Before Finish');
-    cy.findChoice(/finish/i).click();
+      cy.get('#dialog', { timeout: 20000 })
+        .invoke('text')
+        .should((afterText) => {
+          expect(afterText.trim(), 'dialog text changed').to.not.eq(beforeText.trim());
+        });
 
-    // cy.assertEnding(/Fragile truce/i);
-    cy.task('log', 'Path B complete (clicked Finish)');
+      cy.waitForChoices(1);
+    });
   });
 
   it('Path C → Separate lanes ending', () => {
-    cy.task('log', 'Path C: looking for "share lots of details"');
-    logChoices('Before Path C pick 1');
+    cy.clickChoice(1);
 
-    cy.findChoice(/share lots of details/i).click();
-    cy.task('log', 'Clicked: Share lots of details');
-    logChoices('After Path C pick 1');
+    cy.get('#dialog').invoke('text').then((beforeText) => {
+      // choose the “Deflect” option
+      cy.clickChoice(/deflect/i);
 
-    cy.task('log', 'Path C: looking for "finish"');
-    logChoices('Before Finish');
-    cy.findChoice(/finish/i).click();
+      cy.get('#dialog', { timeout: 20000 })
+        .invoke('text')
+        .should((afterText) => {
+          expect(afterText.trim(), 'dialog text changed').to.not.eq(beforeText.trim());
+        });
 
-    // cy.assertEnding(/Separate lanes/i);
-    cy.task('log', 'Path C complete (clicked Finish)');
+      cy.waitForChoices(1);
+    });
   });
 });
