@@ -1,248 +1,623 @@
 {
   "id": "dating-after-breakup-with-child-involved",
-  "version": 2,
   "title": "Dating After Breakup (With Child Involved)",
-  "description": "Navigate dating after a breakup while co-parenting: timing introductions, setting boundaries with an ex, and keeping the child's well-being first.",
-  "tags": ["co-parenting", "dating", "boundaries", "communication", "child-wellbeing"],
-  "difficulty": "medium",
-  "meters": {
-    "trust": { "min": 0, "max": 100, "start": 50, "label": "Trust" },
-    "tension": { "min": 0, "max": 100, "start": 20, "label": "Tension" },
-    "childStress": { "min": 0, "max": 100, "start": 10, "label": "Child Stress" }
-  },
+  "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
+  "version": "1.3.0",
+  "meters": ["trust", "tension", "childStress"],
   "acts": [
     {
       "id": "act1",
-      "title": "Act 1 — First Disclosure",
-      "start": "a1_line1",
-      "steps": {
-        "a1_line1": {
-          "id": "a1_line1",
-          "type": "choice",
-          "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.",
+      "title": "The First Weekend Without the Child",
+      "steps": [
+        {
+          "id": "a1s1",
+          "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected.",
+          "tone": "reflective · gentle melancholy",
           "choices": [
             {
-              "id": "A",
-              "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co-parenting stable.\"",
-              "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }],
-              "next": "a1_line2A"
+              "id": "a1s1c1",
+              "text": "I’ll clean up and make some dinner — I need to get back into routine.",
+              "tone": "mature · self-care",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a1s2"
             },
             {
-              "id": "B",
-              "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\"",
-              "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }, { "meter": "childStress", "delta": 0 }],
-              "next": "a1_line2B"
-            },
-            {
-              "id": "C",
-              "label": "Deflect: change the subject to logistics.",
-              "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }],
-              "next": "a1_line2C"
+              "id": "a1s1c2",
+              "text": "I’ll text my friend to go out — I need to distract myself.",
+              "tone": "impulsive · escapist",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1s2"
             }
           ]
         },
-        "a1_line2A": {
-          "id": "a1_line2A",
-          "type": "choice",
-          "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"",
+        {
+          "id": "a1s2",
+          "text": "Your friend replies quickly: “We’re at the new bar downtown — come join us!” You hesitate.",
+          "tone": "ambivalent · tentative",
           "choices": [
-            { "id": "A1", "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-            { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_to_act2" }
+            {
+              "id": "a1s2c1",
+              "text": "I’ll go. Maybe a bit of socializing will help.",
+              "tone": "open · exploratory",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1s3"
+            },
+            {
+              "id": "a1s2c2",
+              "text": "No, I think I’ll stay home. This feels forced.",
+              "tone": "self-protective · grounded",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1s3"
+            }
           ]
         },
-        "a1_line2B": {
-          "id": "a1_line2B",
-          "type": "choice",
-          "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"",
+        {
+          "id": "a1s3",
+          "text": "Just as you settle in, your phone lights up — a message from your ex: “Did you pack the extra pajamas? She says she can’t find them.”",
+          "tone": "practical · co-parenting micro-stress",
           "choices": [
-            { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"", "effects": [{ "meter": "trust", "delta": 0 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-            { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_to_act2" }
+            {
+              "id": "a1s3c1",
+              "text": "Yes, they’re in the blue bag. Try checking the side pocket.",
+              "tone": "calm · cooperative",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a1s4"
+            },
+            {
+              "id": "a1s3c2",
+              "text": "You could’ve checked before texting me.",
+              "tone": "frustrated · defensive",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 2 },
+                { "meter": "childStress", "delta": 1 }
+              ],
+              "next": "a1s4"
+            }
           ]
         },
-        "a1_line2C": {
-          "id": "a1_line2C",
-          "type": "choice",
-          "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.",
+        {
+          "id": "a1s4",
+          "text": "Lying in bed, you scroll through social media. Everyone seems to be in couples or on trips.",
+          "tone": "lonely · self-comparison",
           "choices": [
-            { "id": "C1", "label": "Follow up later with a message clarifying intent.", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-            { "id": "C2", "label": "Leave it be.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }], "next": "a1_to_act2" }
+            {
+              "id": "a1s4c1",
+              "text": "I’ll log off — this isn’t helping.",
+              "tone": "self-aware · boundary-setting",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1end"
+            },
+            {
+              "id": "a1s4c2",
+              "text": "Maybe I’ll re-download the dating app… just to look.",
+              "tone": "curious · slightly anxious",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a1end"
+            }
           ]
         },
-        "a1_to_act2": {
-          "id": "a1_to_act2",
-          "type": "goto",
-          "text": "",
-          "act": "act2",
-          "to": "a2_line1",
-          "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a2_line1" }]
-        },
-        "a1_end": {
-          "id": "a1_end",
-          "type": "end",
-          "text": "End of Act 1.",
-          "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }]
+        {
+          "id": "a1end",
+          "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
+          "tone": "quiet · open-ended",
+          "summary": {
+            "highTrust": "You’ve kept your composure and handled the weekend with maturity — you’re ready to move forward.",
+            "highTension": "The silence stings and emotions flicker. There’s healing to do, but you’re learning what you need.",
+            "highChildStress": "Even when apart, your thoughts circle back to your child — guilt mixes with care."
+          },
+          "choices": [
+            {
+              "id": "a1endc1",
+              "text": "Continue to Act 2.",
+              "tone": "gentle · hopeful",
+              "next": "act2s1"
+            }
+          ]
         }
-      },
-      "nodes": [
-        { "id": "a1_line1", "type": "choice", "text": "Your ex notices you seem happier and asks if you're seeing someone. You want to handle this respectfully, keeping the co-parenting relationship stable.", "choices": [
-          { "id": "A", "label": "Be open: \"I have started seeing someone. I want to be transparent and keep our co-parenting stable.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2A" },
-          { "id": "B", "label": "Keep it private for now: \"I'm not ready to discuss my personal life yet.\"", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2B" },
-          { "id": "C", "label": "Deflect: change the subject to logistics.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 1 }, { "meter": "childStress", "delta": 0 }], "next": "a1_line2C" }
-        ]},
-        { "id": "a1_line2A", "type": "choice", "text": "Your ex appreciates the honesty but looks tense: \"Thanks for telling me. I just want what's best for our child.\"", "choices": [
-          { "id": "A1", "label": "Affirm shared priority: \"Our child's well-being is the priority. Let's agree on pacing and communication.\"", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-          { "id": "A2", "label": "Brush it off: \"It's my life; I know what I'm doing.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_to_act2" }
-        ]},
-        { "id": "a1_line2B", "type": "choice", "text": "Your ex frowns: \"We should keep each other informed if it affects our child.\"", "choices": [
-          { "id": "B1", "label": "Acknowledge later update: \"Fair. I'll share when it's relevant for our child.\"", "effects": [{ "meter": "trust", "delta": 0 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-          { "id": "B2", "label": "Stay guarded: \"I don't owe details about my private life.\"", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": 2 }], "next": "a1_to_act2" }
-        ]},
-        { "id": "a1_line2C", "type": "choice", "text": "You pivot to handover logistics. The awkwardness lingers, and the topic remains unresolved.", "choices": [
-          { "id": "C1", "label": "Follow up later with a message clarifying intent.", "effects": [{ "meter": "trust", "delta": 1 }, { "meter": "tension", "delta": -1 }], "next": "a1_to_act2" },
-          { "id": "C2", "label": "Leave it be.", "effects": [{ "meter": "trust", "delta": -1 }, { "meter": "tension", "delta": 0 }], "next": "a1_to_act2" }
-        ]},
-        { "id": "a1_to_act2", "type": "goto", "text": "", "act": "act2", "to": "a2_line1", "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a2_line1" }] },
-        { "id": "a1_end", "type": "end", "text": "End of Act 1.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
       ]
     },
     {
       "id": "act2",
-      "title": "Act 2 — First Conversation About New Partner",
-      "start": "a2_line1",
-      "steps": {
-        "a2_line1": { "id": "a2_line1", "type": "line", "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.", "to": "a2_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }] },
-        "a2_choice1": {
-          "id": "a2_choice1",
-          "type": "choice",
-          "text": "How do you open the topic?",
+      "title": "The Swipe of Possibility",
+      "steps": [
+        {
+          "id": "act2s1",
+          "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
+          "tone": "tentative · curious",
           "choices": [
-            { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
-            { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
-            { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
+            {
+              "id": "a2s1c1",
+              "text": "I’ll open it. Just curious who’s out there.",
+              "tone": "open · cautious",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2s2"
+            },
+            {
+              "id": "a2s1c2",
+              "text": "No, not yet. I don’t want to rush into anything.",
+              "tone": "measured · patient",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2s2"
+            }
           ]
         },
-        "a2_line2a": { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        "a2_line2b": { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        "a2_line2c": { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        "a2_choice2": {
-          "id": "a2_choice2",
-          "type": "choice",
-          "text": "Set a boundary about pacing and info:",
+        {
+          "id": "a2s2",
+          "text": "You scroll through a few profiles — smiles, bios, small talk hooks. It’s both exciting and exhausting.",
+          "tone": "ambivalent · overstimulated",
           "choices": [
-            { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_to_act3" },
-            { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_to_act3" },
-            { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_to_act3" }
+            {
+              "id": "a2s2c1",
+              "text": "Swipe right on someone interesting — what’s the harm?",
+              "tone": "playful · testing waters",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2s3"
+            },
+            {
+              "id": "a2s2c2",
+              "text": "Close the app. This doesn’t feel like me right now.",
+              "tone": "self-preserving · clear boundary",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2s3"
+            }
           ]
         },
-        "a2_to_act3": { "id": "a2_to_act3", "type": "goto", "text": "", "act": "act3", "to": "a3_line1", "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a3_line1" }] },
-        "a2_end": { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
-      },
-      "nodes": [
-        { "id": "a2_line1", "type": "line", "text": "It’s your regular check-in. You want to bring up that you’ve started seeing someone new.", "to": "a2_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice1" }] },
-        { "id": "a2_choice1", "type": "choice", "text": "How do you open the topic?", "choices": [
-          { "id": "a2_c1", "label": "Neutral, child-first heads-up.", "to": "a2_line2a", "effects": [{ "meter": "trust", "delta": 5 }, { "meter": "tension", "delta": -3 }], "next": "a2_line2a" },
-          { "id": "a2_c2", "label": "Share lots of details.", "to": "a2_line2b", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a2_line2b" },
-          { "id": "a2_c3", "label": "Avoid the topic.", "to": "a2_line2c", "effects": [{ "meter": "trust", "delta": -2 }], "next": "a2_line2c" }
-        ]},
-        { "id": "a2_line2a", "type": "line", "text": "You signal pacing and no intros yet.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        { "id": "a2_line2b", "type": "line", "text": "They tense up at the amount of info.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        { "id": "a2_line2c", "type": "line", "text": "You kick the can again.", "to": "a2_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a2_choice2" }] },
-        { "id": "a2_choice2", "type": "choice", "text": "Set a boundary about pacing and info:", "choices": [
-          { "id": "a2_c2a", "label": "90-day no intros + only schedule-relevant info.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -4 }], "next": "a2_to_act3" },
-          { "id": "a2_c2b", "label": "Intros soon; it’s going great.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": -6 }, { "meter": "tension", "delta": 8 }, { "meter": "childStress", "delta": 3 }], "next": "a2_to_act3" },
-          { "id": "a2_c2c", "label": "Ask what helps them feel safe.", "to": "a2_to_act3", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -2 }], "next": "a2_to_act3" }
-        ]},
-        { "id": "a2_to_act3", "type": "goto", "text": "", "act": "act3", "to": "a3_line1", "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a3_line1" }] },
-        { "id": "a2_end", "type": "end", "text": "End of Act 2.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
+        {
+          "id": "a2s3",
+          "text": "Just then, your child’s photo pops up on your lock screen — a reminder from the shared album with your ex.",
+          "tone": "tender · grounding",
+          "choices": [
+            {
+              "id": "a2s3c1",
+              "text": "Smile softly — they look happy. That’s what matters.",
+              "tone": "warm · reassured",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a2s4"
+            },
+            {
+              "id": "a2s3c2",
+              "text": "Feel a sting of guilt — maybe this isn’t the time to date.",
+              "tone": "guilty · conflicted",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 1 }
+              ],
+              "next": "a2s4"
+            }
+          ]
+        },
+        {
+          "id": "a2s4",
+          "text": "Later that day, your friend texts again: “So, any cute matches yet?” You laugh — maybe, maybe not.",
+          "tone": "light · slightly teasing",
+          "choices": [
+            {
+              "id": "a2s4c1",
+              "text": "Be honest: 'I tried it, but it felt weird.'",
+              "tone": "honest · self-aware",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2end"
+            },
+            {
+              "id": "a2s4c2",
+              "text": "Joke: 'Already planning the wedding.'",
+              "tone": "humorous · deflecting",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a2end"
+            }
+          ]
+        },
+        {
+          "id": "a2end",
+          "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
+          "tone": "soft · contemplative",
+          "summary": {
+            "highTrust": "You’ve taken a healthy step forward. There’s space now for self-kindness and new beginnings.",
+            "highTension": "Your emotions still wrestle between guilt and curiosity, but at least you’re honest with yourself.",
+            "highChildStress": "Even while exploring new ground, your child stays at the heart of every decision."
+          },
+          "choices": [
+            {
+              "id": "a2endc1",
+              "text": "Continue to Act 3.",
+              "tone": "hopeful · steady",
+              "next": "a3s1"
+            }
+          ]
+        }
       ]
     },
     {
       "id": "act3",
-      "title": "Act 3 — Boundary Breach / Unexpected Overlap",
-      "start": "a3_line1",
-      "steps": {
-        "a3_line1": { "id": "a3_line1", "type": "line", "text": "At pickup, your new partner is at your place when your ex arrives. The child sees them say hello.", "to": "a3_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice1" }] },
-        "a3_choice1": {
-          "id": "a3_choice1",
-          "type": "choice",
-          "text": "Your ex looks surprised. How do you respond in the moment?",
+      "title": "First Real Connection",
+      "steps": [
+        {
+          "id": "a3s1",
+          "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you.",
+          "tone": "tentative · surprised · gentle humor",
           "choices": [
-            { "id": "a3_c1", "label": "Own the miss: brief apology + redirect to child’s comfort.", "to": "a3_line2a", "effects": [{ "meter": "trust", "delta": 3 }, { "meter": "tension", "delta": -2 }, { "meter": "childStress", "delta": 0 }], "next": "a3_line2a" },
-            { "id": "a3_c2", "label": "Downplay it; treat as casual coincidence.", "to": "a3_line2b", "effects": [{ "meter": "trust", "delta": -3 }, { "meter": "tension", "delta": 4 }, { "meter": "childStress", "delta": 1 }], "next": "a3_line2b" },
-            { "id": "a3_c3", "label": "Ask partner to step out for privacy.", "to": "a3_line2c", "effects": [{ "meter": "trust", "delta": 2 }, { "meter": "tension", "delta": -1 }], "next": "a3_line2c" }
+            {
+              "id": "a3s1c1",
+              "text": "Hi! Thanks — I wasn’t sure I’d even try this.",
+              "tone": "open · humble · vulnerable optimism",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s2"
+            },
+            {
+              "id": "a3s1c2",
+              "text": "Maybe another time.",
+              "tone": "reserved · quiet · self-protective",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s2"
+            },
+            {
+              "id": "a3s1c3",
+              "text": "Careful, I’m still under emotional construction 🚧.",
+              "tone": "playful · self-ironic · humor masking caution",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s2"
+            }
           ]
         },
-        "a3_line2a": { "id": "a3_line2a", "type": "line", "text": "You acknowledge the situation and focus on the child’s comfort.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        "a3_line2b": { "id": "a3_line2b", "type": "line", "text": "You minimize it; tension rises.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        "a3_line2c": { "id": "a3_line2c", "type": "line", "text": "Your partner steps out; you keep the exchange short and calm.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        "a3_choice2": {
-          "id": "a3_choice2",
-          "type": "choice",
-          "text": "Set the follow-up boundary:",
+        {
+          "id": "a3s2",
+          "text": "The glow of the screen fades; your reflection stares back. For the first time in months, you ask yourself what you actually want.",
+          "tone": "introspective · slow pacing · gentle internal monologue",
           "choices": [
-            { "id": "a3_c2a", "label": "Propose a 2–3 minute plan to sync on expectations later (away from child).", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -3 }], "next": "a3_to_act4" },
-            { "id": "a3_c2b", "label": "Say it’s no big deal; no follow-up needed.", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a3_to_act4" },
-            { "id": "a3_c2c", "label": "Text later acknowledging their perspective and clarifying pacing.", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": 3 }, { "meter": "tension", "delta": -2 }], "next": "a3_to_act4" }
+            {
+              "id": "a3s2c1",
+              "text": "I want companionship, not distraction.",
+              "tone": "mature · centred · soft conviction",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s3"
+            },
+            {
+              "id": "a3s2c2",
+              "text": "I just miss being wanted.",
+              "tone": "melancholic · self-aware · aching honesty",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s3"
+            },
+            {
+              "id": "a3s2c3",
+              "text": "Maybe I’m doing okay — just figuring things out.",
+              "tone": "balanced · accepting · calm exhale",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a3s3"
+            }
           ]
         },
-        "a3_to_act4": { "id": "a3_to_act4", "type": "goto", "text": "", "act": "act4", "to": "a4_line1", "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a4_line1" }] },
-        "a3_end": { "id": "a3_end", "type": "end", "text": "End of Act 3.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
-      },
-      "nodes": [
-        { "id": "a3_line1", "type": "line", "text": "At pickup, your new partner is at your place when your ex arrives. The child sees them say hello.", "to": "a3_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice1" }] },
-        { "id": "a3_choice1", "type": "choice", "text": "Your ex looks surprised. How do you respond in the moment?", "choices": [
-          { "id": "a3_c1", "label": "Own the miss: brief apology + redirect to child’s comfort.", "to": "a3_line2a", "effects": [{ "meter": "trust", "delta": 3 }, { "meter": "tension", "delta": -2 }, { "meter": "childStress", "delta": 0 }], "next": "a3_line2a" },
-          { "id": "a3_c2", "label": "Downplay it; treat as casual coincidence.", "to": "a3_line2b", "effects": [{ "meter": "trust", "delta": -3 }, { "meter": "tension", "delta": 4 }, { "meter": "childStress", "delta": 1 }], "next": "a3_line2b" },
-          { "id": "a3_c3", "label": "Ask partner to step out for privacy.", "to": "a3_line2c", "effects": [{ "meter": "trust", "delta": 2 }, { "meter": "tension", "delta": -1 }], "next": "a3_line2c" }
-        ]},
-        { "id": "a3_line2a", "type": "line", "text": "You acknowledge the situation and focus on the child’s comfort.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        { "id": "a3_line2b", "type": "line", "text": "You minimize it; tension rises.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        { "id": "a3_line2c", "type": "line", "text": "Your partner steps out; you keep the exchange short and calm.", "to": "a3_choice2", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a3_choice2" }] },
-        { "id": "a3_choice2", "type": "choice", "text": "Set the follow-up boundary:", "choices": [
-          { "id": "a3_c2a", "label": "Propose a 2–3 minute plan to sync on expectations later (away from child).", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": 4 }, { "meter": "tension", "delta": -3 }], "next": "a3_to_act4" },
-          { "id": "a3_c2b", "label": "Say it’s no big deal; no follow-up needed.", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": -4 }, { "meter": "tension", "delta": 6 }, { "meter": "childStress", "delta": 2 }], "next": "a3_to_act4" },
-          { "id": "a3_c2c", "label": "Text later acknowledging their perspective and clarifying pacing.", "to": "a3_to_act4", "effects": [{ "meter": "trust", "delta": 3 }, { "meter": "tension", "delta": -2 }], "next": "a3_to_act4" }
-        ]},
-        { "id": "a3_to_act4", "type": "goto", "text": "", "act": "act4", "to": "a4_line1", "choices": [{ "id": "E", "label": "Continue", "effects": [], "next": "a4_line1" }] },
-        { "id": "a3_end", "type": "end", "text": "End of Act 3.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
+        {
+          "id": "a3s3",
+          "text": "Your child calls from your ex’s phone: “Daddy/Mommy, can we go to the park tomorrow?” The sound of their voice melts any remaining tension.",
+          "tone": "warm · tender · grounding",
+          "choices": [
+            {
+              "id": "a3s3c1",
+              "text": "Of course! I missed you.",
+              "tone": "loving · gentle · immediate warmth",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a3end"
+            },
+            {
+              "id": "a3s3c2",
+              "text": "We’ll see, I have things to do.",
+              "tone": "tired · detached · subtle guilt undertone",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 1 }
+              ],
+              "next": "a3end"
+            },
+            {
+              "id": "a3s3c3",
+              "text": "I’d love that — maybe we can bring the kite.",
+              "tone": "joyful · playful · re-energized",
+              "effects": [
+                { "meter": "trust", "delta": 2 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a3end"
+            }
+          ]
+        },
+        {
+          "id": "a3end",
+          "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
+          "tone": "meditative · lightly hopeful · closure vibe",
+          "summary": {
+            "highTrust": "You’re beginning to rebuild — carefully, but genuinely.",
+            "highTension": "The tug-of-war between guilt and desire still lingers, yet awareness is progress.",
+            "highChildStress": "Your love for your child keeps grounding you — every step forward includes them."
+          },
+          "choices": [
+            {
+              "id": "a3endc1",
+              "text": "Continue to Act 4.",
+              "tone": "calm · optimistic",
+              "next": "act4"
+            }
+          ]
+        }
       ]
     },
     {
       "id": "act4",
-      "title": "Act 4 — Outcomes & Agreements",
-      "start": "a4_line1",
-      "steps": {
-        "a4_line1": { "id": "a4_line1", "type": "line", "text": "You and your ex debrief privately after the overlap. You aim to leave with clarity and a plan.", "to": "a4_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a4_choice1" }] },
-        "a4_choice1": {
-          "id": "a4_choice1",
-          "type": "choice",
-          "text": "Pick the closing approach:",
+      "title": "The First Date Dilemma",
+      "steps": [
+        {
+          "id": "a4s1",
+          "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together.",
+          "tone": "anticipatory · hopeful · slightly anxious",
           "choices": [
-            { "id": "a4_c1", "label": "Stable plan: clear timeline, intros threshold, and check-in cadence.", "to": "a4_end_stable", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -5 }], "next": "a4_end_stable" },
-            { "id": "a4_c2", "label": "Fragile truce: temporary agreement with follow-up in two weeks.", "to": "a4_end_truce", "effects": [{ "meter": "trust", "delta": 2 }, { "meter": "tension", "delta": -2 }], "next": "a4_end_truce" },
-            { "id": "a4_c3", "label": "Separate lanes: pause new-partner exposure and formalize comms via email.", "to": "a4_end_split", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": -1 }, { "meter": "childStress", "delta": 1 }], "next": "a4_end_split" }
+            {
+              "id": "a4s1c1",
+              "text": "Confirm pickup logistics with your ex before you leave.",
+              "tone": "responsible · proactive",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a4s2"
+            },
+            {
+              "id": "a4s1c2",
+              "text": "Skip logistics — it’ll be fine.",
+              "tone": "avoidant · optimistic",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4s2"
+            },
+            {
+              "id": "a4s1c3",
+              "text": "Cancel the date — you’re not ready.",
+              "tone": "self-protective · low energy",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4end"
+            }
           ]
         },
-        "a4_end_stable": { "id": "a4_end_stable", "type": "end", "text": "Stable Resolution — You agree on a 90-day pacing rule, no surprise intros, and monthly check-ins. Co-parenting trust improves.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] },
-        "a4_end_truce": { "id": "a4_end_truce", "type": "end", "text": "Fragile Truce — You set a short-term plan and calendar a follow-up. Some tension remains, but there’s a path forward.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] },
-        "a4_end_split": { "id": "a4_end_split", "type": "end", "text": "Separate Lanes — You reduce live contact and move to structured email updates. Stable but distant.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
-      },
-      "nodes": [
-        { "id": "a4_line1", "type": "line", "text": "You and your ex debrief privately after the overlap. You aim to leave with clarity and a plan.", "to": "a4_choice1", "choices": [{ "id": "C", "label": "Continue", "effects": [], "next": "a4_choice1" }] },
-        { "id": "a4_choice1", "type": "choice", "text": "Pick the closing approach:", "choices": [
-          { "id": "a4_c1", "label": "Stable plan: clear timeline, intros threshold, and check-in cadence.", "to": "a4_end_stable", "effects": [{ "meter": "trust", "delta": 6 }, { "meter": "tension", "delta": -5 }], "next": "a4_end_stable" },
-          { "id": "a4_c2", "label": "Fragile truce: temporary agreement with follow-up in two weeks.", "to": "a4_end_truce", "effects": [{ "meter": "trust", "delta": 2 }, { "meter": "tension", "delta": -2 }], "next": "a4_end_truce" },
-          { "id": "a4_c3", "label": "Separate lanes: pause new-partner exposure and formalize comms via email.", "to": "a4_end_split", "effects": [{ "meter": "trust", "delta": -2 }, { "meter": "tension", "delta": -1 }, { "meter": "childStress", "delta": 1 }], "next": "a4_end_split" }
-        ]},
-        { "id": "a4_end_stable", "type": "end", "text": "Stable Resolution — You agree on a 90-day pacing rule, no surprise intros, and monthly check-ins. Co-parenting trust improves.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] },
-        { "id": "a4_end_truce", "type": "end", "text": "Fragile Truce — You set a short-term plan and calendar a follow-up. Some tension remains, but there’s a path forward.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] },
-        { "id": "a4_end_split", "type": "end", "text": "Separate Lanes — You reduce live contact and move to structured email updates. Stable but distant.", "choices": [{ "id": "E", "label": "Finish", "effects": [], "next": null }] }
+        {
+          "id": "a4s2",
+          "text": "Phone in hand. A message field to your ex blinks: pickup tomorrow at 10:00? You can set the tone now.",
+          "tone": "practical · boundary-setting opportunity",
+          "choices": [
+            {
+              "id": "a4s2c1",
+              "text": "Be clear and kind: 'Pickup at 10:00 at the park entrance, I’ll confirm in the morning.'",
+              "tone": "calm · collaborative",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a4s3"
+            },
+            {
+              "id": "a4s2c2",
+              "text": "Keep it vague: 'I’ll text you tomorrow.'",
+              "tone": "noncommittal · hedging",
+              "effects": [
+                { "meter": "trust", "delta": 0 },
+                { "meter": "tension", "delta": 1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4s3"
+            },
+            {
+              "id": "a4s2c3",
+              "text": "Sound irritated: 'Just be ready whenever, okay?'",
+              "tone": "irritable · controlling",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 2 },
+                { "meter": "childStress", "delta": 1 }
+              ],
+              "next": "a4s3"
+            }
+          ]
+        },
+        {
+          "id": "a4s3",
+          "text": "At the café. Your date smiles, easy conversation bubbling. They ask about your weekend. The parenting question hangs in the air.",
+          "tone": "warm · curious · vulnerable",
+          "choices": [
+            {
+              "id": "a4s3c1",
+              "text": "Be upfront about being a parent and what that means for your time.",
+              "tone": "honest · grounded",
+              "effects": [
+                { "meter": "trust", "delta": 2 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4s4"
+            },
+            {
+              "id": "a4s3c2",
+              "text": "Keep it light — mention your child briefly, then pivot to hobbies.",
+              "tone": "balanced · socially attuned",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4s4"
+            },
+            {
+              "id": "a4s3c3",
+              "text": "Overshare about your ex and the breakup details.",
+              "tone": "nervous · overdisclosing",
+              "effects": [
+                { "meter": "trust", "delta": -1 },
+                { "meter": "tension", "delta": 2 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4s4"
+            }
+          ]
+        },
+        {
+          "id": "a4s4",
+          "text": "Later, the date suggests a spontaneous late movie. It would push past your usual wind-down before pickup.",
+          "tone": "temptation · boundary test",
+          "choices": [
+            {
+              "id": "a4s4c1",
+              "text": "Set a clear boundary: 'I’d love to, but I need rest to be present tomorrow.'",
+              "tone": "assertive · caring · self-respect",
+              "effects": [
+                { "meter": "trust", "delta": 2 },
+                { "meter": "tension", "delta": -1 },
+                { "meter": "childStress", "delta": -1 }
+              ],
+              "next": "a4end"
+            },
+            {
+              "id": "a4s4c2",
+              "text": "Compromise: 'Let’s grab a short walk instead.'",
+              "tone": "creative · flexible",
+              "effects": [
+                { "meter": "trust", "delta": 1 },
+                { "meter": "tension", "delta": 0 },
+                { "meter": "childStress", "delta": 0 }
+              ],
+              "next": "a4end"
+            },
+            {
+              "id": "a4s4c3",
+              "text": "Ignore the boundary and go anyway.",
+              "tone": "impulsive · avoidant",
+              "effects": [
+                { "meter": "trust", "delta": -2 },
+                { "meter": "tension", "delta": 2 },
+                { "meter": "childStress", "delta": 1 }
+              ],
+              "next": "a4end"
+            }
+          ]
+        },
+        {
+          "id": "a4end",
+          "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
+          "tone": "settled · gently optimistic",
+          "summary": {
+            "highTrust": "Your boundaries and honesty created space for something real.",
+            "highTension": "The pull between desire and duty is still loud, but you named it — that matters.",
+            "highChildStress": "You steered the night with your child in mind. That care is your compass."
+          },
+          "choices": [
+            {
+              "id": "a4endc1",
+              "text": "Continue to Act 5.",
+              "tone": "confident · forward-looking",
+              "next": "act5"
+            },
+            {
+              "id": "a4endc2",
+              "text": "Pause here (return to menu).",
+              "tone": "reflective · contained",
+              "next": null
+            }
+          ]
+        }
       ]
     }
-  ],
-  "startAct": "act1",
-  "start": "a1_line1",
-  "startNode": "a1_line1",
-  "entryNode": "a1_line1",
-  "entry": { "actId": "act1", "nodeId": "a1_line1" }
+  ]
 }
