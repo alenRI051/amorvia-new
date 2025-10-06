@@ -42,7 +42,7 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.waitForChoices(1);
     logChoiceLabels('intro choices');
     cy.clickChoice(1);                  // click "Continue"
-    cy.wait(50);                        // tiny yield for DOM to settle
+    cy.wait(150);                        // tiny yield for DOM to settle
     cy.log('===== beforeEach done =====');
   });
 
@@ -50,13 +50,13 @@ describe('Dating After Breakup (With Child Involved)', () => {
     cy.waitForChoices(1);
     logChoiceLabels('branch A screen');
     cy.clickChoice(1);                  // first option = Path A
-    cy.wait(50);
+    cy.wait(150);
     expectDialogHasText();
 
     cy.waitForChoices(1);
     logChoiceLabels('A follow-up');
     cy.clickChoice(1);
-    cy.wait(50);
+    cy.wait(150);
 
     expectDialogHasText();
     cy.get('#hud').should('exist');
@@ -70,13 +70,13 @@ describe('Dating After Breakup (With Child Involved)', () => {
       expect(len).to.be.gte(2);
     });
     cy.clickChoice(2);                  // second option = Path B
-    cy.wait(50);
+    cy.wait(150);
     expectDialogHasText();
 
     cy.waitForChoices(1);
     logChoiceLabels('B follow-up');
     cy.clickChoice(1);
-    cy.wait(50);
+    cy.wait(150);
 
     expectDialogHasText();
     cy.get('#hud').should('exist');
@@ -90,13 +90,13 @@ describe('Dating After Breakup (With Child Involved)', () => {
       const indexToClick = len >= 3 ? 3 : len; // prefer 3rd, else last available
       cy.wrap(null).then(() => cy.clickChoice(indexToClick));
     });
-    cy.wait(50);
+    cy.wait(150);
     expectDialogHasText();
 
     cy.waitForChoices(1);
     logChoiceLabels('C follow-up');
     cy.clickChoice(1);
-    cy.wait(50);
+    cy.wait(150);
 
     expectDialogHasText();
     cy.get('#hud').should('exist');
