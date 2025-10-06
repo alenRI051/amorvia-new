@@ -35,6 +35,27 @@ Cypress.Commands.add('clickChoice', (target) => {
     });
 });
 
+// Safe select by visible text or value (no .catch on Cypress chains!)
+Cypress.Commands.add('safeSelect', (selector, target, options = {}) => {
+  cy.get(selector, { timeout: 20000 }).should('be.visible').then($sel => {
+    const el = $sel[0];
+    const opts = Array.from(el.options);
+    const hasByText  = opts.some(o => (o.text || '').trim().match(new RegExp(`^${target}$`, 'i')));
+    const hasByValue = opts.some(o => (o.value || '').trim() === target);
+
+    // debug dump
+    const available = opts.map(o => o.text.trim() || o.value).join(' | ');
+    cy.log(`safeSelect("${selector}", "${target}") available: [${available}]`);
+
+    if (!hasByText && !hasByValue) {
+      throw new Error(`Option "${target}" not found in ${selector}`);
+    }
+
+    // force helps in headless / overlay cases
+    cy.wrap($sel).select(target, { force: true, ...options });
+  });
+});
+
 // Force UI into v2 mode so `.v2-only` content (choices, HUD) is visible
 Cypress.Commands.add('ensureV2Mode', () => {
   // If the app respects ?mode=v2, we also visit with that query param (harmless if ignored)
