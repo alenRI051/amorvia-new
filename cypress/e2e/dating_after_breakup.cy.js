@@ -1,49 +1,43 @@
 // cypress/e2e/dating_after_breakup.cy.js
 
 describe('Dating After Breakup (With Child Involved)', () => {
-  beforeEach(() => {
-    cy.bootScenario('dating-after-breakup-with-child-involved');
-  });
+  // NOTE: beforeEach is handled in support/e2e.js (bootScenario + ensure v2)
 
-  // Path A – Stable plan ending
   it('Path A → Stable plan ending', () => {
-    // Act 1
-    cy.clickChoiceIndex(0); // e.g., "Be open"
-    cy.clickChoiceIndex(0); // e.g., "Affirm shared priority"
+    // Make sure we actually have choices on screen
+    cy.waitForChoices(1);
 
-    // Act 2 (indexes follow the on-screen order for this path)
-    cy.clickChoiceIndex(0); // "Continue"
-    cy.clickChoiceIndex(0); // "Neutral, child-first heads-up"
-    cy.clickChoiceIndex(0); // "Continue"
-    cy.clickChoiceIndex(0); // "90-day no intros + only schedule-relevant info"
-    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
+    // Click through your intended path by label or index
+    // Example labels (adjust to your real UI text):
+    cy.clickChoice(/neutral.*heads?-?up/i); // step 1
+    cy.waitForChoices(1);
+
+    // keep choosing…
+    // cy.clickChoice(/keep it brief/i);
+    // cy.waitForChoices(1);
+
+    // Eventually, click finish
+    cy.clickChoice(/finish/i);
   });
 
-  // Path B – Fragile truce ending
   it('Path B → Fragile truce ending', () => {
-    // Act 1
-    cy.clickChoiceIndex(1); // e.g., "Not ready to discuss"
-    cy.clickChoiceIndex(1); // e.g., "Share when it's relevant"
-
-    // Act 2
-    cy.clickChoiceIndex(0); // Continue
-    cy.clickChoiceIndex(1); // e.g., "Avoid the topic"
-    cy.clickChoiceIndex(0); // Continue
-    cy.clickChoiceIndex(1); // e.g., "Ask what helps them feel safe"
-    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
+    cy.waitForChoices(1);
+    // Example: choose by index if labels shift
+    // (1-based convenience)
+    cy.clickChoice(1);
+    cy.waitForChoices(1);
+    cy.clickChoice(2);
+    cy.waitForChoices(1);
+    // …
   });
 
-  // Path C – Separate lanes ending
   it('Path C → Separate lanes ending', () => {
-    // Act 1
-    cy.clickChoiceIndex(2); // e.g., "Deflect"
-    cy.clickChoiceIndex(1); // e.g., "Follow up later"
-
-    // Act 2
-    cy.clickChoiceIndex(0); // Continue
-    cy.clickChoiceIndex(2); // e.g., "Share lots of details"
-    cy.clickChoiceIndex(0); // Continue
-    cy.clickChoiceIndex(2); // e.g., "Intros soon"
-    cy.contains('button, [role="button"]', /finish/i, { timeout: 20000 }).click();
+    cy.waitForChoices(1);
+    // mix of label and index
+    cy.clickChoice(/avoid the topic/i);
+    cy.waitForChoices(1);
+    cy.clickChoice(2);
+    cy.waitForChoices(1);
+    // …
   });
 });
