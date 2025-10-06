@@ -144,17 +144,33 @@ Cypress.Commands.add('bootScenario', (scenarioId) => {
   cy.waitForChoices(1);
 });
 
-// Find (but don't click) a choice by label (string/regex) or by index
-Cypress.Commands.add('findChoice', (target) => {
+// cypress/support/commands.js
+
+// Find + click a choice by label (string or /regex/i) OR by index
+Cypress.Commands.add('clickChoice', (target) => {
   cy.get('#choices', { timeout: 20000 }).should('be.visible');
 
   if (typeof target === 'number') {
-    const idx = target >= 1 ? target - 1 : target; // allow 1-based
-    return cy.get('#choices').find('button, [role="button"]', { timeout: 20000 }).eq(idx);
+    const idx = target >= 1 ? target - 1 : target;   // allow 1-based
+    cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
+      .eq(idx)
+      .click({ force: true });
+    return;
   }
 
-  const matcher = target instanceof RegExp ? target : new RegExp(`^\\s*${target}\\s*$`, 'i');
+  const matcher = target instanceof RegExp
+    ? target
+    : new RegExp(`^\\s*${target}\\s*$`, 'i');
 
-  return cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
-    .filter((_, el) => matcher.test(el.innerText || el.textContent || ''));
+  cy.get('#choices').find('button, [role="button"]', { timeout: 20000 })
+    .should('have.length.greaterThan', 0)
+    .then(($btns) => {
+      const els = Array.from($btns);
+      const idx = els.findIndex((el) =>
+        matcher.test((el.innerText || el.textContent || '').trim())
+      );
+      expect(idx, `button matching ${matcher}`).to.be.gte(0);
+      cy.wrap(els[idx]).click({ force: true });
+    });
 });
+
