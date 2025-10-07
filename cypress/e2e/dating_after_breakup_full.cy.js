@@ -12,8 +12,9 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
   let firstStepByAct = new Map();
 
   before(() => {
-    cy.readFile(SCENARIO_PATH, 'utf8').then((raw) => {
-      data = JSON.parse(raw);
+    // Cypress readFile auto-parses .json → returns an object
+    cy.readFile(SCENARIO_PATH).then((json) => {
+      data = json;
 
       // collect ids
       (data.acts || []).forEach((act) => {
@@ -48,8 +49,7 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
           expect(choice).to.have.property('label').that.is.a('string');
           expect(choice).to.have.property('to');
           expect(choice.to === 'menu' || typeof choice.to === 'string').to.eq(true);
-          // v2 effects is an object
-          expect(choice).to.have.property('effects').that.is.an('object');
+          expect(choice).to.have.property('effects').that.is.an('object'); // v2
         });
       });
     });
@@ -81,7 +81,6 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
       act.steps.forEach((step) => {
         step.choices.forEach((choice) => {
           const eff = choice.effects || {};
-          // unknown keys?
           Object.keys(eff).forEach((k) => {
             if (!SAFE_METERS.includes(k)) {
               invalids.push(`${step.id}/${choice.id}: unknown meter "${k}"`);
