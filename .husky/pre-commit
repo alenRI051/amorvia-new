@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+set -e
+
+echo "🔎 Pre-commit: convert + lint + smoke"
+npm run convert:v2
+npm run lint:schemas
+npm run test:e2e:spec -- cypress/e2e/_smoke_all_scenarios.cy.js

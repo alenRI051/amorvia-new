@@ -29,7 +29,8 @@
     "convert:v2:dry": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json",
     "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write",
     "fix:display-text": "node tools/fix-display-text.mjs",
-    "ci:lean": "npm run lint:schemas && npm run test:e2e:spec -- cypress/e2e/_smoke_all_scenarios.cy.js"
+    "ci:lean": "npm run lint:schemas && npm run test:e2e:spec -- cypress/e2e/_smoke_all_scenarios.cy.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "ajv-formats": "^3.0.1"
@@ -43,6 +44,8 @@
     "glob": "^11.0.3",
     "globby": "^15.0.0",
     "http-server": "^14.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
     "minimist": "^1.2.8"
   }
 }
