@@ -26,76 +26,95 @@
     {
       "title": "Act 1",
       "id": "act1",
-      "steps": {
-        "start": {
-          "id": "start",
-          "type": "goto",
-          "text": "",
-          "to": "auto_e285qb",
+      "steps": [
+        {
+          "start": {
+            "id": "start",
+            "type": "goto",
+            "text": "",
+            "to": "auto_e285qb",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_e285qb": {
+            "id": "auto_e285qb",
+            "type": "goto",
+            "text": "",
+            "to": "**Slow lane:** Wait 3–6 months and discuss expectations with your ex.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_as9w8u": {
+            "id": "auto_as9w8u",
+            "type": "goto",
+            "text": "",
+            "to": "**Guided intro:** Short, neutral, child-focused activity first.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_kozuq8": {
+            "id": "auto_kozuq8",
+            "type": "goto",
+            "text": "",
+            "to": "**Not yet:** Prioritize child's stability; revisit in Act 3.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "act1_end": {
+            "id": "act1_end",
+            "text": "Scenario segment ends here.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Finish",
+                "effects": [],
+                "next": null
+              }
+            ]
+          },
+          "id": "a1s1",
           "choices": [
             {
-              "id": "E",
+              "id": "a1s1c1",
               "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_e285qb": {
-          "id": "auto_e285qb",
-          "type": "goto",
-          "text": "",
-          "to": "**Slow lane:** Wait 3–6 months and discuss expectations with your ex.",
-          "choices": [
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
+            },
             {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_as9w8u": {
-          "id": "auto_as9w8u",
-          "type": "goto",
-          "text": "",
-          "to": "**Guided intro:** Short, neutral, child-focused activity first.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_kozuq8": {
-          "id": "auto_kozuq8",
-          "type": "goto",
-          "text": "",
-          "to": "**Not yet:** Prioritize child's stability; revisit in Act 3.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "act1_end": {
-          "id": "act1_end",
-          "text": "Scenario segment ends here.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Finish",
-              "effects": [],
-              "next": null
+              "id": "a1s1c2",
+              "label": "Return to menu",
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
-      },
+      ],
       "start": "start"
     }
   ],

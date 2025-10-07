@@ -4,12 +4,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "lint:schemas": "node validator.mjs",
+    "lint:schemas": "ajv validate -s public/schema/scenario.v2.schema.json -d 'public/data/*.v2.json' --spec=draft2020 --strict=false",
     "lint:schemas:ci": "node validator.mjs --ci",
     "lint:v2": "node scripts/validate-v2.js",
     "fix:v2": "node scripts/fix-v2.js",
     "fix:v2:write": "node scripts/fix-v2.js --write",
-    "fix:schemas": "node tools/migrate-steps-to-nodes.v2.mjs && node tools/normalize-text-and-ids.mjs && node tools/ensure-min-choices.v2.mjs && node tools/one-shot-fix.mjs && node tools/add-missing-node-ids.mjs",
+    "fix:schemas": "npm run convert:v2 && npm run lint:schemas",
     "choices:extract": "node tools/extract-effects-from-labels.v2.mjs",
     "choices:extract:write": "node tools/extract-effects-from-labels.v2.mjs --write --backup",
     "choices:scan": "node tools/scan-choice-effects.v2.mjs",
@@ -25,18 +25,18 @@
     "serve:static": "http-server -p 3000 .",
     "setup:dev": "bash tools/setup-dev.sh",
     "convert:v2:dry": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json",
-    "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write",
-    "lint:schemas": "ajv validate -s public/schema/scenario.v2.schema.json -d 'public/data/*.v2.json' --spec=draft2020 --strict=false",
-    "fix:schemas": "npm run convert:v2 && npm run lint:schemas"
+    "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write"
   },
   "dependencies": {
     "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
+    "ajv-cli": "^5.0.0",
     "chalk": "^5.6.2",
     "cypress": "^15.3.0",
     "execa": "^9.6.0",
+    "glob": "^11.0.3",
     "globby": "^15.0.0",
     "http-server": "^14.1.1",
     "minimist": "^1.2.8"

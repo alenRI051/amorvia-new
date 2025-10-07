@@ -14,82 +14,104 @@
     "ChildStress": {
       "label": "Child Stress",
       "start": 10
-    }
+    },
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
   },
   "acts": [
     {
       "title": "Act 1",
       "id": "act1",
-      "steps": {
-        "start": {
-          "id": "start",
-          "type": "goto",
-          "text": "",
-          "to": "auto_31rmuw",
+      "steps": [
+        {
+          "start": {
+            "id": "start",
+            "type": "goto",
+            "text": "",
+            "to": "auto_31rmuw",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_31rmuw": {
+            "id": "auto_31rmuw",
+            "type": "goto",
+            "text": "",
+            "to": "Unified rules list, reviewed weekly.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_hn0bas": {
+            "id": "auto_hn0bas",
+            "type": "goto",
+            "text": "",
+            "to": "Zones of control by domain.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_93nx6r": {
+            "id": "auto_93nx6r",
+            "type": "goto",
+            "text": "",
+            "to": "Coach mode with consistent consequences.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "act1_end": {
+            "id": "act1_end",
+            "text": "Scenario segment ends here.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Finish",
+                "effects": [],
+                "next": null
+              }
+            ]
+          },
+          "id": "a1s1",
           "choices": [
             {
-              "id": "E",
+              "id": "a1s1c1",
               "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_31rmuw": {
-          "id": "auto_31rmuw",
-          "type": "goto",
-          "text": "",
-          "to": "Unified rules list, reviewed weekly.",
-          "choices": [
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
+            },
             {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_hn0bas": {
-          "id": "auto_hn0bas",
-          "type": "goto",
-          "text": "",
-          "to": "Zones of control by domain.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_93nx6r": {
-          "id": "auto_93nx6r",
-          "type": "goto",
-          "text": "",
-          "to": "Coach mode with consistent consequences.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "act1_end": {
-          "id": "act1_end",
-          "text": "Scenario segment ends here.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Finish",
-              "effects": [],
-              "next": null
+              "id": "a1s1c2",
+              "label": "Return to menu",
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
-      },
+      ],
       "start": "start"
     }
   ],

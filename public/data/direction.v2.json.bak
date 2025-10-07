@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "id": "direction",
+  "title": "Direction",
+  "meters": {
+    "trust": {
+      "label": "Trust",
+      "start": 50,
+      "min": 0,
+      "max": 100
+    },
+    "tension": {
+      "label": "Tension",
+      "start": 20,
+      "min": 0,
+      "max": 100
+    },
+    "childStress": {
+      "label": "Child Stress",
+      "start": 10,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "acts": [
+    {
+      "title": "Act 1",
+      "id": "act1",
+      "steps": {
+        "start": {
+          "id": "start",
+          "type": "goto",
+          "text": "",
+          "to": "auto_btl7s1",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "auto_btl7s1": {
+          "id": "auto_btl7s1",
+          "type": "goto",
+          "text": "",
+          "to": "Non-human silhouettes with aura color shifts by mood.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "auto_kqp66e": {
+          "id": "auto_kqp66e",
+          "type": "goto",
+          "text": "",
+          "to": "Eye shape reflects emotional state.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "auto_if7dog": {
+          "id": "auto_if7dog",
+          "type": "goto",
+          "text": "",
+          "to": "Backgrounds: realistic interiors.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Continue",
+              "effects": [],
+              "next": "act1_end"
+            }
+          ]
+        },
+        "act1_end": {
+          "id": "act1_end",
+          "text": "Scenario segment ends here.",
+          "choices": [
+            {
+              "id": "E",
+              "label": "Finish",
+              "effects": [],
+              "next": null
+            }
+          ]
+        }
+      },
+      "start": "start"
+    }
+  ],
+  "startAct": "act1",
+  "start": "start",
+  "startNode": "start",
+  "entryNode": "start",
+  "entry": {
+    "actId": "act1",
+    "nodeId": "start"
+  }
+}

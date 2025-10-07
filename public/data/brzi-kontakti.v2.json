@@ -26,76 +26,95 @@
     {
       "title": "Act 1",
       "id": "act1",
-      "steps": {
-        "start": {
-          "id": "start",
-          "type": "goto",
-          "text": "",
-          "to": "auto_zgs44m",
+      "steps": [
+        {
+          "start": {
+            "id": "start",
+            "type": "goto",
+            "text": "",
+            "to": "auto_zgs44m",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_zgs44m": {
+            "id": "auto_zgs44m",
+            "type": "goto",
+            "text": "",
+            "to": "**CZSS**: socskrb.hr",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_ys851q": {
+            "id": "auto_ys851q",
+            "type": "goto",
+            "text": "",
+            "to": "**Obiteljski sud / odvjetnici**: lokalni kontakti",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "auto_tl7500": {
+            "id": "auto_tl7500",
+            "type": "goto",
+            "text": "",
+            "to": "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "act1_end"
+              }
+            ]
+          },
+          "act1_end": {
+            "id": "act1_end",
+            "text": "Scenario segment ends here.",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Finish",
+                "effects": [],
+                "next": null
+              }
+            ]
+          },
+          "id": "a1s1",
           "choices": [
             {
-              "id": "E",
+              "id": "a1s1c1",
               "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_zgs44m": {
-          "id": "auto_zgs44m",
-          "type": "goto",
-          "text": "",
-          "to": "**CZSS**: socskrb.hr",
-          "choices": [
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
+            },
             {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_ys851q": {
-          "id": "auto_ys851q",
-          "type": "goto",
-          "text": "",
-          "to": "**Obiteljski sud / odvjetnici**: lokalni kontakti",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "auto_tl7500": {
-          "id": "auto_tl7500",
-          "type": "goto",
-          "text": "",
-          "to": "**Mediacija**: provjerite registrirane medijatore Ministarstva pravosuđa",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "act1_end"
-            }
-          ]
-        },
-        "act1_end": {
-          "id": "act1_end",
-          "text": "Scenario segment ends here.",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Finish",
-              "effects": [],
-              "next": null
+              "id": "a1s1c2",
+              "label": "Return to menu",
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
-      },
+      ],
       "start": "start"
     }
   ],

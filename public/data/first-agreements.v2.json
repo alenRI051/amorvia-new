@@ -27,83 +27,102 @@
       "id": "act-4",
       "title": "Act 4",
       "start": "a4c1",
-      "steps": {
-        "start": {
-          "id": "start",
-          "type": "goto",
-          "text": "",
-          "to": "a4c1",
+      "steps": [
+        {
+          "start": {
+            "id": "start",
+            "type": "goto",
+            "text": "",
+            "to": "a4c1",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "end"
+              }
+            ]
+          },
+          "a4c1": {
+            "id": "a4c1",
+            "type": "choice",
+            "prompt": "Choose a path",
+            "choices": [
+              {
+                "label": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r",
+                "to": "a4n1",
+                "effects": [
+                  {
+                    "meter": "tension",
+                    "delta": 0
+                  }
+                ],
+                "id": "auto_c_a4c10",
+                "next": "end"
+              },
+              {
+                "id": "auto_continue",
+                "label": "Continue",
+                "to": "a4n1",
+                "effects": [
+                  {
+                    "meter": "tension",
+                    "delta": 0
+                  }
+                ],
+                "next": "end"
+              }
+            ],
+            "text": ""
+          },
+          "a4n1": {
+            "id": "a4n1",
+            "type": "line",
+            "speaker": "narrator",
+            "text": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r\\n\\r\\n# New scenario: Scene - First Agreements\\r\\nfirst_agreements = {\\r\\n \\\"version\\\": 2,\\r\\n \\\"id\\\": \\\"scene-first-agreements\\\",\\r\\n \\\"title\\\": \\\"Scene: First Agreements\\\",\\r\\n \\\"meters\\\": {\\r\\n \\\"tension\\\": {\\\"",
+            "to": "end",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "end"
+              }
+            ]
+          },
+          "end": {
+            "id": "end",
+            "type": "end",
+            "summary": "End of act.",
+            "text": "",
+            "choices": [
+              {
+                "id": "E",
+                "label": "Continue",
+                "effects": [],
+                "next": "end"
+              }
+            ]
+          },
+          "id": "a1s1",
           "choices": [
             {
-              "id": "E",
+              "id": "a1s1c1",
               "label": "Continue",
-              "effects": [],
-              "next": "end"
-            }
-          ]
-        },
-        "a4c1": {
-          "id": "a4c1",
-          "type": "choice",
-          "prompt": "Choose a path",
-          "choices": [
-            {
-              "label": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r",
-              "to": "a4n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ],
-              "id": "auto_c_a4c10",
-              "next": "end"
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
             },
             {
-              "id": "auto_continue",
-              "label": "Continue",
-              "to": "a4n1",
-              "effects": [
-                {
-                  "meter": "tension",
-                  "delta": 0
-                }
-              ],
-              "next": "end"
-            }
-          ],
-          "text": ""
-        },
-        "a4n1": {
-          "id": "a4n1",
-          "type": "line",
-          "speaker": "narrator",
-          "text": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r\\n\\r\\n# New scenario: Scene - First Agreements\\r\\nfirst_agreements = {\\r\\n \\\"version\\\": 2,\\r\\n \\\"id\\\": \\\"scene-first-agreements\\\",\\r\\n \\\"title\\\": \\\"Scene: First Agreements\\\",\\r\\n \\\"meters\\\": {\\r\\n \\\"tension\\\": {\\\"",
-          "to": "end",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "end"
-            }
-          ]
-        },
-        "end": {
-          "id": "end",
-          "type": "end",
-          "summary": "End of act.",
-          "text": "",
-          "choices": [
-            {
-              "id": "E",
-              "label": "Continue",
-              "effects": [],
-              "next": "end"
+              "id": "a1s1c2",
+              "label": "Return to menu",
+              "tone": "neutral",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
-      }
+      ]
     }
   ],
   "startAct": "act-4",
