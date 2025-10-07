@@ -4,17 +4,37 @@ const SCENARIO_PATH = 'public/data/dating-after-breakup-with-child-involved.v2.j
 const SAFE_METERS = ['trust', 'tension', 'childStress'];
 const SAFE_RANGE = { min: -2, max: 2 };
 const isSafeDelta = (n) => Number.isFinite(n) && n >= SAFE_RANGE.min && n <= SAFE_RANGE.max;
+// Flip to true if you want to enforce integer deltas
+const REQUIRE_INTEGER_DELTAS = false;
 
 describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () => {
   let data;
-  let stepIds = new Set();
-  let actIds = new Set();
-  let firstStepByAct = new Map();
+  const stepIds = new Set();
+  const actIds = new Set();
+  const firstStepByAct = new Map();
+
+  // simple seeded RNG (mulberry32) for deterministic random-walks within a run
+  let rand;
+  const mulberry32 = (seed) => () => {
+    let t = (seed += 0x6D2B79F5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 
   before(() => {
     // Cypress readFile auto-parses .json → returns an object
     cy.readFile(SCENARIO_PATH).then((json) => {
       data = json;
+
+      // seed RNG from a stable string (scenario id + version)
+      const seedStr = `${data.id}|${data.version}`;
+      let seed = 0;
+      for (let i = 0; i < seedStr.length; i++) {
+        seed = (seed * 31 + seedStr.charCodeAt(i)) >>> 0;
+      }
+      rand = mulberry32(seed || 1);
 
       // collect ids
       (data.acts || []).forEach((act) => {
@@ -35,21 +55,40 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
     expect(data).to.have.property('acts').that.is.an('array').and.not.empty;
   });
 
-  it('each act has steps and each step has valid choices', () => {
-    data.acts.forEach((act) => {
+  it('each act has steps, valid first step, and each step has valid choices', () => {
+    // uniqueness trackers
+    const seenActIds = new Set();
+    const seenStepIds = new Set();
+
+    data.acts.forEach((act, actIndex) => {
+      expect(act).to.have.property('id').that.is.a('string');
+      expect(seenActIds.has(act.id), `duplicate act id "${act.id}"`).to.eq(false);
+      seenActIds.add(act.id);
+
       expect(act).to.have.property('steps').that.is.an('array').and.not.empty;
+      const first = act.steps?.[0]?.id;
+      expect(first, `act "${act.id}" must have a first step id`).to.be.a('string');
+
       act.steps.forEach((step) => {
         expect(step).to.have.property('id').that.is.a('string');
+        expect(seenStepIds.has(step.id), `duplicate step id "${step.id}"`).to.eq(false);
+        seenStepIds.add(step.id);
+
         expect(step).to.have.property('text').that.is.a('string');
         expect(step).to.have.property('choices').that.is.an('array');
-        expect(step.choices.length).to.be.gte(2);
+        expect(step.choices.length, `step ${step.id} must have at least 2 choices`).to.be.gte(2);
 
+        // unique choice ids within step
+        const seenChoiceIds = new Set();
         step.choices.forEach((choice) => {
           expect(choice).to.have.property('id').that.is.a('string');
+          expect(seenChoiceIds.has(choice.id), `duplicate choice id "${choice.id}" in step "${step.id}"`).to.eq(false);
+          seenChoiceIds.add(choice.id);
+
           expect(choice).to.have.property('label').that.is.a('string');
           expect(choice).to.have.property('to');
           expect(choice.to === 'menu' || typeof choice.to === 'string').to.eq(true);
-          expect(choice).to.have.property('effects').that.is.an('object'); // v2
+          expect(choice).to.have.property('effects').that.is.an('object'); // v2 effects object
         });
       });
     });
@@ -74,7 +113,7 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
     }
   });
 
-  it('no choice effect uses an unknown meter or out-of-range delta', () => {
+  it('no choice effect uses an unknown meter, non-integer (optional), or out-of-range delta', () => {
     const invalids = [];
 
     data.acts.forEach((act) => {
@@ -82,10 +121,13 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
         step.choices.forEach((choice) => {
           const eff = choice.effects || {};
           Object.keys(eff).forEach((k) => {
+            const v = eff[k];
             if (!SAFE_METERS.includes(k)) {
               invalids.push(`${step.id}/${choice.id}: unknown meter "${k}"`);
-            } else if (!isSafeDelta(eff[k])) {
-              invalids.push(`${step.id}/${choice.id}: ${k} delta ${eff[k]} out of ${SAFE_RANGE.min}..${SAFE_RANGE.max}`);
+            } else if (!isSafeDelta(v)) {
+              invalids.push(`${step.id}/${choice.id}: ${k} delta ${v} out of ${SAFE_RANGE.min}..${SAFE_RANGE.max}`);
+            } else if (REQUIRE_INTEGER_DELTAS && !Number.isInteger(v)) {
+              invalids.push(`${step.id}/${choice.id}: ${k} delta must be integer, got ${v}`);
             }
           });
         });
@@ -127,11 +169,10 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
   });
 
   it('random playthroughs keep cumulative meters within clamps', () => {
-    const CLAMP = { min: -10, max: 10 }; // tune as needed
+    const CLAMP = { min: -10, max: 10 }; // engine-like clamp
     const runs = 50; // number of random walks
 
     const clamp = (v) => Math.max(CLAMP.min, Math.min(CLAMP.max, v));
-    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
     for (let r = 0; r < runs; r++) {
       const totals = { trust: 0, tension: 0, childStress: 0 };
@@ -174,3 +215,4 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
     }
   });
 });
+
