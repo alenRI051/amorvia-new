@@ -614,7 +614,17 @@
               "text": "Pause here (return to menu).",
               "tone": "reflective · contained",
               "next": null
-            }
+            },
+            {
+  "id": "act5",
+  "title": "After the First Date",
+  "steps": [
+    {
+      "id": "a5stub",
+      "text": "Placeholder for Act 5 content — decompress from the date and plan next steps.",
+      "tone": "neutral · placeholder",
+      "choices": [
+        { "id": "a5stubc1", "text": "Return to menu.", "next": null }
           ]
         }
       ]
