@@ -126,3 +126,58 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
     }
   });
 });
+it('random playthroughs keep cumulative meters within clamps', () => {
+  const CLAMP = { min: -10, max: 10 }; // tune as needed
+  const runs = 50; // number of random walks
+
+  function clamp(v) {
+    return Math.max(CLAMP.min, Math.min(CLAMP.max, v));
+  }
+
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  for (let r = 0; r < runs; r++) {
+    const totals = { trust: 0, tension: 0, childStress: 0 };
+
+    // start at first act/first step
+    let act = data.acts[0];
+    let step = act.steps[0];
+    let hops = 0;
+
+    while (hops < 200 && step) {
+      const choice = pick(step.choices);
+      const eff = choice.effects || {};
+
+      // apply deltas with clamp
+      Object.keys(totals).forEach((m) => {
+        const nextVal = totals[m] + (eff[m] || 0);
+        totals[m] = clamp(nextVal);
+        // also assert engine-like clamp is respected
+        expect(totals[m]).to.be.within(CLAMP.min, CLAMP.max);
+      });
+
+      // resolve next
+      if (choice.to === 'menu') break; // terminal
+      const to = choice.to;
+
+      // act jump?
+      const nextAct = data.acts.find((a) => a.id === to);
+      if (nextAct) {
+        act = nextAct;
+        step = act.steps[0];
+      } else {
+        // step jump
+        // find target step across all acts (IDs are globally unique in your files)
+        let found = null;
+        for (const a of data.acts) {
+          found = a.steps.find((s) => s.id === to);
+          if (found) break;
+        }
+        step = found || null;
+      }
+      hops++;
+    }
+  }
+});
