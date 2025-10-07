@@ -27,7 +27,8 @@
     "serve:static": "http-server -p 3000 .",
     "setup:dev": "bash tools/setup-dev.sh",
     "convert:v2:dry": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json",
-    "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write"
+    "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write",
+    "fix:display-text": "node tools/fix-display-text.mjs"
   },
   "dependencies": {
     "ajv-formats": "^3.0.1"
