@@ -112,7 +112,8 @@
               "effects": {},
               "to": "menu"
             }
-          ]
+          ],
+          "text": "[a1s1]"
         }
       ],
       "start": "start"

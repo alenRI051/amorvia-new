@@ -128,7 +128,8 @@
               "effects": {},
               "to": "menu"
             }
-          ]
+          ],
+          "text": "[a1s1]"
         }
       ],
       "start": "start"
@@ -218,7 +219,8 @@
               "effects": {},
               "to": "menu"
             }
-          ]
+          ],
+          "text": "[a2s1]"
         }
       ],
       "start": "a2s1"
@@ -309,7 +311,8 @@
               "effects": {},
               "to": "menu"
             }
-          ]
+          ],
+          "text": "[a3s1]"
         }
       ],
       "start": "a3s1"
