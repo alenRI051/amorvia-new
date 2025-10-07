@@ -7,6 +7,7 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',          // your http-server target
     specPattern: 'cypress/e2e/**/*.cy.js',
+    excludeSpecPattern: ['**/_template_*.cy.js'],
     supportFile: 'cypress/support/e2e.js',
     setupNodeEvents(on, config) {
       // Simple Node-side logger so you can print to terminal from tests
