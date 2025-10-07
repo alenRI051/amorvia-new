@@ -87,8 +87,10 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
     expect(scenario).to.have.property('title').and.to.be.a('string').and.not.be.empty;
     expect(scenario).to.have.property('version', '1.3.0');
     expect(scenario).to.have.property('meters').and.to.be.an('array');
-    // Check meter set matches expectations
-    expect(new Set(scenario.meters)).to.deep.eq(ALLOWED_METERS);
+    // Check meter set matches expectations (array compare to avoid Set pitfalls)
+    const metersSorted = [...scenario.meters].sort();
+    const expectedSorted = [...ALLOWED_METERS].sort();
+    expect(metersSorted).to.deep.eq(expectedSorted);
     // Acts exist and include 1..4
     expect(scenario).to.have.property('acts').and.to.be.an('array').and.not.be.empty;
     const actIds = scenario.acts.map(a => a.id);
