@@ -5,16 +5,12 @@ const SAFE_RANGE = { min: -2, max: 2 };
 const isSafeDelta = (n) => Number.isFinite(n) && n >= SAFE_RANGE.min && n <= SAFE_RANGE.max;
 
 // Normalize act.steps to an array of {id, ...step}
-// - If steps is already an array, return as-is.
-// - If steps is an object map, convert entries to array and inject key as id when missing.
-// Also return a Set of stepIds for target resolution.
 function normalizeSteps(steps) {
   if (Array.isArray(steps)) {
     const ids = new Set();
     steps.forEach((s) => { if (s && s.id) ids.add(s.id); });
     return { list: steps, ids };
   }
-  // object map case
   const list = [];
   const ids = new Set();
   if (steps && typeof steps === 'object') {
@@ -27,16 +23,14 @@ function normalizeSteps(steps) {
   return { list, ids };
 }
 
-// Get step display text: accept either `text` or `label`
-const getStepText = (step) => {
-  if (typeof step.text === 'string') return step.text;
-  if (typeof step.label === 'string') return step.label;
-  return undefined;
-};
+// Determine if a step has some human-readable display text
+const DISPLAY_KEYS = ['text', 'label', 'prompt', 'title', 'description', 'desc'];
+function hasDisplayText(step) {
+  return DISPLAY_KEYS.some((k) => typeof step[k] === 'string' && step[k].trim().length > 0);
+}
 
 describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
   it('validates every public/data/*.v2.json', () => {
-    // Use shell to list files to avoid Node "node:*" imports in Cypress bundler
     cy.exec('ls -1 public/data/*.v2.json').then(({ stdout }) => {
       const files = stdout.trim().split('\n').filter(Boolean);
       expect(files.length, 'at least one v2 scenario present').to.be.greaterThan(0);
@@ -68,14 +62,11 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
             const { list, ids } = normalizeSteps(act.steps);
             expect(list, `${path} ${act.id} normalized steps array`).to.be.an('array').and.not.empty;
 
-            // store
             stepsByAct.set(act.id, list);
 
-            // first step id (after normalization)
             const firstId = list?.[0]?.id;
             if (firstId) firstStepByAct.set(act.id, firstId);
 
-            // accumulate global step ids
             ids.forEach((id) => allStepIds.add(id));
           });
 
@@ -85,8 +76,11 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
             list.forEach((step) => {
               expect(step, `${path} step`).to.have.property('id').that.is.a('string');
 
-              const text = getStepText(step);
-              expect(text, `${path} step text/label`).to.be.a('string');
+              // Accept text-like fields across scenarios
+              expect(
+                hasDisplayText(step),
+                `${path} step ${step.id} needs a display text field (one of ${DISPLAY_KEYS.join(', ')})`
+              ).to.eq(true);
 
               expect(step, `${path} step choices`).to.have.property('choices').that.is.an('array');
               expect(step.choices.length, `${path} ${step.id} choices >=2`).to.be.gte(2);
@@ -163,3 +157,4 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
     });
   });
 });
+
