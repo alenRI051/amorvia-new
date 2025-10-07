@@ -23,7 +23,11 @@
     "test:e2e": "xvfb-run -a cypress run --browser electron",
     "test:e2e:open": "xvfb-run -a cypress open",
     "serve:static": "http-server -p 3000 .",
-    "setup:dev": "bash tools/setup-dev.sh"
+    "setup:dev": "bash tools/setup-dev.sh",
+    "convert:v2:dry": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json",
+    "convert:v2": "node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write",
+    "lint:schemas": "ajv validate -s public/schema/scenario.v2.schema.json -d 'public/data/*.v2.json' --spec=draft2020 --strict=false",
+    "fix:schemas": "npm run convert:v2 && npm run lint:schemas"
   },
   "dependencies": {
     "ajv-formats": "^3.0.1"
