@@ -1,7 +1,7 @@
 // tools/fix-display-text.mjs
 import fs from 'node:fs';
 import path from 'node:path';
-import glob from 'glob';
+import { globSync } from 'glob';
 
 const DISPLAY_KEYS = ['text', 'label', 'prompt', 'title', 'description', 'desc'];
 
@@ -44,4 +44,6 @@ function fixFile(file) {
 }
 
 const pattern = process.argv[2] || 'public/data/*.v2.json';
-for (const file of glob.sync(pattern, { nodir: true })) fixFile(path.resolve(file));
+for (const file of globSync(pattern, { nodir: true })) {
+  fixFile(path.resolve(file));
+}
