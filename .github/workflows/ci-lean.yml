@@ -1,0 +1,52 @@
+name: CI (lean)
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Convert to v2
+        run: npm run convert:v2
+
+      - name: Lint schemas
+        run: npm run lint:schemas
+
+      - name: Run Cypress smoke (Electron)
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: electron
+          spec: |
+            cypress/e2e/_smoke_all_scenarios.cy.js
+            cypress/e2e/dating_after_breakup.cy.js
+        env:
+          CI: true
+
+      - name: Upload Cypress artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts-lean
+          path: |
+            cypress/screenshots
+            cypress/videos
+          if-no-files-found: ignore
