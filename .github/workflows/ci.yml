@@ -8,22 +8,31 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
           cache: 'npm'
 
-      - name: Install deps
+      - name: Install dependencies
         run: npm ci
 
-      - name: Convert to v2
+      - name: Show environment info
+        run: |
+          node -v
+          npm -v
+          npx cypress --version || true
+
+      - name: Convert scenarios to v2
         run: npm run convert:v2
 
-      - name: Lint schemas
+      - name: Validate all schemas
         run: npm run lint:schemas
 
       - name: Run Cypress (Electron headless)
@@ -34,5 +43,6 @@ jobs:
           spec: |
             cypress/e2e/dating_after_breakup.cy.js
             cypress/e2e/dating_after_breakup_full.cy.js
+            cypress/e2e/_smoke_all_scenarios.cy.js
         env:
           CI: true
