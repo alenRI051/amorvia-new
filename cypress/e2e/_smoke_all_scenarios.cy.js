@@ -1,8 +1,38 @@
 /// <reference types="cypress" />
 
-// Repo-wide smoke for all v2 scenarios without using Node 'glob' (works in Cypress runner)
+// Repo-wide smoke for all v2 scenarios (supports acts.steps as array OR object map)
 const SAFE_RANGE = { min: -2, max: 2 };
 const isSafeDelta = (n) => Number.isFinite(n) && n >= SAFE_RANGE.min && n <= SAFE_RANGE.max;
+
+// Normalize act.steps to an array of {id, ...step}
+// - If steps is already an array, return as-is.
+// - If steps is an object map, convert entries to array and inject key as id when missing.
+// Also return a Set of stepIds for target resolution.
+function normalizeSteps(steps) {
+  if (Array.isArray(steps)) {
+    const ids = new Set();
+    steps.forEach((s) => { if (s && s.id) ids.add(s.id); });
+    return { list: steps, ids };
+  }
+  // object map case
+  const list = [];
+  const ids = new Set();
+  if (steps && typeof steps === 'object') {
+    Object.entries(steps).forEach(([key, val]) => {
+      const id = (val && typeof val === 'object' && typeof val.id === 'string') ? val.id : String(key);
+      list.push({ id, ...(val || {}) });
+      ids.add(id);
+    });
+  }
+  return { list, ids };
+}
+
+// Get step display text: accept either `text` or `label`
+const getStepText = (step) => {
+  if (typeof step.text === 'string') return step.text;
+  if (typeof step.label === 'string') return step.label;
+  return undefined;
+};
 
 describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
   it('validates every public/data/*.v2.json', () => {
@@ -16,34 +46,48 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
           // --- Top-level checks
           expect(data, `${path} top-level`).to.have.property('id').that.is.a('string');
           expect(data, `${path} top-level`).to.have.property('title').that.is.a('string');
-          expect(data, `${path} top-level`).to.have.property('version', 2);
+          expect(data, `${path} version`).to.have.property('version', 2);
           expect(data, `${path} meters`).to.have.property('meters').that.is.an('object');
           const knownMeters = Object.keys(data.meters || {});
           expect(knownMeters.length, `${path} meters non-empty`).to.be.greaterThan(0);
           expect(data, `${path} acts`).to.have.property('acts').that.is.an('array').and.not.empty;
 
-          // --- Collect ids + first steps
-          const stepIds = new Set();
+          // --- Collect ids + first steps (after normalization)
           const actIds = new Set();
+          const allStepIds = new Set();
           const firstStepByAct = new Map();
+          const stepsByAct = new Map(); // actId -> normalized list
 
           (data.acts || []).forEach((act) => {
             expect(act, `${path} act`).to.have.property('id').that.is.a('string');
             expect(act, `${path} act`).to.have.property('title').that.is.a('string');
-            expect(act, `${path} act steps`).to.have.property('steps').that.is.an('array').and.not.empty;
+            expect(act, `${path} act steps`).to.have.property('steps');
 
             actIds.add(act.id);
-            const first = act.steps?.[0]?.id;
-            if (first) firstStepByAct.set(act.id, first);
 
-            act.steps.forEach((s) => stepIds.add(s.id));
+            const { list, ids } = normalizeSteps(act.steps);
+            expect(list, `${path} ${act.id} normalized steps array`).to.be.an('array').and.not.empty;
+
+            // store
+            stepsByAct.set(act.id, list);
+
+            // first step id (after normalization)
+            const firstId = list?.[0]?.id;
+            if (firstId) firstStepByAct.set(act.id, firstId);
+
+            // accumulate global step ids
+            ids.forEach((id) => allStepIds.add(id));
           });
 
           // --- Step + choice shape
           data.acts.forEach((act) => {
-            act.steps.forEach((step) => {
+            const list = stepsByAct.get(act.id) || [];
+            list.forEach((step) => {
               expect(step, `${path} step`).to.have.property('id').that.is.a('string');
-              expect(step, `${path} step text`).to.have.property('text').that.is.a('string');
+
+              const text = getStepText(step);
+              expect(text, `${path} step text/label`).to.be.a('string');
+
               expect(step, `${path} step choices`).to.have.property('choices').that.is.an('array');
               expect(step.choices.length, `${path} ${step.id} choices >=2`).to.be.gte(2);
 
@@ -58,10 +102,11 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
           });
 
           // --- Resolve "to" targets
-          const validTargets = new Set(['menu', ...stepIds, ...actIds]);
+          const validTargets = new Set(['menu', ...Array.from(allStepIds), ...Array.from(actIds)]);
           const badTargets = [];
           data.acts.forEach((act) => {
-            act.steps.forEach((step) => {
+            const list = stepsByAct.get(act.id) || [];
+            list.forEach((step) => {
               step.choices.forEach((choice) => {
                 if (!validTargets.has(choice.to)) {
                   badTargets.push(`${path}: ${step.id}/${choice.id} → "${choice.to}"`);
@@ -74,7 +119,8 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
           // --- Effects constraints (known meters + ±2 range)
           const invalidEffects = [];
           data.acts.forEach((act) => {
-            act.steps.forEach((step) => {
+            const list = stepsByAct.get(act.id) || [];
+            list.forEach((step) => {
               step.choices.forEach((choice) => {
                 const eff = choice.effects || {};
                 Object.entries(eff).forEach(([k, v]) => {
@@ -90,11 +136,12 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
           expect(invalidEffects, `${path} invalid effects`).to.deep.eq([]);
 
           // --- Reachability: every non-first step must have at least one inbound
-          const inbound = new Map(Array.from(stepIds).map((id) => [id, 0]));
+          const inbound = new Map(Array.from(allStepIds).map((id) => [id, 0]));
           data.acts.forEach((act) => {
-            act.steps.forEach((step) => {
+            const list = stepsByAct.get(act.id) || [];
+            list.forEach((step) => {
               step.choices.forEach((choice) => {
-                if (stepIds.has(choice.to)) {
+                if (inbound.has(choice.to)) {
                   inbound.set(choice.to, (inbound.get(choice.to) || 0) + 1);
                 }
               });
@@ -103,7 +150,8 @@ describe('Amorvia: repo-wide scenario smoke checks (v2 schema)', () => {
           const orphaned = [];
           data.acts.forEach((act) => {
             const firstId = firstStepByAct.get(act.id);
-            act.steps.forEach((step) => {
+            const list = stepsByAct.get(act.id) || [];
+            list.forEach((step) => {
               if (step.id !== firstId && (inbound.get(step.id) || 0) === 0) {
                 orphaned.push(`${path}: ${step.id} in ${act.id} has no inbound`);
               }
