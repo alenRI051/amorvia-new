@@ -20,6 +20,7 @@
     "choices:neutral": "node tools/auto-fill-neutral-effects.v2.mjs",
     "choices:neutral:write": "node tools/auto-fill-neutral-effects.v2.mjs --write --backup",
     "dev": "http-server -p 3000 public",
+    "pretest:e2e": "npm run convert:v2 && npm run lint:schemas",
     "test:e2e": "CI=1 xvfb-run -a cypress run --browser electron",
     "test:e2e:spec": "CI=1 xvfb-run -a cypress run --browser electron --spec",
     "test:e2e:open": "xvfb-run -a cypress open",
