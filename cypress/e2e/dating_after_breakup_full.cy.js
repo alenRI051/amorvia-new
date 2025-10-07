@@ -72,16 +72,16 @@ describe('Dating After Breakup scenario: full data validation (Acts 1–4)', () 
   let actMap, stepMap;
 
   before(() => {
-    // Read the exact file the app uses
-    cy.readFile('public/data/dating-after-breakup-with-child-involved.v2.json', 'utf8')
-      .then((txt) => {
-        scenario = JSON.parse(txt);
-        const idx = indexScenario(scenario);
-        actMap = idx.actMap;
-        stepMap = idx.stepMap;
+    // Cypress returns an OBJECT for .json files. No JSON.parse needed.
+    cy.readFile('public/data/dating-after-breakup-with-child-involved.v2.json')
+        .then((data) => {
+          scenario = typeof data === 'string' ? JSON.parse(data) : data;
+          const idx = indexScenario(scenario);
+          actMap = idx.actMap;
+          stepMap = idx.stepMap;
       });
   });
-
+    
   it('has required top-level fields and version 1.3.0', () => {
     expect(scenario).to.have.property('id', 'dating-after-breakup-with-child-involved');
     expect(scenario).to.have.property('title').and.to.be.a('string').and.not.be.empty;
