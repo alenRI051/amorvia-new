@@ -97,11 +97,6 @@
           "id": "a1end",
           "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
           "tone": "quiet · open-ended",
-          "summary": {
-            "highTrust": "You’ve kept your composure and handled the weekend with maturity — you’re ready to move forward.",
-            "highTension": "The silence stings and emotions flicker. There’s healing to do, but you’re learning what you need.",
-            "highChildStress": "Even when apart, your thoughts circle back to your child — guilt mixes with care."
-          },
           "choices": [
             {
               "id": "a1endc1",
@@ -115,7 +110,7 @@
               "label": "Pause here (return to menu).",
               "tone": "reflective",
               "effects": {},
-              "to": null
+              "to": "menu"
             }
           ]
         }
@@ -213,11 +208,6 @@
           "id": "a2end",
           "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
           "tone": "soft · contemplative",
-          "summary": {
-            "highTrust": "You’ve taken a healthy step forward. There’s space now for self-kindness and new beginnings.",
-            "highTension": "Your emotions still wrestle between guilt and curiosity, but at least you’re honest with yourself.",
-            "highChildStress": "Even while exploring new ground, your child stays at the heart of every decision."
-          },
           "choices": [
             {
               "id": "a2endc1",
@@ -231,7 +221,7 @@
               "label": "Pause here (return to menu).",
               "tone": "reflective",
               "effects": {},
-              "to": null
+              "to": "menu"
             }
           ]
         }
@@ -329,11 +319,6 @@
           "id": "a3end",
           "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
           "tone": "meditative · lightly hopeful · closure vibe",
-          "summary": {
-            "highTrust": "You’re beginning to rebuild — carefully, but genuinely.",
-            "highTension": "The tug-of-war between guilt and desire still lingers, yet awareness is progress.",
-            "highChildStress": "Your love for your child keeps grounding you — every step forward includes them."
-          },
           "choices": [
             {
               "id": "a3endc1",
@@ -347,7 +332,7 @@
               "label": "Pause here (return to menu).",
               "tone": "reflective",
               "effects": {},
-              "to": null
+              "to": "menu"
             }
           ]
         }
@@ -473,11 +458,6 @@
           "id": "a4end",
           "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
           "tone": "settled · gently optimistic",
-          "summary": {
-            "highTrust": "Your boundaries and honesty created space for something real.",
-            "highTension": "The pull between desire and duty is still loud, but you named it — that matters.",
-            "highChildStress": "You steered the night with your child in mind. That care is your compass."
-          },
           "choices": [
             {
               "id": "a4endc1",
@@ -491,7 +471,7 @@
               "label": "Pause here (return to menu).",
               "tone": "reflective · contained",
               "effects": {},
-              "to": null
+              "to": "menu"
             }
           ]
         }
@@ -506,7 +486,7 @@
           "text": "Placeholder for Act 5 content — decompress from the date and plan next steps.",
           "tone": "neutral · placeholder",
           "choices": [
-            { "id": "a5stubc1", "label": "Return to menu.", "tone": "neutral", "effects": {}, "to": null },
+            { "id": "a5stubc1", "label": "Return to menu.", "tone": "neutral", "effects": {}, "to": "menu" },
             { "id": "a5stubc2", "label": "Back to Act 4 end.", "tone": "neutral", "effects": {}, "to": "a4end" }
           ]
         }
