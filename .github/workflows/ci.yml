@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Convert to v2
+        run: npm run convert:v2
+
+      - name: Lint schemas
+        run: npm run lint:schemas
+
+      - name: Run Cypress (Electron headless)
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: electron
+          spec: |
+            cypress/e2e/dating_after_breakup.cy.js
+            cypress/e2e/dating_after_breakup_full.cy.js
+        env:
+          CI: true
