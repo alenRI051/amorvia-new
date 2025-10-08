@@ -434,7 +434,7 @@
               "label": "Continue to Act 4.",
               "tone": "calm · optimistic",
               "effects": {},
-              "to": "act4"
+              "to": "a4s1"
             },
             {
               "id": "a3endc2",
@@ -621,7 +621,7 @@
               "label": "Continue to Act 5.",
               "tone": "confident · forward-looking",
               "effects": {},
-              "to": "act5"
+              "to": "a5s1"
             },
             {
               "id": "a4endc2",
@@ -646,13 +646,21 @@
               "id": "a5s1c1",
               "label": "I'm feeling optimistic — this could work.",
               "to": "a5s2",
-              "effects": { "trust": 2, "tension": -1, "childStress": 0 }
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": 0
+              }
             },
             {
               "id": "a5s1c2",
               "label": "Cautiously hopeful, but I need clearer boundaries first.",
               "to": "a5s2",
-              "effects": { "trust": 1, "tension": 0, "childStress": 0 }
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              }
             }
           ]
         },
@@ -664,13 +672,21 @@
               "id": "a5s2c1",
               "label": "Share a simple FYI to keep trust intact.",
               "to": "a5s3",
-              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              }
             },
             {
               "id": "a5s2c2",
               "label": "Wait until things feel more defined.",
               "to": "a5s3",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
             }
           ]
         },
@@ -682,13 +698,21 @@
               "id": "a5s3c1",
               "label": "Keep routines stable; no changes yet.",
               "to": "a5s4",
-              "effects": { "trust": 0, "tension": -1, "childStress": -1 }
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": -1
+              }
             },
             {
               "id": "a5s3c2",
               "label": "Introduce tiny changes with advance notice.",
               "to": "a5s4",
-              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              }
             }
           ]
         },
@@ -700,19 +724,31 @@
               "id": "a5s4c1",
               "label": "Set check-ins with the co-parent and keep dates low-key.",
               "to": "a5end",
-              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              }
             },
             {
               "id": "a5s4c2",
               "label": "Pause dating to reassess personal readiness.",
               "to": "a5end",
-              "effects": { "trust": 0, "tension": -2, "childStress": -1 }
+              "effects": {
+                "trust": 0,
+                "tension": -2,
+                "childStress": -1
+              }
             },
             {
               "id": "a5s4c3",
               "label": "Continue dating with explicit boundaries documented.",
               "to": "a5end",
-              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              }
             }
           ]
         },
@@ -724,13 +760,21 @@
               "id": "a5endc1",
               "label": "Open main menu",
               "to": "menu",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
             },
             {
               "id": "a5endc2",
               "label": "Re-read reflections",
               "to": "a5s1",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
             }
           ]
         }
