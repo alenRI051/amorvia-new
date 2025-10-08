@@ -635,102 +635,104 @@
       ]
     },
     {
-  "id": "act5",
-  "label": "Post-date reflections",
-  "steps": [
-    {
-      "id": "a5s1",
-      "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
-      "choices": [
+      "id": "act5",
+      "title": "Post-date reflections",
+      "steps": [
         {
-          "id": "a5s1c1",
-          "label": "I'm feeling optimistic — this could work.",
-          "to": "a5s2",
-          "effects": { "trust": 2, "tension": -1, "childStress": 0 }
+          "id": "a5s1",
+          "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
+          "choices": [
+            {
+              "id": "a5s1c1",
+              "label": "I'm feeling optimistic — this could work.",
+              "to": "a5s2",
+              "effects": { "trust": 2, "tension": -1, "childStress": 0 }
+            },
+            {
+              "id": "a5s1c2",
+              "label": "Cautiously hopeful, but I need clearer boundaries first.",
+              "to": "a5s2",
+              "effects": { "trust": 1, "tension": 0, "childStress": 0 }
+            }
+          ]
         },
         {
-          "id": "a5s1c2",
-          "label": "Cautiously hopeful, but I need clearer boundaries first.",
-          "to": "a5s2",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 }
-        }
-      ]
-    },
-    {
-      "id": "a5s2",
-      "text": "You consider how (and whether) to tell your co-parent about the date.",
-      "choices": [
-        {
-          "id": "a5s2c1",
-          "label": "Share a simple FYI to keep trust intact.",
-          "to": "a5s3",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+          "id": "a5s2",
+          "text": "You consider how (and whether) to tell your co-parent about the date.",
+          "choices": [
+            {
+              "id": "a5s2c1",
+              "label": "Share a simple FYI to keep trust intact.",
+              "to": "a5s3",
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+            },
+            {
+              "id": "a5s2c2",
+              "label": "Wait until things feel more defined.",
+              "to": "a5s3",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+            }
+          ]
         },
         {
-          "id": "a5s2c2",
-          "label": "Wait until things feel more defined.",
-          "to": "a5s3",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 }
-        }
-      ]
-    },
-    {
-      "id": "a5s3",
-      "text": "You think about the child’s routine: what, if anything, needs to change soon?",
-      "choices": [
-        {
-          "id": "a5s3c1",
-          "label": "Keep routines stable; no changes yet.",
-          "to": "a5s4",
-          "effects": { "trust": 0, "tension": -1, "childStress": -1 }
+          "id": "a5s3",
+          "text": "You think about the child’s routine: what, if anything, needs to change soon?",
+          "choices": [
+            {
+              "id": "a5s3c1",
+              "label": "Keep routines stable; no changes yet.",
+              "to": "a5s4",
+              "effects": { "trust": 0, "tension": -1, "childStress": -1 }
+            },
+            {
+              "id": "a5s3c2",
+              "label": "Introduce tiny changes with advance notice.",
+              "to": "a5s4",
+              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
+            }
+          ]
         },
         {
-          "id": "a5s3c2",
-          "label": "Introduce tiny changes with advance notice.",
-          "to": "a5s4",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 }
-        }
-      ]
-    },
-    {
-      "id": "a5s4",
-      "text": "You sketch a short plan for the next two weeks.",
-      "choices": [
-        {
-          "id": "a5s4c1",
-          "label": "Set check-ins with the co-parent and keep dates low-key.",
-          "to": "a5end",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+          "id": "a5s4",
+          "text": "You sketch a short plan for the next two weeks.",
+          "choices": [
+            {
+              "id": "a5s4c1",
+              "label": "Set check-ins with the co-parent and keep dates low-key.",
+              "to": "a5end",
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
+            },
+            {
+              "id": "a5s4c2",
+              "label": "Pause dating to reassess personal readiness.",
+              "to": "a5end",
+              "effects": { "trust": 0, "tension": -2, "childStress": -1 }
+            },
+            {
+              "id": "a5s4c3",
+              "label": "Continue dating with explicit boundaries documented.",
+              "to": "a5end",
+              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
+            }
+          ]
         },
         {
-          "id": "a5s4c2",
-          "label": "Pause dating to reassess personal readiness.",
-          "to": "a5end",
-          "effects": { "trust": 0, "tension": -2, "childStress": -1 }
-        },
-        {
-          "id": "a5s4c3",
-          "label": "Continue dating with explicit boundaries documented.",
-          "to": "a5end",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 }
-        }
-      ]
-    },
-    {
-      "id": "a5end",
-      "text": "You close the day with a clearer sense of pace and boundaries.",
-      "choices": [
-        {
-          "id": "a5endc1",
-          "label": "Open main menu",
-          "to": "menu",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 }
-        },
-        {
-          "id": "a5endc2",
-          "label": "Re-read reflections",
-          "to": "a5s1",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+          "id": "a5end",
+          "text": "You close the day with a clearer sense of pace and boundaries.",
+          "choices": [
+            {
+              "id": "a5endc1",
+              "label": "Open main menu",
+              "to": "menu",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+            },
+            {
+              "id": "a5endc2",
+              "label": "Re-read reflections",
+              "to": "a5s1",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
+            }
+          ]
         }
       ]
     }
