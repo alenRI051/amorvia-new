@@ -14,6 +14,7 @@
     {
       "id": "act1",
       "title": "Act 1 — Handover Chat",
+      "start": "a1s1"
       "steps": [
         {
           "id": "a1s1",
@@ -59,7 +60,7 @@
               "id": "a1endc1",
               "label": "Continue to Act 2.",
               "effects": {},
-              "to": "act2"
+              "to": "a2s1"
             },
             {
               "id": "a1endc2",
@@ -74,6 +75,7 @@
     {
       "id": "act2",
       "title": "Act 2 — Check-in Rhythm",
+      "start": "a2s1",
       "steps": [
         {
           "id": "a2s1",
