@@ -14,7 +14,7 @@
     {
       "id": "act1",
       "title": "Act 1 — Handover Chat",
-      "start": "a1s1"
+      "start": "a1s1",
       "steps": [
         {
           "id": "a1s1",
