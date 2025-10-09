@@ -4,33 +4,43 @@ describe('Co-Parenting with Bipolar Partner — basic flow', () => {
   const TITLE_RE = /co-parenting with bipolar partner/i;
 
   it('loads at Act 1 / a1s1 and continues into Act 2 / a2s1', () => {
-    // 1) Open the app
     cy.visit('http://localhost:3000');
     cy.clearLocalStorage();
 
-    // 2) Open the scenario from the menu by its title
+    // Open scenario by menu title
     cy.contains(TITLE_RE, { timeout: 10000 }).click();
 
-    // Some UIs have a "Start" button; tap it if present
-    cy.contains(/^start$/i, { timeout: 2000 }).click({ force: true }).optional;
+    // If your UI has a Start button, click if present (safe, non-failing check)
+    cy.get('body', { timeout: 5000 }).then(($b) => {
+      if ($b.text().match(/^\s*start\s*$/im)) {
+        cy.contains(/^start$/i).click({ force: true });
+      }
+    });
 
-    // 3) We expect either the first step OR (in the edge case) the Act 1 end node.
-    cy.contains(/handover day\. your co-parent looks tired but alert/i, { timeout: 10000 })
-      .then(() => {
-        // In the normal path, pick first response, then proceed to act end
+    // Branch on what we see first
+    cy.get('body', { timeout: 10000 }).then(($b) => {
+      const txt = $b.text();
+
+      const atFirstStep = /handover day\.?\s+your co-parent looks tired but alert/i.test(txt);
+      const atAct1End  = /end of act 1/i.test(txt);
+
+      if (atFirstStep) {
+        // Normal path through Act 1
         cy.contains(/answer briefly and ask about medication schedule/i).click();
         cy.contains(/confirm pickup time for sunday/i).should('be.visible');
         cy.contains(/confirm details clearly and thank them/i).click();
         cy.contains(/end of act 1/i).should('be.visible');
-      })
-      .catch(() => {
-        // Edge case: if it initially shows End of Act 1, continue anyway
-        cy.contains(/end of act 1/i, { timeout: 4000 }).should('be.visible');
-      })
-      .then(() => {
-        // 4) Continue into Act 2
-        cy.contains(/continue to act 2/i).click();
-        cy.contains(/brief weekly check-in/i, { timeout: 10000 }).should('be.visible');
-      });
+      } else if (atAct1End) {
+        // Already at Act 1 end — just proceed
+        cy.contains(/end of act 1/i).should('be.visible');
+      } else {
+        throw new Error('Expected either the first step text or "End of Act 1", but saw neither.');
+      }
+    });
+
+    // Continue into Act 2 and assert we’re there
+    cy.contains(/continue to act 2/i, { timeout: 5000 }).click();
+    cy.contains(/brief weekly check-in/i, { timeout: 10000 }).should('be.visible');
   });
 });
+
