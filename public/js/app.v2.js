@@ -93,14 +93,6 @@ async function loadIndex() {
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
-function recallLast() {
-  try {
-    return localStorage.getItem('amorvia:lastScenario');
-  } catch {
-    return null;
-  }
-}
-
 /* ----------------------- nodes extraction ----------------------- */
 function extractNodesMap({ raw, graph }) {
   let map = {};
@@ -234,10 +226,6 @@ const METER_LABELS = {
 };
 
 // Extract meter deltas from a choice in a tolerant way.
-// Supports shapes like:
-// - choice.effects: [{meter:'trust', delta:+5}, {key:'tension', amount:-2}, ...]
-// - choice.meters:  {trust:+5, tension:-2}
-// - choice.effect / choice.delta singletons
 function getChoiceDeltas(choice) {
   const totals = { trust: 0, tension: 0, childStress: 0 };
 
@@ -285,7 +273,6 @@ function formatHint(totals) {
 }
 
 // Decorate visible choice buttons in #choices based on current node’s choices.
-// Uses order mapping (1:1 with scenario choices). Avoids double-appending.
 function decorateVisibleChoices(Eng) {
   try {
     const container = document.getElementById('choices');
@@ -306,11 +293,9 @@ function decorateVisibleChoices(Eng) {
       if (!btn) return;
       if (btn.dataset.hinted === '1') return; // already decorated
 
-      // Base label: prefer explicit label, else keep button text
       const base = ch.label ?? btn.textContent ?? '';
       const hint = formatHint(getChoiceDeltas(ch));
 
-      // Only append if we actually have a hint
       const newText = hint ? `${base}${hint}` : base;
       btn.textContent = newText;
       btn.dataset.hinted = '1';
@@ -323,9 +308,16 @@ function decorateVisibleChoices(Eng) {
 
 // Schedule decoration after the engine likely finished rendering the node.
 function scheduleDecorate(Eng) {
-  // micro + macro task to catch different render strategies
   setTimeout(() => decorateVisibleChoices(Eng), 0);
   setTimeout(() => decorateVisibleChoices(Eng), 50);
+}
+
+/* ----------------------- simple persistence helpers ----------------------- */
+function rememberLast(id) {
+  try { localStorage.setItem('amorvia:lastScenario', id); } catch {}
+}
+function recallLast() {
+  try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; }
 }
 
 /* ----------------------- core start ----------------------- */
@@ -365,7 +357,7 @@ async function startScenario(id) {
       nodesMap = extractNodesMap({ raw, graph });
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
-    } else {
+      } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
           graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
           graph_nodes_arr: Array.isArray(graph?.nodes),
@@ -445,7 +437,7 @@ async function startScenario(id) {
     const picker = document.getElementById('scenarioPicker');
     if (picker) picker.value = id;
 
-    try { localStorage.setItem('amorvia:lastScenario', id); } catch {}
+    rememberLast(id);
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
     const dialog = document.getElementById('dialog');
