@@ -174,19 +174,48 @@ function toGraphIfNeeded(data) {
 }
 
 function deriveEntryFromV2(raw) {
-  const act = raw?.acts?.find(a => a.id === 'act1') || raw?.acts?.[0];
-  if (!act || !Array.isArray(act.nodes) || act.nodes.length === 0) return { actId: null, nodeId: null };
-
-  let node = act.nodes.find(n => n.id === 'start') || act.nodes[0];
-  if (node?.type?.toLowerCase() === 'goto' && node.to) {
-    const hop = act.nodes.find(n => n.id === node.to);
-    if (hop) node = hop;
+  if (!raw || !Array.isArray(raw.acts) || raw.acts.length === 0) {
+    return { actId: null, nodeId: null };
   }
-  return { actId: act.id || null, nodeId: node?.id || null };
-}
 
-function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
-function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
+  // 1) Choose act: startAct > act with id 'act1' > first act
+  const act =
+    raw.acts.find(a => a.id === raw.startAct) ||
+    raw.acts.find(a => a.id === 'act1') ||
+    raw.acts[0];
+
+  if (!act) return { actId: null, nodeId: null };
+
+  // 2) Prefer modern "steps" (v2 simple shape)
+  if (Array.isArray(act.steps) && act.steps.length) {
+    // act.start if present, else first step id
+    const stepStart = act.start || act.steps[0]?.id;
+    return { actId: act.id || null, nodeId: stepStart || null };
+  }
+
+  // 3) Legacy "nodes" (graph-ish embedded in acts)
+  if (Array.isArray(act.nodes) && act.nodes.length) {
+    // If there is an explicit 'start' goto, resolve one hop; else first node
+    let node = act.nodes.find(n => n.id === 'start') || act.nodes[0];
+    if (node?.type?.toLowerCase() === 'goto' && node.to) {
+      const hop = act.nodes.find(n => n.id === node.to);
+      if (hop) node = hop;
+    }
+    return { actId: act.id || null, nodeId: node?.id || null };
+  }
+
+  // 4) Fallback: try raw.nodes at root (rare)
+  if (Array.isArray(raw.nodes) && raw.nodes.length) {
+    let node = raw.nodes.find(n => n.id === 'start') || raw.nodes[0];
+    if (node?.type?.toLowerCase() === 'goto' && node.to) {
+      const hop = raw.nodes.find(n => n.id === node.to);
+      if (hop) node = hop;
+    }
+    return { actId: act.id || null, nodeId: node?.id || null };
+  }
+
+  return { actId: null, nodeId: null };
+}
 
 /* ----------------------- meter hint helpers ----------------------- */
 // Map internal keys → full names
