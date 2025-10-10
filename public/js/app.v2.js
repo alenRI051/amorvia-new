@@ -178,7 +178,7 @@ function deriveEntryFromV2(raw) {
     return { actId: null, nodeId: null };
   }
 
-  // 1) Choose act: startAct > act with id 'act1' > first act
+  // choose act: startAct > 'act1' > first
   const act =
     raw.acts.find(a => a.id === raw.startAct) ||
     raw.acts.find(a => a.id === 'act1') ||
@@ -186,16 +186,30 @@ function deriveEntryFromV2(raw) {
 
   if (!act) return { actId: null, nodeId: null };
 
-  // 2) Prefer modern "steps" (v2 simple shape)
+  // helper: first playable step id (not an end/terminal)
+  const pickPlayableStepId = (steps) => {
+    if (!Array.isArray(steps) || steps.length === 0) return null;
+    const notEnd = (s) => {
+      const id = String(s?.id || '').toLowerCase();
+      const txt = String(s?.text || '').toLowerCase();
+      return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
+    };
+    // prefer declared start if it's playable
+    const startId = act.start || steps[0]?.id;
+    const startStep = steps.find(s => s.id === startId);
+    if (startStep && notEnd(startStep)) return startStep.id;
+    // else first playable
+    const playable = steps.find(notEnd);
+    return playable?.id || steps[0]?.id || null;
+  };
+
+  // v2 simple "steps"
   if (Array.isArray(act.steps) && act.steps.length) {
-    // act.start if present, else first step id
-    const stepStart = act.start || act.steps[0]?.id;
-    return { actId: act.id || null, nodeId: stepStart || null };
+    return { actId: act.id || null, nodeId: pickPlayableStepId(act.steps) };
   }
 
-  // 3) Legacy "nodes" (graph-ish embedded in acts)
+  // legacy "nodes"
   if (Array.isArray(act.nodes) && act.nodes.length) {
-    // If there is an explicit 'start' goto, resolve one hop; else first node
     let node = act.nodes.find(n => n.id === 'start') || act.nodes[0];
     if (node?.type?.toLowerCase() === 'goto' && node.to) {
       const hop = act.nodes.find(n => n.id === node.to);
@@ -204,7 +218,7 @@ function deriveEntryFromV2(raw) {
     return { actId: act.id || null, nodeId: node?.id || null };
   }
 
-  // 4) Fallback: try raw.nodes at root (rare)
+  // rare: root nodes
   if (Array.isArray(raw.nodes) && raw.nodes.length) {
     let node = raw.nodes.find(n => n.id === 'start') || raw.nodes[0];
     if (node?.type?.toLowerCase() === 'goto' && node.to) {
