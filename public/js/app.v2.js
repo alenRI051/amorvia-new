@@ -16,6 +16,41 @@ if (window.__amorviaV2Booted) {
   window.__amorviaV2Booted = true;
 }
 
+// --- Amorvia reset support (dev/QA shortcut) ---
+// Use ?reset=1 or #reset to clear saved state and reload fresh.
+(() => {
+  const url = new URL(window.location.href);
+  const shouldReset =
+    url.searchParams.get('reset') === '1' || url.hash.includes('reset');
+
+  if (shouldReset) {
+    console.log('[Amorvia] Reset flag detected — clearing saved progress');
+
+    // Clear persisted Amorvia state
+    try {
+      Object.keys(localStorage)
+        .filter(
+          (k) =>
+            k.startsWith('amorvia:state:') ||
+            k === 'amorvia:lastScenario' ||
+            k === 'amorvia:mode'
+        )
+        .forEach((k) => localStorage.removeItem(k));
+    } catch {}
+
+    // Clear session data as well (if used by the app)
+    try { sessionStorage.clear(); } catch {}
+
+    // Prevent reload loops by stripping the flag from the URL
+    const clean = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, '', clean);
+
+    // Reload once to start clean
+    window.location.reload();
+  }
+})();
+// --- end reset support ---
+
 /* ----------------------- resolve engine ----------------------- */
 function resolveEngineObject() {
   return (
