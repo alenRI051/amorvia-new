@@ -93,6 +93,14 @@ async function loadIndex() {
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
+function recallLast() {
+  try {
+    return localStorage.getItem('amorvia:lastScenario');
+  } catch {
+    return null;
+  }
+}
+
 /* ----------------------- nodes extraction ----------------------- */
 function extractNodesMap({ raw, graph }) {
   let map = {};
