@@ -419,6 +419,47 @@ async function startScenario(id) {
       if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
     }
 
+    // helper: detect end-like node
+const isEndLike = (n) => {
+  if (!n) return false;
+  const id = String(n.id || '').toLowerCase();
+  const txt = String(n.text || '').toLowerCase();
+  const type = String(n.type || '').toLowerCase();
+  return type === 'end' || id.includes('end') || txt.startsWith('end of ') || txt === 'end';
+};
+
+// If startId isn't present, try fallbacks
+const nodeKeys = Object.keys(Eng.state.nodes);
+if (!Eng.state.nodes[startId]) {
+  startId = graph.startId || startId || nodeKeys[0];
+  let s = Eng.state.nodes[startId];
+  if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
+    startId = s.to;
+  }
+  if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
+}
+
+// If startId resolves to an end-like node, pick the first playable step in start act
+const curNodeCand = Eng.state.nodes[startId];
+if (isEndLike(curNodeCand) && Array.isArray(raw?.acts)) {
+  const act =
+    raw.acts.find(a => a.id === raw.startAct) ||
+    raw.acts.find(a => a.id === 'act1') ||
+    raw.acts[0];
+
+  const steps = act?.steps || [];
+  const notEnd = (s) => {
+    const sid = String(s?.id || '').toLowerCase();
+    const stx = String(s?.text || '').toLowerCase();
+    return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
+  };
+
+  const preferred = (act?.start && steps.find(s => s.id === act.start && notEnd(s))) || null;
+  const playable = preferred?.id || (steps.find(notEnd)?.id) || steps[0]?.id;
+
+  if (playable && Eng.state.nodes[playable]) startId = playable;
+}
+
     // Set engine pointer then start
     Eng.state.currentId = startId;
     startFn.call(Eng, startId);
