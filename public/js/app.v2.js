@@ -106,11 +106,34 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // raw.acts[*].nodes
+  // raw.acts[*].nodes  (legacy)
   if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       if (Array.isArray(act?.nodes)) {
         for (const n of act.nodes) if (n?.id) map[n.id] = n;
+      }
+    }
+  }
+
+  // ✅ raw.acts[*].steps  (modern v2)
+  // Synthesize graph-like nodes from steps so lookups/decoration work.
+  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
+    for (const act of raw.acts) {
+      if (Array.isArray(act?.steps)) {
+        for (const s of act.steps) {
+          if (!s?.id) continue;
+          map[s.id] = {
+            id: s.id,
+            type: 'line',
+            text: s.text ?? '',
+            choices: (s.choices || []).map(ch => ({
+              id: ch.id ?? ch.label ?? 'choice',
+              label: ch.label ?? ch.text ?? ch.id ?? '…',
+              to: ch.to ?? ch.goto ?? ch.next ?? null,
+              effects: ch.effects ?? ch.meters ?? ch.effect ?? null,
+            })),
+          };
+        }
       }
     }
   }
