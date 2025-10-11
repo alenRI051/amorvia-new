@@ -199,26 +199,27 @@ function deriveEntryFromV2(raw) {
 
   if (!act) return { actId: null, nodeId: null };
 
+  // ✅ Always normalize to array
+  const steps = Array.isArray(act.steps) ? act.steps : [];
+
   // helper: first playable step id (not an end/terminal)
-  const pickPlayableStepId = (steps) => {
-    if (!Array.isArray(steps) || steps.length === 0) return null;
+  const pickPlayableStepId = (stepsArr) => {
+    if (!Array.isArray(stepsArr) || stepsArr.length === 0) return null;
     const notEnd = (s) => {
       const id = String(s?.id || '').toLowerCase();
       const txt = String(s?.text || '').toLowerCase();
       return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
     };
-    // prefer declared act.start if it's playable
-    const startId = act.start || steps[0]?.id;
-    const startStep = steps.find((s) => s.id === startId);
+    const startId = act.start || stepsArr[0]?.id;
+    const startStep = stepsArr.find((s) => s.id === startId);
     if (startStep && notEnd(startStep)) return startStep.id;
-    // else first playable
-    const playable = steps.find(notEnd);
-    return playable?.id || steps[0]?.id || null;
+    const playable = stepsArr.find(notEnd);
+    return playable?.id || stepsArr[0]?.id || null;
   };
 
-  // v2 steps
-  if (Array.isArray(act.steps) && act.steps.length) {
-    return { actId: act.id || null, nodeId: pickPlayableStepId(act.steps) };
+  // ✅ v2 simple steps
+  if (steps.length) {
+    return { actId: act.id || null, nodeId: pickPlayableStepId(steps) };
   }
 
   // legacy nodes
