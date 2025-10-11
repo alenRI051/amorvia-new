@@ -296,7 +296,7 @@ function formatHint(totals) {
   for (const k of Object.keys(METER_LABELS)) {
     const v = totals[k];
     if (!v) continue;
-    const sign = v > 0 ? '+' : '';
+    const sign = v > 0 ? '+ ' : '';
     parts.push(`${sign}${v} ${METER_LABELS[k]}`);
   }
   return parts.length ? ` (${parts.join(', ')})` : '';
@@ -350,6 +350,15 @@ function recallLast() {
   try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; }
 }
 
+// single utility used in two places
+function isEndLike(n) {
+  if (!n) return false;
+  const idTxt = String(n.id || '').toLowerCase();
+  const text = String(n.text || '').toLowerCase();
+  const typ = String(n.type || '').toLowerCase();
+  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
+}
+
 /* ----------------------- core start ----------------------- */
 async function startScenario(id) {
   try {
@@ -373,26 +382,23 @@ async function startScenario(id) {
     try {
       loadFn.call(Eng, raw);
     } catch (e) {
-  console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
-  graph = toGraphIfNeeded(raw);
+      console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
+      graph = toGraphIfNeeded(raw);
 
-  // Force graph to start on the derived playable node (e.g. a1s1),
-  // because some engines ignore the start() argument and use graph.startId.
-  const graphHas = (id) => {
-    if (!id) return false;
-    if (!graph?.nodes) return false;
-    if (Array.isArray(graph.nodes)) return graph.nodes.some(n => n?.id === id);
-    if (typeof graph.nodes === 'object') return Boolean(graph.nodes[id]);
-    return false;
-  };
-  if (entry.nodeId && graphHas(entry.nodeId)) {
-    graph.startId = entry.nodeId;
-  }
+      // Force graph to start on the derived playable node (e.g. a1s1)
+      const graphHas = (nid) => {
+        if (!nid || !graph?.nodes) return false;
+        if (Array.isArray(graph.nodes)) return graph.nodes.some(n => n?.id === nid);
+        if (typeof graph.nodes === 'object') return Boolean(graph.nodes[nid]);
+        return false;
+      };
+      if (entry.nodeId && graphHas(entry.nodeId)) {
+        graph.startId = entry.nodeId;
+      }
 
-  loadFn.call(Eng, graph);
-  loadedVia = 'graph';
-}
-
+      loadFn.call(Eng, graph);
+      loadedVia = 'graph';
+    }
     if (!graph) graph = toGraphIfNeeded(raw);
 
     // Ensure state and nodes map (hydrate ourselves if engine didn't)
@@ -426,15 +432,7 @@ async function startScenario(id) {
       if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
     }
 
-    // Avoid starting on an End-of-Act node
-    const isEndLike = (n) => {
-      if (!n) return false;
-      const idTxt = String(n.id || '').toLowerCase();
-      const text = String(n.text || '').toLowerCase();
-      const typ = String(n.type || '').toLowerCase();
-      return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
-    };
-
+    // Avoid starting on an End-of-Act node (pre-start)
     const curNodeCand = Eng.state.nodes[startId];
     if (isEndLike(curNodeCand) && Array.isArray(raw?.acts)) {
       const startAct =
@@ -459,47 +457,40 @@ async function startScenario(id) {
     Eng.state.currentId = startId;
     startFn.call(Eng, startId);
 
-    // If engine still started on an end-like node, hop to the first playable step.
-const currentAfterStart = (typeof Eng.currentNode === 'function')
-  ? Eng.currentNode()
-  : Eng.state?.nodes?.[Eng.state?.currentId];
+    // Post-start safety: if engine still started on an end-like node, hop to playable
+    const currentAfterStart =
+      (typeof Eng.currentNode === 'function')
+        ? Eng.currentNode()
+        : Eng.state?.nodes?.[Eng.state?.currentId];
 
-const isEndLike = (n) => {
-  if (!n) return false;
-  const idTxt = String(n.id || '').toLowerCase();
-  const text = String(n.text || '').toLowerCase();
-  const typ = String(n.type || '').toLowerCase();
-  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
-};
+    if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
+      const startAct =
+        raw.acts.find(a => a.id === raw.startAct) ||
+        raw.acts.find(a => a.id === 'act1') ||
+        raw.acts[0];
 
-if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
-  const startAct =
-    raw.acts.find(a => a.id === raw.startAct) ||
-    raw.acts.find(a => a.id === 'act1') ||
-    raw.acts[0];
+      const steps = Array.isArray(startAct?.steps) ? startAct.steps : [];
+      const notEnd = (s) => {
+        const sid = String(s?.id || '').toLowerCase();
+        const stx = String(s?.text || '').toLowerCase();
+        return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
+      };
+      const preferred = (startAct?.start && steps.find(s => s.id === startAct.start && notEnd(s))) || null;
+      const playable = preferred?.id || (steps.find(notEnd)?.id) || steps[0]?.id;
 
-  const steps = Array.isArray(startAct?.steps) ? startAct.steps : [];
-  const notEnd = (s) => {
-    const sid = String(s?.id || '').toLowerCase();
-    const stx = String(s?.text || '').toLowerCase();
-    return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
-  };
-  const preferred = (startAct?.start && steps.find(s => s.id === startAct.start && notEnd(s))) || null;
-  const playable = preferred?.id || (steps.find(notEnd)?.id) || steps[0]?.id;
-
-  if (playable && Eng.state?.nodes?.[playable]) {
-    Eng.state.currentId = playable;
-    if (typeof Eng.goto === 'function') Eng.goto(playable);
-  }
-}
+      if (playable && Eng.state?.nodes?.[playable]) {
+        Eng.state.currentId = playable;
+        if (typeof Eng.goto === 'function') Eng.goto(playable);
+      }
+    }
 
     // Debug: log actual node
-    const cur = (typeof Eng.currentNode === 'function')
-      ? Eng.currentNode()
-      : Eng.state.nodes[Eng.state.currentId];
+    const cur =
+      (typeof Eng.currentNode === 'function')
+        ? Eng.currentNode()
+        : Eng.state.nodes[Eng.state.currentId];
 
-    console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
-    console.log('[Amorvia] node keys (first 10):', nodeKeys.slice(0, 10));
+    console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
 
     // Fallback render if engine didn’t draw
     if (!cur || (!cur.text && (cur.type || '').toLowerCase() !== 'choice')) {
@@ -518,9 +509,10 @@ if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
               if (to && Eng.state.nodes[to]) {
                 Eng.state.currentId = to;
                 if (typeof Eng.goto === 'function') Eng.goto(to);
-                const nn = (typeof Eng.currentNode === 'function')
-                  ? Eng.currentNode()
-                  : Eng.state.nodes[to];
+                const nn =
+                  (typeof Eng.currentNode === 'function')
+                    ? Eng.currentNode()
+                    : Eng.state.nodes[to];
                 const dialogEl = document.getElementById('dialog');
                 if (dialogEl) dialogEl.textContent = nn?.text || '';
                 scheduleDecorate(Eng);
@@ -581,3 +573,4 @@ if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
+
