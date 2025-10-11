@@ -459,6 +459,40 @@ async function startScenario(id) {
     Eng.state.currentId = startId;
     startFn.call(Eng, startId);
 
+    // If engine still started on an end-like node, hop to the first playable step.
+const currentAfterStart = (typeof Eng.currentNode === 'function')
+  ? Eng.currentNode()
+  : Eng.state?.nodes?.[Eng.state?.currentId];
+
+const isEndLike = (n) => {
+  if (!n) return false;
+  const idTxt = String(n.id || '').toLowerCase();
+  const text = String(n.text || '').toLowerCase();
+  const typ = String(n.type || '').toLowerCase();
+  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
+};
+
+if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
+  const startAct =
+    raw.acts.find(a => a.id === raw.startAct) ||
+    raw.acts.find(a => a.id === 'act1') ||
+    raw.acts[0];
+
+  const steps = Array.isArray(startAct?.steps) ? startAct.steps : [];
+  const notEnd = (s) => {
+    const sid = String(s?.id || '').toLowerCase();
+    const stx = String(s?.text || '').toLowerCase();
+    return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
+  };
+  const preferred = (startAct?.start && steps.find(s => s.id === startAct.start && notEnd(s))) || null;
+  const playable = preferred?.id || (steps.find(notEnd)?.id) || steps[0]?.id;
+
+  if (playable && Eng.state?.nodes?.[playable]) {
+    Eng.state.currentId = playable;
+    if (typeof Eng.goto === 'function') Eng.goto(playable);
+  }
+}
+
     // Debug: log actual node
     const cur = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
