@@ -373,11 +373,26 @@ async function startScenario(id) {
     try {
       loadFn.call(Eng, raw);
     } catch (e) {
-      console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
-      graph = toGraphIfNeeded(raw);
-      loadFn.call(Eng, graph);
-      loadedVia = 'graph';
-    }
+  console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
+  graph = toGraphIfNeeded(raw);
+
+  // Force graph to start on the derived playable node (e.g. a1s1),
+  // because some engines ignore the start() argument and use graph.startId.
+  const graphHas = (id) => {
+    if (!id) return false;
+    if (!graph?.nodes) return false;
+    if (Array.isArray(graph.nodes)) return graph.nodes.some(n => n?.id === id);
+    if (typeof graph.nodes === 'object') return Boolean(graph.nodes[id]);
+    return false;
+  };
+  if (entry.nodeId && graphHas(entry.nodeId)) {
+    graph.startId = entry.nodeId;
+  }
+
+  loadFn.call(Eng, graph);
+  loadedVia = 'graph';
+}
+
     if (!graph) graph = toGraphIfNeeded(raw);
 
     // Ensure state and nodes map (hydrate ourselves if engine didn't)
