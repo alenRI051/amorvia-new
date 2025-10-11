@@ -95,19 +95,19 @@ async function loadIndex() {
 
 /* ----------------------- nodes extraction ----------------------- */
 function extractNodesMap({ raw, graph }) {
-  let map = {};
+  const map = {};
 
-  // graph.nodes
+  // graph.nodes (object or array)
   if (graph?.nodes) {
     if (Array.isArray(graph.nodes)) {
       for (const n of graph.nodes) if (n?.id) map[n.id] = n;
     } else if (typeof graph.nodes === 'object') {
-      map = { ...graph.nodes };
+      Object.assign(map, graph.nodes);
     }
   }
 
-  // raw.acts[*].nodes  (legacy)
-  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
+  // raw.acts[*].nodes (legacy embedded graph)
+  if (Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       if (Array.isArray(act?.nodes)) {
         for (const n of act.nodes) if (n?.id) map[n.id] = n;
@@ -115,9 +115,8 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // ✅ raw.acts[*].steps  (modern v2)
-  // Synthesize graph-like nodes from steps so lookups/decoration work.
-  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
+  // ✅ raw.acts[*].steps (modern v2) — ALWAYS merge
+  if (Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       if (Array.isArray(act?.steps)) {
         for (const s of act.steps) {
@@ -138,12 +137,12 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // raw.nodes
-  if ((!map || !Object.keys(map).length) && raw?.nodes) {
+  // raw.nodes at root (rare)
+  if (raw?.nodes) {
     if (Array.isArray(raw.nodes)) {
       for (const n of raw.nodes) if (n?.id) map[n.id] = n;
     } else if (typeof raw.nodes === 'object') {
-      map = { ...raw.nodes };
+      Object.assign(map, raw.nodes);
     }
   }
 
