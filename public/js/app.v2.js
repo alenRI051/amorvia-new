@@ -249,7 +249,6 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 function injectGraphEntryNode(graph, entryId) {
   if (!graph || !entryId) return graph;
   const ENTRY_ID = '__amorvia_entry__';
-
   const makeNode = (to) => ({ id: ENTRY_ID, type: 'goto', to });
 
   if (Array.isArray(graph.nodes)) {
@@ -258,7 +257,6 @@ function injectGraphEntryNode(graph, entryId) {
   } else if (graph.nodes && typeof graph.nodes === 'object') {
     if (!graph.nodes[ENTRY_ID]) graph.nodes[ENTRY_ID] = makeNode(entryId);
   } else {
-    // create nodes array if absent
     graph.nodes = [ makeNode(entryId) ];
   }
 
@@ -361,7 +359,7 @@ async function startScenario(id) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
 
-      // Hard enforce starting node by injecting a synthetic entry
+      // Force graph to start on the derived playable node by injecting a synthetic entry
       injectGraphEntryNode(graph, entry.nodeId);
 
       loadFn.call(Eng, graph);
@@ -421,7 +419,6 @@ async function startScenario(id) {
 
     // Set engine pointer then start
     Eng.state.currentId = startId;
-    // Also set any startId the engine might read
     if (Eng.state.graph && typeof Eng.state.graph === 'object') {
       Eng.state.graph.startId = startId;
     }
@@ -429,31 +426,30 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // If the engine actually started at the synthetic entry, hop to the real first step.
-{
-  const ENTRY_ID = '__amorvia_entry__';
-  const curId =
-    (typeof Eng.currentNode === 'function' ? Eng.currentNode()?.id : Eng.state?.currentId);
+    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
+    if (startId === '__amorvia_entry__' && entry?.nodeId) {
+      const target = entry.nodeId;
+      const hop = () => {
+        if (Eng.state?.nodes?.[target]) {
+          Eng.state.currentId = target;
+          if (typeof Eng.goto === 'function') {
+            Eng.goto(target);
+          } else if (typeof Eng.start === 'function') {
+            Eng.start(target);
+          }
 
-  if ((curId === ENTRY_ID) && entry?.nodeId) {
-    const target = entry.nodeId;
-    const hop = () => {
-      if (Eng.state?.nodes?.[target]) {
-        Eng.state.currentId = target;
-        if (typeof Eng.goto === 'function') {
-          Eng.goto(target);
-        } else if (typeof Eng.start === 'function') {
-          Eng.start(target);
+          // Force immediate UI update if engine didn’t render yet
+          const node = Eng.state.nodes[target];
+          const dialogEl = document.getElementById('dialog');
+          if (dialogEl && node?.text) dialogEl.textContent = node.text;
+
+          scheduleDecorate(Eng);
+        } else {
+          setTimeout(hop, 0); // hydration not ready yet—try next tick
         }
-        scheduleDecorate(Eng);
-      } else {
-        // nodes may hydrate on the next tick
-        setTimeout(hop, 0);
-      }
-    };
-    setTimeout(hop, 0);
-  }
-}
+      };
+      setTimeout(hop, 0);
+    }
 
     // Post-start safety: if still at an end node, jump to playable
     const currentAfterStart = (typeof Eng.currentNode === 'function')
@@ -478,6 +474,11 @@ async function startScenario(id) {
       if (playable && Eng.state?.nodes?.[playable]) {
         Eng.state.currentId = playable;
         if (typeof Eng.goto === 'function') Eng.goto(playable);
+
+        // Ensure dialog text appears if engine hasn't rendered yet
+        const node = Eng.state.nodes[playable];
+        const dialogEl = document.getElementById('dialog');
+        if (dialogEl && node?.text) dialogEl.textContent = node.text;
       }
     }
 
