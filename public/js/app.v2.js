@@ -509,6 +509,7 @@ async function startScenario(id) {
         }
       };
       setTimeout(hop, 0);
+      hop(); // immediate call (no delay) to ensure instant first render
     }
 
     // Post-start safety: if still at an end node, jump to playable
