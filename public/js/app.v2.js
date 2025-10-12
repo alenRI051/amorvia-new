@@ -106,21 +106,25 @@ function extractNodesMap({ raw, graph }) {
   // raw.acts[*].steps (modern v2) → synthesize nodes
   if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
-      const steps = Array.isArray(act?.steps) ? act.steps : [];
+      const steps = Array.isArray(act?.steps)
+        ? act.steps
+        : (typeof act?.steps === 'object' ? Object.values(act.steps) : []);
       for (const s of steps) {
         if (!s?.id) continue;
         map[s.id] = {
           id: s.id,
           type: 'line',
           text: s.text ?? '',
-          choices: (Array.isArray(s.choices) ? s.choices : []).map((ch, i) => ({
-            id: ch?.id ?? `${s.id}:choice:${i}`,
-            label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
-            to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
-            // keep original shapes for hinting
-            effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
-            meters: ch?.meters ?? null,
-          })),
+          choices: (Array.isArray(s.choices)
+                    ? s.choices
+                    : (typeof s.choices === 'object' ? Object.values(s.choices) : []))
+                    .map((ch, i) => ({
+                      id: ch?.id ?? `${s.id}:choice:${i}`,
+                      label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
+                      to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
+                      effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
+                      meters: ch?.meters ?? null,
+                    })),
         };
       }
     }
@@ -141,9 +145,16 @@ function extractNodesMap({ raw, graph }) {
 /* ----------------------- raw-steps fallback renderer ----------------------- */
 function indexSteps(raw) {
   const map = {};
-  (raw?.acts || []).forEach(act => {
-    (act?.steps || []).forEach(s => { if (s?.id) map[s.id] = s; });
+  if (!raw?.acts) return map;
+
+  raw.acts.forEach(act => {
+    // handle both arrays and object maps of steps
+    const steps = Array.isArray(act?.steps)
+      ? act.steps
+      : (typeof act?.steps === 'object' ? Object.values(act.steps) : []);
+    steps.forEach(s => { if (s?.id) map[s.id] = s; });
   });
+
   return map;
 }
 
@@ -155,26 +166,28 @@ function renderRawStep(stepId, raw, Eng) {
 
   if (!step || !dialog || !choices) return false;
 
-  // text
+  // Text
   dialog.textContent = step.text || '';
 
-  // choices
+  // Choices (tolerate array or object)
+  const stepChoices = Array.isArray(step.choices)
+    ? step.choices
+    : (typeof step.choices === 'object' ? Object.values(step.choices) : []);
   choices.innerHTML = '';
-  (Array.isArray(step.choices) ? step.choices : []).forEach(ch => {
+  stepChoices.forEach(ch => {
     const b = document.createElement('button');
     b.className = 'button';
     b.textContent = ch?.label || ch?.id || '…';
     b.addEventListener('click', () => {
       const to = ch?.to || ch?.goto || ch?.next;
       if (!to) return;
-      if (Eng?.state) Eng.state.currentId = to;   // move engine pointer
+      if (Eng?.state) Eng.state.currentId = to;
       if (typeof Eng?.goto === 'function') Eng.goto(to);
-      renderRawStep(to, raw, Eng);                 // render next step
+      renderRawStep(to, raw, Eng);
     });
     choices.appendChild(b);
   });
 
-  // decorate hints if we have an engine node for this id
   setTimeout(() => scheduleDecorate(Eng), 0);
   return true;
 }
@@ -237,7 +250,9 @@ function deriveEntryFromV2(raw) {
 
   if (!act) return { actId: null, nodeId: null };
 
-  const steps = Array.isArray(act.steps) ? act.steps : [];
+  const steps = Array.isArray(act.steps)
+    ? act.steps
+    : (typeof act.steps === 'object' ? Object.values(act.steps) : []);
 
   const pickPlayableStepId = (stepsArr) => {
     if (!Array.isArray(stepsArr) || stepsArr.length === 0) return null;
@@ -448,7 +463,9 @@ async function startScenario(id) {
         raw.acts.find(a => a.id === 'act1') ||
         raw.acts[0];
 
-      const steps = Array.isArray(startAct?.steps) ? startAct.steps : [];
+      const steps = Array.isArray(startAct?.steps)
+        ? startAct.steps
+        : (typeof startAct?.steps === 'object' ? Object.values(startAct.steps) : []);
       const notEnd = (s) => {
         const sid = String(s?.id || '').toLowerCase();
         const stx = String(s?.text || '').toLowerCase();
@@ -468,16 +485,24 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // ---- Auto-hop if we started at the synthetic entry ----
+    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
     if (startId === '__amorvia_entry__' && entry?.nodeId) {
       const target = entry.nodeId;
       const hop = () => {
         if (Eng.state?.nodes?.[target]) {
           Eng.state.currentId = target;
-          if (typeof Eng.goto === 'function') Eng.goto(target);
-          else if (typeof Eng.start === 'function') Eng.start(target);
-          // ensure visible immediately even if engine didn't render yet
-          renderRawStep(target, raw, Eng);
+          if (typeof Eng.goto === 'function') {
+            Eng.goto(target);
+          } else if (typeof Eng.start === 'function') {
+            Eng.start(target);
+            renderRawStep(target, raw, Eng);
+          }
+
+          // Force immediate UI update if engine didn’t render yet
+          const node = Eng.state.nodes[target];
+          const dialogEl = document.getElementById('dialog');
+          if (dialogEl && node?.text) dialogEl.textContent = node.text;
+
           scheduleDecorate(Eng);
         } else {
           setTimeout(hop, 0); // hydration not ready yet—try next tick
@@ -497,7 +522,9 @@ async function startScenario(id) {
         raw.acts.find(a => a.id === 'act1') ||
         raw.acts[0];
 
-      const steps = Array.isArray(startAct?.steps) ? startAct.steps : [];
+      const steps = Array.isArray(startAct?.steps)
+        ? startAct.steps
+        : (typeof startAct?.steps === 'object' ? Object.values(startAct.steps) : []);
       const notEnd = (s) => {
         const sid = String(s?.id || '').toLowerCase();
         const stx = String(s?.text || '').toLowerCase();
@@ -518,28 +545,22 @@ async function startScenario(id) {
     }
 
     // Debug
-    const cur = (typeof Eng.currentNode === 'function')
+    const curNodeNow = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
       : Eng.state.nodes[Eng.state.currentId];
-    console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
+    console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, curNodeNow);
 
     // Fallback render if engine didn’t draw (or drew an empty node)
     {
-      const curNodeId = Eng.state?.currentId;
-      const cn =
-        (typeof Eng.currentNode === 'function') ? Eng.currentNode()
-        : Eng.state?.nodes?.[curNodeId];
-
-      const noText = !cn || (!cn.text && (cn.type || '').toLowerCase() !== 'choice');
-
+      const curId = Eng.state?.currentId;
+      const cur = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state?.nodes?.[curId];
+      const noText = !cur || (!cur.text && (cur.type || '').toLowerCase() !== 'choice');
       if (noText) {
-        // Try to render the exact node from raw steps
-        const rendered = renderRawStep(curNodeId, raw, Eng);
+        const rendered = renderRawStep(curId, raw, Eng);
         if (!rendered) {
-          // last resort placeholder (shouldn’t be hit after this patch)
           const dialog = document.getElementById('dialog');
           const choices = document.getElementById('choices');
-          if (dialog) dialog.textContent = cn?.text || '(…)';
+          if (dialog) dialog.textContent = cur?.text || '(…)';
           if (choices) choices.innerHTML = '';
         }
       }
