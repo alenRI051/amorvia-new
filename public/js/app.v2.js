@@ -137,6 +137,49 @@ function extractNodesMap({ raw, graph }) {
   return map;
 }
 
+// ---- raw-steps fallback renderer ----
+function indexSteps(raw) {
+  const map = {};
+  (raw?.acts || []).forEach(act => {
+    (act?.steps || []).forEach(s => { if (s?.id) map[s.id] = s; });
+  });
+  return map;
+}
+
+function renderRawStep(stepId, raw, Eng) {
+  const steps = (Eng.__rawStepsIndex ||= indexSteps(raw));
+  const step = steps[stepId];
+  const dialog = document.getElementById('dialog');
+  const choices = document.getElementById('choices');
+
+  if (!step || !dialog || !choices) return false;
+
+  // text
+  dialog.textContent = step.text || '';
+
+  // choices
+  choices.innerHTML = '';
+  (step.choices || []).forEach(ch => {
+    const b = document.createElement('button');
+    b.className = 'button';
+    b.textContent = ch.label || ch.id || '…';
+    b.addEventListener('click', () => {
+      const to = ch.to || ch.goto || ch.next;
+      if (!to) return;
+      // move engine pointer if possible
+      if (Eng?.state) Eng.state.currentId = to;
+      if (typeof Eng?.goto === 'function') Eng.goto(to);
+      // render next step from raw immediately (in case engine still doesn’t)
+      renderRawStep(to, raw, Eng);
+    });
+    choices.appendChild(b);
+  });
+
+  // decorate hints if we have an engine node for this id
+  setTimeout(() => scheduleDecorate(Eng), 0);
+  return true;
+}
+
 /* ----------------------- UI wiring ----------------------- */
 function renderList(list) {
   const container = document.getElementById('scenarioListV2'); // optional
