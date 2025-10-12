@@ -289,6 +289,7 @@ function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', i
 function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
 
 /* Force-start helper: inject a synthetic entry node that goto’s our target */
+const AMORVIA_ENTRY_ID = '__amorvia_entry__';
 function injectGraphEntryNode(graph, entryId) {
   if (!graph || !entryId) return graph;
   const ENTRY_ID = '__amorvia_entry__';
