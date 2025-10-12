@@ -140,9 +140,17 @@ function extractNodesMap({ raw, graph }) {
 // ---- raw-steps fallback renderer ----
 function indexSteps(raw) {
   const map = {};
-  (raw?.acts || []).forEach(act => {
-    (act?.steps || []).forEach(s => { if (s?.id) map[s.id] = s; });
+  if (!raw?.acts) return map;
+
+  raw.acts.forEach(act => {
+    const steps = Array.isArray(act?.steps)
+      ? act.steps
+      : (typeof act?.steps === 'object' ? Object.values(act.steps) : []);
+    steps.forEach(s => {
+      if (s?.id) map[s.id] = s;
+    });
   });
+
   return map;
 }
 
