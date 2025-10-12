@@ -531,36 +531,27 @@ async function startScenario(id) {
       : Eng.state.nodes[Eng.state.currentId];
     console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
 
-    // Fallback render if engine didn’t draw
-    if (!cur || (!cur.text && (cur.type || '').toLowerCase() !== 'choice')) {
+    // Fallback render if engine didn’t draw (or drew an empty node)
+{
+  const curNodeId = Eng.state?.currentId;
+  const cur =
+    (typeof Eng.currentNode === 'function') ? Eng.currentNode()
+    : Eng.state?.nodes?.[curNodeId];
+
+  const noText = !cur || (!cur.text && (cur.type || '').toLowerCase() !== 'choice');
+
+  if (noText) {
+    // Try to render the exact node from raw steps
+    const rendered = renderRawStep(curNodeId, raw, Eng);
+    if (!rendered) {
+      // last resort placeholder (shouldn’t be hit after this patch)
       const dialog = document.getElementById('dialog');
       const choices = document.getElementById('choices');
       if (dialog) dialog.textContent = cur?.text || '(…)';
-      if (choices) {
-        choices.innerHTML = '';
-        if (Array.isArray(cur?.choices)) {
-          cur.choices.forEach(ch => {
-            const b = document.createElement('button');
-            b.className = 'button';
-            b.textContent = ch.label || ch.id || '…';
-            b.addEventListener('click', () => {
-              const to = ch.to || ch.goto || ch.next;
-              if (to && Eng.state.nodes[to]) {
-                Eng.state.currentId = to;
-                if (typeof Eng.goto === 'function') Eng.goto(to);
-                const nn = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state.nodes[to];
-                const dialogEl = document.getElementById('dialog');
-                if (dialogEl) dialogEl.textContent = nn?.text || '';
-                scheduleDecorate(Eng);
-              }
-            });
-            choices.appendChild(b);
-          });
-        }
-      }
+      if (choices) choices.innerHTML = '';
     }
-
-    scheduleDecorate(Eng);
+  }
+}
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
