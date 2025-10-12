@@ -166,10 +166,13 @@ function renderRawStep(stepId, raw, Eng) {
     b.addEventListener('click', () => {
       const to = ch.to || ch.goto || ch.next;
       if (!to) return;
-      // move engine pointer if possible
       if (Eng?.state) Eng.state.currentId = to;
-      if (typeof Eng?.goto === 'function') Eng.goto(to);
-      // render next step from raw immediately (in case engine still doesn’t)
+      if (typeof Eng?.goto === 'function') {
+        Eng.goto(to);
+      } else if (typeof Eng?.start === 'function') {
+        Eng.start(to);
+      }
+      // Always render next step from raw immediately (engine may be lazy)
       renderRawStep(to, raw, Eng);
     });
     choices.appendChild(b);
@@ -290,21 +293,21 @@ function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'
 
 /* Force-start helper: inject a synthetic entry node that goto’s our target */
 const AMORVIA_ENTRY_ID = '__amorvia_entry__';
+
 function injectGraphEntryNode(graph, entryId) {
   if (!graph || !entryId) return graph;
-  const ENTRY_ID = '__amorvia_entry__';
-  const makeNode = (to) => ({ id: ENTRY_ID, type: 'goto', to });
+  const makeNode = (to) => ({ id: AMORVIA_ENTRY_ID, type: 'goto', to });
 
   if (Array.isArray(graph.nodes)) {
-    const exists = graph.nodes.some(n => n?.id === ENTRY_ID);
+    const exists = graph.nodes.some(n => n?.id === AMORVIA_ENTRY_ID);
     if (!exists) graph.nodes.unshift(makeNode(entryId));
   } else if (graph.nodes && typeof graph.nodes === 'object') {
-    if (!graph.nodes[ENTRY_ID]) graph.nodes[ENTRY_ID] = makeNode(entryId);
+    if (!graph.nodes[AMORVIA_ENTRY_ID]) graph.nodes[AMORVIA_ENTRY_ID] = makeNode(entryId);
   } else {
     graph.nodes = [ makeNode(entryId) ];
   }
 
-  graph.startId = ENTRY_ID;
+  graph.startId = AMORVIA_ENTRY_ID;
   return graph;
 }
 
@@ -470,23 +473,20 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
-    if (startId === '__amorvia_entry__' && entry?.nodeId) {
+    // If we actually started at the synthetic entry node, hop to the real first step and render immediately.
+    if (Eng.state?.currentId === AMORVIA_ENTRY_ID && entry?.nodeId) {
       const target = entry.nodeId;
       const hop = () => {
         if (Eng.state?.nodes?.[target]) {
           Eng.state.currentId = target;
+
           if (typeof Eng.goto === 'function') {
             Eng.goto(target);
           } else if (typeof Eng.start === 'function') {
             Eng.start(target);
-            renderRawStep(target, raw, Eng);
           }
-
-          // Force immediate UI update if engine didn’t render yet
-          const node = Eng.state.nodes[target];
-          const dialogEl = document.getElementById('dialog');
-          if (dialogEl && node?.text) dialogEl.textContent = node.text;
+          // Always render immediately from raw
+          renderRawStep(target, raw, Eng);
 
           scheduleDecorate(Eng);
         } else {
@@ -521,9 +521,7 @@ async function startScenario(id) {
         if (typeof Eng.goto === 'function') Eng.goto(playable);
 
         // Ensure dialog text appears if engine hasn't rendered yet
-        const node = Eng.state.nodes[playable];
-        const dialogEl = document.getElementById('dialog');
-        if (dialogEl && node?.text) dialogEl.textContent = node.text;
+        renderRawStep(playable, raw, Eng);
       }
     }
 
@@ -534,26 +532,25 @@ async function startScenario(id) {
     console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
 
     // Fallback render if engine didn’t draw (or drew an empty node)
-{
-  const curNodeId = Eng.state?.currentId;
-  const cur =
-    (typeof Eng.currentNode === 'function') ? Eng.currentNode()
-    : Eng.state?.nodes?.[curNodeId];
+    {
+      const curNodeId = Eng.state?.currentId;
+      const nodeNow =
+        (typeof Eng.currentNode === 'function') ? Eng.currentNode()
+        : Eng.state?.nodes?.[curNodeId];
 
-  const noText = !cur || (!cur.text && (cur.type || '').toLowerCase() !== 'choice');
+      const noText = !nodeNow || (!nodeNow.text && (nodeNow.type || '').toLowerCase() !== 'choice');
 
-  if (noText) {
-    // Try to render the exact node from raw steps
-    const rendered = renderRawStep(curNodeId, raw, Eng);
-    if (!rendered) {
-      // last resort placeholder (shouldn’t be hit after this patch)
-      const dialog = document.getElementById('dialog');
-      const choices = document.getElementById('choices');
-      if (dialog) dialog.textContent = cur?.text || '(…)';
-      if (choices) choices.innerHTML = '';
+      if (noText) {
+        // Try to render the exact node from raw steps
+        const rendered = renderRawStep(curNodeId, raw, Eng);
+        if (!rendered) {
+          const dialog = document.getElementById('dialog');
+          const choices = document.getElementById('choices');
+          if (dialog) dialog.textContent = nodeNow?.text || '(…)';
+          if (choices) choices.innerHTML = '';
+        }
+      }
     }
-  }
-}
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
