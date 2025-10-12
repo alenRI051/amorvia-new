@@ -16,35 +16,29 @@ if (window.__amorviaV2Booted) {
   window.__amorviaV2Booted = true;
 }
 
-// --- Amorvia reset support (dev/QA shortcut) ---
-// Use ?reset=1 or #reset to clear saved state and reload fresh.
+// --- Reset support (?reset=1 or #reset) ---
 (() => {
   const url = new URL(window.location.href);
   const shouldReset =
     url.searchParams.get('reset') === '1' || url.hash.includes('reset');
+  if (!shouldReset) return;
 
-  if (shouldReset) {
-    console.log('[Amorvia] Reset flag detected — clearing saved progress');
+  console.log('[Amorvia] Reset flag detected — clearing saved progress');
+  try {
+    Object.keys(localStorage)
+      .filter(k =>
+        k.startsWith('amorvia:state:') ||
+        k === 'amorvia:lastScenario' ||
+        k === 'amorvia:mode'
+      )
+      .forEach(k => localStorage.removeItem(k));
+  } catch {}
+  try { sessionStorage.clear(); } catch {}
 
-    try {
-      Object.keys(localStorage)
-        .filter(
-          (k) =>
-            k.startsWith('amorvia:state:') ||
-            k === 'amorvia:lastScenario' ||
-            k === 'amorvia:mode'
-        )
-        .forEach((k) => localStorage.removeItem(k));
-    } catch {}
-
-    try { sessionStorage.clear(); } catch {}
-
-    const clean = window.location.origin + window.location.pathname;
-    window.history.replaceState({}, '', clean);
-    window.location.reload();
-  }
+  const clean = window.location.origin + window.location.pathname;
+  window.history.replaceState({}, '', clean);
+  window.location.reload();
 })();
-// --- end reset support ---
 
 /* ----------------------- resolve engine ----------------------- */
 function resolveEngineObject() {
@@ -56,7 +50,6 @@ function resolveEngineObject() {
   );
 }
 
-// Poll until engine exposes the methods we need
 function waitForEngine() {
   return new Promise((resolve) => {
     const check = () => {
@@ -124,7 +117,6 @@ function extractNodesMap({ raw, graph }) {
             id: ch?.id ?? `${s.id}:choice:${i}`,
             label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
             to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
-            // keep original shapes for hinting
             effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
             meters: ch?.meters ?? null,
           })),
@@ -185,7 +177,7 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-/* ----------------------- format helpers ----------------------- */
+/* ----------------------- helpers ----------------------- */
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
   return looksGraph ? data : v2ToGraph(data);
@@ -196,7 +188,6 @@ function deriveEntryFromV2(raw) {
     return { actId: null, nodeId: null };
   }
 
-  // choose act: startAct > 'act1' > first
   const act =
     raw.acts.find(a => a.id === raw.startAct) ||
     raw.acts.find(a => a.id === 'act1') ||
@@ -206,7 +197,6 @@ function deriveEntryFromV2(raw) {
 
   const steps = Array.isArray(act.steps) ? act.steps : [];
 
-  // helper: first playable step id (not an end/terminal)
   const pickPlayableStepId = (stepsArr) => {
     if (!Array.isArray(stepsArr) || stepsArr.length === 0) return null;
     const notEnd = (s) => {
@@ -221,12 +211,8 @@ function deriveEntryFromV2(raw) {
     return playable?.id || stepsArr[0]?.id || null;
   };
 
-  // v2 simple steps
-  if (steps.length) {
-    return { actId: act.id || null, nodeId: pickPlayableStepId(steps) };
-  }
+  if (steps.length) return { actId: act.id || null, nodeId: pickPlayableStepId(steps) };
 
-  // legacy nodes
   if (Array.isArray(act.nodes) && act.nodes.length) {
     let node = act.nodes.find((n) => n.id === 'start') || act.nodes[0];
     if (node?.type?.toLowerCase() === 'goto' && node.to) {
@@ -236,7 +222,6 @@ function deriveEntryFromV2(raw) {
     return { actId: act.id || null, nodeId: node?.id || null };
   }
 
-  // rare: root nodes
   if (Array.isArray(raw.nodes) && raw.nodes.length) {
     let node = raw.nodes.find((n) => n.id === 'start') || raw.nodes[0];
     if (node?.type?.toLowerCase() === 'goto' && node.to) {
@@ -249,45 +234,59 @@ function deriveEntryFromV2(raw) {
   return { actId: null, nodeId: null };
 }
 
-/* ----------------------- meter hint helpers ----------------------- */
-const METER_LABELS = {
-  trust: 'Trust',
-  tension: 'Tension',
-  childStress: 'Child Stress',
-};
+function isEndLike(n) {
+  if (!n) return false;
+  const idTxt = String(n.id || '').toLowerCase();
+  const text = String(n.text || '').toLowerCase();
+  const typ = String(n.type || '').toLowerCase();
+  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
+}
 
-// Extract meter deltas from a choice in a tolerant way.
+function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
+function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
+
+/* Force-start helper: inject a synthetic entry node that goto’s our target */
+function injectGraphEntryNode(graph, entryId) {
+  if (!graph || !entryId) return graph;
+  const ENTRY_ID = '__amorvia_entry__';
+
+  const makeNode = (to) => ({ id: ENTRY_ID, type: 'goto', to });
+
+  if (Array.isArray(graph.nodes)) {
+    const exists = graph.nodes.some(n => n?.id === ENTRY_ID);
+    if (!exists) graph.nodes.unshift(makeNode(entryId));
+  } else if (graph.nodes && typeof graph.nodes === 'object') {
+    if (!graph.nodes[ENTRY_ID]) graph.nodes[ENTRY_ID] = makeNode(entryId);
+  } else {
+    // create nodes array if absent
+    graph.nodes = [ makeNode(entryId) ];
+  }
+
+  graph.startId = ENTRY_ID;
+  return graph;
+}
+
+/* ----------------------- meter hint helpers ----------------------- */
+const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
+
 function getChoiceDeltas(choice) {
   const totals = { trust: 0, tension: 0, childStress: 0 };
-
   const add = (k, v) => {
     const key = String(k || '').trim();
     if (!key) return;
-    const norm =
-      key in totals ? key :
-      key.toLowerCase() === 'childstress' ? 'childStress' :
-      key.toLowerCase();
+    const norm = key in totals ? key : (key.toLowerCase() === 'childstress' ? 'childStress' : key.toLowerCase());
     if (norm in totals) {
       const n = Number(v);
       if (!Number.isNaN(n) && n !== 0) totals[norm] += n;
     }
   };
-
   if (choice && typeof choice.meters === 'object') {
     for (const [k, v] of Object.entries(choice.meters)) add(k, v);
   }
-
   if (Array.isArray(choice?.effects)) {
-    for (const e of choice.effects) {
-      if (!e) continue;
-      add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
-    }
+    for (const e of choice.effects) add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
   }
-
-  if (choice?.meter || choice?.key) {
-    add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
-  }
-
+  if (choice?.meter || choice?.key) add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
   return totals;
 }
 
@@ -296,22 +295,20 @@ function formatHint(totals) {
   for (const k of Object.keys(METER_LABELS)) {
     const v = totals[k];
     if (!v) continue;
-    const sign = v > 0 ? '+ ' : '';
+    const sign = v > 0 ? '+' : '';
     parts.push(`${sign}${v} ${METER_LABELS[k]}`);
   }
   return parts.length ? ` (${parts.join(', ')})` : '';
 }
 
-// Decorate visible choice buttons in #choices based on current node’s choices.
 function decorateVisibleChoices(Eng) {
   try {
     const container = document.getElementById('choices');
     if (!container) return;
 
-    const node =
-      (typeof Eng.currentNode === 'function')
-        ? Eng.currentNode()
-        : Eng.state?.nodes?.[Eng.state?.currentId];
+    const node = (typeof Eng.currentNode === 'function')
+      ? Eng.currentNode()
+      : Eng.state?.nodes?.[Eng.state?.currentId];
 
     if (!node || !Array.isArray(node.choices) || !node.choices.length) return;
 
@@ -320,43 +317,22 @@ function decorateVisibleChoices(Eng) {
 
     node.choices.forEach((ch, idx) => {
       const btn = buttons[idx];
-      if (!btn) return;
-      if (btn.dataset.hinted === '1') return; // already decorated
-
+      if (!btn || btn.dataset.hinted === '1') return;
       const base = ch.label ?? btn.textContent ?? '';
       const hint = formatHint(getChoiceDeltas(ch));
-
       const newText = hint ? `${base}${hint}` : base;
       btn.textContent = newText;
       btn.dataset.hinted = '1';
-      btn.title = newText; // a11y hover
+      btn.title = newText;
     });
   } catch (err) {
     console.warn('[Amorvia] decorateVisibleChoices failed:', err);
   }
 }
 
-// Schedule decoration after the engine likely finished rendering the node.
 function scheduleDecorate(Eng) {
   setTimeout(() => decorateVisibleChoices(Eng), 0);
   setTimeout(() => decorateVisibleChoices(Eng), 50);
-}
-
-/* ----------------------- simple persistence helpers ----------------------- */
-function rememberLast(id) {
-  try { localStorage.setItem('amorvia:lastScenario', id); } catch {}
-}
-function recallLast() {
-  try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; }
-}
-
-// single utility used in two places
-function isEndLike(n) {
-  if (!n) return false;
-  const idTxt = String(n.id || '').toLowerCase();
-  const text = String(n.text || '').toLowerCase();
-  const typ = String(n.type || '').toLowerCase();
-  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
 }
 
 /* ----------------------- core start ----------------------- */
@@ -385,16 +361,8 @@ async function startScenario(id) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
 
-      // Force graph to start on the derived playable node (e.g. a1s1)
-      const graphHas = (nid) => {
-        if (!nid || !graph?.nodes) return false;
-        if (Array.isArray(graph.nodes)) return graph.nodes.some(n => n?.id === nid);
-        if (typeof graph.nodes === 'object') return Boolean(graph.nodes[nid]);
-        return false;
-      };
-      if (entry.nodeId && graphHas(entry.nodeId)) {
-        graph.startId = entry.nodeId;
-      }
+      // Hard enforce starting node by injecting a synthetic entry
+      injectGraphEntryNode(graph, entry.nodeId);
 
       loadFn.call(Eng, graph);
       loadedVia = 'graph';
@@ -420,11 +388,11 @@ async function startScenario(id) {
       }
     }
 
-    // Choose a safe start id in the nodes map
+    // Choose a safe start id in our nodes map
     const nodeKeys = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
     if (!Eng.state.nodes[startId]) {
-      startId = graph.startId || startId || nodeKeys[0];
+      startId = (graph.startId || startId || nodeKeys[0]);
       let s = Eng.state.nodes[startId];
       if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
         startId = s.to;
@@ -432,7 +400,7 @@ async function startScenario(id) {
       if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
     }
 
-    // Avoid starting on an End-of-Act node (pre-start)
+    // Pre-start: avoid End-of-Act
     const curNodeCand = Eng.state.nodes[startId];
     if (isEndLike(curNodeCand) && Array.isArray(raw?.acts)) {
       const startAct =
@@ -446,22 +414,25 @@ async function startScenario(id) {
         const stx = String(s?.text || '').toLowerCase();
         return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
       };
-
       const preferred = (startAct?.start && steps.find(s => s.id === startAct.start && notEnd(s))) || null;
       const playable = preferred?.id || (steps.find(notEnd)?.id) || steps[0]?.id;
-
       if (playable && Eng.state.nodes[playable]) startId = playable;
     }
 
     // Set engine pointer then start
     Eng.state.currentId = startId;
+    // Also set any startId the engine might read
+    if (Eng.state.graph && typeof Eng.state.graph === 'object') {
+      Eng.state.graph.startId = startId;
+    }
+    if (Eng.state.startId !== undefined) Eng.state.startId = startId;
+
     startFn.call(Eng, startId);
 
-    // Post-start safety: if engine still started on an end-like node, hop to playable
-    const currentAfterStart =
-      (typeof Eng.currentNode === 'function')
-        ? Eng.currentNode()
-        : Eng.state?.nodes?.[Eng.state?.currentId];
+    // Post-start safety: if still at an end node, jump to playable
+    const currentAfterStart = (typeof Eng.currentNode === 'function')
+      ? Eng.currentNode()
+      : Eng.state?.nodes?.[Eng.state?.currentId];
 
     if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
       const startAct =
@@ -484,12 +455,10 @@ async function startScenario(id) {
       }
     }
 
-    // Debug: log actual node
-    const cur =
-      (typeof Eng.currentNode === 'function')
-        ? Eng.currentNode()
-        : Eng.state.nodes[Eng.state.currentId];
-
+    // Debug
+    const cur = (typeof Eng.currentNode === 'function')
+      ? Eng.currentNode()
+      : Eng.state.nodes[Eng.state.currentId];
     console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
 
     // Fallback render if engine didn’t draw
@@ -509,10 +478,7 @@ async function startScenario(id) {
               if (to && Eng.state.nodes[to]) {
                 Eng.state.currentId = to;
                 if (typeof Eng.goto === 'function') Eng.goto(to);
-                const nn =
-                  (typeof Eng.currentNode === 'function')
-                    ? Eng.currentNode()
-                    : Eng.state.nodes[to];
+                const nn = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state.nodes[to];
                 const dialogEl = document.getElementById('dialog');
                 if (dialogEl) dialogEl.textContent = nn?.text || '';
                 scheduleDecorate(Eng);
@@ -524,7 +490,6 @@ async function startScenario(id) {
       }
     }
 
-    // Always decorate visible choices after a start
     scheduleDecorate(Eng);
 
     // Reflect selection in UI
@@ -573,4 +538,3 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
-
