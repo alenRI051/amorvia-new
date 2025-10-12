@@ -429,26 +429,30 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // If we booted via the synthetic entry node, auto-hop to the real first step.
-if (startId === '__amorvia_entry__' && entry?.nodeId) {
-  const target = entry.nodeId;
-  const hop = () => {
-    // make sure the target exists in the hydrated nodes map
-    if (Eng.state?.nodes?.[target]) {
-      Eng.state.currentId = target;
-      if (typeof Eng.goto === 'function') {
-        Eng.goto(target);
-      } else if (typeof Eng.start === 'function') {
-        Eng.start(target);
+    // If the engine actually started at the synthetic entry, hop to the real first step.
+{
+  const ENTRY_ID = '__amorvia_entry__';
+  const curId =
+    (typeof Eng.currentNode === 'function' ? Eng.currentNode()?.id : Eng.state?.currentId);
+
+  if ((curId === ENTRY_ID) && entry?.nodeId) {
+    const target = entry.nodeId;
+    const hop = () => {
+      if (Eng.state?.nodes?.[target]) {
+        Eng.state.currentId = target;
+        if (typeof Eng.goto === 'function') {
+          Eng.goto(target);
+        } else if (typeof Eng.start === 'function') {
+          Eng.start(target);
+        }
+        scheduleDecorate(Eng);
+      } else {
+        // nodes may hydrate on the next tick
+        setTimeout(hop, 0);
       }
-      scheduleDecorate(Eng);
-    } else {
-      // state may not be fully hydrated yet — try again on next tick
-      setTimeout(hop, 0);
-    }
-  };
-  // jump on the next tick so any initial render finishes first
-  setTimeout(hop, 0);
+    };
+    setTimeout(hop, 0);
+  }
 }
 
     // Post-start safety: if still at an end node, jump to playable
