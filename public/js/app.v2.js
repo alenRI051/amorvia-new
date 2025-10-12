@@ -479,6 +479,7 @@ async function startScenario(id) {
             Eng.goto(target);
           } else if (typeof Eng.start === 'function') {
             Eng.start(target);
+            renderRawStep(target, raw, Eng);
           }
 
           // Force immediate UI update if engine didn’t render yet
