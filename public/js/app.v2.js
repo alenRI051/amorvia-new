@@ -284,7 +284,7 @@ async function startScenario(id) {
       Eng.__gotoDecorated = true;
     }
 
-    const raw = await getJSON(`/amorvia.eu/data/${id}.v2.json`);
+    const raw = await getJSON(`/data/${id}.v2.json`);
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
