@@ -80,7 +80,7 @@ async function getJSON(url) {
 }
 
 async function loadIndex() {
-  const idx = await getJSON('/amorvia.eu/data/v2-index.json');
+  const idx = await getJSON('/data/v2-index.json');
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
