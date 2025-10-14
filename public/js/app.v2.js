@@ -5,6 +5,7 @@
 // - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes, or acts[*].steps)
 // - Starts on a safe node (resolves one goto hop; avoids starting on "End of Act")
 // - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
+// - Includes a QA pill that toggles an Act/Step jumper panel
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -125,7 +126,7 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // raw.acts[*].steps (modern v2) → synthesize nodes (supports array or object)
+  // raw.acts[*].steps (modern v2) → synthesize nodes
   if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       const stepsArr = Array.isArray(act?.steps)
@@ -184,8 +185,10 @@ function renderRawStep(stepId, raw, Eng) {
 
   if (!step || !dialog || !choices) return false;
 
+  // text
   dialog.textContent = step.text || '';
 
+  // choices
   choices.innerHTML = '';
   const choicesArr = Array.isArray(step.choices)
     ? step.choices
@@ -200,11 +203,12 @@ function renderRawStep(stepId, raw, Eng) {
       if (!to) return;
       if (Eng?.state) Eng.state.currentId = to;
       if (typeof Eng?.goto === 'function') Eng.goto(to);
-      renderRawStep(to, raw, Eng); // chain fallback render
+      renderRawStep(to, raw, Eng); // immediate fallback render chain
     });
     choices.appendChild(b);
   });
 
+  // decorate hints if we have an engine node for this id
   setTimeout(() => scheduleDecorate(Eng), 0);
   return true;
 }
@@ -321,13 +325,10 @@ function isEndLike(n) {
 function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
 function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
 
-// Synthetic entry id helper
-const ENTRY_ID = '__amorvia_entry__';
-const isEntryId = (x) => String(x) === ENTRY_ID;
-
 /* Force-start helper: inject a synthetic entry node that goto’s our target */
 function injectGraphEntryNode(graph, entryId) {
   if (!graph || !entryId) return graph;
+  const ENTRY_ID = '__amorvia_entry__';
   const makeNode = (to) => ({ id: ENTRY_ID, type: 'goto', to });
 
   if (Array.isArray(graph.nodes)) {
@@ -434,6 +435,7 @@ async function startScenario(id) {
 
     // Fetch + compute robust entry
     const raw = await getJSON(dataPath);
+    window.AmorviaApp = Object.assign({}, window.AmorviaApp, { lastRaw: raw });
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
@@ -445,7 +447,7 @@ async function startScenario(id) {
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
-      injectGraphEntryNode(graph, entry.nodeId); // enforce start
+      injectGraphEntryNode(graph, entry.nodeId);
       loadFn.call(Eng, graph);
       loadedVia = 'graph';
     }
@@ -458,7 +460,7 @@ async function startScenario(id) {
       nodesMap = extractNodesMap({ raw, graph });
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
-      } else {
+    } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
           graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
           graph_nodes_arr: Array.isArray(graph?.nodes),
@@ -503,27 +505,30 @@ async function startScenario(id) {
 
     // Set engine pointer then start
     Eng.state.currentId = startId;
-    if (Eng.state.graph && typeof Eng.state.graph === 'object') Eng.state.graph.startId = startId;
+    if (Eng.state.graph && typeof Eng.state.graph === 'object') {
+      Eng.state.graph.startId = startId;
+    }
     if (Eng.state.startId !== undefined) Eng.state.startId = startId;
 
     startFn.call(Eng, startId);
 
     // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
-    if (isEntryId(startId) && entry?.nodeId) {
+    if (startId === '__amorvia_entry__' && entry?.nodeId) {
       const target = entry.nodeId;
       const hop = () => {
         if (Eng.state?.nodes?.[target]) {
           Eng.state.currentId = target;
           if (typeof Eng.goto === 'function') {
             Eng.goto(target);
-            // force immediate draw after goto
-            renderRawStep(target, raw, Eng);
           } else if (typeof Eng.start === 'function') {
             Eng.start(target);
             renderRawStep(target, raw, Eng);
-          } else {
-            renderRawStep(target, raw, Eng);
           }
+
+          const node = Eng.state.nodes[target];
+          const dialogEl = document.getElementById('dialog');
+          if (dialogEl && node?.text) dialogEl.textContent = node.text;
+
           scheduleDecorate(Eng);
         } else {
           setTimeout(hop, 0);
@@ -555,7 +560,10 @@ async function startScenario(id) {
       if (playable2 && Eng.state?.nodes?.[playable2]) {
         Eng.state.currentId = playable2;
         if (typeof Eng.goto === 'function') Eng.goto(playable2);
-        renderRawStep(playable2, raw, Eng);
+
+        const node2 = Eng.state.nodes[playable2];
+        const dialogEl2 = document.getElementById('dialog');
+        if (dialogEl2 && node2?.text) dialogEl2.textContent = node2.text;
       }
     }
 
@@ -568,15 +576,14 @@ async function startScenario(id) {
     // Fallback render if engine didn’t draw (or drew an empty node)
     {
       const curNodeId = Eng.state?.currentId;
-      const targetId = isEntryId(curNodeId) && entry?.nodeId ? entry.nodeId : curNodeId;
       const cur2 =
         (typeof Eng.currentNode === 'function') ? Eng.currentNode()
-        : Eng.state?.nodes?.[targetId];
+        : Eng.state?.nodes?.[curNodeId];
 
       const noText = !cur2 || (!cur2.text && (cur2.type || '').toLowerCase() !== 'choice');
 
       if (noText) {
-        const rendered = renderRawStep(targetId, raw, Eng);
+        const rendered = renderRawStep(curNodeId, raw, Eng);
         if (!rendered) {
           const dialog = document.getElementById('dialog');
           const choices = document.getElementById('choices');
@@ -586,8 +593,38 @@ async function startScenario(id) {
       }
     }
 
-    // Always decorate visible choices after a start
+    // Force UI draw from raw if needed
+    {
+      const node = Eng.state?.nodes?.[Eng.state?.currentId];
+      const dialogEl = document.getElementById('dialog');
+      const choicesEl = document.getElementById('choices');
+
+      if (dialogEl && (!dialogEl.textContent || dialogEl.textContent === '(…)')) {
+        const rendered = renderRawStep(Eng.state.currentId, raw, Eng);
+        if (!rendered && node?.text) {
+          dialogEl.textContent = node.text;
+          if (Array.isArray(node?.choices)) {
+            choicesEl.innerHTML = '';
+            node.choices.forEach(ch => {
+              const b = document.createElement('button');
+              b.className = 'button';
+              b.textContent = ch.label || ch.id || 'Continue';
+              b.addEventListener('click', () => {
+                const to = ch.to || ch.goto || ch.next;
+                if (to) Eng.goto(to);
+              });
+              choicesEl.appendChild(b);
+            });
+          }
+        }
+      }
+    }
+
+    // Decorate visible choices
     scheduleDecorate(Eng);
+
+    // Refresh QA jumper (if present)
+    try { window.AmorviaDebug?.refreshJumpPanel?.(); } catch {}
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -620,6 +657,173 @@ async function startScenario(id) {
 })();
 
 // -----------------------------------------------------------------------------
+// QA Debug: Act/Step jumper (with pill)
+// -----------------------------------------------------------------------------
+(function installDebugJumpUI(){
+  if (window.__amorviaDebugJumpInstalled) return;
+  window.__amorviaDebugJumpInstalled = true;
+
+  const LS_KEY_VIS = 'amorvia:qa:panel:visible';
+  const toArr = (v) => Array.isArray(v) ? v : Object.values(v || {});
+  const isVisible = () => (localStorage.getItem(LS_KEY_VIS) ?? '0') === '1';
+  const setVisible = (on) => localStorage.setItem(LS_KEY_VIS, on ? '1' : '0');
+
+  // Pill
+  const pill = document.createElement('button');
+  pill.id = 'amorvia-qa-pill';
+  pill.type = 'button';
+  pill.textContent = '🐞 QA';
+  pill.title = 'Toggle QA panel';
+  pill.style.cssText = [
+    'position:fixed','right:12px','bottom:12px','z-index:10001',
+    'background:#0a84ff','color:#fff','border:none','padding:8px 12px',
+    'border-radius:999px','font:12px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
+    'box-shadow:0 2px 8px rgba(0,0,0,.35)','cursor:pointer'
+  ].join(';');
+  document.body.appendChild(pill);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.id = 'amorvia-debug-jump';
+  panel.style.cssText = [
+    'position:fixed','right:12px','top:12px','z-index:10000',
+    'background:#111','color:#fff','padding:8px 10px',
+    'border-radius:8px','box-shadow:0 2px 8px rgba(0,0,0,.35)',
+    'font:12px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
+    'opacity:.95','display:none'
+  ].join(';');
+
+  panel.innerHTML = `
+    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+      <strong style="font-weight:600">Jump:</strong>
+      <select id="dbgAct" style="max-width:180px"></select>
+      <select id="dbgStep" style="max-width:240px"></select>
+      <button id="dbgGo" class="button" style="padding:3px 8px">Go</button>
+      <button id="dbgReload" class="button" style="padding:3px 8px">↻</button>
+      <button id="dbgClose" class="button" style="padding:3px 8px; margin-left:4px">✕</button>
+    </div>
+  `;
+  document.body.appendChild(panel);
+
+  const actSel  = panel.querySelector('#dbgAct');
+  const stepSel = panel.querySelector('#dbgStep');
+  const goBtn   = panel.querySelector('#dbgGo');
+  const reload  = panel.querySelector('#dbgReload');
+  const close   = panel.querySelector('#dbgClose');
+
+  function show(on) {
+    panel.style.display = on ? 'block' : 'none';
+    setVisible(on);
+  }
+  show(isVisible());
+
+  pill.addEventListener('click', () => show(panel.style.display === 'none'));
+  window.addEventListener('keydown', (e) => {
+    if (e.altKey && (e.key === 'q' || e.key === 'Q')) {
+      e.preventDefault();
+      show(panel.style.display === 'none');
+    }
+  });
+
+  function populateActsAndSteps() {
+    const raw = (window.AmorviaApp || {}).lastRaw;
+    actSel.innerHTML = '';
+    stepSel.innerHTML = '';
+
+    if (!raw || !Array.isArray(raw.acts) || raw.acts.length === 0) {
+      const opt = document.createElement('option');
+      opt.textContent = '(no acts loaded)';
+      opt.value = '';
+      actSel.appendChild(opt);
+      return;
+    }
+
+    raw.acts.forEach((a, idx) => {
+      const opt = document.createElement('option');
+      opt.value = a.id || `act${idx+1}`;
+      opt.textContent = `${a.title || a.id || opt.value}`;
+      actSel.appendChild(opt);
+    });
+
+    const startActId = raw.startAct || 'act1';
+    if ([...actSel.options].some(o => o.value === startActId)) actSel.value = startActId;
+    else actSel.selectedIndex = 0;
+
+    populateStepsForSelectedAct();
+  }
+
+  function populateStepsForSelectedAct() {
+    const raw = (window.AmorviaApp || {}).lastRaw;
+    stepSel.innerHTML = '';
+    if (!raw) return;
+
+    const actId = actSel.value;
+    const act = raw.acts.find(a => (a.id || '') === actId) || raw.acts[0];
+    const steps = toArr(act?.steps);
+
+    if (!steps.length) {
+      const opt = document.createElement('option');
+      opt.textContent = '(no steps)';
+      opt.value = '';
+      stepSel.appendChild(opt);
+      return;
+    }
+
+    steps.forEach((s, i) => {
+      const opt = document.createElement('option');
+      opt.value = s.id || `step${i+1}`;
+      let label = s.id || opt.value;
+      if (s.text) label += ` — ${String(s.text).slice(0, 50).replace(/\s+/g,' ')}${s.text.length>50?'…':''}`;
+      opt.textContent = label;
+      stepSel.appendChild(opt);
+    });
+
+    const preferred = act.start;
+    if (preferred && [...stepSel.options].some(o => o.value === preferred)) {
+      stepSel.value = preferred;
+    } else {
+      const playable = steps.find(s => {
+        const id = String(s?.id || '').toLowerCase();
+        const txt = String(s?.text || '').toLowerCase();
+        return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
+      });
+      if (playable && [...stepSel.options].some(o => o.value === playable.id)) {
+        stepSel.value = playable.id;
+      }
+    }
+  }
+
+  actSel.addEventListener('change', populateStepsForSelectedAct);
+  reload.addEventListener('click', populateActsAndSteps);
+  close.addEventListener('click', () => show(false));
+
+  goBtn.addEventListener('click', async () => {
+    const nodeId = stepSel.value;
+    if (!nodeId) return;
+    const { Eng } = await waitForEngine();
+
+    if (Eng?.state?.nodes?.[nodeId]) {
+      Eng.state.currentId = nodeId;
+      if (typeof Eng.goto === 'function') Eng.goto(nodeId);
+      else if (typeof Eng.start === 'function') Eng.start(nodeId);
+      scheduleDecorate(Eng);
+    } else {
+      const raw = (window.AmorviaApp || {}).lastRaw;
+      renderRawStep(nodeId, raw, Eng);
+      if (Eng?.state) Eng.state.currentId = nodeId;
+      scheduleDecorate(Eng);
+    }
+  });
+
+  populateActsAndSteps();
+
+  window.AmorviaDebug = {
+    refreshJumpPanel: populateActsAndSteps,
+    showQA(on){ show(on); }
+  };
+})();
+
+// -----------------------------------------------------------------------------
 // Init
 // -----------------------------------------------------------------------------
 (async function init() {
@@ -638,6 +842,4 @@ async function startScenario(id) {
 })();
 
 // Debug helper
-window.AmorviaApp = { startScenario };
-
-
+window.AmorviaApp = Object.assign({ startScenario }, window.AmorviaApp || {});
