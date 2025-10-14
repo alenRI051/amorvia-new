@@ -600,6 +600,34 @@ async function startScenario(id) {
       }
     }
 
+    // --- Force UI draw if no text rendered ---
+{
+  const node = Eng.state?.nodes?.[Eng.state?.currentId];
+  const dialogEl = document.getElementById('dialog');
+  const choicesEl = document.getElementById('choices');
+
+  // If engine didn’t populate UI yet, draw from raw steps fallback
+  if (dialogEl && (!dialogEl.textContent || dialogEl.textContent === '(…)')) {
+    const rendered = renderRawStep(Eng.state.currentId, raw, Eng);
+    if (!rendered && node?.text) {
+      dialogEl.textContent = node.text;
+      if (Array.isArray(node?.choices)) {
+        choicesEl.innerHTML = '';
+        node.choices.forEach(ch => {
+          const b = document.createElement('button');
+          b.className = 'button';
+          b.textContent = ch.label || ch.id || 'Continue';
+          b.addEventListener('click', () => {
+            const to = ch.to || ch.goto || ch.next;
+            if (to) Eng.goto(to);
+          });
+          choicesEl.appendChild(b);
+        });
+      }
+    }
+  }
+}
+
     // Always decorate visible choices after a start
     scheduleDecorate(Eng);
 
