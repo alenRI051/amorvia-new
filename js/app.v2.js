@@ -153,7 +153,7 @@ function renderRawStep(stepId, raw, Eng) {
 
   dialog.textContent = step.text || '';
   choices.innerHTML = '';
-  (step.choices || []).forEach(ch => {
+  (Array.isArray(step.choices) ? step.choices : []).forEach(ch => {
     const b = document.createElement('button');
     b.className = 'button';
     b.textContent = ch.label || ch.id || '…';
