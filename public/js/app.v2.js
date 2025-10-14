@@ -5,23 +5,22 @@
 // - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes, or acts[*].steps)
 // - Starts on a safe node (resolves one goto hop; avoids starting on "End of Act")
 // - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
-// - Includes a QA pill that toggles an Act/Step jumper panel
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
 
-// -----------------------------------------------------------------------------
-// One-shot guard
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   One-shot guard
+----------------------------------------------------------------------------- */
 if (window.__amorviaV2Booted) {
   console.warn('[Amorvia] app.v2 already booted, skipping.');
 } else {
   window.__amorviaV2Booted = true;
 }
 
-// -----------------------------------------------------------------------------
-// Reset support (?reset=1 or #reset)
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Reset support (?reset=1 or #reset)
+----------------------------------------------------------------------------- */
 (() => {
   const url = new URL(window.location.href);
   const shouldReset =
@@ -45,9 +44,9 @@ if (window.__amorviaV2Booted) {
   window.location.reload();
 })();
 
-// -----------------------------------------------------------------------------
-// Engine resolution
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Engine resolution
+----------------------------------------------------------------------------- */
 function resolveEngineObject() {
   return (
     ImportedEngine?.ScenarioEngine ||
@@ -73,9 +72,9 @@ function waitForEngine() {
   });
 }
 
-// -----------------------------------------------------------------------------
-// Fetch helpers
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Fetch helpers
+----------------------------------------------------------------------------- */
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
@@ -102,9 +101,9 @@ async function loadIndex() {
   return list;
 }
 
-// -----------------------------------------------------------------------------
-// Nodes extraction / hydration
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Nodes extraction / hydration
+----------------------------------------------------------------------------- */
 function extractNodesMap({ raw, graph }) {
   let map = {};
 
@@ -143,6 +142,7 @@ function extractNodesMap({ raw, graph }) {
               id: ch?.id ?? `${s.id}:choice:${i}`,
               label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
               to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
+              // keep original shapes for hinting
               effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
               meters: ch?.meters ?? null,
             })),
@@ -163,9 +163,9 @@ function extractNodesMap({ raw, graph }) {
   return map;
 }
 
-// -----------------------------------------------------------------------------
-// Raw-steps fallback renderer (safe for array/object shapes)
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Raw-steps fallback renderer (safe for array/object shapes)
+----------------------------------------------------------------------------- */
 function indexSteps(raw) {
   const map = {};
   (raw?.acts || []).forEach(act => {
@@ -213,9 +213,9 @@ function renderRawStep(stepId, raw, Eng) {
   return true;
 }
 
-// -----------------------------------------------------------------------------
-// UI wiring
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   UI wiring
+----------------------------------------------------------------------------- */
 function renderList(list) {
   const container = document.getElementById('scenarioListV2'); // optional
   const picker = document.getElementById('scenarioPicker');    // primary
@@ -255,9 +255,9 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-// -----------------------------------------------------------------------------
-// Helpers
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Helpers
+----------------------------------------------------------------------------- */
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
   return looksGraph ? data : v2ToGraph(data);
@@ -344,9 +344,9 @@ function injectGraphEntryNode(graph, entryId) {
   return graph;
 }
 
-// -----------------------------------------------------------------------------
-// Meter hint helpers
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Meter hint helpers
+----------------------------------------------------------------------------- */
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
 
 function getChoiceDeltas(choice) {
@@ -415,9 +415,9 @@ function scheduleDecorate(Eng) {
   setTimeout(() => decorateVisibleChoices(Eng), 50);
 }
 
-// -----------------------------------------------------------------------------
-// Core: startScenario
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Core: startScenario
+----------------------------------------------------------------------------- */
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
@@ -435,9 +435,12 @@ async function startScenario(id) {
 
     // Fetch + compute robust entry
     const raw = await getJSON(dataPath);
-    window.AmorviaApp = Object.assign({}, window.AmorviaApp, { lastRaw: raw });
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
+
+    // Track last-loaded path/data for dev watcher
+    (window.AmorviaApp ||= {}).lastPath = dataPath;
+    window.AmorviaApp.lastRaw = raw;
 
     // Try raw v2 first; fallback to graph if rejected
     let loadedVia = 'v2';
@@ -447,7 +450,10 @@ async function startScenario(id) {
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
+
+      // Hard enforce starting node by injecting a synthetic entry
       injectGraphEntryNode(graph, entry.nodeId);
+
       loadFn.call(Eng, graph);
       loadedVia = 'graph';
     }
@@ -460,7 +466,7 @@ async function startScenario(id) {
       nodesMap = extractNodesMap({ raw, graph });
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
-    } else {
+      } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
           graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
           graph_nodes_arr: Array.isArray(graph?.nodes),
@@ -525,13 +531,14 @@ async function startScenario(id) {
             renderRawStep(target, raw, Eng);
           }
 
+          // Force immediate UI update if engine didn’t render yet
           const node = Eng.state.nodes[target];
           const dialogEl = document.getElementById('dialog');
           if (dialogEl && node?.text) dialogEl.textContent = node.text;
 
           scheduleDecorate(Eng);
         } else {
-          setTimeout(hop, 0);
+          setTimeout(hop, 0); // hydration not ready yet—try next tick
         }
       };
       setTimeout(hop, 0);
@@ -561,6 +568,7 @@ async function startScenario(id) {
         Eng.state.currentId = playable2;
         if (typeof Eng.goto === 'function') Eng.goto(playable2);
 
+        // Ensure dialog text appears if engine hasn't rendered yet
         const node2 = Eng.state.nodes[playable2];
         const dialogEl2 = document.getElementById('dialog');
         if (dialogEl2 && node2?.text) dialogEl2.textContent = node2.text;
@@ -583,8 +591,10 @@ async function startScenario(id) {
       const noText = !cur2 || (!cur2.text && (cur2.type || '').toLowerCase() !== 'choice');
 
       if (noText) {
+        // Try to render the exact node from raw steps
         const rendered = renderRawStep(curNodeId, raw, Eng);
         if (!rendered) {
+          // last resort placeholder
           const dialog = document.getElementById('dialog');
           const choices = document.getElementById('choices');
           if (dialog) dialog.textContent = cur2?.text || '(…)';
@@ -593,12 +603,11 @@ async function startScenario(id) {
       }
     }
 
-    // Force UI draw from raw if needed
+    // If dialog still shows placeholder, force a draw from raw/node
     {
       const node = Eng.state?.nodes?.[Eng.state?.currentId];
       const dialogEl = document.getElementById('dialog');
       const choicesEl = document.getElementById('choices');
-
       if (dialogEl && (!dialogEl.textContent || dialogEl.textContent === '(…)')) {
         const rendered = renderRawStep(Eng.state.currentId, raw, Eng);
         if (!rendered && node?.text) {
@@ -620,11 +629,8 @@ async function startScenario(id) {
       }
     }
 
-    // Decorate visible choices
+    // Always decorate visible choices after a start
     scheduleDecorate(Eng);
-
-    // Refresh QA jumper (if present)
-    try { window.AmorviaDebug?.refreshJumpPanel?.(); } catch {}
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -643,9 +649,9 @@ async function startScenario(id) {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Restart button
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Restart button
+----------------------------------------------------------------------------- */
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
@@ -656,205 +662,9 @@ async function startScenario(id) {
   });
 })();
 
-// -----------------------------------------------------------------------------
-// QA Debug: Act/Step jumper (with pill)
-// -----------------------------------------------------------------------------
-(function installDebugJumpUI(){
-  if (window.__amorviaDebugJumpInstalled) return;
-  window.__amorviaDebugJumpInstalled = true;
-
-  const LS_KEY_VIS = 'amorvia:qa:panel:visible';
-  const toArr = (v) => Array.isArray(v) ? v : Object.values(v || {});
-  const isVisible = () => (localStorage.getItem(LS_KEY_VIS) ?? '0') === '1';
-  const setVisible = (on) => localStorage.setItem(LS_KEY_VIS, on ? '1' : '0');
-
-  // Pill
-  const pill = document.createElement('button');
-  pill.id = 'amorvia-qa-pill';
-  pill.type = 'button';
-  pill.textContent = '🐞 QA';
-  pill.title = 'Toggle QA panel';
-  pill.style.cssText = [
-    'position:fixed','right:12px','bottom:12px','z-index:10001',
-    'background:#0a84ff','color:#fff','border:none','padding:8px 12px',
-    'border-radius:999px','font:12px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
-    'box-shadow:0 2px 8px rgba(0,0,0,.35)','cursor:pointer'
-  ].join(';');
-  document.body.appendChild(pill);
-
-  // Panel
-  const panel = document.createElement('div');
-  panel.id = 'amorvia-debug-jump';
-  panel.style.cssText = [
-    'position:fixed','right:12px','top:12px','z-index:10000',
-    'background:#111','color:#fff','padding:8px 10px',
-    'border-radius:8px','box-shadow:0 2px 8px rgba(0,0,0,.35)',
-    'font:12px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
-    'opacity:.95','display:none'
-  ].join(';');
-
-  panel.innerHTML = `
-    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-      <strong style="font-weight:600">Jump:</strong>
-      <select id="dbgAct" style="max-width:180px"></select>
-      <select id="dbgStep" style="max-width:240px"></select>
-      <button id="dbgGo" class="button" style="padding:3px 8px">Go</button>
-      <button id="dbgReload" class="button" style="padding:3px 8px">↻</button>
-      <button id="dbgClose" class="button" style="padding:3px 8px; margin-left:4px">✕</button>
-    </div>
-  `;
-  document.body.appendChild(panel);
-
-  const actSel  = panel.querySelector('#dbgAct');
-  const stepSel = panel.querySelector('#dbgStep');
-  const goBtn   = panel.querySelector('#dbgGo');
-  const reload  = panel.querySelector('#dbgReload');
-  const close   = panel.querySelector('#dbgClose');
-
-  function show(on) {
-    panel.style.display = on ? 'block' : 'none';
-    setVisible(on);
-  }
-  show(isVisible());
-
-  pill.addEventListener('click', () => show(panel.style.display === 'none'));
-  window.addEventListener('keydown', (e) => {
-    if (e.altKey && (e.key === 'q' || e.key === 'Q')) {
-      e.preventDefault();
-      show(panel.style.display === 'none');
-    }
-  });
-
-  function populateActsAndSteps() {
-    const raw = (window.AmorviaApp || {}).lastRaw;
-    actSel.innerHTML = '';
-    stepSel.innerHTML = '';
-
-    if (!raw || !Array.isArray(raw.acts) || raw.acts.length === 0) {
-      const opt = document.createElement('option');
-      opt.textContent = '(no acts loaded)';
-      opt.value = '';
-      actSel.appendChild(opt);
-      return;
-    }
-
-    raw.acts.forEach((a, idx) => {
-      const opt = document.createElement('option');
-      opt.value = a.id || `act${idx+1}`;
-      opt.textContent = `${a.title || a.id || opt.value}`;
-      actSel.appendChild(opt);
-    });
-
-    const startActId = raw.startAct || 'act1';
-    if ([...actSel.options].some(o => o.value === startActId)) actSel.value = startActId;
-    else actSel.selectedIndex = 0;
-
-    populateStepsForSelectedAct();
-  }
-
-  function populateStepsForSelectedAct() {
-    const raw = (window.AmorviaApp || {}).lastRaw;
-    stepSel.innerHTML = '';
-    if (!raw) return;
-
-    const actId = actSel.value;
-    const act = raw.acts.find(a => (a.id || '') === actId) || raw.acts[0];
-    const steps = toArr(act?.steps);
-
-    if (!steps.length) {
-      const opt = document.createElement('option');
-      opt.textContent = '(no steps)';
-      opt.value = '';
-      stepSel.appendChild(opt);
-      return;
-    }
-
-    steps.forEach((s, i) => {
-      const opt = document.createElement('option');
-      opt.value = s.id || `step${i+1}`;
-      let label = s.id || opt.value;
-      if (s.text) label += ` — ${String(s.text).slice(0, 50).replace(/\s+/g,' ')}${s.text.length>50?'…':''}`;
-      opt.textContent = label;
-      stepSel.appendChild(opt);
-    });
-
-    const preferred = act.start;
-    if (preferred && [...stepSel.options].some(o => o.value === preferred)) {
-      stepSel.value = preferred;
-    } else {
-      const playable = steps.find(s => {
-        const id = String(s?.id || '').toLowerCase();
-        const txt = String(s?.text || '').toLowerCase();
-        return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
-      });
-      if (playable && [...stepSel.options].some(o => o.value === playable.id)) {
-        stepSel.value = playable.id;
-      }
-    }
-  }
-
-  actSel.addEventListener('change', populateStepsForSelectedAct);
-  reload.addEventListener('click', populateActsAndSteps);
-  close.addEventListener('click', () => show(false));
-
-  goBtn.addEventListener('click', async () => {
-    const nodeId = stepSel.value;
-    if (!nodeId) return;
-    const { Eng } = await waitForEngine();
-
-    if (Eng?.state?.nodes?.[nodeId]) {
-      Eng.state.currentId = nodeId;
-      if (typeof Eng.goto === 'function') Eng.goto(nodeId);
-      else if (typeof Eng.start === 'function') Eng.start(nodeId);
-      scheduleDecorate(Eng);
-    } else {
-      const raw = (window.AmorviaApp || {}).lastRaw;
-      renderRawStep(nodeId, raw, Eng);
-      if (Eng?.state) Eng.state.currentId = nodeId;
-      scheduleDecorate(Eng);
-    }
-  });
-
-  populateActsAndSteps();
-
-  window.AmorviaDebug = {
-    refreshJumpPanel: populateActsAndSteps,
-    showQA(on){ show(on); }
-  };
-})();
-
-// --- QA extra: Reload current step button ---
-(function addReloadCurrentStepButton() {
-  const panel = document.getElementById('amorvia-debug-jump');
-  if (!panel || document.getElementById('dbgReRender')) return;
-
-  const goBtn = panel.querySelector('#dbgGo');
-  if (!goBtn) return;
-
-  const reloadBtn = document.createElement('button');
-  reloadBtn.id = 'dbgReRender';
-  reloadBtn.className = 'button';
-  reloadBtn.textContent = 'Re-render';
-  reloadBtn.style.padding = '3px 8px';
-  reloadBtn.style.marginLeft = '4px';
-
-  goBtn.insertAdjacentElement('afterend', reloadBtn);
-
-  reloadBtn.addEventListener('click', async () => {
-    const { Eng } = await waitForEngine();
-    const raw = (window.AmorviaApp || {}).lastRaw;
-    const id = Eng?.state?.currentId;
-    if (id && raw) {
-      console.log(`[QA] Forcing re-render of ${id}`);
-      renderRawStep(id, raw, Eng);
-      scheduleDecorate(Eng);
-    }
-  });
-})();
-
-// -----------------------------------------------------------------------------
-// Init
-// -----------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
+   Init
+----------------------------------------------------------------------------- */
 (async function init() {
   try {
     const scenarios = await loadIndex();
@@ -871,4 +681,144 @@ async function startScenario(id) {
 })();
 
 // Debug helper
-window.AmorviaApp = Object.assign({ startScenario }, window.AmorviaApp || {});
+window.AmorviaApp = Object.assign(window.AmorviaApp || {}, { startScenario });
+
+/* -----------------------------------------------------------------------------
+   Dev-only: Live JSON watcher (auto hot-reload current step on file change)
+   - adds a "Live reload JSON" checkbox in QA panel (#amorvia-debug-jump)
+----------------------------------------------------------------------------- */
+(function liveScenarioWatcher() {
+  const qa = document.getElementById('amorvia-debug-jump');
+  if (!qa || document.getElementById('dbgWatch')) return;
+
+  const row = document.createElement('div');
+  row.style.marginTop = '6px';
+  row.style.display = 'flex';
+  row.style.alignItems = 'center';
+  row.style.gap = '6px';
+
+  const chk = document.createElement('input');
+  chk.type = 'checkbox';
+  chk.id = 'dbgWatch';
+
+  const lbl = document.createElement('label');
+  lbl.htmlFor = 'dbgWatch';
+  lbl.textContent = 'Live reload JSON';
+
+  const msInput = document.createElement('input');
+  msInput.type = 'number';
+  msInput.min = '500';
+  msInput.step = '100';
+  msInput.value = '1500';
+  msInput.title = 'Polling interval (ms)';
+  msInput.style.width = '90px';
+
+  row.appendChild(chk);
+  row.appendChild(lbl);
+  row.appendChild(msInput);
+  qa.appendChild(row);
+
+  let timer = null;
+  let lastStamp = null;
+
+  const getStampFromHeaders = (headers) =>
+    headers.get('ETag') || headers.get('Last-Modified') || null;
+
+  async function fetchMeta(path) {
+    try {
+      const res = await fetch(path, { method: 'HEAD', cache: 'no-store' });
+      if (!res.ok) return null;
+      return getStampFromHeaders(res.headers);
+    } catch {
+      return null;
+    }
+  }
+
+  async function fetchJSONNoCache(path) {
+    const url = path + (path.includes('?') ? '&' : '?') + 'ts=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`GET ${path} ${res.status}`);
+    return await res.json();
+  }
+
+  async function poll() {
+    try {
+      const { Eng } = await waitForEngine();
+      const app = window.AmorviaApp || {};
+      const path = app.lastPath;
+      if (!path) return;
+
+      // 1) Try HEAD validators
+      let stamp = await fetchMeta(path);
+
+      // 2) If server doesn’t return validators, fallback to GET & hash sample
+      let usedFallback = false;
+      if (!stamp) {
+        usedFallback = true;
+        const raw = await fetchJSONNoCache(path);
+        const rough = JSON.stringify(raw).slice(0, 1024);
+        let h = 0;
+        for (let i = 0; i < rough.length; i++) {
+          h = ((h << 5) - h) + rough.charCodeAt(i);
+          h |= 0;
+        }
+        stamp = `h${h}`;
+        if (stamp !== lastStamp) {
+          await hotApply(raw, Eng);
+          lastStamp = stamp;
+          return;
+        }
+      }
+
+      if (stamp === lastStamp) return;
+
+      const fresh = usedFallback ? null : await fetchJSONNoCache(path);
+      await hotApply(fresh, Eng);
+      lastStamp = stamp;
+    } catch (err) {
+      console.warn('[QA] live watcher error:', err);
+    }
+  }
+
+  async function hotApply(freshRawMaybeNull, Eng) {
+    const app = (window.AmorviaApp ||= {});
+    const path = app.lastPath;
+    const freshRaw = freshRawMaybeNull || await fetchJSONNoCache(path);
+    app.lastRaw = freshRaw;
+
+    const curId = Eng?.state?.currentId;
+    if (curId) {
+      const ok = renderRawStep(curId, freshRaw, Eng);
+      if (!ok) {
+        const entry = deriveEntryFromV2(freshRaw);
+        if (entry?.nodeId) {
+          Eng.state.currentId = entry.nodeId;
+          renderRawStep(entry.nodeId, freshRaw, Eng);
+        }
+      }
+      scheduleDecorate(Eng);
+      console.log('[QA] Live reload applied at', Eng.state.currentId);
+    }
+  }
+
+  function start() {
+    stop();
+    lastStamp = null;
+    timer = setInterval(poll, Math.max(500, Number(msInput.value) || 1500));
+    console.log('[QA] Live watcher ON');
+  }
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    console.log('[QA] Live watcher OFF');
+  }
+
+  chk.addEventListener('change', () => (chk.checked ? start() : stop()));
+  msInput.addEventListener('change', () => { if (chk.checked) start(); });
+
+  // Optional: auto-enable when in devcache=0 mode
+  if (location.search.includes('devcache=0')) {
+    chk.checked = true;
+    start();
+  }
+})();
