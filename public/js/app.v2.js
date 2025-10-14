@@ -1,39 +1,32 @@
-// Amorvia v2 loader – final corrected edition (2025-10-14)
-// ---------------------------------------------------------
-// - Loads v2 JSON scenarios or converts to graph fallback
-// - Hydrates ScenarioEngine safely from any structure
-// - Starts on first playable step, skipping "End of Act"
-// - Provides raw-step fallback renderer if engine fails
-// - Adds meter-hint decoration to visible choices
+// v2 loader wired to ScenarioEngine
+// - Works with v2 acts/steps, legacy nodes, mixed
+// - Robust start node selection (never starts on "End of Act")
+// - Forces start via synthetic __amorvia_entry__ when engine ignores start()
+// - Last-resort renderer directly from raw steps
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
 
-// --- one-shot guard ---
+/* ---------------- one-shot guard ---------------- */
 if (window.__amorviaV2Booted) {
   console.warn('[Amorvia] app.v2 already booted, skipping.');
 } else {
   window.__amorviaV2Booted = true;
 }
 
-/* =========================================================
-   RESET HANDLER (?reset=1 or #reset)
-========================================================= */
+/* ---------------- reset (?reset=1 or #reset) ---------------- */
 (() => {
   const url = new URL(window.location.href);
   const shouldReset =
     url.searchParams.get('reset') === '1' || url.hash.includes('reset');
   if (!shouldReset) return;
-
-  console.log('[Amorvia] Reset flag detected — clearing saved progress');
   try {
     Object.keys(localStorage)
       .filter(k =>
         k.startsWith('amorvia:state:') ||
         k === 'amorvia:lastScenario' ||
         k === 'amorvia:mode'
-      )
-      .forEach(k => localStorage.removeItem(k));
+      ).forEach(k => localStorage.removeItem(k));
   } catch {}
   try { sessionStorage.clear(); } catch {}
   const clean = window.location.origin + window.location.pathname;
@@ -41,9 +34,7 @@ if (window.__amorviaV2Booted) {
   window.location.reload();
 })();
 
-/* =========================================================
-   ENGINE RESOLUTION + WAIT
-========================================================= */
+/* ---------------- engine resolve / wait ---------------- */
 function resolveEngineObject() {
   return (
     ImportedEngine?.ScenarioEngine ||
@@ -52,30 +43,33 @@ function resolveEngineObject() {
     window.ScenarioEngine
   );
 }
-
 function waitForEngine() {
   return new Promise((resolve) => {
-    const check = () => {
+    const tick = () => {
       const Eng = resolveEngineObject();
       const loadFn = Eng?.loadScenario || Eng?.LoadScenario;
       const startFn = Eng?.start;
       if (Eng && typeof loadFn === 'function' && typeof startFn === 'function') {
         resolve({ Eng, loadFn, startFn });
-      } else setTimeout(check, 50);
+      } else {
+        setTimeout(tick, 50);
+      }
     };
-    check();
+    tick();
   });
 }
 
-/* =========================================================
-   FETCH HELPERS
-========================================================= */
+/* ---------------- fetch helpers ---------------- */
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
 async function getJSON(url) {
   const res = await fetch(url + devBust, noStore);
-  if (!res.ok) throw new Error(`${url} ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    // If the server returned HTML (404 page), throw a JSON-ish error
+    throw new Error(`${url} ${res.status}${text?.startsWith('{') ? '' : ' (not JSON or 404 HTML)'}`);
+  }
   return await res.json();
 }
 
@@ -84,38 +78,41 @@ async function loadIndex() {
   return Array.isArray(idx) ? idx : (idx.scenarios || []);
 }
 
-/* =========================================================
-   NODE EXTRACTION + RAW-STEP RENDER FALLBACK
-========================================================= */
+/* ---------------- shapes → nodes map ---------------- */
 function extractNodesMap({ raw, graph }) {
   let map = {};
 
-  // 1. Graph nodes
+  // graph.nodes
   if (graph?.nodes) {
-    if (Array.isArray(graph.nodes))
+    if (Array.isArray(graph.nodes)) {
       for (const n of graph.nodes) if (n?.id) map[n.id] = n;
-    else if (typeof graph.nodes === 'object') map = { ...graph.nodes };
+    } else if (typeof graph.nodes === 'object') {
+      map = { ...graph.nodes };
+    }
   }
 
-  // 2. Acts[*].nodes
-  if (!Object.keys(map).length && Array.isArray(raw?.acts)) {
-    for (const act of raw.acts)
-      if (Array.isArray(act?.nodes))
+  // raw.acts[*].nodes (legacy)
+  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
+    for (const act of raw.acts) {
+      if (Array.isArray(act?.nodes)) {
         for (const n of act.nodes) if (n?.id) map[n.id] = n;
+      }
+    }
   }
 
-  // 3. Acts[*].steps (modern)
-  if (!Object.keys(map).length && Array.isArray(raw?.acts)) {
+  // raw.acts[*].steps (modern) → synthesize graphish nodes
+  if ((!map || !Object.keys(map).length) && Array.isArray(raw?.acts)) {
     for (const act of raw.acts) {
       const steps = Array.isArray(act?.steps) ? act.steps : [];
-      for (const s of steps) {
+      for (let i = 0; i < steps.length; i++) {
+        const s = steps[i];
         if (!s?.id) continue;
         map[s.id] = {
           id: s.id,
           type: 'line',
           text: s.text ?? '',
-          choices: (s.choices || []).map((ch, i) => ({
-            id: ch?.id ?? `${s.id}:choice:${i}`,
+          choices: (s.choices || []).map((ch, idx) => ({
+            id: ch?.id ?? `${s.id}:choice:${idx}`,
             label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
             to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
             effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
@@ -126,24 +123,109 @@ function extractNodesMap({ raw, graph }) {
     }
   }
 
-  // 4. Root nodes
-  if (!Object.keys(map).length && raw?.nodes) {
-    if (Array.isArray(raw.nodes))
+  // raw.nodes (rare)
+  if ((!map || !Object.keys(map).length) && raw?.nodes) {
+    if (Array.isArray(raw.nodes)) {
       for (const n of raw.nodes) if (n?.id) map[n.id] = n;
-    else if (typeof raw.nodes === 'object') map = { ...raw.nodes };
+    } else if (typeof raw.nodes === 'object') {
+      map = { ...raw.nodes };
+    }
   }
 
   return map;
 }
 
-function indexSteps(raw) {
-  const map = {};
-  (raw?.acts || []).forEach(act =>
-    (act?.steps || []).forEach(s => { if (s?.id) map[s.id] = s; })
-  );
-  return map;
+/* ---------------- utility ---------------- */
+function toGraphIfNeeded(data) {
+  const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
+  return looksGraph ? data : v2ToGraph(data);
+}
+function isEndLike(n) {
+  if (!n) return false;
+  const idTxt = String(n.id || '').toLowerCase();
+  const text = String(n.text || '').toLowerCase();
+  const typ  = String(n.type || '').toLowerCase();
+  return typ === 'end' || idTxt.includes('end') || text.startsWith('end of ') || text === 'end';
+}
+function rememberLast(id) { try { localStorage.setItem('amorvia:lastScenario', id); } catch {} }
+function recallLast() { try { return localStorage.getItem('amorvia:lastScenario'); } catch { return null; } }
+
+/* robust entry derivation from raw */
+function deriveEntryFromV2(raw) {
+  if (!raw || !Array.isArray(raw.acts) || raw.acts.length === 0) {
+    return { actId: null, nodeId: null };
+  }
+  const act =
+    raw.acts.find(a => a.id === raw.startAct) ||
+    raw.acts.find(a => a.id === 'act1') ||
+    raw.acts[0];
+
+  if (!act) return { actId: null, nodeId: null };
+
+  const steps = Array.isArray(act.steps) ? act.steps : [];
+  const pickPlayableStepId = (arr) => {
+    if (!Array.isArray(arr) || arr.length === 0) return null;
+    const notEnd = (s) => {
+      const id = String(s?.id || '').toLowerCase();
+      const txt = String(s?.text || '').toLowerCase();
+      return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
+    };
+    const startId = act.start || arr[0]?.id;
+    const startStep = arr.find(s => s.id === startId);
+    if (startStep && notEnd(startStep)) return startStep.id;
+    const playable = arr.find(notEnd);
+    return playable?.id || arr[0]?.id || null;
+  };
+
+  if (steps.length) return { actId: act.id || null, nodeId: pickPlayableStepId(steps) };
+
+  if (Array.isArray(act.nodes) && act.nodes.length) {
+    let node = act.nodes.find(n => n.id === 'start') || act.nodes[0];
+    if (node?.type?.toLowerCase() === 'goto' && node.to) {
+      const hop = act.nodes.find(n => n.id === node.to);
+      if (hop) node = hop;
+    }
+    return { actId: act.id || null, nodeId: node?.id || null };
+  }
+
+  if (Array.isArray(raw.nodes) && raw.nodes.length) {
+    let node = raw.nodes.find(n => n.id === 'start') || raw.nodes[0];
+    if (node?.type?.toLowerCase() === 'goto' && node.to) {
+      const hop = raw.nodes.find(n => n.id === node.to);
+      if (hop) node = hop;
+    }
+    return { actId: act.id || null, nodeId: node?.id || null };
+  }
+
+  return { actId: null, nodeId: null };
 }
 
+/* synthetic entry injector (forces engines that ignore start arg) */
+function injectGraphEntryNode(graph, entryId) {
+  if (!graph || !entryId) return graph;
+  const ENTRY_ID = '__amorvia_entry__';
+  const makeNode = (to) => ({ id: ENTRY_ID, type: 'goto', to });
+
+  if (Array.isArray(graph.nodes)) {
+    const exists = graph.nodes.some(n => n?.id === ENTRY_ID);
+    if (!exists) graph.nodes.unshift(makeNode(entryId));
+  } else if (graph.nodes && typeof graph.nodes === 'object') {
+    if (!graph.nodes[ENTRY_ID]) graph.nodes[ENTRY_ID] = makeNode(entryId);
+  } else {
+    graph.nodes = [ makeNode(entryId) ];
+  }
+  graph.startId = ENTRY_ID;
+  return graph;
+}
+
+/* raw-steps quick index + renderer (last resort) */
+function indexSteps(raw) {
+  const map = {};
+  (raw?.acts || []).forEach(act => {
+    (act?.steps || []).forEach(s => { if (s?.id) map[s.id] = s; });
+  });
+  return map;
+}
 function renderRawStep(stepId, raw, Eng) {
   const steps = (Eng.__rawStepsIndex ||= indexSteps(raw));
   const step = steps[stepId];
@@ -166,69 +248,31 @@ function renderRawStep(stepId, raw, Eng) {
     });
     choices.appendChild(b);
   });
-  setTimeout(() => scheduleDecorate(Eng), 0);
   return true;
 }
 
-/* =========================================================
-   ENTRY SELECTION HELPERS
-========================================================= */
-function deriveEntryFromV2(raw) {
-  if (!raw?.acts?.length) return { actId: null, nodeId: null };
-  const act =
-    raw.acts.find(a => a.id === raw.startAct) ||
-    raw.acts.find(a => a.id === 'act1') ||
-    raw.acts[0];
-  if (!act) return { actId: null, nodeId: null };
-  const steps = Array.isArray(act.steps) ? act.steps : [];
-
-  const notEnd = (s) => {
-    const id = String(s?.id || '').toLowerCase();
-    const txt = String(s?.text || '').toLowerCase();
-    return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
-  };
-
-  const startId = act.start || steps[0]?.id;
-  const startStep = steps.find(s => s.id === startId && notEnd(s));
-  if (startStep) return { actId: act.id, nodeId: startStep.id };
-  const playable = steps.find(notEnd);
-  return { actId: act.id, nodeId: playable?.id || steps[0]?.id || null };
-}
-
-function isEndLike(n) {
-  if (!n) return false;
-  const id = (n.id || '').toLowerCase();
-  const txt = (n.text || '').toLowerCase();
-  const typ = (n.type || '').toLowerCase();
-  return typ === 'end' || id.includes('end') || txt.startsWith('end of ') || txt === 'end';
-}
-
-/* =========================================================
-   METER HINT DECORATION
-========================================================= */
+/* ---------------- meter hint decoration ---------------- */
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
-
 function getChoiceDeltas(choice) {
   const totals = { trust: 0, tension: 0, childStress: 0 };
   const add = (k, v) => {
     const key = String(k || '').trim();
     if (!key) return;
-    const norm = key in totals ? key :
-      (key.toLowerCase() === 'childstress' ? 'childStress' : key.toLowerCase());
+    const norm = key in totals ? key : (key.toLowerCase() === 'childstress' ? 'childStress' : key.toLowerCase());
     if (norm in totals) {
       const n = Number(v);
       if (!Number.isNaN(n) && n !== 0) totals[norm] += n;
     }
   };
-  if (choice && typeof choice.meters === 'object')
+  if (choice && typeof choice.meters === 'object') {
     for (const [k, v] of Object.entries(choice.meters)) add(k, v);
-  if (Array.isArray(choice?.effects))
+  }
+  if (Array.isArray(choice?.effects)) {
     for (const e of choice.effects) add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
-  if (choice?.meter || choice?.key)
-    add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
+  }
+  if (choice?.meter || choice?.key) add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
   return totals;
 }
-
 function formatHint(totals) {
   const parts = [];
   for (const k of Object.keys(METER_LABELS)) {
@@ -239,7 +283,6 @@ function formatHint(totals) {
   }
   return parts.length ? ` (${parts.join(', ')})` : '';
 }
-
 function decorateVisibleChoices(Eng) {
   try {
     const container = document.getElementById('choices');
@@ -247,7 +290,7 @@ function decorateVisibleChoices(Eng) {
     const node = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
       : Eng.state?.nodes?.[Eng.state?.currentId];
-    if (!node?.choices?.length) return;
+    if (!node || !Array.isArray(node.choices) || !node.choices.length) return;
 
     const buttons = Array.from(container.querySelectorAll('button, [role="button"]'));
     node.choices.forEach((ch, idx) => {
@@ -264,80 +307,170 @@ function decorateVisibleChoices(Eng) {
     console.warn('[Amorvia] decorateVisibleChoices failed:', err);
   }
 }
-
 function scheduleDecorate(Eng) {
   setTimeout(() => decorateVisibleChoices(Eng), 0);
   setTimeout(() => decorateVisibleChoices(Eng), 50);
 }
 
-/* =========================================================
-   START SCENARIO
-========================================================= */
+/* ---------------- UI list ---------------- */
+function renderList(list) {
+  const container = document.getElementById('scenarioListV2'); // optional
+  const picker = document.getElementById('scenarioPicker');    // primary
+  if (picker) picker.innerHTML = '';
+  if (container) container.innerHTML = '';
+
+  list.forEach((item, i) => {
+    const id = item.id || item;
+    const title = item.title || item.id || String(item);
+
+    if (picker) {
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = title;
+      if (i === 0) opt.selected = true;
+      picker.appendChild(opt);
+    }
+
+    if (container) {
+      const el = document.createElement('div');
+      el.className = 'item text-white';
+      el.textContent = title;
+      el.dataset.id = id;
+      el.setAttribute('role', 'option');
+      el.setAttribute('aria-selected', 'false');
+      el.tabIndex = 0;
+      el.addEventListener('click', () => startScenario(id));
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startScenario(id); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); el.nextElementSibling?.focus?.(); }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); el.previousElementSibling?.focus?.(); }
+      });
+      container.appendChild(el);
+    }
+  });
+
+  if (picker) picker.addEventListener('change', () => startScenario(picker.value));
+}
+
+/* ---------------- core start ---------------- */
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
 
-    // Re-decorate after each goto
+    // Re-decorate after every navigation.
     if (!Eng.__gotoDecorated && typeof Eng.goto === 'function') {
       const _goto = Eng.goto.bind(Eng);
       Eng.goto = (to) => { const r = _goto(to); scheduleDecorate(Eng); return r; };
       Eng.__gotoDecorated = true;
     }
 
+    // Fetch scenario + compute entry
     const raw = await getJSON(`/data/${id}.v2.json`);
-    const entry = deriveEntryFromV2(raw);
-    if (!entry.nodeId) throw new Error('Scenario has no entry node.');
+    let entry = deriveEntryFromV2(raw);
+    // If derivation failed, we’ll compute after hydration from node map.
 
+    // Load raw, fallback to graph
     let loadedVia = 'v2';
     let graph = null;
-
     try {
       loadFn.call(Eng, raw);
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
-      graph = v2ToGraph(raw);
-      // inject entry node so startId = first playable
-      const ENTRY_ID = '__amorvia_entry__';
-      const entryNode = { id: ENTRY_ID, type: 'goto', to: entry.nodeId };
-      if (Array.isArray(graph.nodes)) graph.nodes.unshift(entryNode);
-      else graph.nodes = [entryNode];
-      graph.startId = ENTRY_ID;
+      graph = toGraphIfNeeded(raw);
+
+      // If we already have an entry candidate, force the engine to start there
+      if (entry?.nodeId) {
+        injectGraphEntryNode(graph, entry.nodeId);
+      }
       loadFn.call(Eng, graph);
       loadedVia = 'graph';
     }
-    if (!graph) graph = v2ToGraph(raw);
+    if (!graph) graph = toGraphIfNeeded(raw);
 
+    // Hydrate nodes map if engine didn’t
     if (!Eng.state) Eng.state = {};
-    let nodesMap = Eng.state.nodes;
-    if (!nodesMap || !Object.keys(nodesMap).length) {
-      nodesMap = extractNodesMap({ raw, graph });
-      Eng.state.nodes = nodesMap;
+    if (!Eng.state.nodes || !Object.keys(Eng.state.nodes).length) {
+      Eng.state.nodes = extractNodesMap({ raw, graph });
+      if (!Object.keys(Eng.state.nodes).length) {
+        throw new Error('Engine has no nodes after load; unable to extract nodes map.');
+      }
     }
 
-    // Pick safe start id
-    const nodeKeys = Object.keys(Eng.state.nodes);
+    // If we still lack entry.nodeId, pick from hydrated nodes map (non-end first)
+    if (!entry?.nodeId) {
+      const keys = Object.keys(Eng.state.nodes);
+      const pick =
+        keys.find(k => !isEndLike(Eng.state.nodes[k])) || // first non-end
+        keys[0] || null;
+      entry = { actId: entry?.actId ?? null, nodeId: pick };
+      if (!entry.nodeId) {
+        throw new Error('Scenario has no entry node.'); // (shouldn’t happen now)
+      }
+    }
+
+    // Compute startId safely (resolve one goto)
+    const keys = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
-    if (!Eng.state.nodes[startId]) startId = nodeKeys[0];
-
-    // Avoid starting on End node
-    const curNodeCand = Eng.state.nodes[startId];
-    if (isEndLike(curNodeCand)) {
-      const act = raw.acts.find(a => a.id === entry.actId) || raw.acts[0];
-      const playable = act?.steps?.find(s => !isEndLike(s))?.id || act?.steps?.[0]?.id;
-      if (playable && Eng.state.nodes[playable]) startId = playable;
+    if (!Eng.state.nodes[startId]) {
+      startId = graph.startId || startId || keys[0];
+    }
+    let s = Eng.state.nodes[startId];
+    if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
+      startId = s.to;
+      s = Eng.state.nodes[startId];
     }
 
+    // Avoid End-of-Act pre-start
+    if (isEndLike(s)) {
+      const nonEnd = keys.find(k => !isEndLike(Eng.state.nodes[k]));
+      if (nonEnd) startId = nonEnd;
+    }
+
+    // Set pointer + try starting
     Eng.state.currentId = startId;
+    if (Eng.state.graph && typeof Eng.state.graph === 'object') Eng.state.graph.startId = startId;
+    if (Eng.state.startId !== undefined) Eng.state.startId = startId;
     startFn.call(Eng, startId);
 
-    // Render raw fallback if needed
-    const cur = (typeof Eng.currentNode === 'function')
-      ? Eng.currentNode()
-      : Eng.state.nodes[startId];
-    if (!cur?.text) renderRawStep(startId, raw, Eng);
+    // If engine ignored our start and still sat at synthetic entry, hop
+    if (startId === '__amorvia_entry__' && entry?.nodeId) {
+      const target = entry.nodeId;
+      setTimeout(function hop() {
+        if (Eng.state?.nodes?.[target]) {
+          Eng.state.currentId = target;
+          if (typeof Eng.goto === 'function') Eng.goto(target);
+          scheduleDecorate(Eng);
+        } else {
+          setTimeout(hop, 0);
+        }
+      }, 0);
+    }
 
-    console.log('[Amorvia] started (via:', loadedVia + ') at', startId, cur);
+    // If UI didn’t render, force from raw
+    const curNow = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state.nodes[Eng.state.currentId];
+    const noText = !curNow || (!curNow.text && (curNow.type || '').toLowerCase() !== 'choice');
+    if (noText) {
+      const did = renderRawStep(Eng.state.currentId, raw, Eng);
+      if (!did) {
+        const dialog = document.getElementById('dialog');
+        if (dialog) dialog.textContent = curNow?.text || '(…)';
+      }
+    }
+
+    // Decorate
     scheduleDecorate(Eng);
+
+    // UI reflect selection
+    document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
+      const on = el.dataset.id === id;
+      el.classList.toggle('is-active', on);
+      el.setAttribute('aria-selected', String(on));
+    });
+    const picker = document.getElementById('scenarioPicker');
+    if (picker) picker.value = id;
+
+    rememberLast(id);
+    console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, curNow || Eng.state.nodes[Eng.state.currentId]);
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
     const dialog = document.getElementById('dialog');
@@ -345,23 +478,23 @@ async function startScenario(id) {
   }
 }
 
-/* =========================================================
-   RESTART BUTTON + INIT
-========================================================= */
+/* ---------------- restart button ---------------- */
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
   btn.addEventListener('click', () => {
     const picker = document.getElementById('scenarioPicker');
-    const id = picker?.value || localStorage.getItem('amorvia:lastScenario');
+    const id = picker?.value || recallLast();
     if (id) startScenario(id);
   });
 })();
 
+/* ---------------- init ---------------- */
 (async function init() {
   try {
     const scenarios = await loadIndex();
-    const last = localStorage.getItem('amorvia:lastScenario');
+    renderList(scenarios);
+    const last = recallLast();
     const first = (scenarios[0] && (scenarios[0].id || scenarios[0])) || null;
     const initial = last || first;
     if (initial) await startScenario(initial);
@@ -372,6 +505,5 @@ async function startScenario(id) {
   }
 })();
 
+// Debug helper
 window.AmorviaApp = { startScenario };
-
-
