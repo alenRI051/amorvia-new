@@ -823,6 +823,35 @@ async function startScenario(id) {
   };
 })();
 
+// --- QA extra: Reload current step button ---
+(function addReloadCurrentStepButton() {
+  const panel = document.getElementById('amorvia-debug-jump');
+  if (!panel || document.getElementById('dbgReRender')) return;
+
+  const goBtn = panel.querySelector('#dbgGo');
+  if (!goBtn) return;
+
+  const reloadBtn = document.createElement('button');
+  reloadBtn.id = 'dbgReRender';
+  reloadBtn.className = 'button';
+  reloadBtn.textContent = 'Re-render';
+  reloadBtn.style.padding = '3px 8px';
+  reloadBtn.style.marginLeft = '4px';
+
+  goBtn.insertAdjacentElement('afterend', reloadBtn);
+
+  reloadBtn.addEventListener('click', async () => {
+    const { Eng } = await waitForEngine();
+    const raw = (window.AmorviaApp || {}).lastRaw;
+    const id = Eng?.state?.currentId;
+    if (id && raw) {
+      console.log(`[QA] Forcing re-render of ${id}`);
+      renderRawStep(id, raw, Eng);
+      scheduleDecorate(Eng);
+    }
+  });
+})();
+
 // -----------------------------------------------------------------------------
 // Init
 // -----------------------------------------------------------------------------
