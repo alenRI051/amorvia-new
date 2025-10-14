@@ -6,8 +6,8 @@
 // - Provides raw-step fallback renderer if engine fails
 // - Adds meter-hint decoration to visible choices
 
-import { v2ToGraph } from '/amorvia.eu/js/compat/v2-to-graph.js';
-import * as ImportedEngine from '/amorvia.eu/js/engine/scenarioEngine.js';
+import { v2ToGraph } from '/js/compat/v2-to-graph.js';
+import * as ImportedEngine from '/js/engine/scenarioEngine.js';
 
 // --- one-shot guard ---
 if (window.__amorviaV2Booted) {
