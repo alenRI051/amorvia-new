@@ -2,26 +2,25 @@
 // -------------------------------------------------------------------------------
 // - Waits until engine exposes { loadScenario|LoadScenario, start }
 // - Loads raw v2 first, falls back to graph if needed
-// - Hydrates engine.state.nodes from graph / acts[*].nodes / acts[*].steps / raw.nodes
-// - Starts on a safe node (resolves one goto hop; avoids "End of Act")
-// - Injects meter-hints (Trust, Tension, Child Stress) to visible choice labels
-// - Forces UI rendering if dialog stays "(…)" (first-tick placeholder)
+// - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes, or acts[*].steps)
+// - Starts on a safe node (resolves one goto hop; avoids starting on "End of Act")
+// - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
 
-/* -----------------------------------------------------------------------------
-   One-shot guard
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// One-shot guard
+// -----------------------------------------------------------------------------
 if (window.__amorviaV2Booted) {
   console.warn('[Amorvia] app.v2 already booted, skipping.');
 } else {
   window.__amorviaV2Booted = true;
 }
 
-/* -----------------------------------------------------------------------------
-   Reset support (?reset=1 or #reset)
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Reset support (?reset=1 or #reset)
+// -----------------------------------------------------------------------------
 (() => {
   const url = new URL(window.location.href);
   const shouldReset =
@@ -45,9 +44,9 @@ if (window.__amorviaV2Booted) {
   window.location.reload();
 })();
 
-/* -----------------------------------------------------------------------------
-   Engine resolution
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Engine resolution
+// -----------------------------------------------------------------------------
 function resolveEngineObject() {
   return (
     ImportedEngine?.ScenarioEngine ||
@@ -73,9 +72,9 @@ function waitForEngine() {
   });
 }
 
-/* -----------------------------------------------------------------------------
-   Fetch helpers
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Fetch helpers
+// -----------------------------------------------------------------------------
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
@@ -86,7 +85,7 @@ async function getJSON(url) {
   return await res.json();
 }
 
-// v2 index cache (for id → path)
+// cache of v2 index and map id->path
 let SCENARIOS = [];
 let SCENARIO_BY_ID = Object.create(null);
 
@@ -102,16 +101,16 @@ async function loadIndex() {
   return list;
 }
 
-/* -----------------------------------------------------------------------------
-   Nodes extraction / hydration
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Nodes extraction / hydration
+// -----------------------------------------------------------------------------
 function extractNodesMap({ raw, graph }) {
   let map = {};
 
   // graph.nodes
   if (graph?.nodes) {
     if (Array.isArray(graph.nodes)) {
-      for (const n of (graph.nodes || [])) if (n?.id) map[n.id] = n;
+      for (const n of graph.nodes) if (n?.id) map[n.id] = n;
     } else if (typeof graph.nodes === 'object') {
       map = { ...graph.nodes };
     }
@@ -163,9 +162,9 @@ function extractNodesMap({ raw, graph }) {
   return map;
 }
 
-/* -----------------------------------------------------------------------------
-   Raw-steps fallback renderer
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Raw-steps fallback renderer (safe for array/object shapes)
+// -----------------------------------------------------------------------------
 function indexSteps(raw) {
   const map = {};
   (raw?.acts || []).forEach(act => {
@@ -186,8 +185,8 @@ function renderRawStep(stepId, raw, Eng) {
   if (!step || !dialog || !choices) return false;
 
   dialog.textContent = step.text || '';
-  choices.innerHTML = '';
 
+  choices.innerHTML = '';
   const choicesArr = Array.isArray(step.choices)
     ? step.choices
     : Object.values(step.choices || {});
@@ -210,9 +209,9 @@ function renderRawStep(stepId, raw, Eng) {
   return true;
 }
 
-/* -----------------------------------------------------------------------------
-   UI wiring
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// UI wiring
+// -----------------------------------------------------------------------------
 function renderList(list) {
   const container = document.getElementById('scenarioListV2'); // optional
   const picker = document.getElementById('scenarioPicker');    // primary
@@ -252,9 +251,9 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-/* -----------------------------------------------------------------------------
-   Helpers
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
   return looksGraph ? data : v2ToGraph(data);
@@ -341,9 +340,9 @@ function injectGraphEntryNode(graph, entryId) {
   return graph;
 }
 
-/* -----------------------------------------------------------------------------
-   Meter hint helpers
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Meter hint helpers
+// -----------------------------------------------------------------------------
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
 
 function getChoiceDeltas(choice) {
@@ -412,9 +411,9 @@ function scheduleDecorate(Eng) {
   setTimeout(() => decorateVisibleChoices(Eng), 50);
 }
 
-/* -----------------------------------------------------------------------------
-   Force-render if dialog shows placeholder "(…)"
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// NEW: Force re-render if the UI still shows placeholder text
+// -----------------------------------------------------------------------------
 function forceRenderIfPlaceholder(Eng, raw) {
   const dialogEl = document.getElementById('dialog');
   const choicesEl = document.getElementById('choices');
@@ -423,7 +422,6 @@ function forceRenderIfPlaceholder(Eng, raw) {
   const id = Eng?.state?.currentId;
   const isPlaceholder = (t) => !t || t.trim() === '(…)';
 
-  // Retry a few times to catch late hydration
   let attempts = 0;
   const tryRender = () => {
     const node = id ? Eng?.state?.nodes?.[id] : null;
@@ -431,9 +429,7 @@ function forceRenderIfPlaceholder(Eng, raw) {
     const stillPlaceholder = isPlaceholder(dialogEl.textContent);
 
     if (ready && stillPlaceholder) {
-      // Force proper text
       dialogEl.textContent = node.text;
-      // Replace choices from node
       choicesEl.innerHTML = '';
       if (Array.isArray(node?.choices)) {
         node.choices.forEach(ch => {
@@ -457,9 +453,9 @@ function forceRenderIfPlaceholder(Eng, raw) {
   tryRender();
 }
 
-/* -----------------------------------------------------------------------------
-   Core: startScenario
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Core: startScenario
+// -----------------------------------------------------------------------------
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
@@ -467,17 +463,16 @@ async function startScenario(id) {
     // Monkey-patch goto() once so every navigation re-decorates.
     if (!Eng.__gotoDecorated && typeof Eng.goto === 'function') {
       const _goto = Eng.goto.bind(Eng);
-      Eng.goto = (to) => { const r = _goto(to); scheduleDecorate(Eng); setTimeout(() => forceRenderIfPlaceholder(Eng, Eng.__raw), 0); return r; };
+      Eng.goto = (to) => { const r = _goto(to); scheduleDecorate(Eng); return r; };
       Eng.__gotoDecorated = true;
     }
 
-    // Resolve the JSON path from index if available; else fall back to /data/{id}.v2.json
+    // Resolve the JSON path from the index if available; else fall back to /data/{id}.v2.json
     const fromIndex = SCENARIO_BY_ID[id];
     const dataPath = fromIndex?.path || `/data/${id}.v2.json`;
 
     // Fetch + compute robust entry
     const raw = await getJSON(dataPath);
-    Eng.__raw = raw; // keep for forceRenderIfPlaceholder
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
@@ -489,7 +484,10 @@ async function startScenario(id) {
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
+
+      // Hard enforce starting node by injecting a synthetic entry
       injectGraphEntryNode(graph, entry.nodeId);
+
       loadFn.call(Eng, graph);
       loadedVia = 'graph';
     }
@@ -502,7 +500,7 @@ async function startScenario(id) {
       nodesMap = extractNodesMap({ raw, graph });
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
-    } else {
+      } else {
         console.error('[Amorvia] could not build nodes map. Shapes:', {
           graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
           graph_nodes_arr: Array.isArray(graph?.nodes),
@@ -547,29 +545,58 @@ async function startScenario(id) {
 
     // Set engine pointer then start
     Eng.state.currentId = startId;
-    if (Eng.state.graph && typeof Eng.state.graph === 'object') Eng.state.graph.startId = startId;
+    if (Eng.state.graph && typeof Eng.state.graph === 'object') {
+      Eng.state.graph.startId = startId;
+    }
     if (Eng.state.startId !== undefined) Eng.state.startId = startId;
 
     startFn.call(Eng, startId);
 
-    // If we booted via synthetic entry, hop to the real first step & render immediately
+    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
     if (startId === '__amorvia_entry__' && entry?.nodeId) {
       const target = entry.nodeId;
       const hop = () => {
         if (Eng.state?.nodes?.[target]) {
           Eng.state.currentId = target;
-          if (typeof Eng.goto === 'function') Eng.goto(target);
-          else if (typeof Eng.start === 'function') { Eng.start(target); renderRawStep(target, raw, Eng); }
+          if (typeof Eng.goto === 'function') {
+            Eng.goto(target);
+          } else if (typeof Eng.start === 'function') {
+            Eng.start(target);
+            renderRawStep(target, raw, Eng);
+          }
+
           scheduleDecorate(Eng);
-          forceRenderIfPlaceholder(Eng, raw);
         } else {
           setTimeout(hop, 0);
         }
       };
       setTimeout(hop, 0);
-    } else {
-      // ensure first frame renders text/choices
-      forceRenderIfPlaceholder(Eng, raw);
+    }
+
+    // Post-start safety: if still at an end node, jump to playable
+    const currentAfterStart = (typeof Eng.currentNode === 'function')
+      ? Eng.currentNode()
+      : Eng.state?.nodes?.[Eng.state?.currentId];
+
+    if (isEndLike(currentAfterStart) && Array.isArray(raw?.acts)) {
+      const startAct2 =
+        raw.acts.find(a => a.id === raw.startAct) ||
+        raw.acts.find(a => a.id === 'act1') ||
+        raw.acts[0];
+
+      const stepsArr2 = Array.isArray(startAct2?.steps) ? startAct2.steps : Object.values(startAct2?.steps || {});
+      const notEnd2 = (s) => {
+        const sid = String(s?.id || '').toLowerCase();
+        const stx = String(s?.text || '').toLowerCase();
+        return !(sid.includes('end') || stx.startsWith('end of ') || stx === 'end');
+      };
+      const preferred2 = (startAct2?.start && stepsArr2.find(s => s.id === startAct2.start && notEnd2(s))) || null;
+      const playable2 = preferred2?.id || (stepsArr2.find(notEnd2)?.id) || stepsArr2[0]?.id;
+
+      if (playable2 && Eng.state?.nodes?.[playable2]) {
+        Eng.state.currentId = playable2;
+        if (typeof Eng.goto === 'function') Eng.goto(playable2);
+      }
     }
 
     // Debug
@@ -577,6 +604,32 @@ async function startScenario(id) {
       ? Eng.currentNode()
       : Eng.state.nodes[Eng.state.currentId];
     console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
+
+    // Fallback render if engine didn’t draw (or drew an empty node)
+    {
+      const curNodeId = Eng.state?.currentId;
+      const cur2 =
+        (typeof Eng.currentNode === 'function') ? Eng.currentNode()
+        : Eng.state?.nodes?.[curNodeId];
+
+      const noText = !cur2 || (!cur2.text && (cur2.type || '').toLowerCase() !== 'choice');
+
+      if (noText) {
+        const rendered = renderRawStep(curNodeId, raw, Eng);
+        if (!rendered) {
+          const dialog = document.getElementById('dialog');
+          const choices = document.getElementById('choices');
+          if (dialog) dialog.textContent = cur2?.text || '(…)';
+          if (choices) choices.innerHTML = '';
+        }
+      }
+    }
+
+    // NEW: one more pass to replace any lingering "(…)" with real text when hydration arrives
+    forceRenderIfPlaceholder(Eng, raw);
+
+    // Always decorate visible choices after a start
+    scheduleDecorate(Eng);
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -595,9 +648,9 @@ async function startScenario(id) {
   }
 }
 
-/* -----------------------------------------------------------------------------
-   Restart button
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Restart button
+// -----------------------------------------------------------------------------
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
@@ -608,9 +661,9 @@ async function startScenario(id) {
   });
 })();
 
-/* -----------------------------------------------------------------------------
-   Init
------------------------------------------------------------------------------ */
+// -----------------------------------------------------------------------------
+// Init
+// -----------------------------------------------------------------------------
 (async function init() {
   try {
     const scenarios = await loadIndex();
@@ -628,4 +681,3 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
-
