@@ -420,20 +420,22 @@ function forceRenderIfPlaceholder(Eng, raw) {
   const choicesEl = document.getElementById('choices');
   if (!dialogEl || !choicesEl) return;
 
+  const id = Eng?.state?.currentId;
   const isPlaceholder = (t) => !t || t.trim() === '(…)';
 
-  if (isPlaceholder(dialogEl.textContent)) {
-    const id = Eng?.state?.currentId;
-    // Try raw fallback first
-    const rendered = id ? renderRawStep(id, raw, Eng) : false;
+  // Retry a few times to catch late hydration
+  let attempts = 0;
+  const tryRender = () => {
+    const node = id ? Eng?.state?.nodes?.[id] : null;
+    const ready = node && node.text && node.text.trim().length > 0;
+    const stillPlaceholder = isPlaceholder(dialogEl.textContent);
 
-    if (!rendered) {
-      // Fallback to hydrated engine node text/choices
-      const node = id ? Eng?.state?.nodes?.[id] : null;
-      if (node?.text) dialogEl.textContent = node.text;
-
-      if (Array.isArray(node?.choices) && node.choices.length) {
-        choicesEl.innerHTML = '';
+    if (ready && stillPlaceholder) {
+      // Force proper text
+      dialogEl.textContent = node.text;
+      // Replace choices from node
+      choicesEl.innerHTML = '';
+      if (Array.isArray(node?.choices)) {
         node.choices.forEach(ch => {
           const b = document.createElement('button');
           b.className = 'button';
@@ -445,10 +447,14 @@ function forceRenderIfPlaceholder(Eng, raw) {
           choicesEl.appendChild(b);
         });
       }
+      scheduleDecorate(Eng);
+    } else if (!ready && attempts < 10) {
+      attempts++;
+      setTimeout(tryRender, 60);
     }
+  };
 
-    scheduleDecorate(Eng);
-  }
+  tryRender();
 }
 
 /* -----------------------------------------------------------------------------
