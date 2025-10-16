@@ -415,38 +415,45 @@ function scheduleDecorate(Eng) {
 // NEW: Force re-render if the UI still shows placeholder text
 // -----------------------------------------------------------------------------
 function forceRenderIfPlaceholder(Eng, raw) {
-  const dialogEl = document.getElementById('dialog');
-  const choicesEl = document.getElementById('choices');
+  const dialogEl = document.getElementById("dialog");
+  const choicesEl = document.getElementById("choices");
   if (!dialogEl || !choicesEl) return;
 
   const id = Eng?.state?.currentId;
-  const isPlaceholder = (t) => !t || t.trim() === '(…)';
+  const isPlaceholder = (t) => !t || t.trim() === "(…)";
 
   let attempts = 0;
   const tryRender = () => {
     const node = id ? Eng?.state?.nodes?.[id] : null;
-    const ready = node && node.text && node.text.trim().length > 0;
+    const ready = node && typeof node.text === "string" && node.text.trim().length > 0;
     const stillPlaceholder = isPlaceholder(dialogEl.textContent);
+
+    // Log for one frame to confirm
+    if (attempts === 0)
+      console.log("[Amorvia] retry render check:", { id, ready, node });
 
     if (ready && stillPlaceholder) {
       dialogEl.textContent = node.text;
-      choicesEl.innerHTML = '';
+
+      // Clear and rebuild choices
+      choicesEl.innerHTML = "";
       if (Array.isArray(node?.choices)) {
-        node.choices.forEach(ch => {
-          const b = document.createElement('button');
-          b.className = 'button';
-          b.textContent = ch.label || ch.id || 'Continue';
-          b.addEventListener('click', () => {
+        node.choices.forEach((ch) => {
+          const b = document.createElement("button");
+          b.className = "button";
+          b.textContent = ch.label || ch.id || "Continue";
+          b.addEventListener("click", () => {
             const to = ch.to || ch.goto || ch.next;
-            if (to && typeof Eng.goto === 'function') Eng.goto(to);
+            if (to && typeof Eng.goto === "function") Eng.goto(to);
           });
           choicesEl.appendChild(b);
         });
       }
       scheduleDecorate(Eng);
-    } else if (!ready && attempts < 10) {
+      console.log("[Amorvia] rendered hydrated node", id, node.text);
+    } else if (!ready && attempts < 20) {
       attempts++;
-      setTimeout(tryRender, 60);
+      setTimeout(tryRender, 120); // wait a bit longer between checks
     }
   };
 
