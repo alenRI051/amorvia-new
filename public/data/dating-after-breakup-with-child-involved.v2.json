@@ -1,22 +1,15 @@
 {
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "tags": [
-    "post-breakup",
-    "parenting",
-    "dating",
-    "emotional-recovery"
-  ],
   "version": 2,
-  "meters": {
-    "trust": 0,
-    "tension": 0,
-    "childStress": 0
-  },
+  "startAct": "act1",
+  "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "acts": [
     {
       "id": "act1",
       "title": "The First Weekend Without the Child",
+      "start": "a1s1",
       "steps": [
         {
           "id": "a1s1",
@@ -27,22 +20,14 @@
               "id": "a1s1c1",
               "label": "I’ll clean up and make some dinner — I need to get back into routine.",
               "tone": "mature · self-care",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": 0, "childStress": -1 },
               "to": "a1s2"
             },
             {
               "id": "a1s1c2",
               "label": "I’ll text my friend to go out — I need to distract myself.",
               "tone": "impulsive · escapist",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a1s2"
             }
           ]
@@ -56,22 +41,14 @@
               "id": "a1s2c1",
               "label": "I’ll go. Maybe a bit of socializing will help.",
               "tone": "open · exploratory",
-              "effects": {
-                "trust": 0,
-                "tension": 0,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
               "to": "a1s3"
             },
             {
               "id": "a1s2c2",
               "label": "No, I think I’ll stay home. This feels forced.",
               "tone": "self-protective · grounded",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a1s3"
             }
           ]
@@ -85,22 +62,14 @@
               "id": "a1s3c1",
               "label": "Yes, they’re in the blue bag. Try checking the side pocket.",
               "tone": "calm · cooperative",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
               "to": "a1s4"
             },
             {
               "id": "a1s3c2",
               "label": "You could’ve checked before texting me.",
               "tone": "frustrated · defensive",
-              "effects": {
-                "trust": -1,
-                "tension": 2,
-                "childStress": 1
-              },
+              "effects": { "trust": -1, "tension": 2, "childStress": 1 },
               "to": "a1s4"
             }
           ]
@@ -114,22 +83,14 @@
               "id": "a1s4c1",
               "label": "I’ll log off — this isn’t helping.",
               "tone": "self-aware · boundary-setting",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a1end"
             },
             {
               "id": "a1s4c2",
               "label": "Maybe I’ll re-download the dating app… just to look.",
               "tone": "curious · slightly anxious",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a1end"
             }
           ]
@@ -139,20 +100,8 @@
           "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
           "tone": "quiet · open-ended",
           "choices": [
-            {
-              "id": "a1endc1",
-              "label": "Continue to Act 2.",
-              "tone": "gentle · hopeful",
-              "effects": {},
-              "to": "act2s1"
-            },
-            {
-              "id": "a1endc2",
-              "label": "Pause here (return to menu).",
-              "tone": "reflective",
-              "effects": {},
-              "to": "menu"
-            }
+            { "id": "a1endc1", "label": "Continue to Act 2.", "tone": "gentle · hopeful", "effects": {}, "to": "a2s1" },
+            { "id": "a1endc2", "label": "Pause here (return to menu).", "tone": "reflective", "effects": {}, "to": "menu" }
           ]
         }
       ]
@@ -160,9 +109,10 @@
     {
       "id": "act2",
       "title": "The Swipe of Possibility",
+      "start": "a2s1",
       "steps": [
         {
-          "id": "act2s1",
+          "id": "a2s1",
           "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
           "tone": "tentative · curious",
           "choices": [
@@ -170,22 +120,14 @@
               "id": "a2s1c1",
               "label": "I’ll open it. Just curious who’s out there.",
               "tone": "open · cautious",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a2s2"
             },
             {
               "id": "a2s1c2",
               "label": "No, not yet. I don’t want to rush into anything.",
               "tone": "measured · patient",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a2s2"
             }
           ]
@@ -199,22 +141,14 @@
               "id": "a2s2c1",
               "label": "Swipe right on someone interesting — what’s the harm?",
               "tone": "playful · testing waters",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a2s3"
             },
             {
               "id": "a2s2c2",
               "label": "Close the app. This doesn’t feel like me right now.",
               "tone": "self-preserving · clear boundary",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a2s3"
             }
           ]
@@ -228,22 +162,14 @@
               "id": "a2s3c1",
               "label": "Smile softly — they look happy. That’s what matters.",
               "tone": "warm · reassured",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
               "to": "a2s4"
             },
             {
               "id": "a2s3c2",
               "label": "Feel a sting of guilt — maybe this isn’t the time to date.",
               "tone": "guilty · conflicted",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 1
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 1 },
               "to": "a2s4"
             }
           ]
@@ -257,22 +183,14 @@
               "id": "a2s4c1",
               "label": "Be honest: 'I tried it, but it felt weird.'",
               "tone": "honest · self-aware",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a2end"
             },
             {
               "id": "a2s4c2",
               "label": "Joke: 'Already planning the wedding.'",
               "tone": "humorous · deflecting",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a2end"
             }
           ]
@@ -282,20 +200,8 @@
           "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
           "tone": "soft · contemplative",
           "choices": [
-            {
-              "id": "a2endc1",
-              "label": "Continue to Act 3.",
-              "tone": "hopeful · steady",
-              "effects": {},
-              "to": "a3s1"
-            },
-            {
-              "id": "a2endc2",
-              "label": "Pause here (return to menu).",
-              "tone": "reflective",
-              "effects": {},
-              "to": "menu"
-            }
+            { "id": "a2endc1", "label": "Continue to Act 3.", "tone": "hopeful · steady", "effects": {}, "to": "a3s1" },
+            { "id": "a2endc2", "label": "Pause here (return to menu).", "tone": "reflective", "effects": {}, "to": "menu" }
           ]
         }
       ]
@@ -303,6 +209,7 @@
     {
       "id": "act3",
       "title": "First Real Connection",
+      "start": "a3s1",
       "steps": [
         {
           "id": "a3s1",
@@ -313,33 +220,21 @@
               "id": "a3s1c1",
               "label": "Hi! Thanks — I wasn’t sure I’d even try this.",
               "tone": "open · humble · vulnerable optimism",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": 0, "childStress": 0 },
               "to": "a3s2"
             },
             {
               "id": "a3s1c2",
               "label": "Maybe another time.",
               "tone": "reserved · quiet · self-protective",
-              "effects": {
-                "trust": 0,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": -1, "childStress": 0 },
               "to": "a3s2"
             },
             {
               "id": "a3s1c3",
               "label": "Careful, I’m still under emotional construction 🚧.",
               "tone": "playful · self-ironic · humor masking caution",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a3s2"
             }
           ]
@@ -353,33 +248,21 @@
               "id": "a3s2c1",
               "label": "I want companionship, not distraction.",
               "tone": "mature · centred · soft conviction",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
               "to": "a3s3"
             },
             {
               "id": "a3s2c2",
               "label": "I just miss being wanted.",
               "tone": "melancholic · self-aware · aching honesty",
-              "effects": {
-                "trust": -1,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": -1, "tension": 1, "childStress": 0 },
               "to": "a3s3"
             },
             {
               "id": "a3s2c3",
               "label": "Maybe I’m doing okay — just figuring things out.",
               "tone": "balanced · accepting · calm exhale",
-              "effects": {
-                "trust": 0,
-                "tension": 0,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
               "to": "a3s3"
             }
           ]
@@ -393,33 +276,21 @@
               "id": "a3s3c1",
               "label": "Of course! I missed you.",
               "tone": "loving · gentle · immediate warmth",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
               "to": "a3end"
             },
             {
               "id": "a3s3c2",
               "label": "We’ll see, I have things to do.",
               "tone": "tired · detached · subtle guilt undertone",
-              "effects": {
-                "trust": -1,
-                "tension": 1,
-                "childStress": 1
-              },
+              "effects": { "trust": -1, "tension": 1, "childStress": 1 },
               "to": "a3end"
             },
             {
               "id": "a3s3c3",
               "label": "I’d love that — maybe we can bring the kite.",
               "tone": "joyful · playful · re-energized",
-              "effects": {
-                "trust": 2,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 2, "tension": -1, "childStress": -1 },
               "to": "a3end"
             }
           ]
@@ -429,20 +300,8 @@
           "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
           "tone": "meditative · lightly hopeful · closure vibe",
           "choices": [
-            {
-              "id": "a3endc1",
-              "label": "Continue to Act 4.",
-              "tone": "calm · optimistic",
-              "effects": {},
-              "to": "a4s1"
-            },
-            {
-              "id": "a3endc2",
-              "label": "Pause here (return to menu).",
-              "tone": "reflective",
-              "effects": {},
-              "to": "menu"
-            }
+            { "id": "a3endc1", "label": "Continue to Act 4.", "tone": "calm · optimistic", "effects": {}, "to": "a4s1" },
+            { "id": "a3endc2", "label": "Pause here (return to menu).", "tone": "reflective", "effects": {}, "to": "menu" }
           ]
         }
       ]
@@ -450,6 +309,7 @@
     {
       "id": "act4",
       "title": "The First Date Dilemma",
+      "start": "a4s1",
       "steps": [
         {
           "id": "a4s1",
@@ -460,33 +320,21 @@
               "id": "a4s1c1",
               "label": "Confirm pickup logistics with your ex before you leave.",
               "tone": "responsible · proactive",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
               "to": "a4s2"
             },
             {
               "id": "a4s1c2",
               "label": "Skip logistics — it’ll be fine.",
               "tone": "avoidant · optimistic",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a4s2"
             },
             {
               "id": "a4s1c3",
               "label": "Cancel the date — you’re not ready.",
               "tone": "self-protective · low energy",
-              "effects": {
-                "trust": 0,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": -1, "childStress": 0 },
               "to": "a4end"
             }
           ]
@@ -500,33 +348,21 @@
               "id": "a4s2c1",
               "label": "Be clear and kind: 'Pickup at 10:00 at the park entrance, I’ll confirm in the morning.'",
               "tone": "calm · collaborative",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
               "to": "a4s3"
             },
             {
               "id": "a4s2c2",
               "label": "Keep it vague: 'I’ll text you tomorrow.'",
               "tone": "noncommittal · hedging",
-              "effects": {
-                "trust": 0,
-                "tension": 1,
-                "childStress": 0
-              },
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
               "to": "a4s3"
             },
             {
               "id": "a4s2c3",
               "label": "Sound irritated: 'Just be ready whenever, okay?'",
               "tone": "irritable · controlling",
-              "effects": {
-                "trust": -1,
-                "tension": 2,
-                "childStress": 1
-              },
+              "effects": { "trust": -1, "tension": 2, "childStress": 1 },
               "to": "a4s3"
             }
           ]
@@ -540,33 +376,21 @@
               "id": "a4s3c1",
               "label": "Be upfront about being a parent and what that means for your time.",
               "tone": "honest · grounded",
-              "effects": {
-                "trust": 2,
-                "tension": -1,
-                "childStress": 0
-              },
+              "effects": { "trust": 2, "tension": -1, "childStress": 0 },
               "to": "a4s4"
             },
             {
               "id": "a4s3c2",
               "label": "Keep it light — mention your child briefly, then pivot to hobbies.",
               "tone": "balanced · socially attuned",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": 0, "childStress": 0 },
               "to": "a4s4"
             },
             {
               "id": "a4s3c3",
               "label": "Overshare about your ex and the breakup details.",
               "tone": "nervous · overdisclosing",
-              "effects": {
-                "trust": -1,
-                "tension": 2,
-                "childStress": 0
-              },
+              "effects": { "trust": -1, "tension": 2, "childStress": 0 },
               "to": "a4s4"
             }
           ]
@@ -580,33 +404,21 @@
               "id": "a4s4c1",
               "label": "Set a clear boundary: 'I’d love to, but I need rest to be present tomorrow.'",
               "tone": "assertive · caring · self-respect",
-              "effects": {
-                "trust": 2,
-                "tension": -1,
-                "childStress": -1
-              },
+              "effects": { "trust": 2, "tension": -1, "childStress": -1 },
               "to": "a4end"
             },
             {
               "id": "a4s4c2",
               "label": "Compromise: 'Let’s grab a short walk instead.'",
               "tone": "creative · flexible",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": 0
-              },
+              "effects": { "trust": 1, "tension": 0, "childStress": 0 },
               "to": "a4end"
             },
             {
               "id": "a4s4c3",
               "label": "Ignore the boundary and go anyway.",
               "tone": "impulsive · avoidant",
-              "effects": {
-                "trust": -2,
-                "tension": 2,
-                "childStress": 1
-              },
+              "effects": { "trust": -2, "tension": 2, "childStress": 1 },
               "to": "a4end"
             }
           ]
@@ -616,20 +428,8 @@
           "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
           "tone": "settled · gently optimistic",
           "choices": [
-            {
-              "id": "a4endc1",
-              "label": "Continue to Act 5.",
-              "tone": "confident · forward-looking",
-              "effects": {},
-              "to": "a5s1"
-            },
-            {
-              "id": "a4endc2",
-              "label": "Pause here (return to menu).",
-              "tone": "reflective · contained",
-              "effects": {},
-              "to": "menu"
-            }
+            { "id": "a4endc1", "label": "Continue to Act 5.", "tone": "confident · forward-looking", "effects": {}, "to": "a5s1" },
+            { "id": "a4endc2", "label": "Pause here (return to menu).", "tone": "reflective · contained", "effects": {}, "to": "menu" }
           ]
         }
       ]
@@ -637,6 +437,7 @@
     {
       "id": "act5",
       "title": "Post-date reflections",
+      "start": "a5s1",
       "steps": [
         {
           "id": "a5s1",
@@ -646,21 +447,13 @@
               "id": "a5s1c1",
               "label": "I'm feeling optimistic — this could work.",
               "to": "a5s2",
-              "effects": {
-                "trust": 2,
-                "tension": -1,
-                "childStress": 0
-              }
+              "effects": { "trust": 2, "tension": -1, "childStress": 0 }
             },
             {
               "id": "a5s1c2",
               "label": "Cautiously hopeful, but I need clearer boundaries first.",
               "to": "a5s2",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": 0
-              }
+              "effects": { "trust": 1, "tension": 0, "childStress": 0 }
             }
           ]
         },
@@ -672,21 +465,13 @@
               "id": "a5s2c1",
               "label": "Share a simple FYI to keep trust intact.",
               "to": "a5s3",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              }
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
             },
             {
               "id": "a5s2c2",
               "label": "Wait until things feel more defined.",
               "to": "a5s3",
-              "effects": {
-                "trust": 0,
-                "tension": 0,
-                "childStress": 0
-              }
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 }
             }
           ]
         },
@@ -698,21 +483,13 @@
               "id": "a5s3c1",
               "label": "Keep routines stable; no changes yet.",
               "to": "a5s4",
-              "effects": {
-                "trust": 0,
-                "tension": -1,
-                "childStress": -1
-              }
+              "effects": { "trust": 0, "tension": -1, "childStress": -1 }
             },
             {
               "id": "a5s3c2",
               "label": "Introduce tiny changes with advance notice.",
               "to": "a5s4",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": -1
-              }
+              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
             }
           ]
         },
@@ -724,31 +501,19 @@
               "id": "a5s4c1",
               "label": "Set check-ins with the co-parent and keep dates low-key.",
               "to": "a5end",
-              "effects": {
-                "trust": 1,
-                "tension": -1,
-                "childStress": 0
-              }
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 }
             },
             {
               "id": "a5s4c2",
               "label": "Pause dating to reassess personal readiness.",
               "to": "a5end",
-              "effects": {
-                "trust": 0,
-                "tension": -2,
-                "childStress": -1
-              }
+              "effects": { "trust": 0, "tension": -2, "childStress": -1 }
             },
             {
               "id": "a5s4c3",
               "label": "Continue dating with explicit boundaries documented.",
               "to": "a5end",
-              "effects": {
-                "trust": 1,
-                "tension": 0,
-                "childStress": -1
-              }
+              "effects": { "trust": 1, "tension": 0, "childStress": -1 }
             }
           ]
         },
@@ -756,26 +521,8 @@
           "id": "a5end",
           "text": "You close the day with a clearer sense of pace and boundaries.",
           "choices": [
-            {
-              "id": "a5endc1",
-              "label": "Open main menu",
-              "to": "menu",
-              "effects": {
-                "trust": 0,
-                "tension": 0,
-                "childStress": 0
-              }
-            },
-            {
-              "id": "a5endc2",
-              "label": "Re-read reflections",
-              "to": "a5s1",
-              "effects": {
-                "trust": 0,
-                "tension": 0,
-                "childStress": 0
-              }
-            }
+            { "id": "a5endc1", "label": "Open main menu", "to": "menu", "effects": { "trust": 0, "tension": 0, "childStress": 0 } },
+            { "id": "a5endc2", "label": "Re-read reflections", "to": "a5s1", "effects": { "trust": 0, "tension": 0, "childStress": 0 } }
           ]
         }
       ]
