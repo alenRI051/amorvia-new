@@ -1,46 +1,157 @@
 {
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "version": 2.4,
-  "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
-  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
-
-  "start": "a1_1",
-  "startNodeId": "a1_1",
-
+  "tags": [
+    "post-breakup",
+    "parenting",
+    "dating",
+    "emotional-recovery"
+  ],
+  "version": 2,
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
   "acts": [
     {
       "id": "act1",
-      "title": "A New Beginning",
-      "nodes": [
+      "title": "The First Weekend Without the Child",
+      "steps": [
         {
-          "id": "a1_1",
-          "speaker": "Narrator",
-          "text": "It's been several months since the breakup. You’ve finally decided to start dating again. Your child is adjusting well, but the thought of introducing someone new still feels complicated.",
-          "next": "a1_2"
-        },
-        {
-          "id": "a1_2",
-          "speaker": "Inner Voice",
-          "text": "Do I even tell my ex I’m seeing someone?",
+          "id": "a1s1",
+          "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected.",
+          "tone": "reflective · gentle melancholy",
           "choices": [
             {
-              "id": "a1_c1",
-              "text": "Yes, it’s better to be transparent.",
-              "effects": { "trust": 1, "tension": -1 },
-              "next": "a2_1"
+              "id": "a1s1c1",
+              "label": "I’ll clean up and make some dinner — I need to get back into routine.",
+              "tone": "mature · self-care",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              },
+              "to": "a1s2"
             },
             {
-              "id": "a1_c2",
-              "text": "No, it’s my private life for now.",
-              "effects": { "trust": -1, "tension": 1 },
-              "next": "a2_1"
+              "id": "a1s1c2",
+              "label": "I’ll text my friend to go out — I need to distract myself.",
+              "tone": "impulsive · escapist",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a1s2"
+            }
+          ]
+        },
+        {
+          "id": "a1s2",
+          "text": "Your friend replies quickly: “We’re at the new bar downtown — come join us!” You hesitate.",
+          "tone": "ambivalent · tentative",
+          "choices": [
+            {
+              "id": "a1s2c1",
+              "label": "I’ll go. Maybe a bit of socializing will help.",
+              "tone": "open · exploratory",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a1s3"
             },
             {
-              "id": "a1_c3",
-              "text": "Maybe after a few dates, if it becomes serious.",
-              "effects": { "trust": 0, "tension": 0 },
-              "next": "a2_1"
+              "id": "a1s2c2",
+              "label": "No, I think I’ll stay home. This feels forced.",
+              "tone": "self-protective · grounded",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s3",
+          "text": "Just as you settle in, your phone lights up — a message from your ex: “Did you pack the extra pajamas? She says she can’t find them.”",
+          "tone": "practical · co-parenting micro-stress",
+          "choices": [
+            {
+              "id": "a1s3c1",
+              "label": "Yes, they’re in the blue bag. Try checking the side pocket.",
+              "tone": "calm · cooperative",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a1s4"
+            },
+            {
+              "id": "a1s3c2",
+              "label": "You could’ve checked before texting me.",
+              "tone": "frustrated · defensive",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 1
+              },
+              "to": "a1s4"
+            }
+          ]
+        },
+        {
+          "id": "a1s4",
+          "text": "Lying in bed, you scroll through social media. Everyone seems to be in couples or on trips.",
+          "tone": "lonely · self-comparison",
+          "choices": [
+            {
+              "id": "a1s4c1",
+              "label": "I’ll log off — this isn’t helping.",
+              "tone": "self-aware · boundary-setting",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a1end"
+            },
+            {
+              "id": "a1s4c2",
+              "label": "Maybe I’ll re-download the dating app… just to look.",
+              "tone": "curious · slightly anxious",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a1end"
+            }
+          ]
+        },
+        {
+          "id": "a1end",
+          "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
+          "tone": "quiet · open-ended",
+          "choices": [
+            {
+              "id": "a1endc1",
+              "label": "Continue to Act 2.",
+              "tone": "gentle · hopeful",
+              "effects": {},
+              "to": "act2s1"
+            },
+            {
+              "id": "a1endc2",
+              "label": "Pause here (return to menu).",
+              "tone": "reflective",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
@@ -48,30 +159,142 @@
     },
     {
       "id": "act2",
-      "title": "The Conversation",
-      "nodes": [
+      "title": "The Swipe of Possibility",
+      "steps": [
         {
-          "id": "a2_1",
-          "speaker": "Ex-Partner",
-          "text": "You seem happier lately. Is there someone new?",
+          "id": "act2s1",
+          "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
+          "tone": "tentative · curious",
           "choices": [
             {
-              "id": "a2_c1",
-              "text": "Yes, I’ve started seeing someone. I wanted to be upfront about it.",
-              "effects": { "trust": 2, "tension": -1 },
-              "next": "a3_1"
+              "id": "a2s1c1",
+              "label": "I’ll open it. Just curious who’s out there.",
+              "tone": "open · cautious",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a2s2"
             },
             {
-              "id": "a2_c2",
-              "text": "That’s not something I want to discuss right now.",
-              "effects": { "trust": -1, "tension": 2 },
-              "next": "a3_1"
+              "id": "a2s1c2",
+              "label": "No, not yet. I don’t want to rush into anything.",
+              "tone": "measured · patient",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a2s2"
+            }
+          ]
+        },
+        {
+          "id": "a2s2",
+          "text": "You scroll through a few profiles — smiles, bios, small talk hooks. It’s both exciting and exhausting.",
+          "tone": "ambivalent · overstimulated",
+          "choices": [
+            {
+              "id": "a2s2c1",
+              "label": "Swipe right on someone interesting — what’s the harm?",
+              "tone": "playful · testing waters",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a2s3"
             },
             {
-              "id": "a2_c3",
-              "text": "Kind of. It’s still early, nothing serious.",
-              "effects": { "trust": 0, "tension": 0 },
-              "next": "a3_1"
+              "id": "a2s2c2",
+              "label": "Close the app. This doesn’t feel like me right now.",
+              "tone": "self-preserving · clear boundary",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a2s3"
+            }
+          ]
+        },
+        {
+          "id": "a2s3",
+          "text": "Just then, your child’s photo pops up on your lock screen — a reminder from the shared album with your ex.",
+          "tone": "tender · grounding",
+          "choices": [
+            {
+              "id": "a2s3c1",
+              "label": "Smile softly — they look happy. That’s what matters.",
+              "tone": "warm · reassured",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a2s4"
+            },
+            {
+              "id": "a2s3c2",
+              "label": "Feel a sting of guilt — maybe this isn’t the time to date.",
+              "tone": "guilty · conflicted",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 1
+              },
+              "to": "a2s4"
+            }
+          ]
+        },
+        {
+          "id": "a2s4",
+          "text": "Later that day, your friend texts again: “So, any cute matches yet?” You laugh — maybe, maybe not.",
+          "tone": "light · slightly teasing",
+          "choices": [
+            {
+              "id": "a2s4c1",
+              "label": "Be honest: 'I tried it, but it felt weird.'",
+              "tone": "honest · self-aware",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a2end"
+            },
+            {
+              "id": "a2s4c2",
+              "label": "Joke: 'Already planning the wedding.'",
+              "tone": "humorous · deflecting",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a2end"
+            }
+          ]
+        },
+        {
+          "id": "a2end",
+          "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
+          "tone": "soft · contemplative",
+          "choices": [
+            {
+              "id": "a2endc1",
+              "label": "Continue to Act 3.",
+              "tone": "hopeful · steady",
+              "effects": {},
+              "to": "a3s1"
+            },
+            {
+              "id": "a2endc2",
+              "label": "Pause here (return to menu).",
+              "tone": "reflective",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
@@ -79,30 +302,146 @@
     },
     {
       "id": "act3",
-      "title": "The Child’s Reaction",
-      "nodes": [
+      "title": "First Real Connection",
+      "steps": [
         {
-          "id": "a3_1",
-          "speaker": "Child",
-          "text": "Who’s that person you were talking to on the phone?",
+          "id": "a3s1",
+          "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you.",
+          "tone": "tentative · surprised · gentle humor",
           "choices": [
             {
-              "id": "a3_c1",
-              "text": "That’s a new friend. You’ll meet them someday.",
-              "effects": { "trust": 1, "childStress": -1 },
-              "next": "a4_1"
+              "id": "a3s1c1",
+              "label": "Hi! Thanks — I wasn’t sure I’d even try this.",
+              "tone": "open · humble · vulnerable optimism",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a3s2"
             },
             {
-              "id": "a3_c2",
-              "text": "Don’t worry about it, it’s adult stuff.",
-              "effects": { "trust": -1, "childStress": 2 },
-              "next": "a4_1"
+              "id": "a3s1c2",
+              "label": "Maybe another time.",
+              "tone": "reserved · quiet · self-protective",
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a3s2"
             },
             {
-              "id": "a3_c3",
-              "text": "Someone I care about, but I’ll always be your parent first.",
-              "effects": { "trust": 2, "childStress": -2 },
-              "next": "a4_1"
+              "id": "a3s1c3",
+              "label": "Careful, I’m still under emotional construction 🚧.",
+              "tone": "playful · self-ironic · humor masking caution",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a3s2"
+            }
+          ]
+        },
+        {
+          "id": "a3s2",
+          "text": "The glow of the screen fades; your reflection stares back. For the first time in months, you ask yourself what you actually want.",
+          "tone": "introspective · slow pacing · gentle internal monologue",
+          "choices": [
+            {
+              "id": "a3s2c1",
+              "label": "I want companionship, not distraction.",
+              "tone": "mature · centred · soft conviction",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a3s3"
+            },
+            {
+              "id": "a3s2c2",
+              "label": "I just miss being wanted.",
+              "tone": "melancholic · self-aware · aching honesty",
+              "effects": {
+                "trust": -1,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a3s3"
+            },
+            {
+              "id": "a3s2c3",
+              "label": "Maybe I’m doing okay — just figuring things out.",
+              "tone": "balanced · accepting · calm exhale",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a3s3"
+            }
+          ]
+        },
+        {
+          "id": "a3s3",
+          "text": "Your child calls from your ex’s phone: “Daddy/Mommy, can we go to the park tomorrow?” The sound of their voice melts any remaining tension.",
+          "tone": "warm · tender · grounding",
+          "choices": [
+            {
+              "id": "a3s3c1",
+              "label": "Of course! I missed you.",
+              "tone": "loving · gentle · immediate warmth",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a3end"
+            },
+            {
+              "id": "a3s3c2",
+              "label": "We’ll see, I have things to do.",
+              "tone": "tired · detached · subtle guilt undertone",
+              "effects": {
+                "trust": -1,
+                "tension": 1,
+                "childStress": 1
+              },
+              "to": "a3end"
+            },
+            {
+              "id": "a3s3c3",
+              "label": "I’d love that — maybe we can bring the kite.",
+              "tone": "joyful · playful · re-energized",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a3end"
+            }
+          ]
+        },
+        {
+          "id": "a3end",
+          "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
+          "tone": "meditative · lightly hopeful · closure vibe",
+          "choices": [
+            {
+              "id": "a3endc1",
+              "label": "Continue to Act 4.",
+              "tone": "calm · optimistic",
+              "effects": {},
+              "to": "a4s1"
+            },
+            {
+              "id": "a3endc2",
+              "label": "Pause here (return to menu).",
+              "tone": "reflective",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
@@ -110,30 +449,186 @@
     },
     {
       "id": "act4",
-      "title": "Co-Parent Tensions",
-      "nodes": [
+      "title": "The First Date Dilemma",
+      "steps": [
         {
-          "id": "a4_1",
-          "speaker": "Ex-Partner",
-          "text": "I just hope whoever this is won’t confuse our child.",
+          "id": "a4s1",
+          "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together.",
+          "tone": "anticipatory · hopeful · slightly anxious",
           "choices": [
             {
-              "id": "a4_c1",
-              "text": "I understand your concern. I’ll make sure introductions happen gradually.",
-              "effects": { "trust": 2, "tension": -2 },
-              "next": "a5_1"
+              "id": "a4s1c1",
+              "label": "Confirm pickup logistics with your ex before you leave.",
+              "tone": "responsible · proactive",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a4s2"
             },
             {
-              "id": "a4_c2",
-              "text": "You don’t get to control my personal life.",
-              "effects": { "trust": -2, "tension": 3, "childStress": 1 },
-              "next": "a5_1"
+              "id": "a4s1c2",
+              "label": "Skip logistics — it’ll be fine.",
+              "tone": "avoidant · optimistic",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a4s2"
             },
             {
-              "id": "a4_c3",
-              "text": "Let’s talk to the counselor about timing together.",
-              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-              "next": "a5_1"
+              "id": "a4s1c3",
+              "label": "Cancel the date — you’re not ready.",
+              "tone": "self-protective · low energy",
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a4end"
+            }
+          ]
+        },
+        {
+          "id": "a4s2",
+          "text": "Phone in hand. A message field to your ex blinks: pickup tomorrow at 10:00? You can set the tone now.",
+          "tone": "practical · boundary-setting opportunity",
+          "choices": [
+            {
+              "id": "a4s2c1",
+              "label": "Be clear and kind: 'Pickup at 10:00 at the park entrance, I’ll confirm in the morning.'",
+              "tone": "calm · collaborative",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a4s3"
+            },
+            {
+              "id": "a4s2c2",
+              "label": "Keep it vague: 'I’ll text you tomorrow.'",
+              "tone": "noncommittal · hedging",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a4s3"
+            },
+            {
+              "id": "a4s2c3",
+              "label": "Sound irritated: 'Just be ready whenever, okay?'",
+              "tone": "irritable · controlling",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 1
+              },
+              "to": "a4s3"
+            }
+          ]
+        },
+        {
+          "id": "a4s3",
+          "text": "At the café. Your date smiles, easy conversation bubbling. They ask about your weekend. The parenting question hangs in the air.",
+          "tone": "warm · curious · vulnerable",
+          "choices": [
+            {
+              "id": "a4s3c1",
+              "label": "Be upfront about being a parent and what that means for your time.",
+              "tone": "honest · grounded",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a4s4"
+            },
+            {
+              "id": "a4s3c2",
+              "label": "Keep it light — mention your child briefly, then pivot to hobbies.",
+              "tone": "balanced · socially attuned",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a4s4"
+            },
+            {
+              "id": "a4s3c3",
+              "label": "Overshare about your ex and the breakup details.",
+              "tone": "nervous · overdisclosing",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 0
+              },
+              "to": "a4s4"
+            }
+          ]
+        },
+        {
+          "id": "a4s4",
+          "text": "Later, the date suggests a spontaneous late movie. It would push past your usual wind-down before pickup.",
+          "tone": "temptation · boundary test",
+          "choices": [
+            {
+              "id": "a4s4c1",
+              "label": "Set a clear boundary: 'I’d love to, but I need rest to be present tomorrow.'",
+              "tone": "assertive · caring · self-respect",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a4end"
+            },
+            {
+              "id": "a4s4c2",
+              "label": "Compromise: 'Let’s grab a short walk instead.'",
+              "tone": "creative · flexible",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a4end"
+            },
+            {
+              "id": "a4s4c3",
+              "label": "Ignore the boundary and go anyway.",
+              "tone": "impulsive · avoidant",
+              "effects": {
+                "trust": -2,
+                "tension": 2,
+                "childStress": 1
+              },
+              "to": "a4end"
+            }
+          ]
+        },
+        {
+          "id": "a4end",
+          "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
+          "tone": "settled · gently optimistic",
+          "choices": [
+            {
+              "id": "a4endc1",
+              "label": "Continue to Act 5.",
+              "tone": "confident · forward-looking",
+              "effects": {},
+              "to": "a5s1"
+            },
+            {
+              "id": "a4endc2",
+              "label": "Pause here (return to menu).",
+              "tone": "reflective · contained",
+              "effects": {},
+              "to": "menu"
             }
           ]
         }
@@ -141,42 +636,149 @@
     },
     {
       "id": "act5",
-      "title": "A Balanced Path Forward",
-      "nodes": [
+      "title": "Post-date reflections",
+      "steps": [
         {
-          "id": "a5_1",
-          "speaker": "Narrator",
-          "text": "Weeks later, everyone seems calmer. The child understands that love can take many forms, and both parents are learning to respect boundaries.",
+          "id": "a5s1",
+          "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
           "choices": [
             {
-              "id": "a5_c1",
-              "text": "End on a cooperative note — you and your ex share a smile at drop-off.",
-              "effects": { "trust": 2, "tension": -2, "childStress": -1 },
-              "next": "end"
+              "id": "a5s1c1",
+              "label": "I'm feeling optimistic — this could work.",
+              "to": "a5s2",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": 0
+              }
             },
             {
-              "id": "a5_c2",
-              "text": "Keep distance — peaceful but emotionally neutral.",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "end"
+              "id": "a5s1c2",
+              "label": "Cautiously hopeful, but I need clearer boundaries first.",
+              "to": "a5s2",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "a5s2",
+          "text": "You consider how (and whether) to tell your co-parent about the date.",
+          "choices": [
+            {
+              "id": "a5s2c1",
+              "label": "Share a simple FYI to keep trust intact.",
+              "to": "a5s3",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              }
             },
             {
-              "id": "a5_c3",
-              "text": "Still rocky — your ex refuses to engage.",
-              "effects": { "trust": -2, "tension": 2, "childStress": 1 },
-              "next": "end"
+              "id": "a5s2c2",
+              "label": "Wait until things feel more defined.",
+              "to": "a5s3",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "a5s3",
+          "text": "You think about the child’s routine: what, if anything, needs to change soon?",
+          "choices": [
+            {
+              "id": "a5s3c1",
+              "label": "Keep routines stable; no changes yet.",
+              "to": "a5s4",
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": -1
+              }
+            },
+            {
+              "id": "a5s3c2",
+              "label": "Introduce tiny changes with advance notice.",
+              "to": "a5s4",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "a5s4",
+          "text": "You sketch a short plan for the next two weeks.",
+          "choices": [
+            {
+              "id": "a5s4c1",
+              "label": "Set check-ins with the co-parent and keep dates low-key.",
+              "to": "a5end",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              }
+            },
+            {
+              "id": "a5s4c2",
+              "label": "Pause dating to reassess personal readiness.",
+              "to": "a5end",
+              "effects": {
+                "trust": 0,
+                "tension": -2,
+                "childStress": -1
+              }
+            },
+            {
+              "id": "a5s4c3",
+              "label": "Continue dating with explicit boundaries documented.",
+              "to": "a5end",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              }
+            }
+          ]
+        },
+        {
+          "id": "a5end",
+          "text": "You close the day with a clearer sense of pace and boundaries.",
+          "choices": [
+            {
+              "id": "a5endc1",
+              "label": "Open main menu",
+              "to": "menu",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
+            },
+            {
+              "id": "a5endc2",
+              "label": "Re-read reflections",
+              "to": "a5s1",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              }
             }
           ]
         }
       ]
     }
-  ],
-
-  "endings": {
-    "end": {
-      "title": "Moving On",
-      "text": "No matter which path you chose, you’ve started building a more stable environment where your child feels secure and you regain emotional independence."
-    }
-  }
+  ]
 }
-
