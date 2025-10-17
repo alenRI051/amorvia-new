@@ -5,7 +5,8 @@
 // - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes, or acts[*].steps)
 // - Starts on a safe node (resolves one goto hop; avoids starting on "End of Act")
 // - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
-// - Guarantees cross-act navigation (Act1 → Act2/3/…) by synthesizing nodes from raw steps when missing
+// - Cross-act navigation by synthesizing nodes from raw steps when missing
+// - Animated HUD that updates live on each choice
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -178,6 +179,89 @@ function extractNodesMap({ raw, graph }) {
 }
 
 /* -----------------------------------------------------------------------------
+  HUD (animated)
+----------------------------------------------------------------------------- */
+// We keep meters in Eng.state.meters and animate DOM when they change.
+// Bounds let us map values to 0–100% width. Adjust if you prefer different ranges.
+const METER_BOUNDS = { min: -10, max: 10 };
+const HUD_IDS = {
+  trust: { bar: '#trustBar,#hudTrustBar,[data-meter="trust"] .bar,[data-bar="trust"]', val: '#trustVal,[data-val="trust"]' },
+  tension: { bar: '#tensionBar,#hudTensionBar,[data-meter="tension"] .bar,[data-bar="tension"]', val: '#tensionVal,[data-val="tension"]' },
+  childStress: { bar: '#childStressBar,#hudChildStressBar,[data-meter="childStress"] .bar,[data-bar="childStress"]', val: '#childStressVal,[data-val="childStress"]' },
+};
+
+function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+function pctFromValue(v) {
+  const { min, max } = METER_BOUNDS;
+  const clamped = clamp(v, min, max);
+  return ((clamped - min) / (max - min)) * 100;
+}
+
+function qsel(selector) {
+  try { return document.querySelector(selector) || null; } catch { return null; }
+}
+
+function animateWidth(el, fromPct, toPct, ms = 400) {
+  if (!el) return;
+  const start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / ms, 0, 1);
+    const cur = fromPct + (toPct - fromPct) * t;
+    el.style.width = `${cur}%`;
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function animateNumber(el, fromVal, toVal, ms = 400) {
+  if (!el) return;
+  const start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / ms, 0, 1);
+    const cur = Math.round(fromVal + (toVal - fromVal) * t);
+    el.textContent = String(cur);
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function getHUDSnapshot(Eng) {
+  const m = Eng?.state?.meters || { trust: 0, tension: 0, childStress: 0 };
+  return { trust: m.trust || 0, tension: m.tension || 0, childStress: m.childStress || 0 };
+}
+
+function setHUDMeters(Eng, nextMeters, animateFrom = null) {
+  if (!Eng.state) Eng.state = {};
+  if (!Eng.state.meters) Eng.state.meters = { trust: 0, tension: 0, childStress: 0 };
+
+  const prev = animateFrom || { ...Eng.state.meters };
+
+  // Commit new values
+  Eng.state.meters.trust = nextMeters.trust ?? Eng.state.meters.trust ?? 0;
+  Eng.state.meters.tension = nextMeters.tension ?? Eng.state.meters.tension ?? 0;
+  Eng.state.meters.childStress = nextMeters.childStress ?? Eng.state.meters.childStress ?? 0;
+
+  // Update DOM with animation
+  for (const key of ['trust', 'tension', 'childStress']) {
+    const barEl = qsel(HUD_IDS[key].bar);
+    const valEl = qsel(HUD_IDS[key].val);
+    const fromV = prev[key] ?? 0;
+    const toV   = Eng.state.meters[key] ?? 0;
+    if (barEl) animateWidth(barEl, pctFromValue(fromV), pctFromValue(toV), 400);
+    if (valEl) animateNumber(valEl, fromV, toV, 400);
+  }
+}
+
+function initHUDFromRaw(Eng, raw) {
+  const initial = {
+    trust: Number(raw?.meters?.trust) || 0,
+    tension: Number(raw?.meters?.tension) || 0,
+    childStress: Number(raw?.meters?.childStress) || 0,
+  };
+  setHUDMeters(Eng, initial, initial); // draw instantly (no animation on first frame)
+}
+
+/* -----------------------------------------------------------------------------
   UI helpers (fallback renderer + decoration)
 ----------------------------------------------------------------------------- */
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
@@ -198,6 +282,9 @@ function getChoiceDeltas(choice) {
   }
   if (Array.isArray(choice?.effects)) {
     for (const e of choice.effects) add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
+  }
+  if (choice?.effects && typeof choice.effects === 'object' && !Array.isArray(choice.effects)) {
+    for (const [k, v] of Object.entries(choice.effects)) add(k, v);
   }
   if (choice?.meter || choice?.key) add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
   return totals;
@@ -246,52 +333,6 @@ function decorateVisibleChoices(Eng) {
   } catch (err) {
     console.warn('[Amorvia] decorateVisibleChoices failed:', err);
   }
-}
-
-function renderRawStep(stepId, raw, Eng) {
-  if (!stepId) return false;
-  const idx = (Eng.__rawStepsIndex ||= indexSteps(raw));
-  const step = idx[stepId];
-  const dialog = document.getElementById('dialog');
-  const choices = document.getElementById('choices');
-  if (!step || !dialog || !choices) return false;
-
-  dialog.textContent = step.text || '';
-  choices.innerHTML = '';
-
-  const arr = Array.isArray(step.choices) ? step.choices : Object.values(step.choices || {});
-  arr.forEach((ch, i) => {
-    if (!ch) return;
-    const b = document.createElement('button');
-    b.className = 'button';
-    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
-    b.addEventListener('click', () => navigateTo(ch.to || ch.goto || ch.next, raw, Eng));
-    choices.appendChild(b);
-  });
-
-  scheduleDecorate(Eng);
-  return true;
-}
-
-function renderNodeFromState(nodeId, Eng) {
-  const node = Eng?.state?.nodes?.[nodeId];
-  const dialog = document.getElementById('dialog');
-  const choices = document.getElementById('choices');
-  if (!node || !dialog || !choices) return false;
-
-  dialog.textContent = node.text || '';
-  choices.innerHTML = '';
-
-  (node.choices || []).forEach((ch, i) => {
-    const b = document.createElement('button');
-    b.className = 'button';
-    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
-    b.addEventListener('click', () => navigateTo(ch.to || ch.goto || ch.next, null, Eng));
-    choices.appendChild(b);
-  });
-
-  scheduleDecorate(Eng);
-  return true;
 }
 
 /* -----------------------------------------------------------------------------
@@ -360,14 +401,14 @@ function deriveEntryFromV2(raw) {
 }
 
 /* -----------------------------------------------------------------------------
-  Cross-act safe navigation
+  Cross-act safe navigation + HUD integration
 ----------------------------------------------------------------------------- */
 function ensureNodeInState(targetId, raw, Eng) {
   if (!targetId || !Eng) return false;
-  // If node already present, done
+  // Already present
   if (Eng.state?.nodes?.[targetId]) return true;
 
-  // If we have raw, synthesize from steps and inject
+  // Synthesize from raw
   if (raw) {
     const idx = (Eng.__rawStepsIndex ||= indexSteps(raw));
     const step = idx[targetId];
@@ -382,11 +423,28 @@ function ensureNodeInState(targetId, raw, Eng) {
   return false;
 }
 
+function applyChoiceEffectsToMeters(Eng, choice) {
+  if (!Eng) return;
+  if (!Eng.state) Eng.state = {};
+  if (!Eng.state.meters) Eng.state.meters = { trust: 0, tension: 0, childStress: 0 };
+
+  const prev = getHUDSnapshot(Eng);
+  const deltas = getChoiceDeltas(choice);
+
+  const next = {
+    trust: (prev.trust ?? 0) + (deltas.trust ?? 0),
+    tension: (prev.tension ?? 0) + (deltas.tension ?? 0),
+    childStress: (prev.childStress ?? 0) + (deltas.childStress ?? 0),
+  };
+
+  setHUDMeters(Eng, next, prev);
+}
+
 function navigateTo(targetId, rawOrNull, Eng) {
   if (!targetId) return;
   const raw = rawOrNull ?? Eng.__rawScenario;
 
-  // 'menu' pseudo-target: simple UX — just reload list and clear dialog
+  // 'menu' pseudo-target
   if (targetId === 'menu') {
     const dialog = document.getElementById('dialog');
     const choices = document.getElementById('choices');
@@ -395,7 +453,7 @@ function navigateTo(targetId, rawOrNull, Eng) {
     return;
   }
 
-  // Ensure node exists in state (inject synthesized node if needed)
+  // Ensure node exists (inject if missing)
   if (!ensureNodeInState(targetId, raw, Eng)) {
     console.warn('[Amorvia] target not found and cannot synthesize:', targetId);
     return;
@@ -412,6 +470,65 @@ function navigateTo(targetId, rawOrNull, Eng) {
   if (!renderedFromState) {
     renderRawStep(targetId, raw, Eng);
   }
+}
+
+/* -----------------------------------------------------------------------------
+  Rendering (engine-state and raw) with HUD-aware click handlers
+----------------------------------------------------------------------------- */
+function renderNodeFromState(nodeId, Eng) {
+  const node = Eng?.state?.nodes?.[nodeId];
+  const dialog = document.getElementById('dialog');
+  const choices = document.getElementById('choices');
+  if (!node || !dialog || !choices) return false;
+
+  dialog.textContent = node.text || '';
+  choices.innerHTML = '';
+
+  (node.choices || []).forEach((ch, i) => {
+    const b = document.createElement('button');
+    b.className = 'button';
+    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
+    b.addEventListener('click', () => {
+      // Update HUD first
+      applyChoiceEffectsToMeters(Eng, ch);
+      // Navigate to next
+      navigateTo(ch.to || ch.goto || ch.next, null, Eng);
+    });
+    choices.appendChild(b);
+  });
+
+  scheduleDecorate(Eng);
+  return true;
+}
+
+function renderRawStep(stepId, raw, Eng) {
+  if (!stepId) return false;
+  const steps = (Eng.__rawStepsIndex ||= indexSteps(raw));
+  const step = steps[stepId];
+  const dialog = document.getElementById('dialog');
+  const choices = document.getElementById('choices');
+
+  if (!step || !dialog || !choices) return false;
+
+  dialog.textContent = step.text || '';
+  choices.innerHTML = '';
+  const choicesArr = Array.isArray(step.choices) ? step.choices : Object.values(step.choices || {});
+  choicesArr.forEach((ch, i) => {
+    if (!ch) return;
+    const b = document.createElement('button');
+    b.className = 'button';
+    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
+    b.addEventListener('click', () => {
+      // Update HUD first
+      applyChoiceEffectsToMeters(Eng, ch);
+      // Navigate to next
+      navigateTo(ch.to || ch.goto || ch.next, raw, Eng);
+    });
+    choices.appendChild(b);
+  });
+
+  scheduleDecorate(Eng);
+  return true;
 }
 
 /* -----------------------------------------------------------------------------
@@ -477,8 +594,12 @@ async function startScenario(id) {
     // Fetch + compute robust entry
     const raw = await getJSON(dataPath);
     Eng.__rawScenario = raw; // keep a handle for navigation synthesis
+    Eng.__rawStepsIndex = indexSteps(raw);
     const entry = deriveEntryFromV2(raw);
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
+
+    // Initialize HUD from scenario meters
+    initHUDFromRaw(Eng, raw);
 
     // Try raw v2 first; fallback to graph if rejected
     let loadedVia = 'v2';
@@ -601,3 +722,4 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
+
