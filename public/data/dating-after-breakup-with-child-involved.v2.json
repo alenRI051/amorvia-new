@@ -1,18 +1,12 @@
 {
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "tags": [
-    "post-breakup",
-    "parenting",
-    "dating",
-    "emotional-recovery"
-  ],
-  "version": 2.1,
-  "meters": {
-    "trust": 0,
-    "tension": 0,
-    "childStress": 0
-  },
+  "version": 2.2,
+  "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
+
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meterOrder": ["trust", "tension", "childStress"],
+  "ui": { "hud": { "animated": true } },
 
   "start": "a1s1",
   "startNodeId": "a1s1",
@@ -21,7 +15,7 @@
     {
       "id": "act1",
       "title": "The First Weekend Without the Child",
-      "steps": [
+      "nodes": [
         {
           "id": "a1s1",
           "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected.",
@@ -152,7 +146,7 @@
     {
       "id": "act2",
       "title": "The Swipe of Possibility",
-      "steps": [
+      "nodes": [
         {
           "id": "act2s1",
           "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
@@ -283,7 +277,7 @@
     {
       "id": "act3",
       "title": "First Real Connection",
-      "steps": [
+      "nodes": [
         {
           "id": "a3s1",
           "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you.",
@@ -416,7 +410,7 @@
     {
       "id": "act4",
       "title": "The First Date Dilemma",
-      "steps": [
+      "nodes": [
         {
           "id": "a4s1",
           "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together.",
@@ -583,7 +577,7 @@
     {
       "id": "act5",
       "title": "Post-date reflections",
-      "steps": [
+      "nodes": [
         {
           "id": "a5s1",
           "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
