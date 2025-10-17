@@ -1,30 +1,28 @@
-// v2 loader wired to ScenarioEngine (supports loadScenario OR LoadScenario + start)
-// -------------------------------------------------------------------------------
-// - Waits until engine exposes { loadScenario|LoadScenario, start }
-// - Loads raw v2 first, falls back to graph if needed
-// - Hydrates engine.state.nodes from *any* shape (graph array/object, raw acts[*].nodes, raw.nodes, or acts[*].steps)
-// - Starts on a safe node (resolves one goto hop; avoids starting on "End of Act")
-// - Adds meter-hint injection to choice labels (full names: Trust, Tension, Child Stress)
-// - Forces an initial draw if the dialog is still "(…)" right after start
+// app.v2.js
+// -------------------------------------------------------------------------------------------------
+// Amorvia v2 loader + raw-steps fallback + live HUD meters (animated) + choice hint decoration
+// Works with engines that expose: { loadScenario|LoadScenario, start, goto?, currentNode? }
+// -------------------------------------------------------------------------------------------------
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
 
-/* -----------------------------------------------------------------------------
-   One-shot guard
------------------------------------------------------------------------------ */
+/* ================================================================================================
+   Boot guard
+================================================================================================ */
 if (window.__amorviaV2Booted) {
   console.warn('[Amorvia] app.v2 already booted, skipping.');
 } else {
   window.__amorviaV2Booted = true;
 }
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Reset support (?reset=1 or #reset)
------------------------------------------------------------------------------ */
+================================================================================================ */
 (() => {
   const url = new URL(window.location.href);
-  const shouldReset = url.searchParams.get('reset') === '1' || url.hash.includes('reset');
+  const shouldReset =
+    url.searchParams.get('reset') === '1' || url.hash.includes('reset');
   if (!shouldReset) return;
 
   console.log('[Amorvia] Reset flag detected — clearing saved progress');
@@ -44,9 +42,9 @@ if (window.__amorviaV2Booted) {
   window.location.reload();
 })();
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Engine resolution
------------------------------------------------------------------------------ */
+================================================================================================ */
 function resolveEngineObject() {
   return (
     ImportedEngine?.ScenarioEngine ||
@@ -72,9 +70,9 @@ function waitForEngine() {
   });
 }
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Fetch helpers
------------------------------------------------------------------------------ */
+================================================================================================ */
 const devBust = location.search.includes('devcache=0') ? `?ts=${Date.now()}` : '';
 const noStore = { cache: 'no-store' };
 
@@ -85,7 +83,7 @@ async function getJSON(url) {
   return await res.json();
 }
 
-// cache of v2 index and map id->path
+// v2 index cache
 let SCENARIOS = [];
 let SCENARIO_BY_ID = Object.create(null);
 
@@ -101,9 +99,9 @@ async function loadIndex() {
   return list;
 }
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Nodes extraction / hydration
------------------------------------------------------------------------------ */
+================================================================================================ */
 function extractNodesMap({ raw, graph }) {
   let map = {};
 
@@ -142,7 +140,6 @@ function extractNodesMap({ raw, graph }) {
               id: ch?.id ?? `${s.id}:choice:${i}`,
               label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
               to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
-              // keep original shapes for hinting
               effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
               meters: ch?.meters ?? null,
             })),
@@ -163,9 +160,9 @@ function extractNodesMap({ raw, graph }) {
   return map;
 }
 
-/* -----------------------------------------------------------------------------
-   Raw-steps fallback renderer (safe for array/object shapes)
------------------------------------------------------------------------------ */
+/* ================================================================================================
+   Raw-steps fallback renderer (no more “(…)”)
+================================================================================================ */
 function indexSteps(raw) {
   const map = {};
   (raw?.acts || []).forEach(act => {
@@ -198,23 +195,31 @@ function renderRawStep(stepId, raw, Eng) {
     const b = document.createElement('button');
     b.className = 'button';
     b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
+    const deltas = getChoiceDeltas(ch);
     b.addEventListener('click', () => {
       const to = ch.to || ch.goto || ch.next;
       if (!to) return;
+      // Visual HUD response immediately
+      HUD.applyDelta(deltas);
       if (Eng?.state) Eng.state.currentId = to;
       if (typeof Eng?.goto === 'function') Eng.goto(to);
-      renderRawStep(to, raw, Eng); // immediate fallback render chain
+      // render next step from raw immediately (in case engine still doesn’t)
+      renderRawStep(to, raw, Eng);
+      // capture engine-side clamps if any
+      setTimeout(() => HUD.syncFromEngine(Eng), 40);
     });
     choices.appendChild(b);
   });
 
+  // decorate hints
   setTimeout(() => scheduleDecorate(Eng), 0);
+  setTimeout(() => scheduleHudWiring(Eng), 0);
   return true;
 }
 
-/* -----------------------------------------------------------------------------
-   UI wiring
------------------------------------------------------------------------------ */
+/* ================================================================================================
+   UI: scenario list
+================================================================================================ */
 function renderList(list) {
   const container = document.getElementById('scenarioListV2'); // optional
   const picker = document.getElementById('scenarioPicker');    // primary
@@ -254,9 +259,9 @@ function renderList(list) {
   if (picker) picker.addEventListener('change', () => startScenario(picker.value));
 }
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Helpers
------------------------------------------------------------------------------ */
+================================================================================================ */
 function toGraphIfNeeded(data) {
   const looksGraph = data && typeof data === 'object' && data.startId && data.nodes;
   return looksGraph ? data : v2ToGraph(data);
@@ -343,9 +348,9 @@ function injectGraphEntryNode(graph, entryId) {
   return graph;
 }
 
-/* -----------------------------------------------------------------------------
-   Meter hint helpers
------------------------------------------------------------------------------ */
+/* ================================================================================================
+   Choice meter hints
+================================================================================================ */
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
 
 function getChoiceDeltas(choice) {
@@ -414,63 +419,149 @@ function scheduleDecorate(Eng) {
   setTimeout(() => decorateVisibleChoices(Eng), 50);
 }
 
-/* -----------------------------------------------------------------------------
-   Fallback force draw (from engine state OR raw steps)
------------------------------------------------------------------------------ */
-function __forceDraw(Eng, raw) {
-  try {
-    const dialogEl  = document.getElementById('dialog');
-    const choicesEl = document.getElementById('choices');
-    if (!dialogEl || !choicesEl) return;
-
-    const node =
-      (typeof Eng.currentNode === 'function') ? Eng.currentNode()
-      : Eng.state?.nodes?.[Eng.state?.currentId];
-
-    // Prefer engine node if it has text; otherwise try raw-steps renderer.
-    if (!node || !node.text) {
-      const rendered = renderRawStep(Eng.state?.currentId, raw, Eng);
-      if (rendered) return;
+/* ================================================================================================
+   HUD (live meters) + CSS injector for animated bars
+================================================================================================ */
+(function injectMeterCSS(){
+  if (document.getElementById('amorvia-hud-css')) return;
+  const css = `
+    [data-meter] .fill, [data-meter] .bar, [data-meter] .progress {
+      transition: width 180ms ease;
     }
+    /* graceful default width zero if missing inline styles */
+    [data-meter] .fill:not([style*="width"]),
+    [data-meter] .bar:not([style*="width"]),
+    [data-meter] .progress:not([style*="width"]) { width: 0; }
+  `;
+  const style = document.createElement('style');
+  style.id = 'amorvia-hud-css';
+  style.textContent = css;
+  document.head.appendChild(style);
+})();
 
-    if (node) {
-      dialogEl.textContent = node.text || '';
-      choicesEl.innerHTML = '';
-      (node.choices || []).forEach((ch, i) => {
-        const b = document.createElement('button');
-        b.className = 'button';
-        b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
-        b.addEventListener('click', () => {
-          const to = ch.to || ch.goto || ch.next;
-          if (!to) return;
-          Eng.state.currentId = to;
-          if (typeof Eng.goto === 'function') Eng.goto(to);
-          __forceDraw(Eng, raw);
-        });
-        choicesEl.appendChild(b);
-      });
-      scheduleDecorate(Eng);
-    }
-  } catch (e) {
-    console.warn('[Amorvia] __forceDraw failed:', e);
+const HUD_SELECTORS = {
+  trust:      ['#hudTrust', '#hud-trust', '[data-meter="trust"] .value', '#meter-trust .value', '#trustVal', '.meter-trust .value'],
+  tension:    ['#hudTension', '#hud-tension', '[data-meter="tension"] .value', '#meter-tension .value', '#tensionVal', '.meter-tension .value'],
+  childStress:['#hudChildStress', '#hud-childStress', '[data-meter="childStress"] .value', '#meter-childStress .value', '#childStressVal', '.meter-childStress .value']
+};
+
+function __findOrCreate(elSelList, fallbackBoxSel, idToCreate) {
+  for (const sel of elSelList) {
+    const el = document.querySelector(sel);
+    if (el) return el;
   }
+  const box = document.querySelector(fallbackBoxSel) || document.querySelector('#hud') || document.body;
+  const s = document.createElement('span');
+  s.id = idToCreate;
+  s.style.marginLeft = '0.25rem';
+  s.style.fontWeight = '600';
+  box.appendChild(s);
+  return s;
 }
 
-/* -----------------------------------------------------------------------------
+const HUD = {
+  meters: { trust: 0, tension: 0, childStress: 0 },
+  els: null,
+
+  ensure() {
+    if (this.els) return this.els;
+    this.els = {
+      trust: __findOrCreate(HUD_SELECTORS.trust,  '[data-meter="trust"]',       'hud-trust'),
+      tension: __findOrCreate(HUD_SELECTORS.tension, '[data-meter="tension"]',     'hud-tension'),
+      childStress: __findOrCreate(HUD_SELECTORS.childStress, '[data-meter="childStress"]','hud-childStress'),
+    };
+    return this.els;
+  },
+
+  reset() {
+    this.meters = { trust: 0, tension: 0, childStress: 0 };
+    this.render();
+  },
+
+  syncFromEngine(Eng) {
+    const m = Eng?.state?.meters || Eng?.meters;
+    if (m && typeof m === 'object') {
+      for (const k of Object.keys(this.meters)) {
+        const v = Number(m[k]);
+        if (!Number.isNaN(v)) this.meters[k] = v;
+      }
+    }
+    this.render();
+  },
+
+  applyDelta(deltaObj) {
+    for (const k of Object.keys(this.meters)) {
+      const dv = Number(deltaObj?.[k] || 0);
+      if (!Number.isNaN(dv) && dv !== 0) this.meters[k] += dv;
+    }
+    this.render();
+  },
+
+  render() {
+    const { trust, tension, childStress } = this.meters;
+    const els = this.ensure();
+    if (els.trust) els.trust.textContent = String(trust);
+    if (els.tension) els.tension.textContent = String(tension);
+    if (els.childStress) els.childStress.textContent = String(childStress);
+
+    for (const [k, v] of Object.entries(this.meters)) {
+      const card = document.querySelector(`[data-meter="${k}"]`);
+      if (card) {
+        card.dataset.value = String(v);
+        const fill = card.querySelector('.fill, .bar, .progress');
+        if (fill) fill.style.width = `${Math.max(0, Math.min(100, v))}%`;
+      }
+    }
+  }
+};
+
+function wireHudToVisibleChoices(Eng) {
+  try {
+    const container = document.getElementById('choices');
+    if (!container) return;
+    const node = (typeof Eng.currentNode === 'function') ? Eng.currentNode() : Eng.state?.nodes?.[Eng.state?.currentId];
+    if (!node || !Array.isArray(node.choices)) return;
+
+    const buttons = Array.from(container.querySelectorAll('button, [role="button"]'));
+    buttons.forEach((btn, idx) => {
+      if (btn.__hudWired) return;
+      btn.__hudWired = true;
+      const choice = node.choices[idx];
+      const deltas = getChoiceDeltas(choice);
+      btn.addEventListener('click', () => {
+        HUD.applyDelta(deltas);
+        setTimeout(() => HUD.syncFromEngine(Eng), 40);
+      }, { capture: true });
+    });
+  } catch {}
+}
+
+function scheduleHudWiring(Eng) {
+  setTimeout(() => wireHudToVisibleChoices(Eng), 0);
+  setTimeout(() => wireHudToVisibleChoices(Eng), 60);
+}
+
+/* ================================================================================================
    Core: startScenario
------------------------------------------------------------------------------ */
+================================================================================================ */
 async function startScenario(id) {
   try {
     const { Eng, loadFn, startFn } = await waitForEngine();
 
-    // Monkey-patch goto() once so every navigation re-decorates.
+    // goto monkey-patch -> always (re)decorate + (re)wire HUD
     if (!Eng.__gotoDecorated && typeof Eng.goto === 'function') {
       const _goto = Eng.goto.bind(Eng);
-      Eng.goto = (to) => { const r = _goto(to); scheduleDecorate(Eng); return r; };
+      Eng.goto = (to) => {
+        const r = _goto(to);
+        scheduleDecorate(Eng);
+        scheduleHudWiring(Eng);
+        setTimeout(() => HUD.syncFromEngine(Eng), 0);
+        return r;
+      };
       Eng.__gotoDecorated = true;
     }
 
-    // Resolve the JSON path from the index if available; else fall back to /data/{id}.v2.json
+    // Resolve path from index if available
     const fromIndex = SCENARIO_BY_ID[id];
     const dataPath = fromIndex?.path || `/data/${id}.v2.json`;
 
@@ -493,7 +584,7 @@ async function startScenario(id) {
     }
     if (!graph) graph = toGraphIfNeeded(raw);
 
-    // Ensure state and nodes map (hydrate ourselves if engine didn't)
+    // Ensure state and nodes map
     if (!Eng.state) Eng.state = {};
     let nodesMap = Eng.state.nodes;
     if (!nodesMap || !Object.keys(nodesMap).length) {
@@ -501,18 +592,11 @@ async function startScenario(id) {
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
       } else {
-        console.error('[Amorvia] could not build nodes map. Shapes:', {
-          graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
-          graph_nodes_arr: Array.isArray(graph?.nodes),
-          raw_acts: Array.isArray(raw?.acts) ? raw.acts.length : 0,
-          raw_nodes_obj: !!(raw?.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)),
-          raw_nodes_arr: Array.isArray(raw?.nodes)
-        });
         throw new Error('Engine has no nodes after load; unable to extract nodes map.');
       }
     }
 
-    // Choose a safe start id in our nodes map
+    // Choose a safe start id
     const nodeKeysAll = Object.keys(Eng.state.nodes);
     let startId = entry.nodeId;
     if (!Eng.state.nodes[startId]) {
@@ -524,7 +608,7 @@ async function startScenario(id) {
       if (!Eng.state.nodes[startId]) startId = nodeKeysAll[0];
     }
 
-    // Pre-start: avoid End-of-Act
+    // Pre-start: avoid "End of"
     const curNodeCand = Eng.state.nodes[startId];
     if (isEndLike(curNodeCand) && Array.isArray(raw?.acts)) {
       const startAct =
@@ -550,9 +634,12 @@ async function startScenario(id) {
     }
     if (Eng.state.startId !== undefined) Eng.state.startId = startId;
 
+    // HUD boot
+    HUD.reset();
+
     startFn.call(Eng, startId);
 
-    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
+    // If we booted via synthetic entry, auto-hop
     if (startId === '__amorvia_entry__' && entry?.nodeId) {
       const target = entry.nodeId;
       const hop = () => {
@@ -564,10 +651,8 @@ async function startScenario(id) {
             Eng.start(target);
             renderRawStep(target, raw, Eng);
           }
-          const node = Eng.state.nodes[target];
-          const dialogEl = document.getElementById('dialog');
-          if (dialogEl && node?.text) dialogEl.textContent = node.text;
           scheduleDecorate(Eng);
+          scheduleHudWiring(Eng);
         } else {
           setTimeout(hop, 0);
         }
@@ -575,7 +660,7 @@ async function startScenario(id) {
       setTimeout(hop, 0);
     }
 
-    // Post-start safety: if still at an end node, jump to playable
+    // Post-start safety: escape end nodes
     const currentAfterStart = (typeof Eng.currentNode === 'function')
       ? Eng.currentNode()
       : Eng.state?.nodes?.[Eng.state?.currentId];
@@ -598,9 +683,6 @@ async function startScenario(id) {
       if (playable2 && Eng.state?.nodes?.[playable2]) {
         Eng.state.currentId = playable2;
         if (typeof Eng.goto === 'function') Eng.goto(playable2);
-        const node2 = Eng.state.nodes[playable2];
-        const dialogEl2 = document.getElementById('dialog');
-        if (dialogEl2 && node2?.text) dialogEl2.textContent = node2.text;
       }
     }
 
@@ -610,28 +692,30 @@ async function startScenario(id) {
       : Eng.state.nodes[Eng.state.currentId];
     console.log('[Amorvia] started (via:', loadedVia + ') at', Eng.state.currentId, cur);
 
-    // Fallback initial draw
+    // Fallback render if engine didn’t draw
     {
       const curNodeId = Eng.state?.currentId;
-      const cur2 =
+      const n =
         (typeof Eng.currentNode === 'function') ? Eng.currentNode()
         : Eng.state?.nodes?.[curNodeId];
 
-      const noText = !cur2 || (!cur2.text && (cur2.type || '').toLowerCase() !== 'choice');
+      const noText = !n || (!n.text && (n.type || '').toLowerCase() !== 'choice');
 
       if (noText) {
         const rendered = renderRawStep(curNodeId, raw, Eng);
         if (!rendered) {
           const dialog = document.getElementById('dialog');
           const choices = document.getElementById('choices');
-          if (dialog) dialog.textContent = cur2?.text || '(…)';
+          if (dialog) dialog.textContent = n?.text || '(…)';
           if (choices) choices.innerHTML = '';
         }
       }
     }
 
-    // Always decorate visible choices after a start
+    // Final HUD sync + wiring
+    setTimeout(() => HUD.syncFromEngine(Eng), 0);
     scheduleDecorate(Eng);
+    scheduleHudWiring(Eng);
 
     // Reflect selection in UI
     document.querySelectorAll('#scenarioListV2 .item').forEach(el => {
@@ -643,14 +727,6 @@ async function startScenario(id) {
     if (picker) picker.value = id;
 
     rememberLast(id);
-
-    // --- Extra initial render if text area is empty (final safeguard) ---
-    const dialogEl = document.getElementById('dialog');
-    if (dialogEl && (!dialogEl.textContent || dialogEl.textContent.trim() === '(…)')) {
-      __forceDraw(Eng, raw);
-      setTimeout(() => __forceDraw(Eng, raw), 80);
-      scheduleDecorate(Eng);
-    }
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
     const dialog = document.getElementById('dialog');
@@ -658,9 +734,9 @@ async function startScenario(id) {
   }
 }
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Restart button
------------------------------------------------------------------------------ */
+================================================================================================ */
 (function wireRestart() {
   const btn = document.getElementById('restartAct');
   if (!btn) return;
@@ -671,9 +747,9 @@ async function startScenario(id) {
   });
 })();
 
-/* -----------------------------------------------------------------------------
+/* ================================================================================================
    Init
------------------------------------------------------------------------------ */
+================================================================================================ */
 (async function init() {
   try {
     const scenarios = await loadIndex();
@@ -691,4 +767,3 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario };
-
