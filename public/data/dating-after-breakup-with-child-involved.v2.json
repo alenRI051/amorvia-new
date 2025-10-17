@@ -1,47 +1,46 @@
 {
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "version": 2.3,
-  "tags": [
-    "post-breakup",
-    "parenting",
-    "dating",
-    "emotional-recovery"
-  ],
-  "meters": {
-    "trust": 0,
-    "tension": 0,
-    "childStress": 0
-  },
+  "version": 2.4,
+  "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+
+  "start": "a1_1",
+  "startNodeId": "a1_1",
+
   "acts": [
     {
       "id": "act1",
       "title": "A New Beginning",
-      "steps": [
+      "nodes": [
         {
+          "id": "a1_1",
           "speaker": "Narrator",
-          "text": "It's been several months since the breakup. You’ve finally decided to start dating again. Your child is adjusting well, but the thought of introducing someone new still feels complicated."
+          "text": "It's been several months since the breakup. You’ve finally decided to start dating again. Your child is adjusting well, but the thought of introducing someone new still feels complicated.",
+          "next": "a1_2"
         },
         {
+          "id": "a1_2",
           "speaker": "Inner Voice",
-          "text": "Do I even tell my ex I’m seeing someone?"
-        },
-        {
+          "text": "Do I even tell my ex I’m seeing someone?",
           "choices": [
             {
+              "id": "a1_c1",
               "text": "Yes, it’s better to be transparent.",
               "effects": { "trust": 1, "tension": -1 },
-              "next": "act2"
+              "next": "a2_1"
             },
             {
+              "id": "a1_c2",
               "text": "No, it’s my private life for now.",
               "effects": { "trust": -1, "tension": 1 },
-              "next": "act2"
+              "next": "a2_1"
             },
             {
+              "id": "a1_c3",
               "text": "Maybe after a few dates, if it becomes serious.",
               "effects": { "trust": 0, "tension": 0 },
-              "next": "act2"
+              "next": "a2_1"
             }
           ]
         }
@@ -50,27 +49,29 @@
     {
       "id": "act2",
       "title": "The Conversation",
-      "steps": [
+      "nodes": [
         {
+          "id": "a2_1",
           "speaker": "Ex-Partner",
-          "text": "You seem happier lately. Is there someone new?"
-        },
-        {
+          "text": "You seem happier lately. Is there someone new?",
           "choices": [
             {
+              "id": "a2_c1",
               "text": "Yes, I’ve started seeing someone. I wanted to be upfront about it.",
               "effects": { "trust": 2, "tension": -1 },
-              "next": "act3"
+              "next": "a3_1"
             },
             {
+              "id": "a2_c2",
               "text": "That’s not something I want to discuss right now.",
               "effects": { "trust": -1, "tension": 2 },
-              "next": "act3"
+              "next": "a3_1"
             },
             {
+              "id": "a2_c3",
               "text": "Kind of. It’s still early, nothing serious.",
               "effects": { "trust": 0, "tension": 0 },
-              "next": "act3"
+              "next": "a3_1"
             }
           ]
         }
@@ -79,27 +80,29 @@
     {
       "id": "act3",
       "title": "The Child’s Reaction",
-      "steps": [
+      "nodes": [
         {
+          "id": "a3_1",
           "speaker": "Child",
-          "text": "Who’s that person you were talking to on the phone?"
-        },
-        {
+          "text": "Who’s that person you were talking to on the phone?",
           "choices": [
             {
+              "id": "a3_c1",
               "text": "That’s a new friend. You’ll meet them someday.",
               "effects": { "trust": 1, "childStress": -1 },
-              "next": "act4"
+              "next": "a4_1"
             },
             {
+              "id": "a3_c2",
               "text": "Don’t worry about it, it’s adult stuff.",
               "effects": { "trust": -1, "childStress": 2 },
-              "next": "act4"
+              "next": "a4_1"
             },
             {
+              "id": "a3_c3",
               "text": "Someone I care about, but I’ll always be your parent first.",
               "effects": { "trust": 2, "childStress": -2 },
-              "next": "act4"
+              "next": "a4_1"
             }
           ]
         }
@@ -108,27 +111,29 @@
     {
       "id": "act4",
       "title": "Co-Parent Tensions",
-      "steps": [
+      "nodes": [
         {
+          "id": "a4_1",
           "speaker": "Ex-Partner",
-          "text": "I just hope whoever this is won’t confuse our child."
-        },
-        {
+          "text": "I just hope whoever this is won’t confuse our child.",
           "choices": [
             {
+              "id": "a4_c1",
               "text": "I understand your concern. I’ll make sure introductions happen gradually.",
               "effects": { "trust": 2, "tension": -2 },
-              "next": "act5"
+              "next": "a5_1"
             },
             {
+              "id": "a4_c2",
               "text": "You don’t get to control my personal life.",
               "effects": { "trust": -2, "tension": 3, "childStress": 1 },
-              "next": "act5"
+              "next": "a5_1"
             },
             {
+              "id": "a4_c3",
               "text": "Let’s talk to the counselor about timing together.",
               "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-              "next": "act5"
+              "next": "a5_1"
             }
           ]
         }
@@ -137,24 +142,26 @@
     {
       "id": "act5",
       "title": "A Balanced Path Forward",
-      "steps": [
+      "nodes": [
         {
+          "id": "a5_1",
           "speaker": "Narrator",
-          "text": "Weeks later, everyone seems calmer. The child understands that love can take many forms, and both parents are learning to respect boundaries."
-        },
-        {
+          "text": "Weeks later, everyone seems calmer. The child understands that love can take many forms, and both parents are learning to respect boundaries.",
           "choices": [
             {
+              "id": "a5_c1",
               "text": "End on a cooperative note — you and your ex share a smile at drop-off.",
               "effects": { "trust": 2, "tension": -2, "childStress": -1 },
               "next": "end"
             },
             {
+              "id": "a5_c2",
               "text": "Keep distance — peaceful but emotionally neutral.",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
               "next": "end"
             },
             {
+              "id": "a5_c3",
               "text": "Still rocky — your ex refuses to engage.",
               "effects": { "trust": -2, "tension": 2, "childStress": 1 },
               "next": "end"
@@ -164,6 +171,7 @@
       ]
     }
   ],
+
   "endings": {
     "end": {
       "title": "Moving On",
@@ -171,3 +179,4 @@
     }
   }
 }
+
