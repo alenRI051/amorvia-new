@@ -1,12 +1,15 @@
 {
   "id": "dating-after-breakup-with-child-involved",
   "title": "Dating After Breakup (With Child Involved)",
-  "version": 2.2,
+  "version": 2.3,
   "tags": ["post-breakup", "parenting", "dating", "emotional-recovery"],
 
   "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
-  "ui": { "hud": { "animated": true } },
+  "ui": {
+    "hud": { "animated": true },
+    "dialog": { "defaultSpeaker": "Narrator" }
+  },
 
   "start": "a1s1",
   "startNodeId": "a1s1",
@@ -18,6 +21,7 @@
       "nodes": [
         {
           "id": "a1s1",
+          "speaker": "Narrator",
           "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected.",
           "tone": "reflective · gentle melancholy",
           "choices": [
@@ -43,6 +47,7 @@
         },
         {
           "id": "a1s2",
+          "speaker": "Narrator",
           "text": "Your friend replies quickly: “We’re at the new bar downtown — come join us!” You hesitate.",
           "tone": "ambivalent · tentative",
           "choices": [
@@ -68,6 +73,7 @@
         },
         {
           "id": "a1s3",
+          "speaker": "Narrator",
           "text": "Just as you settle in, your phone lights up — a message from your ex: “Did you pack the extra pajamas? She says she can’t find them.”",
           "tone": "practical · co-parenting micro-stress",
           "choices": [
@@ -93,6 +99,7 @@
         },
         {
           "id": "a1s4",
+          "speaker": "Narrator",
           "text": "Lying in bed, you scroll through social media. Everyone seems to be in couples or on trips.",
           "tone": "lonely · self-comparison",
           "choices": [
@@ -118,6 +125,7 @@
         },
         {
           "id": "a1end",
+          "speaker": "Narrator",
           "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
           "tone": "quiet · open-ended",
           "choices": [
@@ -149,6 +157,7 @@
       "nodes": [
         {
           "id": "act2s1",
+          "speaker": "Narrator",
           "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
           "tone": "tentative · curious",
           "choices": [
@@ -174,6 +183,7 @@
         },
         {
           "id": "a2s2",
+          "speaker": "Narrator",
           "text": "You scroll through a few profiles — smiles, bios, small talk hooks. It’s both exciting and exhausting.",
           "tone": "ambivalent · overstimulated",
           "choices": [
@@ -199,6 +209,7 @@
         },
         {
           "id": "a2s3",
+          "speaker": "Narrator",
           "text": "Just then, your child’s photo pops up on your lock screen — a reminder from the shared album with your ex.",
           "tone": "tender · grounding",
           "choices": [
@@ -224,7 +235,8 @@
         },
         {
           "id": "a2s4",
-          "text": "Later that day, your friend texts again: “So, any cute matches yet?” You laugh — maybe, maybe not.",
+          "speaker": "Friend (text)",
+          "text": "“So, any cute matches yet?”",
           "tone": "light · slightly teasing",
           "choices": [
             {
@@ -249,6 +261,7 @@
         },
         {
           "id": "a2end",
+          "speaker": "Narrator",
           "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
           "tone": "soft · contemplative",
           "choices": [
@@ -280,6 +293,7 @@
       "nodes": [
         {
           "id": "a3s1",
+          "speaker": "Narrator",
           "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you.",
           "tone": "tentative · surprised · gentle humor",
           "choices": [
@@ -314,6 +328,7 @@
         },
         {
           "id": "a3s2",
+          "speaker": "Narrator",
           "text": "The glow of the screen fades; your reflection stares back. For the first time in months, you ask yourself what you actually want.",
           "tone": "introspective · slow pacing · gentle internal monologue",
           "choices": [
@@ -348,7 +363,8 @@
         },
         {
           "id": "a3s3",
-          "text": "Your child calls from your ex’s phone: “Daddy/Mommy, can we go to the park tomorrow?” The sound of their voice melts any remaining tension.",
+          "speaker": "Child (on phone)",
+          "text": "“Daddy/Mommy, can we go to the park tomorrow?”",
           "tone": "warm · tender · grounding",
           "choices": [
             {
@@ -382,6 +398,7 @@
         },
         {
           "id": "a3end",
+          "speaker": "Narrator",
           "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
           "tone": "meditative · lightly hopeful · closure vibe",
           "choices": [
@@ -413,6 +430,7 @@
       "nodes": [
         {
           "id": "a4s1",
+          "speaker": "Narrator",
           "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together.",
           "tone": "anticipatory · hopeful · slightly anxious",
           "choices": [
@@ -447,6 +465,7 @@
         },
         {
           "id": "a4s2",
+          "speaker": "Narrator",
           "text": "Phone in hand. A message field to your ex blinks: pickup tomorrow at 10:00? You can set the tone now.",
           "tone": "practical · boundary-setting opportunity",
           "choices": [
@@ -481,7 +500,8 @@
         },
         {
           "id": "a4s3",
-          "text": "At the café. Your date smiles, easy conversation bubbling. They ask about your weekend. The parenting question hangs in the air.",
+          "speaker": "Date",
+          "text": "“How was your weekend?”",
           "tone": "warm · curious · vulnerable",
           "choices": [
             {
@@ -515,6 +535,7 @@
         },
         {
           "id": "a4s4",
+          "speaker": "Narrator",
           "text": "Later, the date suggests a spontaneous late movie. It would push past your usual wind-down before pickup.",
           "tone": "temptation · boundary test",
           "choices": [
@@ -549,6 +570,7 @@
         },
         {
           "id": "a4end",
+          "speaker": "Narrator",
           "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
           "tone": "settled · gently optimistic",
           "choices": [
@@ -580,6 +602,7 @@
       "nodes": [
         {
           "id": "a5s1",
+          "speaker": "Narrator",
           "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
           "choices": [
             {
@@ -602,6 +625,7 @@
         },
         {
           "id": "a5s2",
+          "speaker": "Narrator",
           "text": "You consider how (and whether) to tell your co-parent about the date.",
           "choices": [
             {
@@ -624,6 +648,7 @@
         },
         {
           "id": "a5s3",
+          "speaker": "Narrator",
           "text": "You think about the child’s routine: what, if anything, needs to change soon?",
           "choices": [
             {
@@ -646,6 +671,7 @@
         },
         {
           "id": "a5s4",
+          "speaker": "Narrator",
           "text": "You sketch a short plan for the next two weeks.",
           "choices": [
             {
@@ -676,6 +702,7 @@
         },
         {
           "id": "a5end",
+          "speaker": "Narrator",
           "text": "You close the day with a clearer sense of pace and boundaries.",
           "choices": [
             {
@@ -700,3 +727,4 @@
     }
   ]
 }
+
