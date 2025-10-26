@@ -105,6 +105,16 @@ async function loadIndex() {
 }
 
 // -----------------------------------------------------------------------------
+// Text fallback helper (bulletproof)
+// -----------------------------------------------------------------------------
+function pickText(...vals) {
+  for (const v of vals) {
+    if (typeof v === 'string' && v.trim().length) return v;
+  }
+  return undefined;
+}
+
+// -----------------------------------------------------------------------------
 // Nodes extraction / hydration
 // -----------------------------------------------------------------------------
 function extractNodesMap({ raw, graph }) {
@@ -139,11 +149,13 @@ function extractNodesMap({ raw, graph }) {
         map[s.id] = {
           id: s.id,
           type: 'line',
-          text: s.text ?? '',
+          text:
+            pickText(s.text, s.content, s.line, s.description, s.title) ??
+            (Array.isArray(s.lines) ? s.lines.join('\n') : ''),
           choices: (Array.isArray(s.choices) ? s.choices : Object.values(s.choices || []))
             .map((ch, i) => ({
               id: ch?.id ?? `${s.id}:choice:${i}`,
-              label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
+              label: pickText(ch?.label, ch?.text, ch?.title, ch?.caption) ?? 'Continue',
               to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
               // keep original shapes for hinting
               effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
@@ -188,8 +200,10 @@ function renderRawStep(stepId, raw, Eng) {
 
   if (!step || !dialog || !choices) return false;
 
-  // text
-  dialog.textContent = step.text || '';
+  // text (robust)
+  dialog.textContent =
+    pickText(step.text, step.content, step.line, step.description, step.title) ??
+    (Array.isArray(step.lines) ? step.lines.join('\n') : ' ');
 
   // choices
   choices.innerHTML = '';
@@ -200,7 +214,7 @@ function renderRawStep(stepId, raw, Eng) {
     if (!ch) return;
     const b = document.createElement('button');
     b.className = 'button';
-    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
+    b.textContent = pickText(ch.label, ch.text, ch.title, ch.caption) || `Choice ${i + 1}`;
     b.addEventListener('click', () => {
       applyChoiceEffectsToMeters(Eng, ch);
       navigateTo(ch.to || ch.goto || ch.next, raw, Eng);
@@ -398,7 +412,7 @@ function decorateVisibleChoices(Eng) {
     node.choices.forEach((ch, idx) => {
       const btn = buttons[idx];
       if (!btn || btn.dataset.hinted === '1') return;
-      const base = ch.label ?? btn.textContent ?? '';
+      const base = pickText(ch.label, btn.textContent) || '';
       const hint = formatHint(getChoiceDeltas(ch));
       const newText = hint ? `${base}${hint}` : base;
       btn.textContent = newText;
@@ -472,10 +486,12 @@ function ensureNodeInState(id, raw, Eng) {
   const node = {
     id: s.id,
     type: 'line',
-    text: s.text ?? '',
+    text:
+      pickText(s.text, s.content, s.line, s.description, s.title) ??
+      (Array.isArray(s.lines) ? s.lines.join('\n') : ''),
     choices: (Array.isArray(s.choices) ? s.choices : Object.values(s.choices || [])).map((ch, i) => ({
       id: ch?.id ?? `${s.id}:choice:${i}`,
-      label: ch?.label ?? ch?.text ?? ch?.id ?? '…',
+      label: pickText(ch?.label, ch?.text, ch?.title, ch?.caption) ?? 'Continue',
       to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
       effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
       meters: ch?.meters ?? null,
@@ -494,13 +510,13 @@ function renderNodeFromState(id, Eng) {
   const choices = document.getElementById('choices');
   if (!n || !dialog || !choices) return false;
 
-  dialog.textContent = n.text || '';
+  dialog.textContent = (n.text && n.text.trim().length ? n.text : ' ');
   choices.innerHTML = '';
 
   (n.choices || []).forEach((ch, i) => {
     const b = document.createElement('button');
     b.className = 'button';
-    b.textContent = ch.label || ch.id || `Choice ${i + 1}`;
+    b.textContent = pickText(ch.label, ch.text, ch.title, ch.caption) || `Choice ${i + 1}`;
     b.addEventListener('click', () => {
       applyChoiceEffectsToMeters(Eng, ch);
       navigateTo(ch.to || ch.goto || ch.next, Eng.__rawScenario, Eng);
@@ -630,19 +646,15 @@ async function startScenario(id) {
     if (!entry.nodeId) throw new Error('Scenario has no entry node.');
 
     // Try raw v2 first; fallback to graph if rejected
-    let loadedVia = 'v2';
     let graph = null;
     try {
       loadFn.call(Eng, raw);
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
-
       // Hard enforce starting node by injecting a synthetic entry
       injectGraphEntryNode(graph, entry.nodeId);
-
       loadFn.call(Eng, graph);
-      loadedVia = 'graph';
     }
     if (!graph) graph = toGraphIfNeeded(raw);
 
@@ -705,29 +717,14 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // If we booted via the synthetic entry, auto-hop to the real first step and render immediately.
-    if (startId === '__amorvia_entry__' && entry?.nodeId) {
-      const target = entry.nodeId;
-      const hop = () => {
-        if (Eng.state?.nodes?.[target]) {
-          Eng.state.currentId = target;
-          if (typeof Eng.goto === 'function') {
-            Eng.goto(target);
-          } else if (typeof Eng.start === 'function') {
-            Eng.start(target);
-            renderRawStep(target, raw, Eng);
-          }
-
-          const node = Eng.state.nodes[target];
-          const dialogEl = document.getElementById('dialog');
-          if (dialogEl && node?.text) dialogEl.textContent = node.text;
-
-          scheduleDecorate(Eng);
-        } else {
-          setTimeout(hop, 0);
-        }
-      };
-      setTimeout(hop, 0);
+    // NEW: Ensure we land on the *playable* step id with narrative text
+    if (entry?.nodeId) {
+      const curId = Eng.state?.currentId;
+      const curNode = Eng.state?.nodes?.[curId];
+      const missingText = !curNode || !pickText(curNode.text);
+      if (missingText || curId === '__amorvia_entry__') {
+        navigateTo(entry.nodeId, raw, Eng);
+      }
     }
 
     // Post-start safety: if still at an end node, jump to playable
@@ -767,14 +764,14 @@ async function startScenario(id) {
         (typeof Eng.currentNode === 'function') ? Eng.currentNode()
         : Eng.state?.nodes?.[curNodeId];
 
-      const noText = !cur2 || (!cur2.text && (cur2.type || '').toLowerCase() !== 'choice');
+      const noText = !cur2 || !pickText(cur2.text);
 
       if (noText) {
         const rendered = renderRawStep(curNodeId, raw, Eng);
         if (!rendered) {
           const dialog = document.getElementById('dialog');
           const choices = document.getElementById('choices');
-          if (dialog) dialog.textContent = cur2?.text || '(…)';
+          if (dialog) dialog.textContent = pickText(cur2?.text) || ' ';
           if (choices) choices.innerHTML = '';
         }
       } else {
@@ -836,4 +833,5 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario, navigateTo };
+
 
