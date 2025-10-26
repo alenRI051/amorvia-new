@@ -1,5 +1,5 @@
 /* js/engine/scenarioEngine.js
-   Amorvia – robust scenario loader with schema shims (v2-friendly)
+   Amorvia – robust loader with schema shims so no node renders as "(…)"
 */
 
 export async function loadScenario(url) {
@@ -9,62 +9,57 @@ export async function loadScenario(url) {
 
   const scn = normalizeScenario(raw);
   const entryId = getEntryNodeId(scn);
-
   if (!entryId || !scn.nodeMap[entryId]) {
-    throw new Error(`Scenario has no entry node (resolved id: ${String(entryId)})`);
+    throw new Error(`Scenario has no entry node (resolved: ${String(entryId)})`);
   }
-  applyUIMode(); // ensures body.v2 if v2 requested
 
+  applyUIMode(); // guarantees body.v2 if requested
   return scn;
 }
 
-/* ---------- Normalization (handles old keys: content/line/lines, etc.) ---------- */
+/* -------------------------------- Normalize Scenario -------------------------------- */
 
 function normalizeScenario(raw) {
   const scn = { ...raw };
 
-  // Collect nodes from either `nodes` or per-act `steps`
+  // Gather nodes from global nodes and per-act steps
   const nodeList = [];
   const pushNode = (n) => {
     if (!n) return;
-    // Allow step ids as strings in acts
-    if (typeof n === "string") {
-      nodeList.push({ id: n });
-      return;
-    }
-    nodeList.push(n);
+    if (typeof n === "string") nodeList.push({ id: n });
+    else nodeList.push(n);
   };
 
   if (Array.isArray(scn.nodes)) scn.nodes.forEach(pushNode);
   if (Array.isArray(scn.acts)) {
-    scn.acts.forEach((act) => {
-      if (Array.isArray(act.steps)) act.steps.forEach(pushNode);
-    });
+    scn.acts.forEach((act) => Array.isArray(act.steps) && act.steps.forEach(pushNode));
   }
 
-  // Deduplicate by id, last write wins
-  const byId = {};
-  for (const node of nodeList) {
-    if (!node || !node.id) continue;
-    byId[node.id] = harmonizeNode(node);
+  // Deduplicate by id (last write wins)
+  const nodeMap = {};
+  for (const n of nodeList) {
+    if (!n || !n.id) continue;
+    nodeMap[n.id] = harmonizeNode(n);
   }
 
-  // Rebuild canonical arrays
-  scn.nodes = Object.values(byId);
-  scn.nodeMap = byId;
+  scn.nodes = Object.values(nodeMap);
+  scn.nodeMap = nodeMap;
 
-  // Ensure meters shape exists
+  // Ensure meters & UI defaults
   scn.meters = scn.meters || { trust: 0, tension: 0, childStress: 0 };
   scn.meterOrder = scn.meterOrder || ["trust", "tension", "childStress"];
-
-  // HUD/UI defaults
   scn.ui = scn.ui || {};
   scn.ui.hud = scn.ui.hud || {};
   if (typeof scn.ui.hud.animate === "undefined") scn.ui.hud.animate = true;
-  // Back-compat
   scn.ui.hud.animated = true;
-
   scn.ui.dialog = scn.ui.dialog || { defaultSpeaker: "Narrator" };
+
+  // Backfill entry pointers for engines that require them
+  const entryId = getEntryNodeId(scn);
+  scn.entry = scn.entry || entryId;
+  scn.entryNodeId = scn.entryNodeId || entryId;
+  scn.start = scn.start || entryId;
+  scn.startNodeId = scn.startNodeId || entryId;
 
   return scn;
 }
@@ -72,23 +67,23 @@ function normalizeScenario(raw) {
 function harmonizeNode(rawNode) {
   const node = { ...rawNode };
 
-  // Speaker fallback
+  // Speaker default
   node.speaker = node.speaker || "Narrator";
 
-  // Text fallback across legacy keys
+  // Text fallback across legacy keys (so renderer never sees empty text)
   node.text =
-    pickFirst(node.text, node.content, node.line) ??
+    pickText(node.text, node.content, node.line, node.description, node.title, node.caption) ??
     (Array.isArray(node.lines) ? node.lines.join("\n") : "");
 
-  // Choices normalization
+  // Choices
   const srcChoices = Array.isArray(node.choices) ? node.choices : [];
-  node.choices = srcChoices.map((c, idx) => {
+  node.choices = srcChoices.map((c) => {
     const cc = { ...c };
-    cc.label = pickFirst(cc.label, cc.text, cc.title, cc.caption, "Continue");
-    cc.text = pickFirst(cc.text, cc.label, "");
-    // Normalize jumps (support next/to/target/then)
-    cc.next = pickFirst(cc.next, cc.to, cc.target, cc.then, null);
-    // Effects: accept either flat or meters; always expose meters for HUD
+    cc.label = pickText(cc.label, cc.text, cc.title, cc.caption, "Continue") || "Continue";
+    cc.text = pickText(cc.text, cc.label, cc.title, "");
+    cc.next = pickText(cc.next, cc.to, cc.target, cc.then, null);
+
+    // Normalize effects → effects.meters
     if (cc.effects && typeof cc.effects === "object") {
       if (!cc.effects.meters) {
         const { trust, tension, childStress } = cc.effects;
@@ -114,46 +109,33 @@ function harmonizeNode(rawNode) {
   return node;
 }
 
-function pickFirst(...vals) {
+function pickText(...vals) {
   for (const v of vals) {
-    if (typeof v === "string" && v.length) return v;
-    if (v !== undefined && v !== null) return v;
+    if (typeof v === "string" && v.trim().length) return v;
   }
   return undefined;
 }
 
-/* ---------- Entry node resolution across variants ---------- */
+/* ------------------------------ Entry Node Resolution ------------------------------ */
+
 export function getEntryNodeId(scn) {
-  // Most common keys
-  const keys = [
-    "entry",
-    "entryNodeId",
-    "entryId",
-    "start",
-    "startNodeId",
-    "root",
-    "rootId",
-  ];
+  const keys = ["entry", "entryNodeId", "entryId", "start", "startNodeId", "root", "rootId"];
   for (const k of keys) {
     if (typeof scn[k] === "string" && scn[k]) return scn[k];
   }
-
-  // Node with entry:true
   const flagged = scn.nodes?.find((n) => n && n.entry === true);
   if (flagged?.id) return flagged.id;
 
-  // First node in act1 if present
   const act1 = scn.acts?.find((a) => a && /^act1$/i.test(a.id || ""));
-  if (act1 && Array.isArray(act1.steps) && act1.steps.length) {
+  if (act1?.steps?.length) {
     const first = act1.steps[0];
     return typeof first === "string" ? first : first?.id;
   }
-
-  // Fallback: first node in nodes
   return scn.nodes?.[0]?.id || null;
 }
 
-/* ---------- Mode handling: ensure v2 class is present if requested ---------- */
+/* ------------------------------------ UI Mode ------------------------------------- */
+
 export function applyUIMode() {
   try {
     const url = new URL(window.location.href);
@@ -163,22 +145,21 @@ export function applyUIMode() {
     document.body.classList.toggle("v2", mode === "v2");
     localStorage.setItem("amorvia:mode", mode);
 
-    // Optional scenario param stickiness
     const scn = url.searchParams.get("scenario");
     if (scn) localStorage.setItem("amorvia:scenario", scn);
   } catch {
-    /* no-op in non-browser environments */
+    /* non-browser env */
   }
 }
 
-/* ---------- Simple renderer helpers (example) ---------- */
+/* ----------------------------- Minimal Render Helpers ----------------------------- */
+/* If your UI already has its own renderer, you can ignore these helpers.
+   They are safe: they will never output "(…)" because text is guaranteed above.
+*/
 export function renderNode(node, { dialogEl, choicesEl }) {
   if (!node) return;
 
-  const safeText = (node.text || "").trim();
-  dialogEl.textContent = safeText.length ? safeText : " ";
-
-  // Clear choices
+  dialogEl.textContent = (node.text || "").trim() || " "; // non-empty to keep height
   while (choicesEl.firstChild) choicesEl.removeChild(choicesEl.firstChild);
 
   (node.choices || []).forEach((c) => {
