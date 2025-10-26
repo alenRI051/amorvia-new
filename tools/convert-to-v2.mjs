@@ -1,190 +1,133 @@
-#!/usr/bin/env node
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { glob } from 'glob';
+// tools/convert-to-v2.mjs
+// Usage: node tools/convert-to-v2.mjs --pattern=public/data/*.v2.json --write
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import glob from "glob";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const args = process.argv.slice(2);
-const patternArg = args.find(a => a.startsWith('--pattern=')) || '--pattern=public/data/*.v2.json';
-const write = args.includes('--write');
-const backup = !args.includes('--no-backup');
+const args = Object.fromEntries(
+  process.argv.slice(2).map((a) => {
+    const [k, v] = a.split("=");
+    return [k.replace(/^--/, ""), v ?? true];
+  })
+);
 
-const pattern = patternArg.split('=')[1];
+const pattern = args.pattern || "public/data/*.v2.json";
+const doWrite = !!args.write;
 
-const DEFAULT_METERS = ['trust','tension','childStress'];
-const DEFAULT_METER_OBJ = { trust:0, tension:0, childStress:0 };
-
-function toEffectsObject(effects) {
-  // effects may be array [{meter, delta}] or object or missing
-  if (!effects) return {};
-  if (Array.isArray(effects)) {
-    const out = {};
-    for (const e of effects) {
-      if (!e || typeof e !== 'object') continue;
-      const m = e.meter;
-      const d = Number(e.delta);
-      if (typeof m === 'string' && Number.isFinite(d)) {
-        out[m] = (out[m] ?? 0) + d;
-      }
-    }
-    return out;
+function pickFirst(...vals) {
+  for (const v of vals) {
+    if (typeof v === "string" && v.length) return v;
+    if (v !== undefined && v !== null) return v;
   }
-  if (typeof effects === 'object') return effects;
-  return {};
+  return undefined;
 }
 
-function ensureTwoChoices(step) {
-  if (!Array.isArray(step.choices)) step.choices = [];
-  // Normalize existing choices
-  step.choices = step.choices.map((c, idx) => {
-    const choice = (typeof c === 'object' && c) ? { ...c } : {};
-    if (choice.text && !choice.label) choice.label = choice.text;
-    delete choice.text;
-    // rename next->to
-    if (choice.next !== undefined && choice.to === undefined) choice.to = choice.next;
-    delete choice.next;
-    // normalize effects
-    choice.effects = toEffectsObject(choice.effects);
-    // to must be a string (schema); default to "menu" if null/undefined/invalid
-    if (choice.to === null || choice.to === undefined || typeof choice.to !== 'string') {
-      choice.to = 'menu';
+function harmonizeChoice(c) {
+  const cc = { ...c };
+  cc.label = pickFirst(cc.label, cc.text, cc.title, cc.caption, "Continue");
+  cc.text = pickFirst(cc.text, cc.label, "");
+  if (cc.effects && typeof cc.effects === "object" && !cc.effects.meters) {
+    const { trust, tension, childStress } = cc.effects;
+    if (
+      typeof trust !== "undefined" ||
+      typeof tension !== "undefined" ||
+      typeof childStress !== "undefined"
+    ) {
+      cc.effects = {
+        ...cc.effects,
+        meters: {
+          trust: trust ?? 0,
+          tension: tension ?? 0,
+          childStress: childStress ?? 0,
+        },
+      };
     }
-    if (!choice.id) {
-      choice.id = `${step.id || 'step'}c${idx+1}`;
-    }
-    if (!choice.label) choice.label = 'Continue';
-    if (!choice.tone) choice.tone = 'neutral';
-    return choice;
-  });
+  }
+  // Normalize jump key
+  cc.next = pickFirst(cc.next, cc.to, cc.target, cc.then, null);
+  return cc;
+}
 
-  // Ensure at least 2 choices
-  while (step.choices.length < 2) {
-    step.choices.push({
-      id: `${step.id || 'step'}c${step.choices.length+1}`,
-      label: step.choices.length === 0 ? 'Continue' : 'Return to menu',
-      tone: 'neutral',
-      effects: {},
-      to: step.choices.length === 0 ? (step.to || 'menu') : 'menu'
+function harmonizeNode(n) {
+  if (!n || typeof n !== "object") return n;
+  const node = { ...n };
+  node.speaker = node.speaker || "Narrator";
+  node.text =
+    pickFirst(node.text, node.content, node.line) ??
+    (Array.isArray(node.lines) ? node.lines.join("\n") : "");
+  if (Array.isArray(node.choices)) node.choices = node.choices.map(harmonizeChoice);
+  return node;
+}
+
+function processScenario(json) {
+  const scn = { ...json };
+
+  // Harmonize nodes
+  if (Array.isArray(scn.nodes)) scn.nodes = scn.nodes.map(harmonizeNode);
+
+  // Harmonize steps that are objects (keep string ids as-is)
+  if (Array.isArray(scn.acts)) {
+    scn.acts = scn.acts.map((act) => {
+      if (!act || !Array.isArray(act.steps)) return act;
+      return {
+        ...act,
+        steps: act.steps.map((s) => (typeof s === "string" ? s : harmonizeNode(s))),
+      };
     });
   }
-}
 
-function normalizeScenario(scn, fname) {
-  const out = { ...scn };
-
-  // version
-  out.version = 2;
-
-  // meters
-  if (!out.meters) {
-    out.meters = { ...DEFAULT_METER_OBJ };
-  } else if (Array.isArray(out.meters)) {
-    const obj = {};
-    for (const m of out.meters) obj[m] = 0;
-    // ensure defaults exist
-    for (const m of DEFAULT_METERS) if (!(m in obj)) obj[m] = 0;
-    out.meters = obj;
-  } else if (typeof out.meters === 'object') {
-    for (const m of DEFAULT_METERS) if (!(m in out.meters)) out.meters[m] = 0;
-  } else {
-    out.meters = { ...DEFAULT_METER_OBJ };
+  // Ensure entry pointer exists
+  scn.entry = scn.entry || scn.entryNodeId || scn.start || scn.startNodeId;
+  if (!scn.entry) {
+    let candidate = null;
+    const act1 = scn.acts?.find((a) => /^act1$/i.test(a?.id || ""));
+    if (act1?.steps?.length) {
+      const first = act1.steps[0];
+      candidate = typeof first === "string" ? first : first?.id;
+    } else if (Array.isArray(scn.nodes) && scn.nodes[0]?.id) {
+      candidate = scn.nodes[0].id;
+    }
+    scn.entry = candidate || "a1s1";
   }
+  scn.entryNodeId = scn.entry;
+  scn.start = scn.entry;
+  scn.startNodeId = scn.entry;
 
-  // acts
-  if (!Array.isArray(out.acts)) out.acts = [];
-  out.acts = out.acts.map((act, aIdx) => {
-    const A = { ...act };
-    // migrate nodes -> steps
-    if (!A.steps && Array.isArray(A.nodes)) {
-      A.steps = A.nodes;
-      delete A.nodes;
-    }
-    // ensure steps array
-    if (!Array.isArray(A.steps)) {
-      if (A.steps && typeof A.steps === 'object') {
-        A.steps = [A.steps];
-      } else {
-        A.steps = [];
-      }
-    }
+  // HUD defaults
+  scn.meters = scn.meters || { trust: 0, tension: 0, childStress: 0 };
+  scn.meterOrder = scn.meterOrder || ["trust", "tension", "childStress"];
+  scn.ui = scn.ui || { hud: { animate: true, animated: true }, dialog: { defaultSpeaker: "Narrator" } };
+  scn.ui.hud = scn.ui.hud || { animate: true, animated: true };
+  if (typeof scn.ui.hud.animate === "undefined") scn.ui.hud.animate = true;
+  scn.ui.hud.animated = true;
+  scn.ui.dialog = scn.ui.dialog || { defaultSpeaker: "Narrator" };
 
-    A.steps = A.steps.map((s, sIdx) => {
-      const step = (typeof s === 'object' && s) ? { ...s } : { text: String(s) };
-
-      if (!step.id) step.id = `a${aIdx+1}s${sIdx+1}`;
-
-      // migrate fields
-      if (step.text === undefined && typeof s === 'string') step.text = s;
-      // some old formats might have 'title' only
-      if (!step.text && step.title) step.text = step.title;
-
-      // tone optional; keep if present
-      // summary not supported by v2 schema → drop
-      if (step.summary) delete step.summary;
-
-      // normalize choices
-      ensureTwoChoices(step);
-      return step;
-    });
-
-    // ensure act id/title
-    if (!A.id) A.id = `act${aIdx+1}`;
-    if (!A.title) A.title = `Act ${aIdx+1}`;
-    return A;
-  });
-
-  return out;
+  return scn;
 }
 
-function isAlreadyV2(obj) {
-  // quick heuristic: version===2, meters object, steps exist with label/to
-  if (obj?.version !== 2) return false;
-  if (!obj?.meters || Array.isArray(obj.meters) || typeof obj.meters !== 'object') return false;
-  const act = obj?.acts?.[0];
-  const step = act?.steps?.[0];
-  const choice = step?.choices?.[0];
-  return !!(choice && typeof choice.label === 'string' && 'to' in choice && !Array.isArray(choice.effects));
-}
+/* --------- Main --------- */
+const files = glob.sync(pattern, { cwd: path.resolve(__dirname, "..") }).map((p) =>
+  path.resolve(path.resolve(__dirname, ".."), p)
+);
 
-const files = glob.sync(pattern, { cwd: process.cwd(), nodir: true });
-if (!files.length) {
-  console.error(`[convert-to-v2] No files matched: ${pattern}`);
-  process.exit(1);
-}
-
-let changed = 0;
+let updated = 0;
 for (const f of files) {
-  const raw = fs.readFileSync(f, 'utf8');
-  let json;
   try {
-    json = JSON.parse(raw);
-  } catch (e) {
-    console.warn(`[convert-to-v2] Skipping (invalid JSON): ${f}`);
-    continue;
-  }
-  const before = JSON.stringify(json);
-  const already = isAlreadyV2(json);
-  const normalized = already ? json : normalizeScenario(json, f);
-  const after = JSON.stringify(normalized, null, 2);
-
-  if (before !== after) {
-    changed++;
-    if (write) {
-      if (backup) {
-        const bak = `${f}.bak`;
-        if (!fs.existsSync(bak)) fs.writeFileSync(bak, raw, 'utf8');
-      }
-      fs.writeFileSync(f, after + '\n', 'utf8');
-      console.log(`[convert-to-v2] Updated ${f}`);
-    } else {
-      console.log(`[convert-to-v2] Would update ${f} (run with --write)`);
+    const raw = JSON.parse(fs.readFileSync(f, "utf8"));
+    const out = processScenario(raw);
+    if (doWrite) {
+      fs.writeFileSync(f, JSON.stringify(out, null, 2) + "\n", "utf8");
+      console.log(`[convert-to-v2] Updated ${path.relative(path.resolve(__dirname, ".."), f)}`);
+      updated++;
     }
-  } else {
-    console.log(`[convert-to-v2] No change ${f}`);
+  } catch (e) {
+    console.error(`[convert-to-v2] Error in ${f}:`, e.message);
   }
 }
+if (doWrite) console.log(`[convert-to-v2] Completed. ${updated} file(s) updated.`);
 
-console.log(`[convert-to-v2] Completed. ${changed} file(s) ${write ? 'updated' : 'would be updated'}.`);
