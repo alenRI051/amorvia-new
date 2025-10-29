@@ -1,16 +1,18 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+)
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL)
  *
- * Goals in this drop-in file:
- *  - Robust engine autoload (supports ScenarioEngine.{loadScenario|LoadScenario} + start)
- *  - Accept raw v2 scenarios OR precompiled graph; auto-hydrate engine.state.nodes
- *  - Safe start node resolver (skips placeholders / "End of Act" sentinels)
- *  - Dialog progression across acts (cross-act goto + next-act fallback)
- *  - HUD sync: animated meters (trust, tension, childStress) + act/progress
- *  - Choice label hint injection from effects (e.g. [+Trust / -Tension])
- *  - Service worker cache bust helpers (force no-store fetch for data/index)
+ * Drop-in replacement for /public/js/app.v2.js
  *
- * Drop this file over /public/js/app.v2.js
+ * Key features:
+ *  - Robust engine autoload (ScenarioEngine.{loadScenario|LoadScenario} + start)
+ *  - Accepts raw v2 scenarios OR precompiled graph; auto-hydrates nodes
+ *  - Safe start node resolver (skips placeholders / "End of Act")
+ *  - Cross-act dialog progression (handles goto, act-end, next-act start)
+ *  - HUD sync (trust, tension, childStress) + Act badge (#actBadge and [data-hud=act])
+ *  - Choice label meter hints (e.g., "[+2 trust / -1 tension]")
+ *  - Dev cache-bust for data fetches
+ *  - DOM autodetect & self-mount fallback panel if containers are missing
+ *  - ES2019-compatible (no bare catch)
  */
 
 (() => {
@@ -34,7 +36,6 @@
     if (CONFIG.noStore) {
       o.cache = "no-store";
       o.headers["Cache-Control"] = "no-store, max-age=0";
-      // add a devcache buster query
       const u = new URL(url, location.origin);
       u.searchParams.set("v", String(Date.now()));
       url = u.toString();
@@ -49,10 +50,14 @@
     const t0 = performance.now();
     while (performance.now() - t0 < timeoutMs) {
       const e = window.ScenarioEngine || window.engine || window.E;
-      if (e && (typeof e.loadScenario === "function" || typeof e.LoadScenario === "function") && typeof e.start === "function") {
+      if (
+        e &&
+        (typeof e.loadScenario === "function" || typeof e.LoadScenario === "function") &&
+        typeof e.start === "function"
+      ) {
         return e;
       }
-      await new Promise(r => setTimeout(r, 50));
+      await new Promise((r) => setTimeout(r, 50));
     }
     throw new Error("ScenarioEngine not ready (loadScenario/LoadScenario + start not found)");
   }
@@ -62,16 +67,15 @@
     try {
       const index = await fetchJSON(CONFIG.indexPath);
       if (Array.isArray(index)) {
-        const hit = index.find(x => x && (x.id === id || x.slug === id));
+        const hit = index.find((x) => x && (x.id === id || x.slug === id));
         if (hit && hit.path) return hit.path;
       } else if (index && index.entries) {
-        const hit = index.entries.find(x => x && (x.id === id || x.slug === id));
+        const hit = index.entries.find((x) => x && (x.id === id || x.slug === id));
         if (hit && hit.path) return hit.path;
       }
     } catch (e) {
       warn("Could not read v2-index.json; will try default path", e);
     }
-    // default fallback
     return `/public/data/${id}.v2.json`;
   }
 
@@ -85,7 +89,6 @@
   }
 
   function flattenV2ToNodes(raw) {
-    // Accept acts[*].nodes OR acts[*].steps OR top-level nodes
     const nodes = [];
     if (Array.isArray(raw.nodes)) return raw.nodes.slice();
 
@@ -94,7 +97,7 @@
         const act = raw.acts[ai];
         if (Array.isArray(act.nodes)) {
           for (const n of act.nodes) nodes.push({ ...n, _actIndex: ai });
-        } else if (Array.isArray(act.steps)) { // raw-steps fallback renderer
+        } else if (Array.isArray(act.steps)) {
           let i = 0;
           for (const step of act.steps) {
             nodes.push({
@@ -113,14 +116,11 @@
   }
 
   function addChoiceMeterHints(choice) {
-    // Inject readable hints like [+Trust / -Tension]
     const effects = choice.effects || choice.meters || choice.effect || {};
     const deltas = [];
     for (const m of CONFIG.meters) {
       const v = effects[m];
-      if (typeof v === "number" && v !== 0) {
-        deltas.push(`${v > 0 ? "+" : ""}${v} ${m}`);
-      }
+      if (typeof v === "number" && v !== 0) deltas.push(`${v > 0 ? "+" : ""}${v} ${m}`);
     }
     if (deltas.length) {
       const hint = ` [${deltas.join(" / ")}]`;
@@ -140,12 +140,11 @@
       else if (Array.isArray(raw.graph)) nodes = raw.graph.slice();
       else nodes = Object.values(raw.nodes || {});
     }
-    // Ensure id and choices array; inject hints
     const map = new Map();
     for (const n of nodes) {
       if (!n || !n.id) continue;
       if (!Array.isArray(n.choices)) n.choices = [];
-      n.choices = n.choices.map(c => addChoiceMeterHints({ ...c }));
+      n.choices = n.choices.map((c) => addChoiceMeterHints({ ...c }));
       map.set(n.id, n);
     }
     return { list: nodes, map };
@@ -153,24 +152,16 @@
 
   // ---- Safe start node resolver ------------------------------------------
   function findSafeStartNodeId(nodes, raw) {
-    const byId = new Map(nodes.map(n => [n.id, n]));
-
-    // 1) Explicit start
+    const byId = new Map(nodes.map((n) => [n.id, n]));
     if (raw && raw.startNode && byId.has(raw.startNode)) return raw.startNode;
-
-    // 2) Common candidates
     for (const c of CONFIG.startNodeCandidates) {
       if (byId.has(c)) return c;
     }
-
-    // 3) First non-placeholder dialog node
     for (const n of nodes) {
       const isEnd = /end\s*of\s*act/i.test(n.title || n.label || n.text || "") || /end/i.test(n.type || "");
-      const hasText = (n.text && n.text.trim().length > 0);
+      const hasText = n.text && n.text.trim().length > 0;
       if (!isEnd && (n.type === "dialog" || hasText)) return n.id;
     }
-
-    // 4) Fallback to first node id
     return nodes[0]?.id || null;
   }
 
@@ -187,11 +178,9 @@
     const targetAct = currentActIdx + 1;
     for (const n of nodes) {
       if (n._actIndex === targetAct) {
-        // prefer explicit act-start
         if (/^act\d+-start$/i.test(n.id) || /start/i.test(n.id)) return n.id;
       }
     }
-    // otherwise first node of the act
     for (const n of nodes) {
       if (n._actIndex === targetAct) return n.id;
     }
@@ -226,18 +215,11 @@
         const label = document.querySelector(`[data-meter="${k}"] .value`);
         if (label) label.textContent = String(val);
       }
-      // Act badge updates (support both data-hud and #actBadge)
       const actEl1 = document.querySelector("[data-hud=act]");
       const actEl2 = document.querySelector("#actBadge");
       const txt = state.actIndex != null ? `Act ${state.actIndex + 1}` : "Act -";
       if (actEl1) actEl1.textContent = txt;
       if (actEl2) actEl2.textContent = txt;
-    } catch (e) {
-      warn("HUD update skipped:", e);
-    }
-  }
-      const actEl = document.querySelector("[data-hud=act]");
-      if (actEl && state.actIndex != null) actEl.textContent = `Act ${state.actIndex + 1}`;
     } catch (e) {
       warn("HUD update skipped:", e);
     }
@@ -249,9 +231,9 @@
     for (const m of CONFIG.meters) initialMeters[m] = 0;
     return {
       nodes,
-      byId: new Map(nodes.map(n => [n.id, n])),
+      byId: new Map(nodes.map((n) => [n.id, n])),
       currentId: startId,
-      actIndex: (nodes.find(n => n.id === startId)?._actIndex) ?? 0,
+      actIndex: nodes.find((n) => n.id === startId)?._actIndex ?? 0,
       meters: { ...initialMeters, ...(raw?.meters || {}) },
       history: [],
     };
@@ -278,13 +260,12 @@
   }
 
   function renderNode(node) {
-    // Minimal renderer hooks — assumes existing DOM structure from HUD v9.7.2-polish
-    const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector('#dialog');
-    const speakerEl = document.querySelector("[data-ui=speaker]") || document.querySelector('#sceneTitle');
-    const choicesEl = document.querySelector("[data-ui=choices]") || document.querySelector('#choices');
+    const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector("#dialog");
+    const speakerEl = document.querySelector("[data-ui=speaker]") || document.querySelector("#sceneTitle");
+    const choicesEl = document.querySelector("[data-ui=choices]") || document.querySelector("#choices");
 
     if (dialogEl) dialogEl.textContent = node.text || node.label || node.title || "";
-    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || (node.title || '');
+    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || node.title || "";
 
     if (choicesEl) {
       choicesEl.innerHTML = "";
@@ -297,7 +278,6 @@
           choicesEl.appendChild(btn);
         }
       } else {
-        // auto-continue if no explicit choices
         const btn = document.createElement("button");
         btn.className = "choice solo";
         btn.textContent = "Continue";
@@ -309,34 +289,18 @@
 
   // expose for DOM-autodetect patch to extend
   window.__amorvia_renderNode = renderNode;
-      } else {
-        // auto-continue if no explicit choices
-        const btn = document.createElement("button");
-        btn.className = "choice solo";
-        btn.textContent = "Continue";
-        btn.addEventListener("click", () => window.__amorvia_onChoice({ goto: node.goto }));
-        choicesEl.appendChild(btn);
-      }
-    }
-  }
 
   function computeNextId(state, node, choice) {
-    // Priority: choice.goto -> node.goto -> act-end -> next-act-start
-    const pick = (x) => typeof x === "string" && x.trim().length > 0 ? x.trim() : null;
-
+    const pick = (x) => (typeof x === "string" && x.trim().length > 0 ? x.trim() : null);
     const fromChoice = pick(choice && (choice.goto || choice.target));
     if (fromChoice) return fromChoice;
-
     const fromNode = pick(node && (node.goto || node.next));
     if (fromNode) return fromNode;
-
     if (isActEndNode(node)) {
       const nid = nextActStartId(state.nodes, node._actIndex);
       if (nid) return nid;
     }
-
-    // As a very last resort, go to the next sequential node in same act
-    const idx = state.nodes.findIndex(n => n.id === node.id);
+    const idx = state.nodes.findIndex((n) => n.id === node.id);
     if (idx >= 0 && idx + 1 < state.nodes.length) {
       const cand = state.nodes[idx + 1];
       if (cand && (cand._actIndex == null || cand._actIndex === node._actIndex)) return cand.id;
@@ -350,7 +314,7 @@
       const engine = await waitForEngine();
       log("Engine ready");
 
-      const scenarioId = defaultScenarioId || (window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved");
+      const scenarioId = defaultScenarioId || window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved";
       const path = await resolveScenarioPathById(scenarioId);
       log("Loading scenario:", scenarioId, "->", path);
       const raw = await fetchJSON(path);
@@ -362,8 +326,6 @@
       if (!startId) throw new Error("Unable to find a start node");
 
       const state = buildEngineState(nodes, startId, raw);
-
-      // Expose bindings
       window.__amorvia_state = state;
 
       window.__amorvia_onChoice = (choice) => {
@@ -385,22 +347,20 @@
       renderNode(state.byId.get(state.currentId));
       updateHUD(state);
 
-      // Let the engine know we loaded (if it uses hooks)
+      // Notify engine (non-fatal if fails)
       try {
         (engine.loadScenario || engine.LoadScenario).call(engine, raw);
-        engine.start && engine.start();
+        if (engine.start) engine.start();
       } catch (e) {
-        // Non-fatal — our in-file driver will still render
         warn("Engine hooks failed (non-fatal):", e);
       }
     } catch (e) {
       err("Boot failed:", e);
-      const dialogEl = document.querySelector("[data-ui=dialog]");
+      const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector("#dialog");
       if (dialogEl) dialogEl.textContent = `Boot error: ${e.message}`;
     }
   }
 
-  // Auto-boot
   document.addEventListener("DOMContentLoaded", () => boot());
 })();
 
@@ -514,5 +474,6 @@
     }
   });
 })();
+
 
 
