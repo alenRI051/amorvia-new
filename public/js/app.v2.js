@@ -9,6 +9,7 @@
 // - Cross-act navigation resolver (handles "act2", "act2.start", "act2s1" ↔ "a2s1")
 // - Lightweight HUD meter animation
 // - Enforces v2 UI mode (body.v2 + localStorage)
+// - Resilient DOM binding for dialog/choices (find or create containers)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -132,6 +133,43 @@ function pickText(...vals) {
 }
 
 // -----------------------------------------------------------------------------
+// UI container resolution (robust)
+// -----------------------------------------------------------------------------
+const DIALOG_SEL  = '#dialog, #line, #text, .dialog, [data-role="dialog"], [data-dialog]';
+const CHOICES_SEL = '#choices, #choiceList, .choices, [data-role="choices"], [data-choices]';
+function qs(sel) { return document.querySelector(sel); }
+
+function ensureUIContainers() {
+  let dialog = qs(DIALOG_SEL);
+  let choices = qs(CHOICES_SEL);
+
+  if (!dialog || !choices) {
+    const host =
+      qs('#act') || qs('#screen') || qs('#stage') || qs('#app') || document.body;
+
+    if (!dialog) {
+      dialog = document.createElement('div');
+      dialog.id = 'dialog';
+      dialog.style.minHeight = '2.5rem';
+      dialog.style.padding = '8px 0';
+      host.appendChild(dialog);
+    }
+    if (!choices) {
+      choices = document.createElement('div');
+      choices.id = 'choices';
+      choices.style.display = 'flex';
+      choices.style.flexWrap = 'wrap';
+      choices.style.gap = '8px';
+      choices.style.padding = '6px 0 12px';
+      host.appendChild(choices);
+    }
+  }
+  return { dialogEl: dialog, choicesEl: choices };
+}
+function getDialogEl()  { return qs(DIALOG_SEL)  || ensureUIContainers().dialogEl; }
+function getChoicesEl() { return qs(CHOICES_SEL) || ensureUIContainers().choicesEl; }
+
+// -----------------------------------------------------------------------------
 // Nodes extraction / hydration
 // -----------------------------------------------------------------------------
 function extractNodesMap({ raw, graph }) {
@@ -212,8 +250,8 @@ function indexSteps(raw) {
 function renderRawStep(stepId, raw, Eng) {
   const steps = (Eng.__rawStepsIndex ||= indexSteps(raw));
   const step = steps[stepId];
-  const dialog = document.getElementById('dialog');
-  const choices = document.getElementById('choices');
+  const dialog = getDialogEl();
+  const choices = getChoicesEl();
 
   if (!step || !dialog || !choices) return false;
 
@@ -396,12 +434,10 @@ function getChoiceDeltas(choice) {
 
   if (!choice) return totals;
 
-  // meters: guard Object.entries against null/undefined
   if (choice.meters && typeof choice.meters === 'object') {
     for (const [k, v] of Object.entries(choice.meters || {})) add(k, v);
   }
 
-  // effects: array of {meter/key, delta/amount/value}
   if (Array.isArray(choice.effects)) {
     for (const e of choice.effects) {
       if (!e) continue;
@@ -409,12 +445,10 @@ function getChoiceDeltas(choice) {
     }
   }
 
-  // effects as a plain object (legacy)
   if (choice.effects && typeof choice.effects === 'object' && !Array.isArray(choice.effects)) {
     for (const [k, v] of Object.entries(choice.effects || {})) add(k, v);
   }
 
-  // single keyed effect form
   if (choice.meter || choice.key) {
     add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
   }
@@ -435,7 +469,7 @@ function formatHint(totals) {
 
 function decorateVisibleChoices(Eng) {
   try {
-    const container = document.getElementById('choices');
+    const container = getChoicesEl();
     if (!container) return;
 
     const node = (typeof Eng.currentNode === 'function')
@@ -489,8 +523,7 @@ function setHUDFromMeters(m) {
     const bar = document.getElementById(id);
     if (!bar) return;
     bar.style.setProperty('--target', String(val));
-    // animate to target using width (%) mapped from -10..10 → 0..100
-    const pct = Math.round((clamp(val) + 10) * 5);
+    const pct = Math.round((clamp(val) + 10) * 5); // -10..10 → 0..100
     requestAnimationFrame(() => { bar.style.width = pct + '%'; });
     bar.setAttribute('aria-valuenow', String(val));
   };
@@ -544,8 +577,8 @@ function ensureNodeInState(id, raw, Eng) {
 
 function renderNodeFromState(id, Eng) {
   const n = Eng?.state?.nodes?.[id];
-  const dialog = document.getElementById('dialog');
-  const choices = document.getElementById('choices');
+  const dialog = getDialogEl();
+  const choices = getChoicesEl();
   if (!n || !dialog || !choices) return false;
 
   dialog.textContent = (n.text && n.text.trim().length ? n.text : ' ');
@@ -580,37 +613,31 @@ function pickFirstPlayableInAct(act) {
     return !(id.includes('end') || txt.startsWith('end of ') || txt === 'end');
   };
 
-  // prefer declared start if playable
   const startId = act.start || stepsArr[0]?.id;
   const startStep = stepsArr.find(s => s.id === startId);
   if (startStep && notEnd(startStep)) return startStep.id;
 
-  // else first playable, else first step
   return (stepsArr.find(notEnd)?.id) || stepsArr[0]?.id || null;
 }
 
 function resolveTargetId(raw, targetId) {
   if (!raw || !targetId) return targetId;
 
-  // Exact step id exists somewhere?
   const allActs = raw.acts || [];
   for (const act of allActs) {
     const stepsArr = Array.isArray(act.steps) ? act.steps : Object.values(act.steps || {});
     if (stepsArr.some(s => s?.id === targetId)) return targetId;
   }
 
-  // If target *is* an act id, go to its start / first playable step
   const act = (raw.acts || []).find(a => a?.id === targetId);
   if (act) return pickFirstPlayableInAct(act);
 
-  // "act2.start" → act2’s start
   if (String(targetId).endsWith('.start')) {
     const actId = String(targetId).slice(0, -6);
     const act2 = (raw.acts || []).find(a => a?.id === actId);
     if (act2) return pickFirstPlayableInAct(act2);
   }
 
-  // Common aliases: "act2s1" vs "a2s1" — try to map "act2sX" ↔ "a2sX"
   const swapPrefixes = (id) => {
     if (id.startsWith('act')) return 'a' + id.slice(3);
     if (/^a\d/.test(id)) return 'act' + id.slice(1);
@@ -624,7 +651,6 @@ function resolveTargetId(raw, targetId) {
     }
   }
 
-  // Couldn’t resolve — return original and let fallback try
   return targetId;
 }
 
@@ -634,8 +660,8 @@ function navigateTo(targetId, rawOrNull, Eng) {
   if (!resolved) return;
 
   if (resolved === 'menu') {
-    const dialog = document.getElementById('dialog');
-    const choices = document.getElementById('choices');
+    const dialog = getDialogEl();
+    const choices = getChoicesEl();
     if (dialog) dialog.textContent = 'Scenario menu — pick another scenario to start.';
     if (choices) choices.innerHTML = '';
     return;
@@ -662,6 +688,7 @@ function navigateTo(targetId, rawOrNull, Eng) {
 // -----------------------------------------------------------------------------
 async function startScenario(id) {
   try {
+    ensureUIContainers();
     applyUIMode();
 
     const { Eng, loadFn, startFn } = await waitForEngine();
@@ -692,8 +719,7 @@ async function startScenario(id) {
     } catch (e) {
       console.warn('[Amorvia] load v2 failed, retrying with graph:', e?.message || e);
       graph = toGraphIfNeeded(raw);
-      // Hard enforce starting node by injecting a synthetic entry
-      injectGraphEntryNode(graph, entry.nodeId);
+      injectGraphEntryNode(graph, entry.nodeId); // enforce start
       loadFn.call(Eng, graph);
     }
     if (!graph) graph = toGraphIfNeeded(raw);
@@ -706,13 +732,7 @@ async function startScenario(id) {
       if (Object.keys(nodesMap).length) {
         Eng.state.nodes = nodesMap;
       } else {
-        console.error('[Amorvia] could not build nodes map. Shapes:', {
-          graph_nodes_obj: !!(graph?.nodes && typeof graph.nodes === 'object' && !Array.isArray(graph.nodes)),
-          graph_nodes_arr: Array.isArray(graph?.nodes),
-          raw_acts: Array.isArray(raw?.acts) ? raw.acts.length : 0,
-          raw_nodes_obj: !!(raw?.nodes && typeof raw.nodes === 'object' && !Array.isArray(raw.nodes)),
-          raw_nodes_arr: Array.isArray(raw?.nodes)
-        });
+        console.error('[Amorvia] could not build nodes map.');
         throw new Error('Engine has no nodes after load; unable to extract nodes map.');
       }
     }
@@ -723,9 +743,7 @@ async function startScenario(id) {
     if (!Eng.state.nodes[startId]) {
       startId = (graph.startId || startId || nodeKeysAll[0]);
       let s = Eng.state.nodes[startId];
-      if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) {
-        startId = s.to;
-      }
+      if (s?.type?.toLowerCase() === 'goto' && s.to && Eng.state.nodes[s.to]) startId = s.to;
       if (!Eng.state.nodes[startId]) startId = nodeKeysAll[0];
     }
 
@@ -750,9 +768,7 @@ async function startScenario(id) {
 
     // Set engine pointer then start
     Eng.state.currentId = startId;
-    if (Eng.state.graph && typeof Eng.state.graph === 'object') {
-      Eng.state.graph.startId = startId;
-    }
+    if (Eng.state.graph && typeof Eng.state.graph === 'object') Eng.state.graph.startId = startId;
     if (Eng.state.startId !== undefined) Eng.state.startId = startId;
 
     startFn.call(Eng, startId);
@@ -765,9 +781,7 @@ async function startScenario(id) {
       if (!hasText || curId === '__amorvia_entry__') {
         navigateTo(entry.nodeId, raw, Eng);
       } else {
-        if (!renderNodeFromState(curId, Eng)) {
-          renderRawStep(curId, raw, Eng);
-        }
+        if (!renderNodeFromState(curId, Eng)) renderRawStep(curId, raw, Eng);
       }
     }
 
@@ -796,7 +810,7 @@ async function startScenario(id) {
         if (typeof Eng.goto === 'function') Eng.goto(playable2);
 
         const node2 = Eng.state.nodes[playable2];
-        const dialogEl2 = document.getElementById('dialog');
+        const dialogEl2 = getDialogEl();
         if (dialogEl2 && node2?.text) dialogEl2.textContent = node2.text;
       }
     }
@@ -813,13 +827,12 @@ async function startScenario(id) {
       if (noText) {
         const rendered = renderRawStep(curNodeId, raw, Eng);
         if (!rendered) {
-          const dialog = document.getElementById('dialog');
-          const choices = document.getElementById('choices');
+          const dialog = getDialogEl();
+          const choices = getChoicesEl();
           if (dialog) dialog.textContent = pickText(cur2?.text) || ' ';
           if (choices) choices.innerHTML = '';
         }
       } else {
-        // ensure the DOM matches state
         renderNodeFromState(curNodeId, Eng);
       }
     }
@@ -839,7 +852,7 @@ async function startScenario(id) {
     rememberLast(id);
   } catch (e) {
     console.error('[Amorvia] Failed to start scenario', id, e);
-    const dialog = document.getElementById('dialog');
+    const dialog = getDialogEl();
     if (dialog) dialog.textContent = `Failed to load scenario ${id}: ${e.message}`;
   }
 }
@@ -862,6 +875,7 @@ async function startScenario(id) {
 // -----------------------------------------------------------------------------
 (async function init() {
   try {
+    ensureUIContainers();
     applyUIMode();
     const scenarios = await loadIndex();
     renderList(scenarios);
@@ -871,7 +885,7 @@ async function startScenario(id) {
     if (initial) await startScenario(initial);
   } catch (e) {
     console.error('[Amorvia] init error', e);
-    const dialog = document.getElementById('dialog');
+    const dialog = getDialogEl();
     if (dialog) dialog.textContent = `Init error: ${e.message}`;
   }
 })();
