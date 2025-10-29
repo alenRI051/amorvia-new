@@ -9,7 +9,7 @@
 // - Cross-act navigation resolver (handles "act2", "act2.start", "act2s1" ↔ "a2s1")
 // - Lightweight HUD meter animation
 // - Enforces v2 UI mode (body.v2 + localStorage)
-// - Non-intrusive DOM binding (never creates dialog/choices; waits for real DOM)
+// - Non-intrusive DOM binding (broad selectors, never creates elements; waits for real DOM)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -133,17 +133,17 @@ function pickText(...vals) {
 }
 
 // -----------------------------------------------------------------------------
-// Non-intrusive DOM binding (never creates elements)
+// Non-intrusive DOM binding (broad selectors; never creates elements)
 // -----------------------------------------------------------------------------
-const DIALOG_SEL  = '#dialog, .dialog, [data-role="dialog"]';
-const CHOICES_SEL = '#choices, .choices, [data-role="choices"]';
+const DIALOG_SEL  = '#dialog, #line, #text, #actText, .dialog, .line, .text, [data-role="dialog"], [data-dialog]';
+const CHOICES_SEL = '#choices, #choiceList, .choices, .choice-list, [data-role="choices"], [data-choices]';
 
 function qs(sel) { return document.querySelector(sel); }
 function getDialogEl()  { return qs(DIALOG_SEL); }
 function getChoicesEl() { return qs(CHOICES_SEL); }
 
 // Wait until a selector appears in DOM (up to timeout), resolving with the node or null.
-function waitForDom(sel, timeout = 4000) {
+function waitForDom(sel, timeout = 5000) {
   return new Promise((resolve) => {
     const el = qs(sel);
     if (el) return resolve(el);
@@ -154,7 +154,12 @@ function waitForDom(sel, timeout = 4000) {
     });
 
     obs.observe(document.documentElement || document.body, { childList: true, subtree: true });
-    setTimeout(() => { obs.disconnect(); resolve(qs(sel) || null); }, timeout);
+    setTimeout(() => {
+      obs.disconnect();
+      const foundLater = qs(sel) || null;
+      if (!foundLater) console.warn('[Amorvia] UI container not found for selector:', sel);
+      resolve(foundLater);
+    }, timeout);
   });
 }
 
@@ -758,6 +763,10 @@ async function startScenario(id) {
     if (Eng.state.graph && typeof Eng.state.graph === 'object') Eng.state.graph.startId = startId;
     if (Eng.state.startId !== undefined) Eng.state.startId = startId;
 
+    // Ensure dialog/choices exist before first draw
+    await waitForDom(DIALOG_SEL);
+    await waitForDom(CHOICES_SEL);
+
     startFn.call(Eng, startId);
 
     // Ensure we land on the *playable* step with visible text and render it
@@ -885,5 +894,4 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario, navigateTo };
-
 
