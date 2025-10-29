@@ -218,16 +218,24 @@
   function updateHUD(state) {
     try {
       const m = state.meters || {};
-      const metersPct = {};
       for (const k of CONFIG.meters) {
         const val = typeof m[k] === "number" ? m[k] : 0;
         const pct = Math.max(0, Math.min(100, val));
-        metersPct[k] = pct;
         const bar = document.querySelector(`[data-meter="${k}"] .bar`);
         animateBar(bar, pct);
         const label = document.querySelector(`[data-meter="${k}"] .value`);
         if (label) label.textContent = String(val);
       }
+      // Act badge updates (support both data-hud and #actBadge)
+      const actEl1 = document.querySelector("[data-hud=act]");
+      const actEl2 = document.querySelector("#actBadge");
+      const txt = state.actIndex != null ? `Act ${state.actIndex + 1}` : "Act -";
+      if (actEl1) actEl1.textContent = txt;
+      if (actEl2) actEl2.textContent = txt;
+    } catch (e) {
+      warn("HUD update skipped:", e);
+    }
+  }
       const actEl = document.querySelector("[data-hud=act]");
       if (actEl && state.actIndex != null) actEl.textContent = `Act ${state.actIndex + 1}`;
     } catch (e) {
@@ -270,14 +278,13 @@
   }
 
   function renderNode(node) {
-    window.__amorvia_renderNode = renderNode;
     // Minimal renderer hooks — assumes existing DOM structure from HUD v9.7.2-polish
-    const dialogEl = document.querySelector("[data-ui=dialog]");
-    const speakerEl = document.querySelector("[data-ui=speaker]");
-    const choicesEl = document.querySelector("[data-ui=choices]");
+    const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector('#dialog');
+    const speakerEl = document.querySelector("[data-ui=speaker]") || document.querySelector('#sceneTitle');
+    const choicesEl = document.querySelector("[data-ui=choices]") || document.querySelector('#choices');
 
     if (dialogEl) dialogEl.textContent = node.text || node.label || node.title || "";
-    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || "";
+    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || (node.title || '');
 
     if (choicesEl) {
       choicesEl.innerHTML = "";
@@ -289,6 +296,19 @@
           btn.addEventListener("click", () => window.__amorvia_onChoice(c));
           choicesEl.appendChild(btn);
         }
+      } else {
+        // auto-continue if no explicit choices
+        const btn = document.createElement("button");
+        btn.className = "choice solo";
+        btn.textContent = "Continue";
+        btn.addEventListener("click", () => window.__amorvia_onChoice({ goto: node.goto }));
+        choicesEl.appendChild(btn);
+      }
+    }
+  }
+
+  // expose for DOM-autodetect patch to extend
+  window.__amorvia_renderNode = renderNode;
       } else {
         // auto-continue if no explicit choices
         const btn = document.createElement("button");
@@ -383,6 +403,7 @@
   // Auto-boot
   document.addEventListener("DOMContentLoaded", () => boot());
 })();
+
 
 /* -----------------------------------------------------------
  * PATCH v9.7.2p+ DOM-Autodetect (adds robust UI selector probing
@@ -495,6 +516,5 @@
     }
   });
 })();
-
 
 
