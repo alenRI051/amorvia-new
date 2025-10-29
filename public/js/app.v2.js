@@ -270,6 +270,7 @@
   }
 
   function renderNode(node) {
+    window.__amorvia_renderNode = renderNode;
     // Minimal renderer hooks — assumes existing DOM structure from HUD v9.7.2-polish
     const dialogEl = document.querySelector("[data-ui=dialog]");
     const speakerEl = document.querySelector("[data-ui=speaker]");
