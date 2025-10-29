@@ -112,5 +112,3 @@
   window.__amorvia_renderNode=n=>{const {d,s,c}=ensure();if(d)d.textContent=n.text||n.label||n.title||'';if(s)s.textContent=n.speaker||n.role||n.actor||'';if(c){c.innerHTML='';if(Array.isArray(n.choices)&&n.choices.length){for(const x of n.choices){const b=document.createElement('button');b.className='choice';b.textContent=x.label||x.text||'Continue';b.addEventListener('click',()=>window.__amorvia_onChoice(x));c.appendChild(b);}}else{const b=document.createElement('button');b.className='choice solo';b.textContent='Continue';b.addEventListener('click',()=>window.__amorvia_onChoice({goto:n.goto}));c.appendChild(b);}}if(typeof _r==='function'){try{_r(n);}catch(e){}}};
   document.addEventListener('DOMContentLoaded',()=>{if(!window.__amorvia_renderNodeBound){const o=window.__amorvia_renderNode||function(){};window.__amorvia_renderNode=(...a)=>{try{ensure();}catch(e){}return o.apply(window,a);};window.__amorvia_renderNodeBound=true;}});
 })();
-
-
