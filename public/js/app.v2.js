@@ -8,6 +8,7 @@
 // - Meter-hint injection to choice labels (Trust, Tension, Child Stress)
 // - Cross-act navigation resolver (handles "act2", "act2.start", "act2s1" ↔ "a2s1")
 // - Lightweight HUD meter animation
+// - Enforces v2 UI mode (body.v2 + localStorage)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -102,6 +103,22 @@ async function loadIndex() {
     if (id) SCENARIO_BY_ID[id] = it;
   });
   return list;
+}
+
+// -----------------------------------------------------------------------------
+// UI mode enforcement
+// -----------------------------------------------------------------------------
+function applyUIMode() {
+  try {
+    const url = new URL(window.location.href);
+    const urlMode = url.searchParams.get('mode');
+    const mode = (urlMode || localStorage.getItem('amorvia:mode') || 'v2').toLowerCase();
+    document.body.classList.toggle('v2', mode === 'v2');
+    localStorage.setItem('amorvia:mode', mode);
+
+    const scn = url.searchParams.get('scenario');
+    if (scn) localStorage.setItem('amorvia:scenario', scn);
+  } catch {}
 }
 
 // -----------------------------------------------------------------------------
@@ -359,28 +376,49 @@ function injectGraphEntryNode(graph, entryId) {
 }
 
 // -----------------------------------------------------------------------------
-// Meter hint helpers
+// Meter hint helpers (safe)
 // -----------------------------------------------------------------------------
 const METER_LABELS = { trust: 'Trust', tension: 'Tension', childStress: 'Child Stress' };
 
 function getChoiceDeltas(choice) {
   const totals = { trust: 0, tension: 0, childStress: 0 };
   const add = (k, v) => {
-    const key = String(k || '').trim();
+    if (k == null) return;
+    const key = String(k).trim();
     if (!key) return;
-    const norm = key in totals ? key : (key.toLowerCase() === 'childstress' ? 'childStress' : key.toLowerCase());
-    if (norm in totals) {
-      const n = Number(v);
-      if (!Number.isNaN(n) && n !== 0) totals[norm] += n;
-    }
+    const norm = key === 'childStress' ? 'childStress'
+               : key.toLowerCase() === 'childstress' ? 'childStress'
+               : key.toLowerCase();
+    if (!(norm in totals)) return;
+    const n = Number(v);
+    if (!Number.isNaN(n) && n !== 0) totals[norm] += n;
   };
-  if (choice && typeof choice.meters === 'object') {
-    for (const [k, v] of Object.entries(choice.meters)) add(k, v);
+
+  if (!choice) return totals;
+
+  // meters: guard Object.entries against null/undefined
+  if (choice.meters && typeof choice.meters === 'object') {
+    for (const [k, v] of Object.entries(choice.meters || {})) add(k, v);
   }
-  if (Array.isArray(choice?.effects)) {
-    for (const e of choice.effects) if (e) add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
+
+  // effects: array of {meter/key, delta/amount/value}
+  if (Array.isArray(choice.effects)) {
+    for (const e of choice.effects) {
+      if (!e) continue;
+      add(e.meter ?? e.key, e.delta ?? e.amount ?? e.value);
+    }
   }
-  if (choice?.meter || choice?.key) add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
+
+  // effects as a plain object (legacy)
+  if (choice.effects && typeof choice.effects === 'object' && !Array.isArray(choice.effects)) {
+    for (const [k, v] of Object.entries(choice.effects || {})) add(k, v);
+  }
+
+  // single keyed effect form
+  if (choice.meter || choice.key) {
+    add(choice.meter ?? choice.key, choice.delta ?? choice.amount ?? choice.value);
+  }
+
   return totals;
 }
 
@@ -624,6 +662,8 @@ function navigateTo(targetId, rawOrNull, Eng) {
 // -----------------------------------------------------------------------------
 async function startScenario(id) {
   try {
+    applyUIMode();
+
     const { Eng, loadFn, startFn } = await waitForEngine();
 
     // Monkey-patch goto() once so every navigation re-decorates.
@@ -717,13 +757,17 @@ async function startScenario(id) {
 
     startFn.call(Eng, startId);
 
-    // NEW: Ensure we land on the *playable* step id with narrative text
+    // Ensure we land on the *playable* step with visible text and render it
     if (entry?.nodeId) {
-      const curId = Eng.state?.currentId;
-      const curNode = Eng.state?.nodes?.[curId];
-      const missingText = !curNode || !pickText(curNode.text);
-      if (missingText || curId === '__amorvia_entry__') {
+      const curId = window.ScenarioEngine?.state?.currentId;
+      const curNode = window.ScenarioEngine?.state?.nodes?.[curId];
+      const hasText = !!(curNode && typeof curNode.text === 'string' && curNode.text.trim().length);
+      if (!hasText || curId === '__amorvia_entry__') {
         navigateTo(entry.nodeId, raw, Eng);
+      } else {
+        if (!renderNodeFromState(curId, Eng)) {
+          renderRawStep(curId, raw, Eng);
+        }
       }
     }
 
@@ -818,6 +862,7 @@ async function startScenario(id) {
 // -----------------------------------------------------------------------------
 (async function init() {
   try {
+    applyUIMode();
     const scenarios = await loadIndex();
     renderList(scenarios);
     const last = recallLast();
@@ -833,5 +878,4 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario, navigateTo };
-
 
