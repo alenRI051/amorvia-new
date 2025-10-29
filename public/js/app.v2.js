@@ -1,18 +1,6 @@
 /*
  * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL)
- *
- * Drop-in replacement for /public/js/app.v2.js
- *
- * Key features:
- *  - Robust engine autoload (ScenarioEngine.{loadScenario|LoadScenario} + start)
- *  - Accepts raw v2 scenarios OR precompiled graph; auto-hydrates nodes
- *  - Safe start node resolver (skips placeholders / "End of Act")
- *  - Cross-act dialog progression (handles goto, act-end, next-act start)
- *  - HUD sync (trust, tension, childStress) + Act badge (#actBadge and [data-hud=act])
- *  - Choice label meter hints (e.g., "[+2 trust / -1 tension]")
- *  - Dev cache-bust for data fetches
- *  - DOM autodetect & self-mount fallback panel if containers are missing
- *  - ES2019-compatible (no bare catch)
+ * Clean ES2019-safe version
  */
 
 (() => {
@@ -25,455 +13,104 @@
     debug: true,
   };
 
-  const log = (...args) => CONFIG.debug && console.log("[Amorvia]", ...args);
-  const warn = (...args) => console.warn("[Amorvia]", ...args);
-  const err = (...args) => console.error("[Amorvia]", ...args);
+  const log = (...a) => CONFIG.debug && console.log('[Amorvia]', ...a);
+  const warn = (...a) => console.warn('[Amorvia]', ...a);
+  const err = (...a) => console.error('[Amorvia]', ...a);
 
-  // ---- Fetch helpers with cache-bust --------------------------------------
   async function fetchJSON(url, opts = {}) {
     const o = { ...opts };
     o.headers = { ...(opts.headers || {}) };
     if (CONFIG.noStore) {
-      o.cache = "no-store";
-      o.headers["Cache-Control"] = "no-store, max-age=0";
+      o.cache = 'no-store';
+      o.headers['Cache-Control'] = 'no-store, max-age=0';
       const u = new URL(url, location.origin);
-      u.searchParams.set("v", String(Date.now()));
+      u.searchParams.set('v', Date.now().toString());
       url = u.toString();
     }
-    const res = await fetch(url, o);
-    if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
-    return res.json();
+    const r = await fetch(url, o);
+    if (!r.ok) throw new Error(`Failed to fetch ${url}: ${r.status}`);
+    return r.json();
   }
 
-  // ---- Engine wait --------------------------------------------------------
-  async function waitForEngine(timeoutMs = 8000) {
+  async function waitForEngine(ms = 8000) {
     const t0 = performance.now();
-    while (performance.now() - t0 < timeoutMs) {
+    while (performance.now() - t0 < ms) {
       const e = window.ScenarioEngine || window.engine || window.E;
-      if (
-        e &&
-        (typeof e.loadScenario === "function" || typeof e.LoadScenario === "function") &&
-        typeof e.start === "function"
-      ) {
-        return e;
-      }
-      await new Promise((r) => setTimeout(r, 50));
+      if (e && (e.loadScenario || e.LoadScenario) && e.start) return e;
+      await new Promise(r => setTimeout(r, 50));
     }
-    throw new Error("ScenarioEngine not ready (loadScenario/LoadScenario + start not found)");
+    throw new Error('ScenarioEngine not ready');
   }
 
-  // ---- Index loader -------------------------------------------------------
   async function resolveScenarioPathById(id) {
     try {
-      const index = await fetchJSON(CONFIG.indexPath);
-      if (Array.isArray(index)) {
-        const hit = index.find((x) => x && (x.id === id || x.slug === id));
-        if (hit && hit.path) return hit.path;
-      } else if (index && index.entries) {
-        const hit = index.entries.find((x) => x && (x.id === id || x.slug === id));
-        if (hit && hit.path) return hit.path;
-      }
-    } catch (e) {
-      warn("Could not read v2-index.json; will try default path", e);
-    }
+      const idx = await fetchJSON(CONFIG.indexPath);
+      const entries = Array.isArray(idx) ? idx : idx.entries;
+      const hit = entries?.find(x => x && (x.id === id || x.slug === id));
+      if (hit?.path) return hit.path;
+    } catch (e) { warn('index read fail', e); }
     return `/public/data/${id}.v2.json`;
   }
 
-  // ---- Shape guards + hydration ------------------------------------------
-  function isGraphShape(x) {
-    return x && (Array.isArray(x.nodes) || Array.isArray(x.graph) || (x.nodes && typeof x.nodes === "object")) && x.version !== 2;
+  function isGraph(x){return x && (Array.isArray(x.nodes)||Array.isArray(x.graph)||(x.nodes&&typeof x.nodes==='object'))&&x.version!==2;}
+  function isV2(x){return x&&(x.version===2||x.schemaVersion===2||x.meters||x.acts);}
+
+  function flatten(raw){
+    const out=[];
+    if(Array.isArray(raw.nodes))return raw.nodes.slice();
+    if(Array.isArray(raw.acts)){
+      raw.acts.forEach((a,i)=>{
+        if(Array.isArray(a.nodes))a.nodes.forEach(n=>out.push({...n,_actIndex:i}));
+        else if(Array.isArray(a.steps))a.steps.forEach((s,j)=>out.push({id:s.id||`act${i+1}-step${j+1}`,type:s.type||'dialog',text:s.text||s.label||s.title||'',choices:s.choices||[],goto:s.goto,_actIndex:i}));
+      });
+    }
+    return out;
   }
 
-  function isV2Raw(x) {
-    return x && (x.version === 2 || x.schemaVersion === 2 || x.meters || x.acts);
+  function addHints(c){
+    const eff=c.effects||c.meters||{};const d=[];
+    for(const m of CONFIG.meters){const v=eff[m];if(typeof v==='number'&&v!==0)d.push(`${v>0?'+':''}${v} ${m}`)}
+    if(d.length){const hint=` [${d.join(' / ')}]`;const base=c.label||c.text||'';c.label=base+hint;}
+    return c;
   }
 
-  function flattenV2ToNodes(raw) {
-    const nodes = [];
-    if (Array.isArray(raw.nodes)) return raw.nodes.slice();
-
-    if (Array.isArray(raw.acts)) {
-      for (let ai = 0; ai < raw.acts.length; ai++) {
-        const act = raw.acts[ai];
-        if (Array.isArray(act.nodes)) {
-          for (const n of act.nodes) nodes.push({ ...n, _actIndex: ai });
-        } else if (Array.isArray(act.steps)) {
-          let i = 0;
-          for (const step of act.steps) {
-            nodes.push({
-              id: step.id || `act${ai + 1}-step${++i}`,
-              type: step.type || "dialog",
-              text: step.text || step.label || step.title || "",
-              choices: step.choices || [],
-              goto: step.goto,
-              _actIndex: ai,
-            });
-          }
-        }
-      }
-    }
-    return nodes;
+  function normalize(raw){
+    let n=[];if(isV2(raw))n=flatten(raw);else if(isGraph(raw)){if(Array.isArray(raw.nodes))n=raw.nodes.slice();else if(Array.isArray(raw.graph))n=raw.graph.slice();else n=Object.values(raw.nodes||{});}const map=new Map();
+    n.forEach(x=>{if(x&&x.id){if(!Array.isArray(x.choices))x.choices=[];x.choices=x.choices.map(y=>addHints({...y}));map.set(x.id,x);}});
+    return{list:n,map};
   }
 
-  function addChoiceMeterHints(choice) {
-    const effects = choice.effects || choice.meters || choice.effect || {};
-    const deltas = [];
-    for (const m of CONFIG.meters) {
-      const v = effects[m];
-      if (typeof v === "number" && v !== 0) deltas.push(`${v > 0 ? "+" : ""}${v} ${m}`);
-    }
-    if (deltas.length) {
-      const hint = ` [${deltas.join(" / ")}]`;
-      if (!choice._labelOriginal) choice._labelOriginal = choice.label || choice.text || "";
-      const base = choice._labelOriginal || choice.label || choice.text || "";
-      choice.label = `${base}${hint}`;
-    }
-    return choice;
-  }
+  function findStart(nodes,raw){const id=new Map(nodes.map(n=>[n.id,n]));if(raw.startNode&&id.has(raw.startNode))return raw.startNode;for(const c of CONFIG.startNodeCandidates)if(id.has(c))return c;for(const n of nodes){if(/end\s*of\s*act/i.test(n.text||'')||/end/i.test(n.type||''))continue;if(n.text)return n.id;}return nodes[0]?.id||null;}
+  function nextAct(nodes,i){const t=i+1;for(const n of nodes){if(n._actIndex===t&&(/^act\d+-start$/i.test(n.id)||/start/i.test(n.id)))return n.id;}for(const n of nodes){if(n._actIndex===t)return n.id;}return null;}
 
-  function normalizeNodes(raw) {
-    let nodes = [];
-    if (isV2Raw(raw)) {
-      nodes = flattenV2ToNodes(raw);
-    } else if (isGraphShape(raw)) {
-      if (Array.isArray(raw.nodes)) nodes = raw.nodes.slice();
-      else if (Array.isArray(raw.graph)) nodes = raw.graph.slice();
-      else nodes = Object.values(raw.nodes || {});
-    }
-    const map = new Map();
-    for (const n of nodes) {
-      if (!n || !n.id) continue;
-      if (!Array.isArray(n.choices)) n.choices = [];
-      n.choices = n.choices.map((c) => addChoiceMeterHints({ ...c }));
-      map.set(n.id, n);
-    }
-    return { list: nodes, map };
-  }
+  function animateBar(el,to,ms=350){if(!el)return;const f=parseFloat(el.dataset.value||'0'),s=performance.now();const t=Math.max(0,Math.min(100,to));function step(x){const k=Math.min(1,(x-s)/ms);const v=f+(t-f)*k;el.style.width=v+'%';el.dataset.value=v;if(k<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
 
-  // ---- Safe start node resolver ------------------------------------------
-  function findSafeStartNodeId(nodes, raw) {
-    const byId = new Map(nodes.map((n) => [n.id, n]));
-    if (raw && raw.startNode && byId.has(raw.startNode)) return raw.startNode;
-    for (const c of CONFIG.startNodeCandidates) {
-      if (byId.has(c)) return c;
-    }
-    for (const n of nodes) {
-      const isEnd = /end\s*of\s*act/i.test(n.title || n.label || n.text || "") || /end/i.test(n.type || "");
-      const hasText = n.text && n.text.trim().length > 0;
-      if (!isEnd && (n.type === "dialog" || hasText)) return n.id;
-    }
-    return nodes[0]?.id || null;
-  }
+  function updateHUD(st){try{const m=st.meters||{};for(const k of CONFIG.meters){const v=m[k]||0;const pct=Math.max(0,Math.min(100,v));animateBar(document.querySelector(`[data-meter="${k}"] .bar`),pct);const lbl=document.querySelector(`[data-meter="${k}"] .value`);if(lbl)lbl.textContent=v;}
+    const t=st.actIndex!=null?`Act ${st.actIndex+1}`:'Act -';const e1=document.querySelector('[data-hud=act]');const e2=document.querySelector('#actBadge');if(e1)e1.textContent=t;if(e2)e2.textContent=t;}catch(e){warn('HUD skip',e);}}
 
-  // ---- Act / flow helpers -------------------------------------------------
-  function isActEndNode(n) {
-    if (!n) return false;
-    if (/end\s*of\s*act/i.test(n.title || n.text || n.label || "")) return true;
-    if (n.type && /actEnd|end/i.test(n.type)) return true;
-    return false;
-  }
+  function buildState(n,start,raw){const m={};CONFIG.meters.forEach(x=>m[x]=0);return{nodes:n,byId:new Map(n.map(x=>[x.id,x])),currentId:start,actIndex:n.find(x=>x.id===start)?._actIndex||0,meters:{...m,...(raw?.meters||{})},history:[]}};
 
-  function nextActStartId(nodes, currentActIdx) {
-    if (currentActIdx == null) return null;
-    const targetAct = currentActIdx + 1;
-    for (const n of nodes) {
-      if (n._actIndex === targetAct) {
-        if (/^act\d+-start$/i.test(n.id) || /start/i.test(n.id)) return n.id;
-      }
-    }
-    for (const n of nodes) {
-      if (n._actIndex === targetAct) return n.id;
-    }
-    return null;
-  }
+  function applyEff(st,c){const e=c.effects||c.meters||{};for(const k of CONFIG.meters){if(typeof e[k]==='number')st.meters[k]=(st.meters[k]||0)+e[k];}}
 
-  // ---- HUD: animated meters ----------------------------------------------
-  function animateBar(el, to, ms = 350) {
-    if (!el) return;
-    const now = performance.now();
-    const from = parseFloat(el.dataset.value || "0");
-    const target = Math.max(0, Math.min(100, to));
-    const start = now;
-    function step(t) {
-      const k = Math.min(1, (t - start) / ms);
-      const v = from + (target - from) * k;
-      el.style.width = v + "%";
-      el.dataset.value = String(v);
-      if (k < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
+  function goto(st,id){if(!st.byId.has(id)){warn('goto unknown',id);return false;}st.history.push(st.currentId);st.currentId=id;const n=st.byId.get(id);if(n&&n._actIndex!=null)st.actIndex=n._actIndex;return true;}
 
-  function updateHUD(state) {
-    try {
-      const m = state.meters || {};
-      for (const k of CONFIG.meters) {
-        const val = typeof m[k] === "number" ? m[k] : 0;
-        const pct = Math.max(0, Math.min(100, val));
-        const bar = document.querySelector(`[data-meter="${k}"] .bar`);
-        animateBar(bar, pct);
-        const label = document.querySelector(`[data-meter="${k}"] .value`);
-        if (label) label.textContent = String(val);
-      }
-      const actEl1 = document.querySelector("[data-hud=act]");
-      const actEl2 = document.querySelector("#actBadge");
-      const txt = state.actIndex != null ? `Act ${state.actIndex + 1}` : "Act -";
-      if (actEl1) actEl1.textContent = txt;
-      if (actEl2) actEl2.textContent = txt;
-    } catch (e) {
-      warn("HUD update skipped:", e);
-    }
-  }
+  function renderNode(n){const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');const s=document.querySelector('[data-ui=speaker]')||document.querySelector('#sceneTitle');const c=document.querySelector('[data-ui=choices]')||document.querySelector('#choices');if(d)d.textContent=n.text||n.label||n.title||'';if(s)s.textContent=n.speaker||n.role||n.actor||n.title||'';if(c){c.innerHTML='';if(Array.isArray(n.choices)&&n.choices.length){for(const x of n.choices){const b=document.createElement('button');b.className='choice';b.textContent=x.label||x.text||'Continue';b.addEventListener('click',()=>window.__amorvia_onChoice(x));c.appendChild(b);}}else{const b=document.createElement('button');b.className='choice solo';b.textContent='Continue';b.addEventListener('click',()=>window.__amorvia_onChoice({goto:n.goto}));c.appendChild(b);}}}
+  window.__amorvia_renderNode=renderNode;
 
-  // ---- Engine driver ------------------------------------------------------
-  function buildEngineState(nodes, startId, raw) {
-    const initialMeters = {};
-    for (const m of CONFIG.meters) initialMeters[m] = 0;
-    return {
-      nodes,
-      byId: new Map(nodes.map((n) => [n.id, n])),
-      currentId: startId,
-      actIndex: nodes.find((n) => n.id === startId)?._actIndex ?? 0,
-      meters: { ...initialMeters, ...(raw?.meters || {}) },
-      history: [],
-    };
-  }
+  function nextId(st,n,c){const pick=x=>typeof x==='string'&&x.trim()?x.trim():null;const ch=pick(c&&(c.goto||c.target));if(ch)return ch;const nd=pick(n&&(n.goto||n.next));if(nd)return nd;if(/end\s*of\s*act/i.test(n.text||'')||/end/i.test(n.type||'')){const id=nextAct(st.nodes,n._actIndex);if(id)return id;}const i=st.nodes.findIndex(x=>x.id===n.id);if(i>=0&&i+1<st.nodes.length){const cand=st.nodes[i+1];if(!cand._actIndex||cand._actIndex===n._actIndex)return cand.id;}return null;}
 
-  function applyEffects(state, choice) {
-    const eff = choice.effects || choice.meters || {};
-    for (const k of CONFIG.meters) {
-      const v = eff[k];
-      if (typeof v === "number") state.meters[k] = (state.meters[k] || 0) + v;
-    }
-  }
-
-  function gotoNode(state, targetId) {
-    if (!state.byId.has(targetId)) {
-      warn("goto unknown node:", targetId);
-      return false;
-    }
-    state.history.push(state.currentId);
-    state.currentId = targetId;
-    const node = state.byId.get(targetId);
-    if (node && node._actIndex != null) state.actIndex = node._actIndex;
-    return true;
-  }
-
-  function renderNode(node) {
-    const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector("#dialog");
-    const speakerEl = document.querySelector("[data-ui=speaker]") || document.querySelector("#sceneTitle");
-    const choicesEl = document.querySelector("[data-ui=choices]") || document.querySelector("#choices");
-
-    if (dialogEl) dialogEl.textContent = node.text || node.label || node.title || "";
-    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || node.title || "";
-
-    if (choicesEl) {
-      choicesEl.innerHTML = "";
-      if (Array.isArray(node.choices) && node.choices.length) {
-        for (const c of node.choices) {
-          const btn = document.createElement("button");
-          btn.className = "choice";
-          btn.textContent = c.label || c.text || "Continue";
-          btn.addEventListener("click", () => window.__amorvia_onChoice(c));
-          choicesEl.appendChild(btn);
-        }
-      } else {
-        const btn = document.createElement("button");
-        btn.className = "choice solo";
-        btn.textContent = "Continue";
-        btn.addEventListener("click", () => window.__amorvia_onChoice({ goto: node.goto }));
-        choicesEl.appendChild(btn);
-      }
-    }
-  }
-
-  // expose for DOM-autodetect patch to extend
-  window.__amorvia_renderNode = renderNode;
-
-  function computeNextId(state, node, choice) {
-    const pick = (x) => (typeof x === "string" && x.trim().length > 0 ? x.trim() : null);
-    const fromChoice = pick(choice && (choice.goto || choice.target));
-    if (fromChoice) return fromChoice;
-    const fromNode = pick(node && (node.goto || node.next));
-    if (fromNode) return fromNode;
-    if (isActEndNode(node)) {
-      const nid = nextActStartId(state.nodes, node._actIndex);
-      if (nid) return nid;
-    }
-    const idx = state.nodes.findIndex((n) => n.id === node.id);
-    if (idx >= 0 && idx + 1 < state.nodes.length) {
-      const cand = state.nodes[idx + 1];
-      if (cand && (cand._actIndex == null || cand._actIndex === node._actIndex)) return cand.id;
-    }
-    return null;
-  }
-
-  // ---- Boot sequence ------------------------------------------------------
-  async function boot(defaultScenarioId) {
-    try {
-      const engine = await waitForEngine();
-      log("Engine ready");
-
-      const scenarioId = defaultScenarioId || window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved";
-      const path = await resolveScenarioPathById(scenarioId);
-      log("Loading scenario:", scenarioId, "->", path);
-      const raw = await fetchJSON(path);
-
-      const { list: nodes } = normalizeNodes(raw);
-      if (!nodes.length) throw new Error("Scenario has no nodes after normalization");
-
-      const startId = findSafeStartNodeId(nodes, raw);
-      if (!startId) throw new Error("Unable to find a start node");
-
-      const state = buildEngineState(nodes, startId, raw);
-      window.__amorvia_state = state;
-
-      window.__amorvia_onChoice = (choice) => {
-        const s = window.__amorvia_state;
-        const cur = s.byId.get(s.currentId);
-        applyEffects(s, choice || {});
-        updateHUD(s);
-        const nextId = computeNextId(s, cur, choice || {});
-        if (!nextId) {
-          warn("No next node from:", cur);
-          return;
-        }
-        gotoNode(s, nextId);
-        renderNode(s.byId.get(s.currentId));
-        updateHUD(s);
-      };
-
-      // Initial mount
-      renderNode(state.byId.get(state.currentId));
-      updateHUD(state);
-
-      // Notify engine (non-fatal if fails)
-      try {
-        (engine.loadScenario || engine.LoadScenario).call(engine, raw);
-        if (engine.start) engine.start();
-      } catch (e) {
-        warn("Engine hooks failed (non-fatal):", e);
-      }
-    } catch (e) {
-      err("Boot failed:", e);
-      const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector("#dialog");
-      if (dialogEl) dialogEl.textContent = `Boot error: ${e.message}`;
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => boot());
+  async function boot(def){try{const e=await waitForEngine();log('Engine ready');const id=def||window.__SCENARIO_ID__||'dating-after-breakup-with-child-involved';const path=await resolveScenarioPathById(id);log('Loading',id,'->',path);const raw=await fetchJSON(path);const {list:n}=normalize(raw);if(!n.length)throw new Error('Scenario empty');const start=findStart(n,raw);if(!start)throw new Error('No start');const st=buildState(n,start,raw);window.__amorvia_state=st;window.__amorvia_onChoice=c=>{const s=window.__amorvia_state;const cur=s.byId.get(s.currentId);applyEff(s,c||{});updateHUD(s);const nx=nextId(s,cur,c||{});if(!nx){warn('No next',cur);return;}goto(s,nx);renderNode(s.byId.get(s.currentId));updateHUD(s);};renderNode(st.byId.get(st.currentId));updateHUD(st);try{(e.loadScenario||e.LoadScenario).call(e,raw);if(e.start)e.start();}catch(ex){warn('engine hook fail',ex);}}catch(ex){err('Boot fail',ex);const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');if(d)d.textContent='Boot error: '+ex.message;}}
+  document.addEventListener('DOMContentLoaded',()=>boot());
 })();
 
-/* -----------------------------------------------------------
- * PATCH v9.7.2p+ DOM-Autodetect (adds robust UI selector probing
- * and self-mount fallback panel if containers are missing)
- * ----------------------------------------------------------- */
-
+/* ---- DOM Autodetect patch ---- */
 (() => {
-  const SEL = {
-    dialog: [
-      '[data-ui=dialog]', '#dialog', '#dialogBox', '.dialog',
-      '[data-role=dialog]', '[data-panel=dialog]', '#text', '[data-ui=text]'
-    ],
-    speaker: [
-      '[data-ui=speaker]', '#speaker', '.speaker',
-      '[data-role=speaker]', '[data-ui=name]', '[data-ui=speakerName]', '#sceneTitle'
-    ],
-    choices: [
-      '[data-ui=choices]', '#choices', '#choiceArea', '.choices',
-      '[data-role=choices]', 'ul.choices', '[data-ui=options]'
-    ],
-  };
-
-  function qTry(list) {
-    for (const s of list) {
-      const el = document.querySelector(s);
-      if (el) return el;
-    }
-    return null;
-  }
-
-  function ensureContainers() {
-    let dialogEl = qTry(SEL.dialog);
-    let speakerEl = qTry(SEL.speaker);
-    let choicesEl = qTry(SEL.choices);
-
-    if (dialogEl && choicesEl) return { dialogEl, speakerEl, choicesEl };
-
-    // Build a minimal panel inside <main> if missing
-    const host = document.querySelector('main#main') || document.body;
-    const panel = document.createElement('section');
-    panel.className = 'card panel';
-    panel.style.marginTop = '0.75rem';
-
-    const speaker = document.createElement('div');
-    speaker.setAttribute('data-ui', 'speaker');
-    speaker.style.fontWeight = '600';
-    speaker.style.margin = '0.25rem 0';
-
-    const dialog = document.createElement('div');
-    dialog.setAttribute('data-ui', 'dialog');
-    dialog.style.minHeight = '3rem';
-    dialog.style.padding = '0.5rem 0';
-
-    const choices = document.createElement('div');
-    choices.setAttribute('data-ui', 'choices');
-    choices.style.display = 'grid';
-    choices.style.gap = '0.5rem';
-
-    panel.appendChild(speaker);
-    panel.appendChild(dialog);
-    panel.appendChild(choices);
-    host.appendChild(panel);
-
-    return { dialogEl: dialog, speakerEl: speaker, choicesEl: choices };
-  }
-
-  // Hook into existing renderer overrides from the main file
-  const _renderNode = window.__amorvia_renderNode;
-  window.__amorvia_renderNode = function (node) {
-    const { dialogEl, speakerEl, choicesEl } = ensureContainers();
-
-    if (dialogEl) dialogEl.textContent = node.text || node.label || node.title || '';
-    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || '';
-
-    if (choicesEl) {
-      choicesEl.innerHTML = '';
-      if (Array.isArray(node.choices) && node.choices.length) {
-        for (const c of node.choices) {
-          const btn = document.createElement('button');
-          btn.className = 'choice';
-          btn.textContent = c.label || c.text || 'Continue';
-          btn.addEventListener('click', () => window.__amorvia_onChoice(c));
-          choicesEl.appendChild(btn);
-        }
-      } else {
-        const btn = document.createElement('button');
-        btn.className = 'choice solo';
-        btn.textContent = 'Continue';
-        btn.addEventListener('click', () => window.__amorvia_onChoice({ goto: node.goto }));
-        choicesEl.appendChild(btn);
-      }
-    }
-
-    // Delegate to base renderer if present (non-conflicting)
-    if (typeof _renderNode === 'function') {
-      try { _renderNode(node); } catch (e) {}
-    }
-  };
-
-  // If base render assigns directly, monkey-patch after DOMContentLoaded
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!window.__amorvia_renderNodeBound) {
-      const orig = window.__amorvia_renderNode || function () {};
-      window.__amorvia_renderNode = (...args) => {
-        try { ensureContainers(); } catch (e) {}
-        return orig.apply(window, args);
-      };
-      window.__amorvia_renderNodeBound = true;
-    }
-  });
+  const SEL={dialog:['[data-ui=dialog]','#dialog','#dialogBox','.dialog','[data-role=dialog]','[data-panel=dialog]','#text','[data-ui=text]'],speaker:['[data-ui=speaker]','#speaker','.speaker','[data-role=speaker]','[data-ui=name]','[data-ui=speakerName]','#sceneTitle'],choices:['[data-ui=choices]','#choices','#choiceArea','.choices','[data-role=choices]','ul.choices','[data-ui=options]']};
+  function qTry(l){for(const s of l){const e=document.querySelector(s);if(e)return e;}return null;}
+  function ensure(){let d=qTry(SEL.dialog),s=qTry(SEL.speaker),c=qTry(SEL.choices);if(d&&c)return{d,s,c};const host=document.querySelector('main#main')||document.body;const p=document.createElement('section');p.className='card panel';p.style.marginTop='0.75rem';const sp=document.createElement('div');sp.dataset.ui='speaker';sp.style.fontWeight='600';sp.style.margin='0.25rem 0';const dg=document.createElement('div');dg.dataset.ui='dialog';dg.style.minHeight='3rem';dg.style.padding='0.5rem 0';const ch=document.createElement('div');ch.dataset.ui='choices';ch.style.display='grid';ch.style.gap='0.5rem';p.appendChild(sp);p.appendChild(dg);p.appendChild(ch);host.appendChild(p);return{d:dg,s:sp,c:ch};}
+  const _r=window.__amorvia_renderNode;
+  window.__amorvia_renderNode=n=>{const {d,s,c}=ensure();if(d)d.textContent=n.text||n.label||n.title||'';if(s)s.textContent=n.speaker||n.role||n.actor||'';if(c){c.innerHTML='';if(Array.isArray(n.choices)&&n.choices.length){for(const x of n.choices){const b=document.createElement('button');b.className='choice';b.textContent=x.label||x.text||'Continue';b.addEventListener('click',()=>window.__amorvia_onChoice(x));c.appendChild(b);}}else{const b=document.createElement('button');b.className='choice solo';b.textContent='Continue';b.addEventListener('click',()=>window.__amorvia_onChoice({goto:n.goto}));c.appendChild(b);}}if(typeof _r==='function'){try{_r(n);}catch(e){}}};
+  document.addEventListener('DOMContentLoaded',()=>{if(!window.__amorvia_renderNodeBound){const o=window.__amorvia_renderNode||function(){};window.__amorvia_renderNode=(...a)=>{try{ensure();}catch(e){}return o.apply(window,a);};window.__amorvia_renderNodeBound=true;}});
 })();
-
 
 
