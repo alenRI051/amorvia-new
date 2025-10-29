@@ -9,7 +9,7 @@
 // - Cross-act navigation resolver (handles "act2", "act2.start", "act2s1" ↔ "a2s1")
 // - Lightweight HUD meter animation
 // - Enforces v2 UI mode (body.v2 + localStorage)
-// - Resilient DOM binding for dialog/choices (find or create containers)
+// - Non-intrusive DOM binding (never creates dialog/choices; waits for real DOM)
 
 import { v2ToGraph } from '/js/compat/v2-to-graph.js';
 import * as ImportedEngine from '/js/engine/scenarioEngine.js';
@@ -133,41 +133,30 @@ function pickText(...vals) {
 }
 
 // -----------------------------------------------------------------------------
-// UI container resolution (robust)
+// Non-intrusive DOM binding (never creates elements)
 // -----------------------------------------------------------------------------
-const DIALOG_SEL  = '#dialog, #line, #text, .dialog, [data-role="dialog"], [data-dialog]';
-const CHOICES_SEL = '#choices, #choiceList, .choices, [data-role="choices"], [data-choices]';
+const DIALOG_SEL  = '#dialog, .dialog, [data-role="dialog"]';
+const CHOICES_SEL = '#choices, .choices, [data-role="choices"]';
+
 function qs(sel) { return document.querySelector(sel); }
+function getDialogEl()  { return qs(DIALOG_SEL); }
+function getChoicesEl() { return qs(CHOICES_SEL); }
 
-function ensureUIContainers() {
-  let dialog = qs(DIALOG_SEL);
-  let choices = qs(CHOICES_SEL);
+// Wait until a selector appears in DOM (up to timeout), resolving with the node or null.
+function waitForDom(sel, timeout = 4000) {
+  return new Promise((resolve) => {
+    const el = qs(sel);
+    if (el) return resolve(el);
 
-  if (!dialog || !choices) {
-    const host =
-      qs('#act') || qs('#screen') || qs('#stage') || qs('#app') || document.body;
+    const obs = new MutationObserver(() => {
+      const found = qs(sel);
+      if (found) { obs.disconnect(); resolve(found); }
+    });
 
-    if (!dialog) {
-      dialog = document.createElement('div');
-      dialog.id = 'dialog';
-      dialog.style.minHeight = '2.5rem';
-      dialog.style.padding = '8px 0';
-      host.appendChild(dialog);
-    }
-    if (!choices) {
-      choices = document.createElement('div');
-      choices.id = 'choices';
-      choices.style.display = 'flex';
-      choices.style.flexWrap = 'wrap';
-      choices.style.gap = '8px';
-      choices.style.padding = '6px 0 12px';
-      host.appendChild(choices);
-    }
-  }
-  return { dialogEl: dialog, choicesEl: choices };
+    obs.observe(document.documentElement || document.body, { childList: true, subtree: true });
+    setTimeout(() => { obs.disconnect(); resolve(qs(sel) || null); }, timeout);
+  });
 }
-function getDialogEl()  { return qs(DIALOG_SEL)  || ensureUIContainers().dialogEl; }
-function getChoicesEl() { return qs(CHOICES_SEL) || ensureUIContainers().choicesEl; }
 
 // -----------------------------------------------------------------------------
 // Nodes extraction / hydration
@@ -212,7 +201,6 @@ function extractNodesMap({ raw, graph }) {
               id: ch?.id ?? `${s.id}:choice:${i}`,
               label: pickText(ch?.label, ch?.text, ch?.title, ch?.caption) ?? 'Continue',
               to: ch?.to ?? ch?.goto ?? ch?.next ?? null,
-              // keep original shapes for hinting
               effects: ch?.effects ?? ch?.meters ?? ch?.effect ?? null,
               meters: ch?.meters ?? null,
             })),
@@ -688,7 +676,6 @@ function navigateTo(targetId, rawOrNull, Eng) {
 // -----------------------------------------------------------------------------
 async function startScenario(id) {
   try {
-    ensureUIContainers();
     applyUIMode();
 
     const { Eng, loadFn, startFn } = await waitForEngine();
@@ -778,7 +765,9 @@ async function startScenario(id) {
       const curId = window.ScenarioEngine?.state?.currentId;
       const curNode = window.ScenarioEngine?.state?.nodes?.[curId];
       const hasText = !!(curNode && typeof curNode.text === 'string' && curNode.text.trim().length);
-      if (!hasText || curId === '__amorvia_entry__') {
+      const dialogExists = !!getDialogEl();
+      const choicesExists = !!getChoicesEl();
+      if (!hasText || curId === '__amorvia_entry__' || !dialogExists || !choicesExists) {
         navigateTo(entry.nodeId, raw, Eng);
       } else {
         if (!renderNodeFromState(curId, Eng)) renderRawStep(curId, raw, Eng);
@@ -875,8 +864,12 @@ async function startScenario(id) {
 // -----------------------------------------------------------------------------
 (async function init() {
   try {
-    ensureUIContainers();
     applyUIMode();
+
+    // Make sure built-in containers exist before the first render
+    await waitForDom(DIALOG_SEL);
+    await waitForDom(CHOICES_SEL);
+
     const scenarios = await loadIndex();
     renderList(scenarios);
     const last = recallLast();
@@ -892,4 +885,5 @@ async function startScenario(id) {
 
 // Debug helper
 window.AmorviaApp = { startScenario, navigateTo };
+
 
