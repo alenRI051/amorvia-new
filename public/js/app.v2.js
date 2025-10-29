@@ -383,3 +383,117 @@
   document.addEventListener("DOMContentLoaded", () => boot());
 })();
 
+/* -----------------------------------------------------------
+ * PATCH v9.7.2p+ DOM-Autodetect (adds robust UI selector probing
+ * and self-mount fallback panel if containers are missing)
+ * ----------------------------------------------------------- */
+
+(() => {
+  const SEL = {
+    dialog: [
+      '[data-ui=dialog]','#dialog','#dialogBox','.dialog','[data-role=dialog]','[data-panel=dialog]','#text','[data-ui=text]'
+    ],
+    speaker: [
+      '[data-ui=speaker]','#speaker','.speaker','[data-role=speaker]','[data-ui=name]','[data-ui=speakerName]'
+    ],
+    choices: [
+      '[data-ui=choices]','#choices','#choiceArea','.choices','[data-role=choices]','ul.choices','[data-ui=options]'
+    ],
+  };
+
+  function qTry(list){
+    for(const s of list){
+      const el = document.querySelector(s);
+      if(el) return el;
+    }
+    return null;
+  }
+
+  function ensureContainers(){
+    let dialogEl = qTry(SEL.dialog);
+    let speakerEl = qTry(SEL.speaker);
+    let choicesEl = qTry(SEL.choices);
+
+    if(dialogEl && choicesEl) return {dialogEl, speakerEl, choicesEl};
+
+    // Build a minimal panel inside <main> if missing
+    const host = document.querySelector('main#main') || document.body;
+    const panel = document.createElement('section');
+    panel.className = 'card panel';
+    panel.style.marginTop = '0.75rem';
+
+    const speaker = document.createElement('div');
+    speaker.setAttribute('data-ui','speaker');
+    speaker.style.fontWeight = '600';
+    speaker.style.margin = '0.25rem 0';
+
+    const dialog = document.createElement('div');
+    dialog.setAttribute('data-ui','dialog');
+    dialog.style.minHeight = '3rem';
+    dialog.style.padding = '0.5rem 0';
+
+    const choices = document.createElement('div');
+    choices.setAttribute('data-ui','choices');
+    choices.style.display = 'grid';
+    choices.style.gap = '0.5rem';
+
+    panel.appendChild(speaker);
+    panel.appendChild(dialog);
+    panel.appendChild(choices);
+    host.appendChild(panel);
+
+    return {
+      dialogEl: dialog,
+      speakerEl: speaker,
+      choicesEl: choices,
+    };
+  }
+
+  // Hook into existing renderer overrides from the main file
+  const _renderNode = window.__amorvia_renderNode;
+  window.__amorvia_renderNode = function(node){
+    const {dialogEl, speakerEl, choicesEl} = ensureContainers();
+
+    if(dialogEl) dialogEl.textContent = node.text || node.label || node.title || '';
+    if(speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || '';
+
+    if(choicesEl){
+      choicesEl.innerHTML = '';
+      if(Array.isArray(node.choices) && node.choices.length){
+        for(const c of node.choices){
+          const btn = document.createElement('button');
+          btn.className = 'choice';
+          btn.textContent = c.label || c.text || 'Continue';
+          btn.addEventListener('click', () => window.__amorvia_onChoice(c));
+          choicesEl.appendChild(btn);
+        }
+      } else {
+        const btn = document.createElement('button');
+        btn.className = 'choice solo';
+        btn.textContent = 'Continue';
+        btn.addEventListener('click', () => window.__amorvia_onChoice({ goto: node.goto }));
+        choicesEl.appendChild(btn);
+      }
+    }
+
+    // Delegate to base renderer if present (non-conflicting)
+    if(typeof _renderNode === 'function'){
+      try{ _renderNode(node); }catch{} // best-effort
+    }
+  };
+
+  // If base render assigns directly, monkey-patch after DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', () => {
+    if(!window.__amorvia_renderNodeBound){
+      const orig = window.__amorvia_renderNode || function(){};
+      window.__amorvia_renderNode = (...args) => {
+        try{ ensureContainers(); }catch{}
+        return orig.apply(window, args);
+      };
+      window.__amorvia_renderNodeBound = true;
+    }
+  });
+})();
+
+
+
