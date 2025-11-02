@@ -1,6 +1,6 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL)
- * Clean ES2019-safe version
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL, Non-Blocking Boot)
+ * Clean ES2019-safe version — boot() patched to render even if engine missing
  */
 
 (() => {
@@ -32,14 +32,15 @@
     return r.json();
   }
 
-  async function waitForEngine(ms = 8000) {
+  async function waitForEngine(ms = 1500) {
     const t0 = performance.now();
     while (performance.now() - t0 < ms) {
       const e = window.ScenarioEngine || window.engine || window.E;
       if (e && (e.loadScenario || e.LoadScenario) && e.start) return e;
       await new Promise(r => setTimeout(r, 50));
     }
-    throw new Error('ScenarioEngine not ready');
+    warn('ScenarioEngine not found within timeout (non-fatal). Proceeding without it.');
+    return null;
   }
 
   async function resolveScenarioPathById(id) {
@@ -99,7 +100,43 @@
 
   function nextId(st,n,c){const pick=x=>typeof x==='string'&&x.trim()?x.trim():null;const ch=pick(c&&(c.goto||c.target));if(ch)return ch;const nd=pick(n&&(n.goto||n.next));if(nd)return nd;if(/end\s*of\s*act/i.test(n.text||'')||/end/i.test(n.type||'')){const id=nextAct(st.nodes,n._actIndex);if(id)return id;}const i=st.nodes.findIndex(x=>x.id===n.id);if(i>=0&&i+1<st.nodes.length){const cand=st.nodes[i+1];if(!cand._actIndex||cand._actIndex===n._actIndex)return cand.id;}return null;}
 
-  async function boot(def){try{const e=await waitForEngine();log('Engine ready');const id=def||window.__SCENARIO_ID__||'dating-after-breakup-with-child-involved';const path=await resolveScenarioPathById(id);log('Loading',id,'->',path);const raw=await fetchJSON(path);const {list:n}=normalize(raw);if(!n.length)throw new Error('Scenario empty');const start=findStart(n,raw);if(!start)throw new Error('No start');const st=buildState(n,start,raw);window.__amorvia_state=st;window.__amorvia_onChoice=c=>{const s=window.__amorvia_state;const cur=s.byId.get(s.currentId);applyEff(s,c||{});updateHUD(s);const nx=nextId(s,cur,c||{});if(!nx){warn('No next',cur);return;}goto(s,nx);renderNode(s.byId.get(s.currentId));updateHUD(s);};renderNode(st.byId.get(st.currentId));updateHUD(st);try{(e.loadScenario||e.LoadScenario).call(e,raw);if(e.start)e.start();}catch(ex){warn('engine hook fail',ex);}}catch(ex){err('Boot fail',ex);const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');if(d)d.textContent='Boot error: '+ex.message;}}
+  async function boot(def){
+    try {
+      const e = await waitForEngine();
+      const id = def || window.__SCENARIO_ID__ || 'dating-after-breakup-with-child-involved';
+      const path = await resolveScenarioPathById(id);
+      log('Loading', id, '->', path);
+      const raw = await fetchJSON(path);
+      const { list:n } = normalize(raw);
+      if (!n.length) throw new Error('Scenario empty');
+      const start = findStart(n, raw);
+      if (!start) throw new Error('No start');
+      const st = buildState(n, start, raw);
+      window.__amorvia_state = st;
+      window.__amorvia_onChoice = c => {
+        const s = window.__amorvia_state;
+        const cur = s.byId.get(s.currentId);
+        applyEff(s, c || {});
+        updateHUD(s);
+        const nx = nextId(s, cur, c || {});
+        if (!nx) { warn('No next', cur); return; }
+        goto(s, nx);
+        renderNode(s.byId.get(s.currentId));
+        updateHUD(s);
+      };
+      renderNode(st.byId.get(st.currentId));
+      updateHUD(st);
+      if (e) {
+        try { (e.loadScenario || e.LoadScenario).call(e, raw); if (e.start) e.start(); }
+        catch(ex) { warn('engine hook fail', ex); }
+      }
+    } catch(ex) {
+      err('Boot fail', ex);
+      const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');
+      if (d) d.textContent='Boot error: '+ex.message;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded',()=>boot());
 })();
 
