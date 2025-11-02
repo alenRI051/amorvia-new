@@ -21,6 +21,7 @@
   function getStoredScenarioId(){ try { return localStorage.getItem(STORAGE_KEYS.lastScenario) || null; } catch(_) { return null; } }
   function setStoredScenarioId(id){ try { if(id) localStorage.setItem(STORAGE_KEYS.lastScenario, id); } catch(_) {} }
   function readUrlScenario(){ try { const u=new URL(location.href); return u.searchParams.get('scenario'); } catch(_) { return null; } }
+  function setUrlScenario(id){ try { const u=new URL(location.href); if(id){ u.searchParams.set('scenario', id); } else { u.searchParams.delete('scenario'); } history.replaceState(null,'',u.toString()); } catch(_) {} } catch(_) { return null; } }
 
   // ---------- Fetch (no-store + cache-bust) ----------
   async function fetchJSON(url, opts = {}) {
@@ -176,10 +177,10 @@
       const wanted = currentId || readUrlScenario() || storedId || window.__SCENARIO_ID__ || items[0]?.id;
       if(wanted) sel.value=wanted;
       sel.disabled=false;
-      sel.onchange=()=>{ const id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(_){} setStoredScenarioId(id); const d=document.querySelector('#dialog')||document.querySelector('[data-ui=dialog]'); const c=document.querySelector('#choices')||document.querySelector('[data-ui=choices]'); if(d)d.textContent='Loading…'; if(c)c.innerHTML=''; boot(id); };
+      sel.onchange=()=>{ const id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(_){} setStoredScenarioId(id); setUrlScenario(id); const d=document.querySelector('#dialog')||document.querySelector('[data-ui=dialog]'); const c=document.querySelector('#choices')||document.querySelector('[data-ui=choices]'); if(d)d.textContent='Loading…'; if(c)c.innerHTML=''; boot(id); };
     }catch(e){
       warn('Failed to populate scenario picker; using fallback list.',e);
-      sel.innerHTML=''; for(const it of fallbackList){ const opt=document.createElement('option'); opt.value=it.id; opt.textContent=it.title; sel.appendChild(opt);} const wanted=currentId||readUrlScenario()||storedId||fallbackList[0].id; sel.value=wanted; sel.disabled=false; sel.onchange=()=>{ const id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(_){} setStoredScenarioId(id); boot(id); };
+      sel.innerHTML=''; for(const it of fallbackList){ const opt=document.createElement('option'); opt.value=it.id; opt.textContent=it.title; sel.appendChild(opt);} const wanted=currentId||readUrlScenario()||storedId||fallbackList[0].id; sel.value=wanted; sel.disabled=false; sel.onchange=()=>{ const id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(_){} setStoredScenarioId(id); setUrlScenario(id); boot(id); };
     }
   }
 
@@ -188,6 +189,7 @@
     try{
       const engine = await waitForEngine(); // may be null
       let scenarioId = defaultScenarioId || readUrlScenario() || getStoredScenarioId() || window.__SCENARIO_ID__ || 'dating-after-breakup-with-child-involved';
+      setUrlScenario(scenarioId);
       const path = await resolveScenarioPathById(scenarioId);
       log('Loading scenario:',scenarioId,'->',path);
       const raw = await fetchJSON(path);
@@ -223,5 +225,4 @@
   window.__amorvia_renderNode = function(node){ const {dialogEl,speakerEl,choicesEl}=ensureContainers(); if(dialogEl) dialogEl.textContent=node.text||node.label||node.title||''; if(speakerEl) speakerEl.textContent=node.speaker||node.role||node.actor||''; if(choicesEl){ choicesEl.innerHTML=''; if(Array.isArray(node.choices)&&node.choices.length){ for(const c of node.choices){ const btn=document.createElement('button'); btn.className='choice'; btn.textContent=c.label||c.text||'Continue'; btn.addEventListener('click',()=>window.__amorvia_onChoice(c)); choicesEl.appendChild(btn);} } else { const btn=document.createElement('button'); btn.className='choice solo'; btn.textContent='Continue'; btn.addEventListener('click',()=>window.__amorvia_onChoice({goto:node.goto})); choicesEl.appendChild(btn);} } if(typeof _renderNode==='function'){ try{ _renderNode(node); } catch(e){} } };
   document.addEventListener('DOMContentLoaded',()=>{ if(!window.__amorvia_renderNodeBound){ const orig=window.__amorvia_renderNode||function(){}; window.__amorvia_renderNode=(...args)=>{ try{ ensureContainers(); } catch(e){} return orig.apply(window,args); }; window.__amorvia_renderNodeBound=true; } });
 })();
-
 
