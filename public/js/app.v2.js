@@ -1,37 +1,46 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL, Non-Blocking Boot)
- * Clean ES2019-safe version — boot() patched to render even if engine missing
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL)
+ * - ES2019-safe (no bare catch)
+ * - Non-blocking boot (renders even if engine isn't ready)
+ * - Scenario picker (schema-agnostic) + reboot on change
+ * - Accepts raw v2 OR graph; hydrates nodes; safe start resolver
+ * - HUD sync (trust, tension, childStress) + Act badge
+ * - Choice label meter hints
+ * - Dev cache-bust on fetch
  */
 
 (() => {
   const CONFIG = {
     indexPath: "/data/v2-index.json",
-    schemaVersion: 2,
     meters: ["trust", "tension", "childStress"],
     startNodeCandidates: ["start", "intro", "act1-start", "act-1-start"],
     noStore: true,
     debug: true,
   };
 
-  const log = (...a) => CONFIG.debug && console.log('[Amorvia]', ...a);
-  const warn = (...a) => console.warn('[Amorvia]', ...a);
-  const err = (...a) => console.error('[Amorvia]', ...a);
+  const log  = (...a) => CONFIG.debug && console.log("[Amorvia]", ...a);
+  const warn = (...a) => console.warn("[Amorvia]", ...a);
+  const err  = (...a) => console.error("[Amorvia]", ...a);
 
+  // ---------- Fetch (no-store + cache-bust) ----------
   async function fetchJSON(url, opts = {}) {
     const o = { ...opts };
     o.headers = { ...(opts.headers || {}) };
     if (CONFIG.noStore) {
-      o.cache = 'no-store';
-      o.headers['Cache-Control'] = 'no-store, max-age=0';
-      const u = new URL(url, location.origin);
-      u.searchParams.set('v', Date.now().toString());
-      url = u.toString();
+      o.cache = "no-store";
+      o.headers["Cache-Control"] = "no-store, max-age=0";
+      try {
+        const u = new URL(url, location.origin);
+        u.searchParams.set("v", String(Date.now()));
+        url = u.toString();
+      } catch (e) { /* ignore for relative URLs */ }
     }
     const r = await fetch(url, o);
     if (!r.ok) throw new Error(`Failed to fetch ${url}: ${r.status}`);
     return r.json();
   }
 
+  // ---------- Engine wait (non-blocking) ----------
   async function waitForEngine(ms = 1500) {
     const t0 = performance.now();
     while (performance.now() - t0 < ms) {
@@ -39,114 +48,484 @@
       if (e && (e.loadScenario || e.LoadScenario) && e.start) return e;
       await new Promise(r => setTimeout(r, 50));
     }
-    warn('ScenarioEngine not found within timeout (non-fatal). Proceeding without it.');
+    warn("ScenarioEngine not found within timeout (non-fatal). Proceeding without it.");
     return null;
   }
 
+  // ---------- Resolve scenario path ----------
   async function resolveScenarioPathById(id) {
     try {
       const idx = await fetchJSON(CONFIG.indexPath);
-      const entries = Array.isArray(idx) ? idx : idx.entries;
-      const hit = entries?.find(x => x && (x.id === id || x.slug === id));
-      if (hit?.path) return hit.path;
-    } catch (e) { warn('index read fail', e); }
+      const entries =
+        Array.isArray(idx) ? idx :
+        Array.isArray(idx?.entries) ? idx.entries :
+        Array.isArray(idx?.items) ? idx.items :
+        Array.isArray(idx?.list) ? idx.list :
+        Array.isArray(idx?.scenarios) ? idx.scenarios : [];
+      const hit = entries.find(x => {
+        if (typeof x === "string") return x === id;
+        return x && (x.id === id || x.slug === id || x.key === id || x.name === id);
+      });
+      if (hit) {
+        if (typeof hit === "string") return `/data/${hit}.v2.json`;
+        if (hit.path) return hit.path;
+      }
+    } catch (e) {
+      warn("Index read failed, will use default path.", e);
+    }
     return `/data/${id}.v2.json`;
   }
 
-  function isGraph(x){return x && (Array.isArray(x.nodes)||Array.isArray(x.graph)||(x.nodes&&typeof x.nodes==='object'))&&x.version!==2;}
-  function isV2(x){return x&&(x.version===2||x.schemaVersion===2||x.meters||x.acts);}
+  // ---------- Shape guards / normalization ----------
+  const isGraph = x =>
+    x && (Array.isArray(x.nodes) || Array.isArray(x.graph) || (x.nodes && typeof x.nodes === "object")) && x.version !== 2;
 
-  function flatten(raw){
-    const out=[];
-    if(Array.isArray(raw.nodes))return raw.nodes.slice();
-    if(Array.isArray(raw.acts)){
-      raw.acts.forEach((a,i)=>{
-        if(Array.isArray(a.nodes))a.nodes.forEach(n=>out.push({...n,_actIndex:i}));
-        else if(Array.isArray(a.steps))a.steps.forEach((s,j)=>out.push({id:s.id||`act${i+1}-step${j+1}`,type:s.type||'dialog',text:s.text||s.label||s.title||'',choices:s.choices||[],goto:s.goto,_actIndex:i}));
+  const isV2 = x =>
+    x && (x.version === 2 || x.schemaVersion === 2 || x.meters || x.acts);
+
+  function flatten(raw) {
+    const out = [];
+    if (Array.isArray(raw.nodes)) return raw.nodes.slice();
+    if (Array.isArray(raw.acts)) {
+      raw.acts.forEach((act, ai) => {
+        if (Array.isArray(act.nodes)) {
+          act.nodes.forEach(n => out.push({ ...n, _actIndex: ai }));
+        } else if (Array.isArray(act.steps)) {
+          act.steps.forEach((s, j) => {
+            out.push({
+              id: s.id || `act${ai + 1}-step${j + 1}`,
+              type: s.type || "dialog",
+              text: s.text || s.label || s.title || "",
+              choices: s.choices || [],
+              goto: s.goto,
+              _actIndex: ai
+            });
+          });
+        }
       });
     }
     return out;
   }
 
-  function addHints(c){
-    const eff=c.effects||c.meters||{};const d=[];
-    for(const m of CONFIG.meters){const v=eff[m];if(typeof v==='number'&&v!==0)d.push(`${v>0?'+':''}${v} ${m}`)}
-    if(d.length){const hint=` [${d.join(' / ')}]`;const base=c.label||c.text||'';c.label=base+hint;}
+  function addChoiceHints(c) {
+    const eff = c.effects || c.meters || {};
+    const parts = [];
+    for (const m of CONFIG.meters) {
+      const v = eff[m];
+      if (typeof v === "number" && v !== 0) parts.push(`${v > 0 ? "+" : ""}${v} ${m}`);
+    }
+    if (parts.length) {
+      const hint = ` [${parts.join(" / ")}]`;
+      const base = c.label || c.text || "";
+      c.label = base + hint;
+    }
     return c;
   }
 
-  function normalize(raw){
-    let n=[];if(isV2(raw))n=flatten(raw);else if(isGraph(raw)){if(Array.isArray(raw.nodes))n=raw.nodes.slice();else if(Array.isArray(raw.graph))n=raw.graph.slice();else n=Object.values(raw.nodes||{});}const map=new Map();
-    n.forEach(x=>{if(x&&x.id){if(!Array.isArray(x.choices))x.choices=[];x.choices=x.choices.map(y=>addHints({...y}));map.set(x.id,x);}});
-    return{list:n,map};
+  function normalize(raw) {
+    let list = [];
+    if (isV2(raw))            list = flatten(raw);
+    else if (isGraph(raw))    list = Array.isArray(raw.nodes) ? raw.nodes.slice()
+                                   : Array.isArray(raw.graph) ? raw.graph.slice()
+                                   : Object.values(raw.nodes || {});
+    const map = new Map();
+    for (const n of list) {
+      if (!n || !n.id) continue;
+      if (!Array.isArray(n.choices)) n.choices = [];
+      n.choices = n.choices.map(x => addChoiceHints({ ...x }));
+      map.set(n.id, n);
+    }
+    return { list, map };
   }
 
-  function findStart(nodes,raw){const id=new Map(nodes.map(n=>[n.id,n]));if(raw.startNode&&id.has(raw.startNode))return raw.startNode;for(const c of CONFIG.startNodeCandidates)if(id.has(c))return c;for(const n of nodes){if(/end\s*of\s*act/i.test(n.text||'')||/end/i.test(n.type||''))continue;if(n.text)return n.id;}return nodes[0]?.id||null;}
-  function nextAct(nodes,i){const t=i+1;for(const n of nodes){if(n._actIndex===t&&(/^act\d+-start$/i.test(n.id)||/start/i.test(n.id)))return n.id;}for(const n of nodes){if(n._actIndex===t)return n.id;}return null;}
+  // ---------- Start node resolver ----------
+  function findStart(nodes, raw) {
+    const byId = new Map(nodes.map(n => [n.id, n]));
+    if (raw && raw.startNode && byId.has(raw.startNode)) return raw.startNode;
+    for (const c of CONFIG.startNodeCandidates) if (byId.has(c)) return c;
+    for (const n of nodes) {
+      const isEnd = /end\s*of\s*act/i.test(n.title || n.label || n.text || "") || /end/i.test(n.type || "");
+      const hasText = (n.text && n.text.trim().length > 0);
+      if (!isEnd && (n.type === "dialog" || hasText)) return n.id;
+    }
+    return nodes[0] ? nodes[0].id : null;
+  }
 
-  function animateBar(el,to,ms=350){if(!el)return;const f=parseFloat(el.dataset.value||'0'),s=performance.now();const t=Math.max(0,Math.min(100,to));function step(x){const k=Math.min(1,(x-s)/ms);const v=f+(t-f)*k;el.style.width=v+'%';el.dataset.value=v;if(k<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+  function isActEndNode(n) {
+    if (!n) return false;
+    if (/end\s*of\s*act/i.test(n.title || n.label || n.text || "")) return true;
+    if (n.type && /actEnd|end/i.test(n.type)) return true;
+    return false;
+  }
 
-  function updateHUD(st){try{const m=st.meters||{};for(const k of CONFIG.meters){const v=m[k]||0;const pct=Math.max(0,Math.min(100,v));animateBar(document.querySelector(`[data-meter="${k}"] .bar`),pct);const lbl=document.querySelector(`[data-meter="${k}"] .value`);if(lbl)lbl.textContent=v;}
-    const t=st.actIndex!=null?`Act ${st.actIndex+1}`:'Act -';const e1=document.querySelector('[data-hud=act]');const e2=document.querySelector('#actBadge');if(e1)e1.textContent=t;if(e2)e2.textContent=t;}catch(e){warn('HUD skip',e);}}
+  function nextActStartId(nodes, currentActIdx) {
+    if (currentActIdx == null) return null;
+    const target = currentActIdx + 1;
+    for (const n of nodes) {
+      if (n._actIndex === target && (/^act\d+-start$/i.test(n.id) || /start/i.test(n.id))) return n.id;
+    }
+    for (const n of nodes) if (n._actIndex === target) return n.id;
+    return null;
+  }
 
-  function buildState(n,start,raw){const m={};CONFIG.meters.forEach(x=>m[x]=0);return{nodes:n,byId:new Map(n.map(x=>[x.id,x])),currentId:start,actIndex:n.find(x=>x.id===start)?._actIndex||0,meters:{...m,...(raw?.meters||{})},history:[]}};
+  // ---------- HUD ----------
+  function animateBar(el, to, ms = 350) {
+    if (!el) return;
+    const from = parseFloat(el.dataset.value || "0");
+    const target = Math.max(0, Math.min(100, to));
+    const start = performance.now();
+    function step(ts) {
+      const k = Math.min(1, (ts - start) / ms);
+      const v = from + (target - from) * k;
+      el.style.width = v + "%";
+      el.dataset.value = String(v);
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
 
-  function applyEff(st,c){const e=c.effects||c.meters||{};for(const k of CONFIG.meters){if(typeof e[k]==='number')st.meters[k]=(st.meters[k]||0)+e[k];}}
-
-  function goto(st,id){if(!st.byId.has(id)){warn('goto unknown',id);return false;}st.history.push(st.currentId);st.currentId=id;const n=st.byId.get(id);if(n&&n._actIndex!=null)st.actIndex=n._actIndex;return true;}
-
-  function renderNode(n){const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');const s=document.querySelector('[data-ui=speaker]')||document.querySelector('#sceneTitle');const c=document.querySelector('[data-ui=choices]')||document.querySelector('#choices');if(d)d.textContent=n.text||n.label||n.title||'';if(s)s.textContent=n.speaker||n.role||n.actor||n.title||'';if(c){c.innerHTML='';if(Array.isArray(n.choices)&&n.choices.length){for(const x of n.choices){const b=document.createElement('button');b.className='choice';b.textContent=x.label||x.text||'Continue';b.addEventListener('click',()=>window.__amorvia_onChoice(x));c.appendChild(b);}}else{const b=document.createElement('button');b.className='choice solo';b.textContent='Continue';b.addEventListener('click',()=>window.__amorvia_onChoice({goto:n.goto}));c.appendChild(b);}}}
-  window.__amorvia_renderNode=renderNode;
-
-  function nextId(st,n,c){const pick=x=>typeof x==='string'&&x.trim()?x.trim():null;const ch=pick(c&&(c.goto||c.target));if(ch)return ch;const nd=pick(n&&(n.goto||n.next));if(nd)return nd;if(/end\s*of\s*act/i.test(n.text||'')||/end/i.test(n.type||'')){const id=nextAct(st.nodes,n._actIndex);if(id)return id;}const i=st.nodes.findIndex(x=>x.id===n.id);if(i>=0&&i+1<st.nodes.length){const cand=st.nodes[i+1];if(!cand._actIndex||cand._actIndex===n._actIndex)return cand.id;}return null;}
-
-  async function boot(def){
+  function updateHUD(state) {
     try {
-      const e = await waitForEngine();
-      const id = def || window.__SCENARIO_ID__ || 'dating-after-breakup-with-child-involved';
-      const path = await resolveScenarioPathById(id);
-      log('Loading', id, '->', path);
-      const raw = await fetchJSON(path);
-      const { list:n } = normalize(raw);
-      if (!n.length) throw new Error('Scenario empty');
-      const start = findStart(n, raw);
-      if (!start) throw new Error('No start');
-      const st = buildState(n, start, raw);
-      window.__amorvia_state = st;
-      window.__amorvia_onChoice = c => {
-        const s = window.__amorvia_state;
-        const cur = s.byId.get(s.currentId);
-        applyEff(s, c || {});
-        updateHUD(s);
-        const nx = nextId(s, cur, c || {});
-        if (!nx) { warn('No next', cur); return; }
-        goto(s, nx);
-        renderNode(s.byId.get(s.currentId));
-        updateHUD(s);
-      };
-      renderNode(st.byId.get(st.currentId));
-      updateHUD(st);
-      if (e) {
-        try { (e.loadScenario || e.LoadScenario).call(e, raw); if (e.start) e.start(); }
-        catch(ex) { warn('engine hook fail', ex); }
+      const m = state.meters || {};
+      for (const k of CONFIG.meters) {
+        const val = typeof m[k] === "number" ? m[k] : 0;
+        animateBar(document.querySelector(`[data-meter="${k}"] .bar`), Math.max(0, Math.min(100, val)));
+        const label = document.querySelector(`[data-meter="${k}"] .value`);
+        if (label) label.textContent = String(val);
       }
-    } catch(ex) {
-      err('Boot fail', ex);
-      const d=document.querySelector('[data-ui=dialog]')||document.querySelector('#dialog');
-      if (d) d.textContent='Boot error: '+ex.message;
+      const txt = state.actIndex != null ? `Act ${state.actIndex + 1}` : "Act -";
+      const el1 = document.querySelector("[data-hud=act]");
+      const el2 = document.querySelector("#actBadge");
+      if (el1) el1.textContent = txt;
+      if (el2) el2.textContent = txt;
+    } catch (e) {
+      warn("HUD update skipped:", e);
     }
   }
 
-  document.addEventListener('DOMContentLoaded',()=>boot());
+  // ---------- Minimal engine driver ----------
+  function buildState(nodes, startId, raw) {
+    const base = {};
+    for (const m of CONFIG.meters) base[m] = 0;
+    return {
+      nodes,
+      byId: new Map(nodes.map(n => [n.id, n])),
+      currentId: startId,
+      actIndex: (nodes.find(n => n.id === startId)?._actIndex) || 0,
+      meters: { ...base, ...(raw && raw.meters ? raw.meters : {}) },
+      history: []
+    };
+  }
+
+  function applyEffects(state, choice) {
+    const eff = choice.effects || choice.meters || {};
+    for (const k of CONFIG.meters) {
+      if (typeof eff[k] === "number") state.meters[k] = (state.meters[k] || 0) + eff[k];
+    }
+  }
+
+  function gotoNode(state, id) {
+    if (!state.byId.has(id)) { warn("goto unknown node:", id); return false; }
+    state.history.push(state.currentId);
+    state.currentId = id;
+    const node = state.byId.get(id);
+    if (node && node._actIndex != null) state.actIndex = node._actIndex;
+    return true;
+  }
+
+  function renderNode(node) {
+    const dialogEl  = document.querySelector("[data-ui=dialog]")  || document.querySelector("#dialog");
+    const speakerEl = document.querySelector("[data-ui=speaker]") || document.querySelector("#sceneTitle");
+    const choicesEl = document.querySelector("[data-ui=choices]") || document.querySelector("#choices");
+
+    if (dialogEl)  dialogEl.textContent  = node.text || node.label || node.title || "";
+    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || node.title || "";
+
+    if (choicesEl) {
+      choicesEl.innerHTML = "";
+      if (Array.isArray(node.choices) && node.choices.length) {
+        for (const c of node.choices) {
+          const btn = document.createElement("button");
+          btn.className = "choice";
+          btn.textContent = c.label || c.text || "Continue";
+          btn.addEventListener("click", () => window.__amorvia_onChoice(c));
+          choicesEl.appendChild(btn);
+        }
+      } else {
+        const btn = document.createElement("button");
+        btn.className = "choice solo";
+        btn.textContent = "Continue";
+        btn.addEventListener("click", () => window.__amorvia_onChoice({ goto: node.goto }));
+        choicesEl.appendChild(btn);
+      }
+    }
+  }
+
+  // expose for DOM-autodetect patch to extend
+  window.__amorvia_renderNode = renderNode;
+
+  function computeNextId(state, node, choice) {
+    const pick = x => (typeof x === "string" && x.trim().length ? x.trim() : null);
+    const fromChoice = pick(choice && (choice.goto || choice.target));
+    if (fromChoice) return fromChoice;
+    const fromNode = pick(node && (node.goto || node.next));
+    if (fromNode) return fromNode;
+    if (isActEndNode(node)) {
+      const nid = nextActStartId(state.nodes, node._actIndex);
+      if (nid) return nid;
+    }
+    const idx = state.nodes.findIndex(n => n.id === node.id);
+    if (idx >= 0 && idx + 1 < state.nodes.length) {
+      const cand = state.nodes[idx + 1];
+      if (!cand._actIndex || cand._actIndex === node._actIndex) return cand.id;
+    }
+    return null;
+  }
+
+  // ---------- Scenario picker helpers ----------
+  function titleFromId(id) {
+    return (id || "")
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, m => m.toUpperCase())
+      .trim();
+  }
+
+  async function populateScenarioPicker(currentId) {
+    const sel = document.getElementById("scenarioPicker");
+    if (!sel) return;
+
+    sel.innerHTML = '<option disabled>Loading…</option>';
+    sel.disabled = true;
+
+    // fallback list (when index unavailable)
+    const fallbackList = [
+      { id: "dating-after-breakup-with-child-involved", title: "Dating After Breakup (With Child)" },
+      { id: "co-parenting-with-bipolar-partner",        title: "Co-parenting With Bipolar Partner" },
+      { id: "visitor",                                  title: "Visitor" }
+    ];
+
+    try {
+      const idx = await fetchJSON(CONFIG.indexPath);
+      const rawEntries =
+        Array.isArray(idx) ? idx :
+        Array.isArray(idx?.entries) ? idx.entries :
+        Array.isArray(idx?.items) ? idx.items :
+        Array.isArray(idx?.list) ? idx.list :
+        Array.isArray(idx?.scenarios) ? idx.scenarios : [];
+
+      let items = rawEntries.map(x => {
+        if (typeof x === "string") {
+          return { id: x, title: titleFromId(x), path: `/data/${x}.v2.json` };
+        }
+        const id   = x.id || x.slug || x.key || (typeof x.name === "string" ? x.name.toLowerCase().replace(/\s+/g, "-") : undefined);
+        const path = x.path || x.url || (id ? `/data/${id}.v2.json` : undefined);
+        const title = x.title || x.name || titleFromId(id);
+        return id ? { id, title, path } : null;
+      }).filter(Boolean);
+
+      if (!items.length) {
+        items = fallbackList;
+        warn("[Amorvia] v2-index.json had no usable entries; using fallback list.");
+      }
+
+      sel.innerHTML = "";
+      for (const it of items.sort((a,b)=>a.title.localeCompare(b.title, undefined, {sensitivity:"base"}))) {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        opt.textContent = it.title;
+        sel.appendChild(opt);
+      }
+
+      const wanted = currentId || window.__SCENARIO_ID__ || items[0]?.id;
+      if (wanted) sel.value = wanted;
+
+      sel.disabled = false;
+      sel.onchange = () => {
+        const id = sel.value;
+        try { window.__SCENARIO_ID__ = id; } catch (_) {}
+        const dialogEl  = document.querySelector("#dialog")  || document.querySelector("[data-ui=dialog]");
+        const choicesEl = document.querySelector("#choices") || document.querySelector("[data-ui=choices]");
+        if (dialogEl) dialogEl.textContent = "Loading…";
+        if (choicesEl) choicesEl.innerHTML = "";
+        boot(id);
+      };
+    } catch (e) {
+      warn("Failed to populate scenario picker; using fallback list.", e);
+      sel.innerHTML = "";
+      for (const it of fallbackList) {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        opt.textContent = it.title;
+        sel.appendChild(opt);
+      }
+      sel.value = currentId || fallbackList[0].id;
+      sel.disabled = false;
+      sel.onchange = () => {
+        const id = sel.value;
+        try { window.__SCENARIO_ID__ = id; } catch (_) {}
+        boot(id);
+      };
+    }
+  }
+
+  // ---------- Boot ----------
+  async function boot(defaultScenarioId) {
+    try {
+      const engine = await waitForEngine(); // may be null (non-fatal)
+
+      // Allow URL ?scenario=... override
+      let scenarioId = defaultScenarioId || window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved";
+      try {
+        const u = new URL(location.href);
+        const q = u.searchParams.get("scenario");
+        if (q) scenarioId = q;
+      } catch (e) {}
+
+      const path = await resolveScenarioPathById(scenarioId);
+      log("Loading scenario:", scenarioId, "->", path);
+      const raw = await fetchJSON(path);
+
+      const { list: nodes } = normalize(raw);
+      if (!nodes.length) throw new Error("Scenario has no nodes after normalization");
+
+      const startId = findStart(nodes, raw);
+      if (!startId) throw new Error("Unable to find a start node");
+
+      const state = buildState(nodes, startId, raw);
+      window.__amorvia_state = state;
+
+      window.__amorvia_onChoice = (choice) => {
+        const s = window.__amorvia_state;
+        const cur = s.byId.get(s.currentId);
+        applyEffects(s, choice || {});
+        updateHUD(s);
+        const nextId = computeNextId(s, cur, choice || {});
+        if (!nextId) { warn("No next node from:", cur); return; }
+        gotoNode(s, nextId);
+        renderNode(s.byId.get(s.currentId));
+        updateHUD(s);
+      };
+
+      // Initial mount
+      renderNode(state.byId.get(state.currentId));
+      updateHUD(state);
+
+      // Notify engine, if available
+      if (engine) {
+        try {
+          (engine.loadScenario || engine.LoadScenario).call(engine, raw);
+          if (engine.start) engine.start();
+        } catch (e) {
+          warn("Engine hooks failed (non-fatal):", e);
+        }
+      }
+    } catch (e) {
+      err("Boot failed:", e);
+      const dialogEl = document.querySelector("[data-ui=dialog]") || document.querySelector("#dialog");
+      if (dialogEl) dialogEl.textContent = `Boot error: ${e.message}`;
+    }
+  }
+
+  // ---------- Init ----------
+  document.addEventListener("DOMContentLoaded", () => {
+    populateScenarioPicker("dating-after-breakup-with-child-involved");
+    boot();
+  });
 })();
 
-/* ---- DOM Autodetect patch ---- */
+/* -----------------------------------------------------------
+ * DOM-Autodetect + Self-mount fallback panel (ES2019-safe)
+ * ----------------------------------------------------------- */
 (() => {
-  const SEL={dialog:['[data-ui=dialog]','#dialog','#dialogBox','.dialog','[data-role=dialog]','[data-panel=dialog]','#text','[data-ui=text]'],speaker:['[data-ui=speaker]','#speaker','.speaker','[data-role=speaker]','[data-ui=name]','[data-ui=speakerName]','#sceneTitle'],choices:['[data-ui=choices]','#choices','#choiceArea','.choices','[data-role=choices]','ul.choices','[data-ui=options]']};
-  function qTry(l){for(const s of l){const e=document.querySelector(s);if(e)return e;}return null;}
-  function ensure(){let d=qTry(SEL.dialog),s=qTry(SEL.speaker),c=qTry(SEL.choices);if(d&&c)return{d,s,c};const host=document.querySelector('main#main')||document.body;const p=document.createElement('section');p.className='card panel';p.style.marginTop='0.75rem';const sp=document.createElement('div');sp.dataset.ui='speaker';sp.style.fontWeight='600';sp.style.margin='0.25rem 0';const dg=document.createElement('div');dg.dataset.ui='dialog';dg.style.minHeight='3rem';dg.style.padding='0.5rem 0';const ch=document.createElement('div');ch.dataset.ui='choices';ch.style.display='grid';ch.style.gap='0.5rem';p.appendChild(sp);p.appendChild(dg);p.appendChild(ch);host.appendChild(p);return{d:dg,s:sp,c:ch};}
-  const _r=window.__amorvia_renderNode;
-  window.__amorvia_renderNode=n=>{const {d,s,c}=ensure();if(d)d.textContent=n.text||n.label||n.title||'';if(s)s.textContent=n.speaker||n.role||n.actor||'';if(c){c.innerHTML='';if(Array.isArray(n.choices)&&n.choices.length){for(const x of n.choices){const b=document.createElement('button');b.className='choice';b.textContent=x.label||x.text||'Continue';b.addEventListener('click',()=>window.__amorvia_onChoice(x));c.appendChild(b);}}else{const b=document.createElement('button');b.className='choice solo';b.textContent='Continue';b.addEventListener('click',()=>window.__amorvia_onChoice({goto:n.goto}));c.appendChild(b);}}if(typeof _r==='function'){try{_r(n);}catch(e){}}};
-  document.addEventListener('DOMContentLoaded',()=>{if(!window.__amorvia_renderNodeBound){const o=window.__amorvia_renderNode||function(){};window.__amorvia_renderNode=(...a)=>{try{ensure();}catch(e){}return o.apply(window,a);};window.__amorvia_renderNodeBound=true;}});
+  const SEL = {
+    dialog:  ['[data-ui=dialog]', '#dialog', '#dialogBox', '.dialog', '[data-role=dialog]', '[data-panel=dialog]', '#text', '[data-ui=text]'],
+    speaker: ['[data-ui=speaker]', '#speaker', '.speaker', '[data-role=speaker]', '[data-ui=name]', '[data-ui=speakerName]', '#sceneTitle'],
+    choices: ['[data-ui=choices]', '#choices', '#choiceArea', '.choices', '[data-role=choices]', 'ul.choices', '[data-ui=options]'],
+  };
+
+  function qTry(list) {
+    for (const s of list) {
+      const el = document.querySelector(s);
+      if (el) return el;
+    }
+    return null;
+  }
+
+  function ensureContainers() {
+    let dialogEl = qTry(SEL.dialog);
+    let speakerEl = qTry(SEL.speaker);
+    let choicesEl = qTry(SEL.choices);
+    if (dialogEl && choicesEl) return { dialogEl, speakerEl, choicesEl };
+
+    // Build a minimal panel inside <main> if missing
+    const host = document.querySelector("main#main") || document.body;
+    const panel = document.createElement("section");
+    panel.className = "card panel";
+    panel.style.marginTop = "0.75rem";
+
+    const speaker = document.createElement("div");
+    speaker.setAttribute("data-ui", "speaker");
+    speaker.style.fontWeight = "600";
+    speaker.style.margin = "0.25rem 0";
+
+    const dialog = document.createElement("div");
+    dialog.setAttribute("data-ui", "dialog");
+    dialog.style.minHeight = "3rem";
+    dialog.style.padding = "0.5rem 0";
+
+    const choices = document.createElement("div");
+    choices.setAttribute("data-ui", "choices");
+    choices.style.display = "grid";
+    choices.style.gap = "0.5rem";
+
+    panel.appendChild(speaker);
+    panel.appendChild(dialog);
+    panel.appendChild(choices);
+    host.appendChild(panel);
+
+    return { dialogEl: dialog, speakerEl: speaker, choicesEl: choices };
+  }
+
+  const _renderNode = window.__amorvia_renderNode;
+  window.__amorvia_renderNode = function (node) {
+    const { dialogEl, speakerEl, choicesEl } = ensureContainers();
+
+    if (dialogEl) dialogEl.textContent = node.text || node.label || node.title || "";
+    if (speakerEl) speakerEl.textContent = node.speaker || node.role || node.actor || "";
+
+    if (choicesEl) {
+      choicesEl.innerHTML = "";
+      if (Array.isArray(node.choices) && node.choices.length) {
+        for (const c of node.choices) {
+          const btn = document.createElement("button");
+          btn.className = "choice";
+          btn.textContent = c.label || c.text || "Continue";
+          btn.addEventListener("click", () => window.__amorvia_onChoice(c));
+          choicesEl.appendChild(btn);
+        }
+      } else {
+        const btn = document.createElement("button");
+        btn.className = "choice solo";
+        btn.textContent = "Continue";
+        btn.addEventListener("click", () => window.__amorvia_onChoice({ goto: node.goto }));
+        choicesEl.appendChild(btn);
+      }
+    }
+
+    if (typeof _renderNode === "function") {
+      try { _renderNode(node); } catch (e) {}
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!window.__amorvia_renderNodeBound) {
+      const orig = window.__amorvia_renderNode || function () {};
+      window.__amorvia_renderNode = (...args) => {
+        try { ensureContainers(); } catch (e) {}
+        return orig.apply(window, args);
+      };
+      window.__amorvia_renderNodeBound = true;
+    }
+  });
 })();
 
