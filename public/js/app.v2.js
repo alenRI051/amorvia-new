@@ -21,6 +21,12 @@
   const log  = (...a) => CONFIG.debug && console.log("[Amorvia]", ...a);
   const warn = (...a) => console.warn("[Amorvia]", ...a);
   const err  = (...a) => console.error("[Amorvia]", ...a);
+  
+  // ---- Persistence helpers ----
+const STORAGE_KEYS = { lastScenario: "amorvia:lastScenarioId" };
+function getStoredScenarioId(){ try { return localStorage.getItem(STORAGE_KEYS.lastScenario) || null; } catch(_) { return null; } }
+function setStoredScenarioId(id){ try { if (id) localStorage.setItem(STORAGE_KEYS.lastScenario, id); } catch(_) {} }
+function readUrlScenario(){ try { const u=new URL(location.href); return u.searchParams.get("scenario"); } catch(_) { return null; } }
 
   // ---------- Fetch (no-store + cache-bust) ----------
   async function fetchJSON(url, opts = {}) {
