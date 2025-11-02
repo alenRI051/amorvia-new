@@ -1,9 +1,10 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ • ES2018-safe • v972p25)
- * Adds:
- *  - Engine Status Badge (Connected / Fallback / Ready / Error)
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ • ES2018-safe • v972p26)
+ * Fix: restore resolveScenarioPathById() (missing in v972p25)
+ * Includes:
+ *  - Engine Status Badge
  *  - Robust Scenario Picker (+watchdog) with URL sync + persistence
- *  - **HUD Auto‑Inject**: builds meters if missing and animates them
+ *  - HUD Auto‑Inject + animation guard
  */
 
 (function () {
@@ -98,14 +99,12 @@
   function ensureHUD(){
     var host = document.getElementById('hud') || document.querySelector('[data-ui=hud]');
     if (!host){
-      // create minimal HUD container under dialog panel
       var panel = document.querySelector('.panel.dialog') || document.querySelector('.card.panel') || document.body;
       host = document.createElement('div');
       host.id = 'hud';
       host.className = 'hud row v2-only';
       panel.appendChild(host);
     }
-    // If it already has meters, keep them; else create the three defaults
     var haveAny = host.querySelector('[data-meter]');
     if (!haveAny){
       var frag = document.createDocumentFragment();
@@ -146,6 +145,33 @@
       if(el1) el1.textContent=txt;
       if(el2) el2.textContent=txt;
     } catch(e){ warn("HUD update skipped:", e); }
+  }
+
+  // ---------- Index -> path (restored) -------------------------------------
+  function resolveScenarioPathById(id) {
+    return fetchJSON(CONFIG.indexPath).then(function(idx){
+      var entries = [];
+      if (Array.isArray(idx)) entries = idx;
+      else if (idx && Array.isArray(idx.entries)) entries = idx.entries;
+      else if (idx && Array.isArray(idx.items)) entries = idx.items;
+      else if (idx && Array.isArray(idx.list)) entries = idx.list;
+      else if (idx && Array.isArray(idx.scenarios)) entries = idx.scenarios;
+
+      var hit=null, i, x;
+      for (i=0;i<entries.length;i++){
+        x = entries[i];
+        if (typeof x === "string" && x === id) { hit = x; break; }
+        if (x && (x.id === id || x.slug === id || x.key === id || x.name === id)) { hit = x; break; }
+      }
+      if (hit) {
+        if (typeof hit === "string") return "/data/" + hit + ".v2.json";
+        if (hit.path) return hit.path;
+      }
+      return "/data/" + id + ".v2.json";
+    }).catch(function(e){
+      warn("Index read failed, defaulting path.", e);
+      return "/data/" + id + ".v2.json";
+    });
   }
 
   // ---------- Shapes / normalize -------------------------------------------
@@ -202,7 +228,7 @@
       if (!n || !n.id) continue;
       if (!Array.isArray(n.choices)) n.choices = [];
       var outChoices = [];
-      for (var c=0;c<n.choices.length;c++) outChoices.push(addChoiceHints(Object.assign({}, n.choices[c])));
+      for (var c=0;c<n.choices.length;c++) outChoices.push(Object.assign({}, addChoiceHints(n.choices[c])));
       n.choices = outChoices;
       map.set(n.id, n);
     }
@@ -331,22 +357,22 @@
       else if (idx && Array.isArray(idx.list)) rawEntries = idx.list;
       else if (idx && Array.isArray(idx.scenarios)) rawEntries = idx.scenarios;
 
-      var items = [];
-      for (var i=0;i<rawEntries.length;i++){
-        var x = rawEntries[i];
-        if (typeof x === "string") items.push({ id:x, title:titleFromId(x), path:"/data/"+x+".v2.json" });
-        else if (x){ var id = x.id || x.slug || x.key || (typeof x.name==="string" ? x.name.toLowerCase().replace(/\s+/g,"-") : undefined);
-          var title = (x.title || x.name || titleFromId(id) || id || "Scenario").trim();
-          if (id) items.push({ id:id, title:title });
-        }
+    var items = [];
+    for (var i=0;i<rawEntries.length;i++){
+      var x = rawEntries[i];
+      if (typeof x === "string") items.push({ id:x, title:titleFromId(x), path:"/data/"+x+".v2.json" });
+      else if (x){ var id = x.id || x.slug || x.key || (typeof x.name==="string" ? x.name.toLowerCase().replace(/\s+/g,"-") : undefined);
+        var title = (x.title || x.name || titleFromId(id) || id || "Scenario").trim();
+        if (id) items.push({ id:id, title:title });
       }
-      if (!items.length) { warn("[Amorvia] Index had no usable entries, using fallback."); items = fallbackList.slice(); }
-      items.sort(function(a,b){ return a.title.localeCompare(b.title); });
-      renderItems(items);
-    }).catch(function(e){
-      warn("Picker fetch failed, using fallback list.", e);
-      renderItems(fallbackList.slice());
-    });
+    }
+    if (!items.length) { warn("[Amorvia] Index had no usable entries, using fallback."); items = fallbackList.slice(); }
+    items.sort(function(a,b){ return a.title.localeCompare(b.title); });
+    renderItems(items);
+  }).catch(function(e){
+    warn("Picker fetch failed, using fallback list.", e);
+    renderItems(fallbackList.slice());
+  });
 
     setTimeout(function(){
       if (sel.options.length === 0){
@@ -360,7 +386,7 @@
   function boot(defaultScenarioId){
     setBadge('Loading…',null);
     waitForEngine().then(function(engine){
-      ensureHUD(); // make sure HUD exists before first update
+      ensureHUD();
       var scenarioId = defaultScenarioId || readUrlScenario() || getStoredScenarioId() || window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved";
       setUrlScenario(scenarioId);
       setBadge('Loading '+scenarioId+'…',null);
