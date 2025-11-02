@@ -1,0 +1,7 @@
+/* Minimal HUD fallback styling (use if your HUD CSS is missing) */
+.hud { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap }
+.hud .meter { display:flex; align-items:center; gap:.5rem; min-width: 220px }
+.hud .meter .label { font-weight:600; min-width:100px }
+.hud .meter .track { position:relative; width:140px; height:8px; background:#e5e7eb; border-radius:6px; overflow:hidden }
+.hud .meter .bar { position:absolute; left:0; top:0; bottom:0; width:0%; background:#2563eb; border-radius:6px; transition: width .35s linear }
+.hud .meter .value { min-width: 24px; text-align:right; font-variant-numeric: tabular-nums }
