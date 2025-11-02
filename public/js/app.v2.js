@@ -1,10 +1,9 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ • ES2018-safe • v972p24)
- * Includes:
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ • ES2018-safe • v972p25)
+ * Adds:
  *  - Engine Status Badge (Connected / Fallback / Ready / Error)
- *  - Robust Scenario Picker (+fallback watchdog)
- *  - URL sync (?scenario=) + localStorage persistence
- *  - ES2018-safe (no optional chaining / bare catch)
+ *  - Robust Scenario Picker (+watchdog) with URL sync + persistence
+ *  - **HUD Auto‑Inject**: builds meters if missing and animates them
  */
 
 (function () {
@@ -95,31 +94,58 @@
     });
   }
 
-  // ---------- Index -> path ----------
-  function resolveScenarioPathById(id) {
-    return fetchJSON(CONFIG.indexPath).then(function(idx){
-      var entries = [];
-      if (Array.isArray(idx)) entries = idx;
-      else if (idx && Array.isArray(idx.entries)) entries = idx.entries;
-      else if (idx && Array.isArray(idx.items)) entries = idx.items;
-      else if (idx && Array.isArray(idx.list)) entries = idx.list;
-      else if (idx && Array.isArray(idx.scenarios)) entries = idx.scenarios;
+  // ---------- HUD (auto-inject + animate) ----------------------------------
+  function ensureHUD(){
+    var host = document.getElementById('hud') || document.querySelector('[data-ui=hud]');
+    if (!host){
+      // create minimal HUD container under dialog panel
+      var panel = document.querySelector('.panel.dialog') || document.querySelector('.card.panel') || document.body;
+      host = document.createElement('div');
+      host.id = 'hud';
+      host.className = 'hud row v2-only';
+      panel.appendChild(host);
+    }
+    // If it already has meters, keep them; else create the three defaults
+    var haveAny = host.querySelector('[data-meter]');
+    if (!haveAny){
+      var frag = document.createDocumentFragment();
+      for (var i=0;i<CONFIG.meters.length;i++){
+        var k = CONFIG.meters[i];
+        var meter = document.createElement('div');
+        meter.className = 'meter';
+        meter.setAttribute('data-meter', k);
+        meter.innerHTML =
+          '<span class="label">'+(k==='childStress'?'Child Stress':k.charAt(0).toUpperCase()+k.slice(1))+'</span>' +
+          '<div class="track"><div class="bar" data-value="0" style="width:0%"></div></div>' +
+          '<span class="value">0</span>';
+        frag.appendChild(meter);
+      }
+      host.appendChild(frag);
+    }
+    return host;
+  }
 
-      var hit=null, i, x;
-      for (i=0;i<entries.length;i++){
-        x = entries[i];
-        if (typeof x === "string" && x === id) { hit = x; break; }
-        if (x && (x.id === id || x.slug === id || x.key === id || x.name === id)) { hit = x; break; }
+  function animateBar(el,to,ms){ if(ms==null) ms=350; if(!el) return; var from=parseFloat(el.getAttribute('data-value')||el.dataset.value||"0"); var target=Math.max(0,Math.min(100,to)); var start=performance.now(); function step(ts){ var k=Math.min(1,(ts-start)/ms); var v=from+(target-from)*k; el.style.width=v+"%"; el.setAttribute('data-value', String(v)); el.dataset.value=String(v); if(k<1) requestAnimationFrame(step);} requestAnimationFrame(step); }
+
+  function updateHUD(state){
+    try{
+      ensureHUD();
+      var m=state.meters||{};
+      for(var i=0;i<CONFIG.meters.length;i++){
+        var k=CONFIG.meters[i];
+        var val=typeof m[k]==="number"?m[k]:0;
+        var pct=Math.max(0,Math.min(100,val));
+        var bar=document.querySelector('[data-meter="'+k+'"] .bar');
+        animateBar(bar,pct);
+        var label=document.querySelector('[data-meter="'+k+'"] .value');
+        if(label) label.textContent=String(val);
       }
-      if (hit) {
-        if (typeof hit === "string") return "/data/" + hit + ".v2.json";
-        if (hit.path) return hit.path;
-      }
-      return "/data/" + id + ".v2.json";
-    }).catch(function(e){
-      warn("Index read failed, defaulting path.", e);
-      return "/data/" + id + ".v2.json";
-    });
+      var txt=state.actIndex!=null?("Act "+(state.actIndex+1)):"Act -";
+      var el1=document.querySelector("[data-hud=act]");
+      var el2=document.querySelector("#actBadge");
+      if(el1) el1.textContent=txt;
+      if(el2) el2.textContent=txt;
+    } catch(e){ warn("HUD update skipped:", e); }
   }
 
   // ---------- Shapes / normalize -------------------------------------------
@@ -215,10 +241,6 @@
     return null;
   }
 
-  // ---------- HUD -----------------------------------------------------------
-  function animateBar(el,to,ms){ if(ms==null) ms=350; if(!el) return; var from=parseFloat(el.dataset.value||"0"); var target=Math.max(0,Math.min(100,to)); var start=performance.now(); function step(ts){ var k=Math.min(1,(ts-start)/ms); var v=from+(target-from)*k; el.style.width=v+"%"; el.dataset.value=String(v); if(k<1) requestAnimationFrame(step);} requestAnimationFrame(step); }
-  function updateHUD(state){ try{ var m=state.meters||{}; for(var i=0;i<CONFIG.meters.length;i++){ var k=CONFIG.meters[i]; var val=typeof m[k]==="number"?m[k]:0; animateBar(document.querySelector('[data-meter="'+k+'"] .bar'), Math.max(0,Math.min(100,val))); var label=document.querySelector('[data-meter="'+k+'"] .value'); if(label) label.textContent=String(val);} var txt=state.actIndex!=null?("Act "+(state.actIndex+1)):"Act -"; var el1=document.querySelector("[data-hud=act]"); var el2=document.querySelector("#actBadge"); if(el1) el1.textContent=txt; if(el2) el2.textContent=txt; } catch(e){ warn("HUD update skipped:", e);} }
-
   // ---------- Driver --------------------------------------------------------
   function buildState(nodes,startId,raw){
     var base={}; for(var i=0;i<CONFIG.meters.length;i++){ base[CONFIG.meters[i]]=0; }
@@ -268,7 +290,7 @@
   }
 
   // ---------- Scenario picker ----------------------------------------------
-  function titleFromId(id){ return String(id||"").replace(/[-_]+/g," ").replace(/\b\w/g(function(m){return m.toUpperCase();})).trim(); }
+  function titleFromId(id){ return String(id||"").replace(/[-_]+/g," ").replace(/\b\w/g,function(m){return m.toUpperCase();}).trim(); }
   function populateScenarioPicker(currentId){
     var sel=document.getElementById("scenarioPicker"); if(!sel) return;
     sel.innerHTML='<option disabled>Loading…</option>'; sel.disabled=true;
@@ -338,6 +360,7 @@
   function boot(defaultScenarioId){
     setBadge('Loading…',null);
     waitForEngine().then(function(engine){
+      ensureHUD(); // make sure HUD exists before first update
       var scenarioId = defaultScenarioId || readUrlScenario() || getStoredScenarioId() || window.__SCENARIO_ID__ || "dating-after-breakup-with-child-involved";
       setUrlScenario(scenarioId);
       setBadge('Loading '+scenarioId+'…',null);
@@ -382,6 +405,7 @@
   // ---------- Init ----------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function(){
     populateScenarioPicker("dating-after-breakup-with-child-involved");
+    ensureHUD();
     boot();
   });
 })();
@@ -435,11 +459,4 @@
     }
     if (typeof _renderNode === "function") { try { _renderNode(node); } catch(e) {} }
   };
-  document.addEventListener("DOMContentLoaded", function(){
-    if (!window.__amorvia_renderNodeBound){
-      var orig = window.__amorvia_renderNode || function(){};
-      window.__amorvia_renderNode = function(){ try { ensureContainers(); } catch(e) {} return orig.apply(window, arguments); };
-      window.__amorvia_renderNodeBound = true;
-    }
-  });
 })();
