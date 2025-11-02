@@ -1,13 +1,8 @@
 /*
- * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ FINAL • ES2018-safe)
- * Features:
- * - Non-blocking boot
- * - Robust scenario picker (+persist last selection, +URL sync ?scenario=)
- * - /data/... fetch paths with cache-bust and no-store
- * - Accepts raw v2 OR graph; hydrates nodes; safe start resolver
- * - HUD sync (trust, tension, childStress) + Act badge
- * - Choice label meter hints
- * - DOM autodetect fallback panel
+ * Amorvia — app.v2.js (Continuum Fix v9.7.2p+ • ES2018-safe • v972p21)
+ * Changes in v972p21: ultra-defensive Scenario Picker
+ * - Always shows fallback items if index fetch/shape fails
+ * - Final guard: if no options rendered, populate fallback + enable select
  */
 
 (function () {
@@ -198,6 +193,17 @@
       {id:'co-parenting-with-bipolar-partner',        title:'Co-parenting With Bipolar Partner'},
       {id:'visitor',                                  title:'Visitor'}
     ];
+    function renderItems(items){
+      sel.innerHTML='';
+      for (var j=0;j<items.length;j++){ var it=items[j]; var opt=document.createElement('option'); opt.value=it.id; opt.textContent=it.title; sel.appendChild(opt); }
+      if (sel.options.length === 0){ // final guard
+        for (var k=0;k<fallbackList.length;k++){ var fb=fallbackList[k]; var o=document.createElement('option'); o.value=fb.id; o.textContent=fb.title; sel.appendChild(o); }
+      }
+      var wanted = currentId || readUrlScenario() || storedId || (window.__SCENARIO_ID__||null) || (sel.options[0] && sel.options[0].value);
+      if (wanted) sel.value = wanted;
+      sel.disabled=false;
+      sel.onchange=function(){ var id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(e){} setStoredScenarioId(id); setUrlScenario(id); var d=document.querySelector('#dialog')||document.querySelector('[data-ui=dialog]'); var c=document.querySelector('#choices')||document.querySelector('[data-ui=choices]'); if(d) d.textContent='Loading…'; if(c) c.innerHTML=''; boot(id); };
+    }
 
     fetchJSON(CONFIG.indexPath).then(function(idx){
       var rawEntries = [];
@@ -211,33 +217,26 @@
       for (var i=0;i<rawEntries.length;i++){
         var x = rawEntries[i];
         if (typeof x === 'string') items.push({ id:x, title:titleFromId(x), path:'/data/'+x+'.v2.json' });
-        else {
-          var id = x.id || x.slug || x.key || (typeof x.name==='string' ? x.name.toLowerCase().replace(/\\s+/g,'-') : undefined);
-          var path = x.path || x.url || (id ? '/data/'+id+'.v2.json' : undefined);
-          var title = x.title || x.name || titleFromId(id);
-          if (id) items.push({ id:id, title:title, path:path });
+        else if (x){ var id = x.id || x.slug || x.key || (typeof x.name==='string' ? x.name.toLowerCase().replace(/\\s+/g,'-') : undefined);
+          var title = (x.title || x.name || titleFromId(id) || id || 'Scenario').trim();
+          if (id) items.push({ id:id, title:title });
         }
       }
-      if (!items.length) { items = fallbackList; warn('[Amorvia] v2-index.json had no usable entries; using fallback list.'); }
+      if (!items.length) { warn('[Amorvia] Index had no usable entries, using fallback.'); items = fallbackList.slice(); }
       items.sort(function(a,b){ return a.title.localeCompare(b.title); });
-
-      sel.innerHTML='';
-      for (var j=0;j<items.length;j++){ var it=items[j]; var opt=document.createElement('option'); opt.value=it.id; opt.textContent=it.title; sel.appendChild(opt); }
-
-      var wanted = currentId || readUrlScenario() || storedId || window.__SCENARIO_ID__ || (items[0] && items[0].id);
-      if (wanted) sel.value = wanted;
-
-      sel.disabled=false;
-      sel.onchange=function(){ var id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(e){} setStoredScenarioId(id); setUrlScenario(id); var d=document.querySelector('#dialog')||document.querySelector('[data-ui=dialog]'); var c=document.querySelector('#choices')||document.querySelector('[data-ui=choices]'); if(d) d.textContent='Loading…'; if(c) c.innerHTML=''; boot(id); };
+      renderItems(items);
     }).catch(function(e){
-      warn('Failed to populate scenario picker; using fallback list.', e);
-      sel.innerHTML='';
-      for (var i=0;i<fallbackList.length;i++){ var it=fallbackList[i]; var opt=document.createElement('option'); opt.value=it.id; opt.textContent=it.title; sel.appendChild(opt); }
-      var wanted = currentId || readUrlScenario() || storedId || fallbackList[0].id;
-      sel.value = wanted;
-      sel.disabled=false;
-      sel.onchange=function(){ var id=sel.value; try{ window.__SCENARIO_ID__=id; }catch(e){} setStoredScenarioId(id); setUrlScenario(id); boot(id); };
+      warn('Picker fetch failed, using fallback list.', e);
+      renderItems(fallbackList.slice());
     });
+
+    // Safety net: if nothing rendered within 2s, force fallback
+    setTimeout(function(){
+      if (sel.options.length === 0){
+        warn('Picker watchdog: forcing fallback options.');
+        renderItems(fallbackList.slice());
+      }
+    }, 2000);
   }
 
   // ---------- Boot ----------
@@ -306,7 +305,8 @@
     var speaker=document.createElement('div'); speaker.setAttribute('data-ui','speaker'); speaker.style.fontWeight='600'; speaker.style.margin='0.25rem 0';
     var dialog=document.createElement('div'); dialog.setAttribute('data-ui','dialog'); dialog.style.minHeight='3rem'; dialog.style.padding='0.5rem 0';
     var choices=document.createElement('div'); choices.setAttribute('data-ui','choices'); choices.style.display='grid'; choices.style.gap='0.5rem';
-    panel.appendChild(speaker); panel.appendChild(dialog); panel.appendChild(choices); host.appendChild(panel);
+    panel.appendChild(speaker); panel.appendChild(dialog); panel.appendChild(choices);
+    host.appendChild(panel);
     return { dialogEl: dialog, speakerEl: speaker, choicesEl: choices };
   }
   var _renderNode = window.__amorvia_renderNode;
