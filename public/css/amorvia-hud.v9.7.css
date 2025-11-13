@@ -107,3 +107,27 @@
   }
 }
 
+/* Toolbar status badge (Scenario loader state) */
+#titleAndList .amor-status-badge {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  white-space: nowrap;
+}
+
+#titleAndList .amor-status-badge[data-tone="loading"] {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+#titleAndList .amor-status-badge[data-tone="ok"] {
+  background: rgba(22, 163, 74, 0.9);
+}
+
+#titleAndList .amor-status-badge[data-tone="error"] {
+  background: rgba(220, 38, 38, 0.95);
+}
