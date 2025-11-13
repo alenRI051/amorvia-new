@@ -1,15 +1,15 @@
 
-// app.v2.js - Amorvia v2 Loader + Scenario Picker (existing UI) + HUD hook (NO TIMEOUT)
-// ------------------------------------------------------------------------------------
-// - Uses the existing #scenarioPicker in #titleAndList (no extra toolbar)
-// - Fetches /data/v2-index.json and populates that picker
+// app.v2.js - Amorvia v2 Loader + Scenario Picker + HUD hook (NO 5s TIMEOUT)
+// -------------------------------------------------------------------------
+// - Fetches /data/v2-index.json and populates scenario picker
 // - Wires to ScenarioEngine (supports loadScenario / LoadScenario + start)
-// - Loads raw v2 JSON and lets engine handle flattening/graph
+// - Loads raw v2 JSON and lets engine handle graph/acts flattening
 // - Keeps URL ?scenario=<id> in sync with picker
 // - Persists last selection in localStorage
-// - Shows simple status badge inside the #titleAndList row
+// - Shows simple status badge
 // - Calls AmorviaHUD.update(state.meters) after each scenario change (if available)
-// - waitForEngine() keeps polling until ScenarioEngine is available (no 5s timeout)
+// - IMPORTANT CHANGE: waitForEngine() no longer rejects after 5000ms. It just keeps polling
+//   until ScenarioEngine is available, so there is no "ScenarioEngine not ready after 5000ms" error.
 
 (function () {
   "use strict";
@@ -20,9 +20,9 @@
   };
 
   const SELECTORS = {
-    picker: "#scenarioPicker",
+    toolbar: "[data-amorvia-toolbar]",
+    picker: "[data-scenario-picker]",
     badge: "[data-amorvia-status]",
-    badgeContainer: "#titleAndList .row",
   };
 
   const STATUS = {
@@ -66,27 +66,9 @@
     });
   }
 
-  function ensureStatusBadge() {
-    let badge = $(SELECTORS.badge);
-    if (badge && badge.isConnected) return badge;
-
-    const container = $(SELECTORS.badgeContainer) || $("#titleAndList");
-    if (!container) return null;
-
-    badge = createEl("span", "amor-status-badge", {
-      "data-amorvia-status": "true",
-    });
-    badge.textContent = STATUS.LOADING;
-    container.appendChild(badge);
-    return badge;
-  }
-
   function setStatus(text, tone) {
-    let badge = $(SELECTORS.badge);
-    if (!badge || !badge.isConnected) {
-      badge = ensureStatusBadge();
-      if (!badge) return;
-    }
+    const badge = $(SELECTORS.badge);
+    if (!badge) return;
     badge.textContent = text;
     badge.dataset.tone = tone || "";
   }
@@ -148,7 +130,8 @@
     return null;
   }
 
-  // Wait for engine with no hard timeout (dev-friendly)
+  // NEW: waitForEngine without hard timeout.
+  // It just keeps polling until ScenarioEngine appears.
   function waitForEngine() {
     return new Promise((resolve) => {
       (function loop() {
@@ -183,7 +166,8 @@
     return state.index.scenarios[0].id || state.index.scenarios[0].slug || null;
   }
 
-  function loadScenarioById(id) {
+  
+function loadScenarioById(id) {
     if (!id) {
       console.warn("[Amorvia] loadScenarioById called with empty id");
       return;
@@ -199,32 +183,36 @@
       picker.value = id;
     }
 
-    const path = "/data/" + id + ".v2.json";
-
+    // Prefer global ensureGraphLoadById helper (handles v2 -> graph conversion)
     return waitForEngine()
       .then((eng) => {
-        return safeJsonFetch(path).then((rawScenario) => ({ eng, rawScenario }));
-      })
-      .then(({ eng, rawScenario }) => {
-        const loader = eng.loadScenario || eng.LoadScenario;
-        if (typeof loader !== "function") {
-          throw new Error("ScenarioEngine has no loadScenario/LoadScenario");
+        if (typeof window.ensureGraphLoadById === "function") {
+          return window.ensureGraphLoadById(id);
         }
 
-        // Let the engine handle internal normalization; we just pass raw v2 JSON
-        loader.call(eng, rawScenario);
+        const path = "/data/" + id + ".v2.json";
+        const engineInstance = eng || getEngine();
+        if (!engineInstance) {
+          throw new Error("ScenarioEngine not available");
+        }
 
-        // Start the engine if it exposes start()
-        if (typeof eng.start === "function") {
-          try {
-            eng.start();
-          } catch (e) {
-            console.warn("[Amorvia] engine.start() threw:", e);
+        return safeJsonFetch(path).then((rawScenario) => {
+          const loader = engineInstance.loadScenario || engineInstance.LoadScenario;
+          if (typeof loader !== "function") {
+            throw new Error("ScenarioEngine has no loadScenario/LoadScenario");
           }
-        } else {
-          console.warn("[Amorvia] ScenarioEngine has no start() method; assuming it auto-renders.");
-        }
-
+          // Fallback: pass rawScenario directly (for future engines that accept v2)
+          loader.call(engineInstance, rawScenario);
+          if (typeof engineInstance.start === "function") {
+            try {
+              engineInstance.start();
+            } catch (e) {
+              console.warn("[Amorvia] engine.start() threw:", e);
+            }
+          }
+        });
+      })
+      .then(() => {
         syncHUDMeters();
         setStatus(STATUS.READY, "ok");
       })
@@ -236,23 +224,56 @@
 
   // ------------------ Scenario picker UI ------------------
 
+
+  function ensureToolbar() {
+    let toolbar = $(SELECTORS.toolbar);
+    if (toolbar && toolbar.isConnected) return toolbar;
+
+    toolbar = createEl("div", "amor-toolbar", { "data-amorvia-toolbar": "true" });
+
+    // You can style .amor-toolbar yourself in CSS.
+    toolbar.style.display = "flex";
+    toolbar.style.alignItems = "center";
+    toolbar.style.gap = "0.5rem";
+    toolbar.style.position = "relative";
+    toolbar.style.zIndex = "30";
+
+    // Try to attach at top of main app container or body
+    const host =
+      document.querySelector("#app") ||
+      document.querySelector("main") ||
+      document.body;
+
+    host.insertBefore(toolbar, host.firstChild);
+    return toolbar;
+  }
+
   function buildPickerUI() {
-    ensureStatusBadge();
+    const toolbar = ensureToolbar();
 
-    const select = $(SELECTORS.picker);
-    if (!select) {
-      console.warn("[Amorvia] No #scenarioPicker found; picker UI disabled.");
-      return;
-    }
+    // Scenario label
+    const label = createEl("label", "amor-picker-label");
+    label.textContent = "Scenario:";
 
-    if (!select.dataset.amorviaBound) {
-      select.addEventListener("change", (ev) => {
-        const newId = ev.target.value;
-        if (!newId) return;
-        loadScenarioById(newId);
-      });
-      select.dataset.amorviaBound = "1";
-    }
+    const select = createEl("select", "amor-picker-select", {
+      "data-scenario-picker": "true",
+    });
+
+    // Status badge
+    const badge = createEl("span", "amor-status-badge", {
+      "data-amorvia-status": "true",
+    });
+    badge.textContent = STATUS.LOADING;
+
+    toolbar.appendChild(label);
+    toolbar.appendChild(select);
+    toolbar.appendChild(badge);
+
+    select.addEventListener("change", (ev) => {
+      const newId = ev.target.value;
+      if (!newId) return;
+      loadScenarioById(newId);
+    });
   }
 
   function populatePicker() {
@@ -307,7 +328,7 @@
       });
   }
 
-  // ------------------ Wire choice clicks -> HUD sync ------------------
+    // ------------------ Wire choice clicks -> HUD sync ------------------
 
   function wireChoiceListener() {
     const choicesEl = document.getElementById("choices");
