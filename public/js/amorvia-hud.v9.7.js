@@ -1,164 +1,136 @@
+// amorvia-hud.v9.7.js
+// v9.7.3-anim – compact chip HUD + pulse on change
+// ------------------------------------------------------------------
+// Oslanja se na engine.state.meters = { trust, tension, childStress } (0-100)
+// Prikazuje 3 "chip" metra unutar postojeceg <div id="hud"> u dialog panelu.
 
-// Amorvia HUD v9.7.2 – Always 3 Meters
-// - Builds on v9.7.1 auto-map
-// - Always renders Trust, Tension, Child Stress (defaults to 0% when missing)
-// - Upgrades engine-provided .meter divs and keeps layout stable
-(function () {
-  const SEL_HUD = '#hud';
-
-  const ORDER = [
-    { key: 'trust',       label: 'Trust' },
-    { key: 'tension',     label: 'Tension' },
-    { key: 'childStress', label: 'Child Stress' }
-  ];
-
-  const KEY_ALIASES = {
-    trust: ['trust'],
-    tension: ['tension', 'stress'],
-    childStress: ['childstress', 'child_stress', 'child stress', 'kidstress']
+window.AmorviaHUD = (() => {
+  let rootEl = null;
+  let chips = {};
+  let lastValues = {
+    trust: null,
+    tension: null,
+    childStress: null,
   };
 
-  const q  = (s, r=document) => r.querySelector(s);
-  const qa = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const clamp = n => Math.max(0, Math.min(100, Math.round(Number(n)||0)));
+  function ensureRoot() {
+    if (rootEl && rootEl.isConnected) return rootEl;
 
-  function extractMetersFromString(str) {
-    const lower = String(str||'').toLowerCase();
-    const out = { trust:null, tension:null, childStress:null };
-
-    // Try labeled tokens first
-    function find(aliases) {
-      for (const a of aliases) {
-        const re = new RegExp(a.replace(/[-/\^$*+?.()|[\]{}]/g,'\\$&') + '\\s*[:=]?\\s*([0-9]{1,3})');
-        const m = lower.match(re);
-        if (m) return clamp(m[1]);
-      }
-      return null;
+    const host = document.getElementById("hud") || document.body;
+    rootEl = host.querySelector("[data-hud-root]");
+    if (!rootEl) {
+      rootEl = document.createElement("div");
+      rootEl.className = "amor-hud-root";
+      rootEl.setAttribute("data-hud-root", "true");
+      host.appendChild(rootEl);
     }
-    out.trust       = find(KEY_ALIASES.trust);
-    out.tension     = find(KEY_ALIASES.tension);
-    out.childStress = find(KEY_ALIASES.childStress);
+    return rootEl;
+  }
 
-    // Fallback: first three numbers in order (trust, tension, childStress)
-    if (out.trust==null && out.tension==null && out.childStress==null) {
-      const nums = (lower.match(/([0-9]{1,3})/g) || []).map(n => clamp(n)).slice(0,3);
-      if (nums.length) {
-        if (nums[0] != null) out.trust = nums[0];
-        if (nums[1] != null) out.tension = nums[1];
-        if (nums[2] != null) out.childStress = nums[2];
-      }
+  function createChip(key, labelText, extraClass) {
+    const chip = document.createElement("div");
+    chip.className = `amor-hud-chip ${extraClass || ""}`.trim();
+
+    const label = document.createElement("span");
+    label.className = "amor-hud-chip-label";
+    label.textContent = labelText;
+
+    const value = document.createElement("span");
+    value.className = "amor-hud-chip-value";
+    value.textContent = "--";
+
+    const barShell = document.createElement("div");
+    barShell.className = "amor-hud-bar-shell";
+
+    const barFill = document.createElement("div");
+    barFill.className = "amor-hud-bar-fill";
+    barShell.appendChild(barFill);
+
+    chip.appendChild(label);
+    chip.appendChild(value);
+    chip.appendChild(barShell);
+
+    return {
+      key,
+      chip,
+      label,
+      value,
+      barShell,
+      barFill,
+    };
+  }
+
+  function init() {
+    const root = ensureRoot();
+    root.innerHTML = "";
+    chips = {};
+
+    const trustChip = createChip("trust", "Trust", "amor-hud-chip--trust");
+    const tensionChip = createChip("tension", "Tension", "amor-hud-chip--tension");
+    const csChip = createChip("childStress", "Child", "amor-hud-chip--childStress");
+
+    chips.trust = trustChip;
+    chips.tension = tensionChip;
+    chips.childStress = csChip;
+
+    root.appendChild(trustChip.chip);
+    root.appendChild(tensionChip.chip);
+    root.appendChild(csChip.chip);
+  }
+
+  function clamp01(v) {
+    if (typeof v !== "number" || Number.isNaN(v)) return 0;
+    return Math.min(1, Math.max(0, v));
+  }
+
+  function applyPulseIfChanged(key, chipObj, newVal) {
+    const oldVal = lastValues[key];
+    lastValues[key] = newVal;
+
+    if (oldVal === null || oldVal === newVal) return;
+
+    const el = chipObj.chip;
+    el.classList.remove("amor-hud-chip--pulse");
+    // force reflow
+    void el.offsetWidth;
+    el.classList.add("amor-hud-chip--pulse");
+
+    setTimeout(() => {
+      el.classList.remove("amor-hud-chip--pulse");
+    }, 600);
+  }
+
+  function updateOne(key, rawValue) {
+    const chipObj = chips[key];
+    if (!chipObj) return;
+
+    const v = typeof rawValue === "number" ? rawValue : 0;
+    const clamped01 = clamp01(v / 100);
+
+    chipObj.value.textContent = `${Math.round(v)}%`;
+    chipObj.barFill.style.transform = `scaleX(${clamped01})`;
+
+    applyPulseIfChanged(key, chipObj, Math.round(v));
+  }
+
+  function update(meters = {}) {
+    if (!rootEl || !rootEl.isConnected) {
+      init();
     }
-
-    // NEW: default any missing values to 0 to guarantee 3 meters
-    if (out.trust == null) out.trust = 0;
-    if (out.tension == null) out.tension = 0;
-    if (out.childStress == null) out.childStress = 0;
-
-    return out;
+    updateOne("trust", meters.trust ?? 0);
+    updateOne("tension", meters.tension ?? 0);
+    updateOne("childStress", meters.childStress ?? 0);
   }
 
-  function ensureAria(hud) {
-    hud.classList.add('hud');
-    hud.setAttribute('role','status');
-    hud.setAttribute('aria-live','polite');
-  }
-
-  function ensureStructure(m, item) {
-    if (!m.getAttribute('data-key')) m.setAttribute('data-key', item.key);
-    if (!m.getAttribute('data-label')) m.setAttribute('data-label', item.label);
-    if (!m.querySelector('.label')) {
-      const label = document.createElement('div');
-      label.className = 'label';
-      label.innerHTML = `<span>${item.label}</span><span class="value">0%</span>`;
-      m.prepend(label);
-    } else {
-      // ensure there's a .value span
-      const lbl = m.querySelector('.label');
-      if (!lbl.querySelector('.value')) {
-        const v = document.createElement('span');
-        v.className = 'value'; v.textContent = '0%';
-        lbl.appendChild(v);
-      }
-    }
-    if (!m.querySelector('.track')) {
-      const track = document.createElement('div'); track.className='track';
-      const fill = document.createElement('div');  fill.className='fill'; fill.style.width='0%';
-      track.appendChild(fill); m.appendChild(track);
-    }
-  }
-
-  function renderMeters(hud, values) {
-    ensureAria(hud);
-
-    // If there are existing .meter nodes (engine-provided), upgrade them to 3
-    let existing = qa('.meter', hud);
-    if (existing.length) {
-      // Ensure we have exactly 3 meter nodes in correct order
-      if (existing.length < 3) {
-        for (let i = existing.length; i < 3; i++) {
-          const m = document.createElement('div'); m.className = 'meter';
-          hud.appendChild(m);
-        }
-        existing = qa('.meter', hud);
-      } else if (existing.length > 3) {
-        existing.slice(3).forEach(n => n.remove());
-        existing = qa('.meter', hud);
-      }
-
-      ORDER.forEach((item, i) => {
-        const m = existing[i];
-        ensureStructure(m, item);
-        const v = values[item.key];
-        const fill = m.querySelector('.fill');
-        const val  = m.querySelector('.value');
-        if (fill) fill.style.width = clamp(v) + '%';
-        if (val)  val.textContent = clamp(v) + '%';
-      });
-      return true;
-    }
-
-    // Fresh render (always 3)
-    hud.innerHTML = '';
-    ORDER.forEach(item => {
-      const v = values[item.key];
-      const meter = document.createElement('div');
-      meter.className = 'meter';
-      meter.setAttribute('data-key', item.key);
-      meter.setAttribute('data-label', item.label);
-
-      const labelEl = document.createElement('div');
-      labelEl.className = 'label';
-      labelEl.innerHTML = `<span>${item.label}</span><span class="value">${clamp(v)}%</span>`;
-
-      const track = document.createElement('div'); track.className='track';
-      const fill  = document.createElement('div'); fill.className='fill'; fill.style.width = clamp(v) + '%';
-      track.appendChild(fill);
-
-      meter.appendChild(labelEl);
-      meter.appendChild(track);
-      hud.appendChild(meter);
-    });
-    return true;
-  }
-
-  function amorviaHudRender() {
-    const hud = q(SEL_HUD);
-    if (!hud) return false;
-    const raw = (hud.innerText || hud.textContent || '').trim();
-    const values = extractMetersFromString(raw);
-    return renderMeters(hud, values);
-  }
-  window.amorviaHudRender = amorviaHudRender;
-
-  function attachObserver() {
-    const hud = q(SEL_HUD);
-    if (!hud) return;
-    let t;
-    const obs = new MutationObserver(() => { clearTimeout(t); t = setTimeout(amorviaHudRender, 50); });
-    obs.observe(hud, { childList:true, subtree:true, characterData:true });
-  }
-
-  const start = () => { amorviaHudRender(); attachObserver(); };
-  if (document.readyState === 'complete' || document.readyState === 'interactive') start();
-  else document.addEventListener('DOMContentLoaded', start, { once:true });
+  return {
+    init,
+    update,
+  };
 })();
+
+// Auto-init kad je DOM spreman (script je defer, pa je ovo sigurno)
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.AmorviaHUD) {
+    window.AmorviaHUD.init();
+  }
+});
