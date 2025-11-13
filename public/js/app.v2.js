@@ -1,6 +1,6 @@
 
-// app.v2.js - Amorvia v2 Loader + Scenario Picker + HUD hook
-// ---------------------------------------------------------
+// app.v2.js - Amorvia v2 Loader + Scenario Picker + HUD hook (NO 5s TIMEOUT)
+// -------------------------------------------------------------------------
 // - Fetches /data/v2-index.json and populates scenario picker
 // - Wires to ScenarioEngine (supports loadScenario / LoadScenario + start)
 // - Loads raw v2 JSON and lets engine handle graph/acts flattening
@@ -8,6 +8,8 @@
 // - Persists last selection in localStorage
 // - Shows simple status badge
 // - Calls AmorviaHUD.update(state.meters) after each scenario change (if available)
+// - IMPORTANT CHANGE: waitForEngine() no longer rejects after 5000ms. It just keeps polling
+//   until ScenarioEngine is available, so there is no "ScenarioEngine not ready after 5000ms" error.
 
 (function () {
   "use strict";
@@ -128,19 +130,14 @@
     return null;
   }
 
-  function waitForEngine(maxMs) {
-    const timeoutMs = typeof maxMs === "number" ? maxMs : 5000;
-    const started = Date.now();
-
-    return new Promise((resolve, reject) => {
+  // NEW: waitForEngine without hard timeout.
+  // It just keeps polling until ScenarioEngine appears.
+  function waitForEngine() {
+    return new Promise((resolve) => {
       (function loop() {
         const eng = getEngine();
-        if (eng && (eng.loadScenario || eng.LoadScenario) && typeof eng.start === "function") {
+        if (eng && (eng.loadScenario || eng.LoadScenario)) {
           resolve(eng);
-          return;
-        }
-        if (Date.now() - started > timeoutMs) {
-          reject(new Error("ScenarioEngine not ready after " + timeoutMs + "ms"));
           return;
         }
         setTimeout(loop, 100);
@@ -192,7 +189,6 @@
         return safeJsonFetch(path).then((rawScenario) => ({ eng, rawScenario }));
       })
       .then(({ eng, rawScenario }) => {
-        // Prefer engine.loadScenario, fall back to LoadScenario
         const loader = eng.loadScenario || eng.LoadScenario;
         if (typeof loader !== "function") {
           throw new Error("ScenarioEngine has no loadScenario/LoadScenario");
@@ -201,11 +197,15 @@
         // Let the engine handle internal normalization; we just pass raw v2 JSON
         loader.call(eng, rawScenario);
 
-        // Start the engine (safe default)
-        try {
-          eng.start();
-        } catch (e) {
-          console.warn("[Amorvia] engine.start() threw:", e);
+        // Start the engine if it exposes start()
+        if (typeof eng.start === "function") {
+          try {
+            eng.start();
+          } catch (e) {
+            console.warn("[Amorvia] engine.start() threw:", e);
+          }
+        } else {
+          console.warn("[Amorvia] ScenarioEngine has no start() method; assuming it auto-renders.");
         }
 
         syncHUDMeters();
