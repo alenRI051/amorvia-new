@@ -347,6 +347,7 @@
   function init() {
     buildPickerUI();
     loadIndex();
+    wireChoiceListener();
   }
 
   if (document.readyState === "loading") {
