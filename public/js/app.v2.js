@@ -322,6 +322,26 @@
       });
   }
 
+    // ------------------ Wire choice clicks -> HUD sync ------------------
+
+  function wireChoiceListener() {
+    const choicesEl = document.getElementById("choices");
+    if (!choicesEl) return;
+
+    choicesEl.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button");
+      if (!btn) return;
+      // Daj engine-u da prvo odradi svoje, onda syncaj meter-e
+      setTimeout(() => {
+        try {
+          syncHUDMeters();
+        } catch (e) {
+          console.warn("[Amorvia] HUD sync after choice failed:", e);
+        }
+      }, 10);
+    });
+  }
+
   // ------------------ Init ------------------
 
   function init() {
