@@ -168,59 +168,39 @@
 
   
 function loadScenarioById(id) {
-    if (!id) {
-      console.warn("[Amorvia] loadScenarioById called with empty id");
-      return;
-    }
-
-    setStatus(STATUS.LOADING, "loading");
-    state.currentScenarioId = id;
-    saveLastScenario(id);
-    updateUrlScenarioParam(id);
-
-    const picker = $(SELECTORS.picker);
-    if (picker) {
-      picker.value = id;
-    }
-
-    // Prefer global ensureGraphLoadById helper (handles v2 -> graph conversion)
-    return waitForEngine()
-      .then((eng) => {
-        if (typeof window.ensureGraphLoadById === "function") {
-          return window.ensureGraphLoadById(id);
-        }
-
-        const path = "/data/" + id + ".v2.json";
-        const engineInstance = eng || getEngine();
-        if (!engineInstance) {
-          throw new Error("ScenarioEngine not available");
-        }
-
-        return safeJsonFetch(path).then((rawScenario) => {
-          const loader = engineInstance.loadScenario || engineInstance.LoadScenario;
-          if (typeof loader !== "function") {
-            throw new Error("ScenarioEngine has no loadScenario/LoadScenario");
-          }
-          // Fallback: pass rawScenario directly (for future engines that accept v2)
-          loader.call(engineInstance, rawScenario);
-          if (typeof engineInstance.start === "function") {
-            try {
-              engineInstance.start();
-            } catch (e) {
-              console.warn("[Amorvia] engine.start() threw:", e);
-            }
-          }
-        });
-      })
-      .then(() => {
-        syncHUDMeters();
-        setStatus(STATUS.READY, "ok");
-      })
-      .catch((err) => {
-        console.error("[Amorvia] Failed to load scenario", id, err);
-        setStatus(STATUS.ERROR, "error");
-      });
+  if (!id) {
+    console.warn("[Amorvia] loadScenarioById called with empty id");
+    return;
   }
+
+  setStatus(STATUS.LOADING, "loading");
+  state.currentScenarioId = id;
+  saveLastScenario(id);
+  updateUrlScenarioParam(id);
+
+  const picker = $(SELECTORS.picker);
+  if (picker) {
+    picker.value = id;
+  }
+
+  // Emit canonical Amorvia event so compat/ensure-graph-hook can
+  // handle v2 -> graph conversion and ScenarioEngine wiring.
+  const ev = new CustomEvent("amorvia:select-scenario", {
+    detail: { id },
+  });
+  window.dispatchEvent(ev);
+
+  // Give the engine a moment to process the event, then sync HUD + badge.
+  setTimeout(() => {
+    try {
+      syncHUDMeters();
+      setStatus(STATUS.READY, "ok");
+    } catch (e) {
+      console.warn("[Amorvia] HUD sync after scenario load failed:", e);
+      setStatus(STATUS.READY, "ok");
+    }
+  }, 80);
+}
 
   // ------------------ Scenario picker UI ------------------
 
