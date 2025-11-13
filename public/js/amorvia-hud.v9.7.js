@@ -128,9 +128,15 @@ window.AmorviaHUD = (() => {
   };
 })();
 
-// Auto-init kad je DOM spreman (script je defer, pa je ovo sigurno)
-document.addEventListener("DOMContentLoaded", () => {
+// Init HUD tek kad postoji #hud slot — retry dok ga engine ne rendera
+function mountWhenReady() {
+  const slot = document.getElementById("hud");
+  if (!slot) {
+    return setTimeout(mountWhenReady, 50);
+  }
   if (window.AmorviaHUD) {
     window.AmorviaHUD.init();
   }
-});
+}
+document.addEventListener("DOMContentLoaded", mountWhenReady);
+
