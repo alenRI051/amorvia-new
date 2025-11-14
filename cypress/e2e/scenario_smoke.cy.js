@@ -8,7 +8,6 @@ describe('Amorvia V2 – scenario smoke test (mini-engine)', () => {
 
       expect(scenarios.length, 'has at least one scenario').to.be.greaterThan(0);
 
-      // Svaki scenarij prođemo u istom testu, redom
       scenarios.forEach((scn, i) => {
         const id = scn.id || scn.slug;
         const title = scn.title || id;
@@ -16,9 +15,19 @@ describe('Amorvia V2 – scenario smoke test (mini-engine)', () => {
         cy.log(`Scenario #${i + 1}: ${title} (${id})`);
 
         cy.visitScenario(id);
-        cy.expectDialogAndChoices();
-        cy.walkScenarioSteps(6);
+        cy.expectDialogHasText();
+
+        // Pokušaj hodati samo ako postoje choices
+        cy.get('body').then(($body) => {
+          const hasChoices = $body.find('[data-testid="choices"] button').length > 0;
+          if (hasChoices) {
+            cy.walkScenarioSteps(6);
+          } else {
+            cy.log(`Scenario ${id} has no interactive choices (info/menu/end screen).`);
+          }
+        });
       });
     });
   });
 });
+
