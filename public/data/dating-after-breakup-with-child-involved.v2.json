@@ -167,50 +167,52 @@
       ]
     },
     {
-      "id": "a1_to_act2",
-      "act": "act1",
-      "speaker": "Narrator",
-      "text": "You take a breath and decide to carry this momentum into tomorrow.",
-      "choices": [
-        {
-          "id": "a1_to_act2_c1",
-          "label": "Continue",
-          "text": "Continue",
-          "nextAct": "act2",
-          "next": "act2s1",
-          "to": "act2s1"
-        }
-      ]
+  "id": "a1_to_act2",
+  "act": "act1",
+  "type": "dialog",
+  "speaker": "Narrator",
+  "title": "Moving Forward",
+  "text": "…whatever your text is here…",
+  "choices": [
+    {
+      "id": "a1_to_act2_c1",
+      "label": "Continue",
+      "text": "Continue",
+      "nextAct": "act2",
+      "next": "a2s1",
+      "to": "a2s1"
+    }
+  ]
+},
+{
+  "id": "a2s1",
+  "act": "act2",
+  "type": "dialog",
+  "speaker": "Narrator",
+  "title": "Back on the App",
+  "text": "The phone screen glows in the dim room. The dating app you deleted long ago is back. Picture after picture, profile after profile — but this time you're not just looking for chemistry. You're looking for someone who can understand that you share your life with your child.",
+  "tone": "reflective · cautious",
+  "choices": [
+    {
+      "id": "a2s1c1",
+      "label": "Be honest — mention your child in your profile.",
+      "text": "You decide to be straightforward from the start. Your profile now clearly says that you have a child and that parenting is central to your life.",
+      "tone": "honest · grounded",
+      "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+      "next": "a2s2",
+      "to": "a2s2"
     },
-  {
-    "id": "a2s1",
-    "actId": "act2",
-    "type": "dialog",
-    "speaker": "Narrator",
-    "title": "Back on the App",
-    "text": "The phone screen glows in the dim room. The dating app you deleted long ago is back. Picture after picture, profile after profile — but this time you're not just looking for chemistry. You're looking for someone who can understand that you share your life with your child.",
-    "tone": "reflective · cautious",
-    "choices": [
-      {
-        "id": "a2s1c1",
-        "label": "Be honest — mention your child in your profile.",
-        "text": "You decide to be straightforward from the start. Your profile now clearly says that you have a child and that parenting is central to your life.",
-        "tone": "honest · grounded",
-        "effects": { "trust": 1, "tension": 0, "childStress": 0 },
-        "next": "a2s2",
-        "to": "a2s2"
-      },
-      {
-        "id": "a2s1c2",
-        "label": "Skip mentioning your child for now.",
-        "text": "You decide to leave that detail out for now. If something becomes serious, you'll explain later.",
-        "tone": "avoidant · anxious",
-        "effects": { "trust": 0, "tension": 1, "childStress": 0 },
-        "next": "a2s2",
-        "to": "a2s2"
-      }
-    ]
-  },
+    {
+      "id": "a2s1c2",
+      "label": "Skip mentioning your child for now.",
+      "text": "You decide to leave that detail out for now. If something becomes serious, you'll explain later.",
+      "tone": "avoidant · anxious",
+      "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+      "next": "a2s2",
+      "to": "a2s2"
+    }
+  ]
+},
   {
     "id": "a2s2",
     "actId": "act2",
