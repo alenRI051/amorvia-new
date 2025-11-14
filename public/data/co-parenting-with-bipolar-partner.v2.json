@@ -3,7 +3,12 @@
   "title": "Co-Parenting with Bipolar Partner",
   "version": 2,
   "startAct": "act1",
-  "tags": ["co-parenting", "communication", "boundaries", "stability"],
+  "tags": [
+    "co-parenting",
+    "communication",
+    "boundaries",
+    "stability"
+  ],
   "difficulty": "medium",
   "description": "Practice stable, respectful communication and child-first boundaries when your co-parent lives with bipolar disorder.",
   "meters": {
@@ -24,13 +29,24 @@
             {
               "id": "a1s1c1",
               "label": "Answer briefly and ask about medication schedule.",
-              "effects": { "trust": 2, "tension": -2 },
+              "effects": {
+                "meters": {
+                  "trust": 2,
+                  "tension": -2
+                }
+              },
               "to": "a1s2"
             },
             {
               "id": "a1s1c2",
               "label": "Vent about frustrations from the week.",
-              "effects": { "trust": -2, "tension": 2, "childStress": 2 },
+              "effects": {
+                "meters": {
+                  "trust": -2,
+                  "tension": 2,
+                  "childStress": 2
+                }
+              },
               "to": "a1s2"
             }
           ]
@@ -42,13 +58,22 @@
             {
               "id": "a1s2c1",
               "label": "Confirm details clearly and thank them.",
-              "effects": { "trust": 1, "tension": -1 },
+              "effects": {
+                "meters": {
+                  "trust": 1,
+                  "tension": -1
+                }
+              },
               "to": "a1end"
             },
             {
               "id": "a1s2c2",
               "label": "Keep it vague: “I’ll text you.”",
-              "effects": { "tension": 1 },
+              "effects": {
+                "meters": {
+                  "tension": 1
+                }
+              },
               "to": "a1end"
             }
           ]
@@ -85,13 +110,22 @@
             {
               "id": "a2s1c1",
               "label": "Propose a 10-minute Sunday check-in with a simple agenda.",
-              "effects": { "trust": 2, "tension": -1 },
+              "effects": {
+                "meters": {
+                  "trust": 2,
+                  "tension": -1
+                }
+              },
               "to": "a2end"
             },
             {
               "id": "a2s1c2",
               "label": "Leave things open-ended for now.",
-              "effects": { "tension": 1 },
+              "effects": {
+                "meters": {
+                  "tension": 1
+                }
+              },
               "to": "a2end"
             }
           ]
@@ -100,8 +134,18 @@
           "id": "a2end",
           "text": "You have a clearer first step toward steadier weeks.",
           "choices": [
-            { "id": "a2endc1", "label": "Return to menu", "effects": {}, "to": "menu" },
-            { "id": "a2endc2", "label": "Revisit Act 1", "effects": {}, "to": "a1s1" }
+            {
+              "id": "a2endc1",
+              "label": "Return to menu",
+              "effects": {},
+              "to": "menu"
+            },
+            {
+              "id": "a2endc2",
+              "label": "Revisit Act 1",
+              "effects": {},
+              "to": "a1s1"
+            }
           ]
         }
       ]
