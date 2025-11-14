@@ -5,7 +5,7 @@ const SCENARIO_ID = 'dating-after-breakup-with-child-involved';
 // Path A: placeholder niz izbora po koracima.
 // Svaki broj je index gumba (0 = prvi, 1 = drugi, ...)
 // Kasnije slobodno prilagodi ovo stvarnom "Stable plan" pathu.
-const PATH_A = [0, 0, 1, 0, 0, 1, 0];
+const PATH_A = [0, 0, 1, 0, 0, 0, 0];
 
 describe('Dating After Breakup (With Child Involved) – Path A stable ending', () => {
   it('follows Path A without crashing and keeps dialog alive', () => {
