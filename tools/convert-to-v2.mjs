@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import glob from "glob";
+import { globSync } from "glob";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -111,7 +111,7 @@ function processScenario(json) {
 }
 
 /* --------- Main --------- */
-const files = glob.sync(pattern, { cwd: path.resolve(__dirname, "..") }).map((p) =>
+const files = globSync(pattern, { cwd: path.resolve(__dirname, "..") }).map((p) =>
   path.resolve(path.resolve(__dirname, ".."), p)
 );
 
