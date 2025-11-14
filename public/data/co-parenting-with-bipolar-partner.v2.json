@@ -1,98 +1,110 @@
 {
   "id": "co-parenting-with-bipolar-partner",
-  "title": "Co-Parenting with Bipolar Partner",
+  "title": "Co-Parenting with a Bipolar Partner",
   "version": 2,
-  "startAct": "act1",
-  "tags": [
-    "co-parenting",
-    "communication",
-    "boundaries",
-    "stability"
-  ],
-  "difficulty": "medium",
-  "description": "Practice stable, respectful communication and child-first boundaries when your co-parent lives with bipolar disorder.",
-  "meters": {
-    "trust": 0,
-    "tension": 0,
-    "childStress": 0
+  "tags": ["co-parenting", "mental-health", "conflict-navigation"],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Ex-Partner": {},
+    "Mediator": {},
+    "Child": {}
   },
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "startAct": "act1",
   "acts": [
     {
       "id": "act1",
-      "title": "Act 1 — Handover Chat",
-      "start": "a1s1",
+      "title": "Morning Message",
       "steps": [
         {
           "id": "a1s1",
-          "text": "Handover day. Your co-parent looks tired but alert: “How was the week?”",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "It’s early morning. Your phone buzzes louder than your alarm. It’s a long message from your ex — written at 3:12 AM.",
+          "tone": "uneasy \u00b7 anticipatory",
           "choices": [
             {
               "id": "a1s1c1",
-              "label": "Answer briefly and ask about medication schedule.",
-              "effects": {
-                "meters": {
-                  "trust": 2,
-                  "tension": -2
-                }
-              },
-              "to": "a1s2"
+              "label": "Read the message immediately.",
+              "text": "You unlock your phone and open the message, heart already racing.",
+              "tone": "hypervigilant \u00b7 anxious",
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+              "next": "a1s2"
             },
             {
               "id": "a1s1c2",
-              "label": "Vent about frustrations from the week.",
-              "effects": {
-                "meters": {
-                  "trust": -2,
-                  "tension": 2,
-                  "childStress": 2
-                }
-              },
-              "to": "a1s2"
+              "label": "Silence the phone and give yourself five minutes.",
+              "text": "You flip the phone over and focus on breathing. The message can wait a moment.",
+              "tone": "self-regulating \u00b7 cautious",
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+              "next": "a1s2"
             }
           ]
         },
         {
           "id": "a1s2",
-          "text": "They nod. You both confirm pickup time for Sunday.",
+          "type": "dialog",
+          "speaker": "Ex-Partner",
+          "text": "The message is a mix of panic and blame: \u201cI can\u2019t sleep, I\u2019m doing EVERYTHING for our child. You don\u2019t understand how hard this is. Maybe I should just keep her full time.\u201d",
+          "tone": "escalated \u00b7 emotionally charged",
           "choices": [
             {
               "id": "a1s2c1",
-              "label": "Confirm details clearly and thank them.",
-              "effects": {
-                "meters": {
-                  "trust": 1,
-                  "tension": -1
-                }
-              },
-              "to": "a1end"
+              "label": "Reply with reassurance and boundaries.",
+              "text": "You type: \u201cI hear that you\u2019re overwhelmed. We\u2019re both doing our best. Let\u2019s talk about changes to the schedule with a mediator, not at 3 AM.\u201d",
+              "tone": "calm \u00b7 boundaried",
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+              "next": "a1s3"
             },
             {
               "id": "a1s2c2",
-              "label": "Keep it vague: “I’ll text you.”",
-              "effects": {
-                "meters": {
-                  "tension": 1
-                }
-              },
-              "to": "a1end"
+              "label": "React defensively.",
+              "text": "You snap back: \u201cYou\u2019re not the only one who\u2019s tired. Threatening custody changes in the middle of the night is not okay.\u201d",
+              "tone": "defensive \u00b7 confrontational",
+              "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+              "next": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s3",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "You stare at the screen, thinking of your child still asleep, unaware of these late-night storms.",
+          "tone": "reflective \u00b7 protective",
+          "choices": [
+            {
+              "id": "a1s3c1",
+              "label": "Focus on what you can control today.",
+              "text": "You decide to anchor your day: breakfast, school drop-off, work. One step at a time.",
+              "tone": "grounded \u00b7 pragmatic",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a1end"
+            },
+            {
+              "id": "a1s3c2",
+              "label": "Spiral into worst-case scenarios.",
+              "text": "You imagine court battles, custody fights, the worst of everything, all before breakfast.",
+              "tone": "catastrophic \u00b7 overwhelmed",
+              "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+              "next": "a1end"
             }
           ]
         },
         {
           "id": "a1end",
-          "text": "End of Act 1.",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "The day is just beginning, but the emotional weather is already stormy.",
+          "tone": "somber \u00b7 realistic",
           "choices": [
             {
               "id": "a1endc1",
-              "label": "Continue to Act 2.",
-              "effects": {},
-              "to": "a2s1"
-            },
-            {
-              "id": "a1endc2",
-              "label": "Return to menu",
-              "effects": {},
-              "to": "menu"
+              "label": "Move to Act 2 \u2013 Planning the Conversation.",
+              "text": "You decide this can\u2019t stay in endless text threads. It needs structure.",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a2s1"
             }
           ]
         }
@@ -100,51 +112,96 @@
     },
     {
       "id": "act2",
-      "title": "Act 2 — Check-in Rhythm",
-      "start": "a2s1",
+      "title": "Planning the Conversation",
       "steps": [
         {
           "id": "a2s1",
-          "text": "You consider setting a brief weekly check-in to stabilize planning.",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "Later that day, you sit at the kitchen table with a notepad. You know that unstructured talks often end in chaos.",
+          "tone": "pragmatic \u00b7 cautious",
           "choices": [
             {
               "id": "a2s1c1",
-              "label": "Propose a 10-minute Sunday check-in with a simple agenda.",
-              "effects": {
-                "meters": {
-                  "trust": 2,
-                  "tension": -1
-                }
-              },
-              "to": "a2end"
+              "label": "Suggest meeting with a mediator.",
+              "text": "You draft: \u201cI think it would help if we talked about schedules with a neutral mediator. Would you be open to that?\u201d",
+              "tone": "solution-focused \u00b7 respectful",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a2s2"
             },
             {
               "id": "a2s1c2",
-              "label": "Leave things open-ended for now.",
-              "effects": {
-                "meters": {
-                  "tension": 1
-                }
-              },
-              "to": "a2end"
+              "label": "Try to handle it alone, one-on-one.",
+              "text": "You decide to invite them for coffee to \u201ctalk it out\u201d, just the two of you.",
+              "tone": "hopeful \u00b7 risky",
+              "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+              "next": "a2s2"
+            }
+          ]
+        },
+        {
+          "id": "a2s2",
+          "type": "dialog",
+          "speaker": "Ex-Partner",
+          "text": "Their reply pings back: \u201cI don\u2019t need a stranger telling me how to raise my kid.\u201d",
+          "tone": "resistant \u00b7 defensive",
+          "choices": [
+            {
+              "id": "a2s2c1",
+              "label": "Normalize support.",
+              "text": "You write: \u201cMediators aren\u2019t there to judge, just to help us communicate when things feel intense.\u201d",
+              "tone": "educational \u00b7 steady",
+              "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+              "next": "a2s3"
+            },
+            {
+              "id": "a2s2c2",
+              "label": "Back off and postpone.",
+              "text": "You decide not to push it further today and let the topic rest.",
+              "tone": "avoidant \u00b7 temporarily soothing",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a2s3"
+            }
+          ]
+        },
+        {
+          "id": "a2s3",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "You remind yourself that bipolar disorder adds another layer to every conversation: energy spikes, crashes, and sensitivity to perceived criticism.",
+          "tone": "informed \u00b7 compassionate",
+          "choices": [
+            {
+              "id": "a2s3c1",
+              "label": "Plan your next steps around stability, not reaction.",
+              "text": "You make a note to only suggest big changes during more stable periods, not right after crises.",
+              "tone": "strategic \u00b7 self-protective",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a2end"
+            },
+            {
+              "id": "a2s3c2",
+              "label": "Continue to react to the latest mood.",
+              "text": "You resign yourself to \u201cseeing how they are that day\u201d and adjusting on the fly.",
+              "tone": "resigned \u00b7 chaotic",
+              "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+              "next": "a2end"
             }
           ]
         },
         {
           "id": "a2end",
-          "text": "You have a clearer first step toward steadier weeks.",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "You put the pen down. The situation is still complex, but at least you have a plan that doesn\u2019t rely solely on midnight messages.",
+          "tone": "measured \u00b7 cautiously hopeful",
           "choices": [
             {
               "id": "a2endc1",
-              "label": "Return to menu",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a2endc2",
-              "label": "Revisit Act 1",
-              "effects": {},
-              "to": "a1s1"
+              "label": "Return to menu.",
+              "text": "You pause the scenario here.",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "menu"
             }
           ]
         }
