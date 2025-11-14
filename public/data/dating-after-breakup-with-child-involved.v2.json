@@ -215,7 +215,7 @@
 },
   {
     "id": "a2s2",
-    "actId": "act2",
+    "act": "act2",
     "type": "dialog",
     "speaker": "Partner",
     "title": "First Message",
@@ -244,7 +244,7 @@
   },
   {
     "id": "a2s3a",
-    "actId": "act2",
+    "act": "act2",
     "type": "dialog",
     "speaker": "Partner",
     "title": "Reaction to Your Honesty",
@@ -273,7 +273,7 @@
   },
   {
     "id": "a2s3b",
-    "actId": "act2",
+    "act": "act2",
     "type": "dialog",
     "speaker": "Narrator",
     "title": "A Small Secret",
@@ -302,7 +302,7 @@
   },
   {
     "id": "a2end_a",
-    "actId": "act2",
+    "act": "act2",
     "type": "dialog",
     "speaker": "Narrator",
     "title": "End of Act 2 — Planned First Date",
@@ -322,7 +322,7 @@
   },
   {
     "id": "a2end_pause",
-    "actId": "act2",
+    "act": "act2",
     "type": "dialog",
     "speaker": "Narrator",
     "title": "End of Act 2 — Pause or Halfway Point",
