@@ -1,23 +1,11 @@
 
 // app.v2.js – Amorvia V2 Mini-Engine + Scenario Picker + HUD hook
 // ---------------------------------------------------------------
-// This version does NOT rely on a global ScenarioEngine.
-// It works directly with flattened *.v2.json scenarios that contain `nodes`.
-// Responsibilities:
-//  - Load /data/v2-index.json and populate #scenarioPicker
-//  - Load /data/<id>.v2.json for the chosen scenario
-//  - Manage simple state: current node + meters (trust, tension, childStress)
-//  - Render dialog + choices into #dialog and #choices
-//  - Handle choice clicks → move to next node
-//  - Update #actBadge + #sceneTitle
-//  - Sync HUD via AmorviaHUD.update({ trust, tension, childStress })
-//
-// It is intentionally conservative and only uses fields we know exist in v2:
-//  - scenario.start / startNodeId / entryId / entry / entryNodeId
-//  - node.id / node.text / node.act / node.choices[*].id/label/text/next/to/effects
-//  - scenario.acts[*] with { id, title }
-//  - scenario.meters (initial values)
-//
+// Works directly with *.v2.json v2 scenarios. Relies on:
+//  - fetch-normalize-entry.v2.patch.js to ensure acts[*].nodes[] + start/entry.
+// Does NOT use a global ScenarioEngine.
+// It manages a tiny in-memory engine: current node + meters.
+
 (function () {
   "use strict";
 
@@ -70,7 +58,8 @@
     let badge = $(SELECTORS.statusBadge);
     if (badge && badge.isConnected) return badge;
 
-    const container = $(SELECTORS.statusContainer) || $("#titleAndList");
+    const container =
+      $(SELECTORS.statusContainer) || document.querySelector("#titleAndList");
     if (!container) return null;
 
     badge = createEl("span", "amor-status-badge", {
@@ -83,9 +72,7 @@
 
   function setStatus(text, tone) {
     let badge = $(SELECTORS.statusBadge);
-    if (!badge || !badge.isConnected) {
-      badge = ensureStatusBadge();
-    }
+    if (!badge || !badge.isConnected) badge = ensureStatusBadge();
     if (!badge) return;
     badge.textContent = text;
     badge.dataset.tone = tone || "";
@@ -93,7 +80,12 @@
 
   function updateUrlScenarioParam(id) {
     if (!window.history || !window.history.replaceState) return;
-    const url = new URL(window.location.href);
+    let url;
+    try {
+      url = new URL(window.location.href);
+    } catch {
+      return;
+    }
     if (id) url.searchParams.set("scenario", id);
     else url.searchParams.delete("scenario");
     window.history.replaceState({}, "", url.toString());
@@ -174,21 +166,41 @@
       scn.start ||
       scn.entryNodeId ||
       scn.entryId ||
-      scn.entry ||
+      (scn.entry && scn.entry.nodeId) ||
       null
     );
   }
 
   function buildLookupTables(scn) {
     state.nodeById = Object.create(null);
-    (scn.nodes || []).forEach((n) => {
-      if (n && n.id) state.nodeById[n.id] = n;
-    });
-
     state.actsById = Object.create(null);
-    (scn.acts || []).forEach((a) => {
-      if (a && a.id) state.actsById[a.id] = a;
-    });
+
+    // Always index acts first (if present)
+    if (Array.isArray(scn.acts)) {
+      scn.acts.forEach((act) => {
+        if (!act) return;
+        const actId = act.id || act.title || "";
+        if (actId) state.actsById[actId] = act;
+
+        const nodes = Array.isArray(act.nodes) ? act.nodes : [];
+        nodes.forEach((node) => {
+          if (!node || !node.id) return;
+          if (!node.act) node.act = actId;
+          state.nodeById[node.id] = node;
+        });
+      });
+    }
+
+    // If scenario has a flat nodes[] array, merge/override
+    if (Array.isArray(scn.nodes)) {
+      scn.nodes.forEach((node) => {
+        if (!node || !node.id) return;
+        if (node.act && !state.actsById[node.act]) {
+          state.actsById[node.act] = { id: node.act, title: node.act };
+        }
+        state.nodeById[node.id] = node;
+      });
+    }
   }
 
   function renderCurrentNode() {
@@ -210,20 +222,26 @@
       return;
     }
 
-    // Update act badge
+    // Act badge
     if (actBadge) {
-      const actMeta = node.act && state.actsById[node.act];
-      if (actMeta && actMeta.title) actBadge.textContent = actMeta.title;
-      else if (node.act) actBadge.textContent = node.act;
-      else actBadge.textContent = "Act -";
+      let actLabel = "Act -";
+      if (node.act && state.actsById[node.act]) {
+        const meta = state.actsById[node.act];
+        actLabel = meta.title || meta.id || "Act -";
+      } else if (node.act) {
+        actLabel = node.act;
+      }
+      actBadge.textContent = actLabel;
     }
 
-    // Update scene title (scenario title)
+    // Scene title
     if (sceneTitle) {
-      sceneTitle.textContent = state.scenario?.title || "Scenario";
+      sceneTitle.textContent = state.scenario && state.scenario.title
+        ? state.scenario.title
+        : "Scenario";
     }
 
-    // Dialog text (simple for now; speaker can be added later)
+    // Dialog text
     dialogEl.textContent = (node.text || "").trim() || " ";
 
     // Choices
@@ -233,11 +251,12 @@
       btn.className = "choice";
       btn.textContent = c.label || c.text || "Continue";
       if (c.id) btn.dataset.choiceId = c.id;
-      btn.dataset.next = c.to || c.next || "";
+      const nextId = c.to || c.next || "";
+      if (nextId) btn.dataset.next = nextId;
       choicesEl.appendChild(btn);
     });
 
-    // Apply any node-level effects on enter
+    // Node-level effects on enter
     if (node.effects) {
       applyEffects(node.effects);
       syncHUD();
@@ -245,21 +264,22 @@
   }
 
   function gotoNode(nextId, choiceId) {
-    const node = state.nodeById[state.currentNodeId];
-    if (!node) return;
+    const current = state.nodeById[state.currentNodeId];
+    if (!current) return;
 
-    // Apply choice-level effects first
+    // Apply choice effects
     if (choiceId) {
-      const choice = (node.choices || []).find((c) => c.id === choiceId);
+      const choice = (current.choices || []).find((c) => c && c.id === choiceId);
       if (choice && choice.effects) applyEffects(choice.effects);
     }
 
-    // Node-level effects are applied on renderCurrentNode()
-
-    // Move to next
-    const targetId = nextId || (node.choices || [])[0]?.to || (node.choices || [])[0]?.next;
+    let targetId = nextId;
     if (!targetId) {
-      console.warn("[AmorviaMini] No next node id for", node.id);
+      const first = (current.choices || [])[0] || null;
+      if (first) targetId = first.to || first.next || null;
+    }
+    if (!targetId) {
+      console.warn("[AmorviaMini] No next node id for", current.id);
       return;
     }
 
@@ -271,7 +291,6 @@
   function wireChoiceClicks() {
     const choicesEl = $(SELECTORS.choices);
     if (!choicesEl || choicesEl.dataset.amorviaMiniBound === "1") return;
-
     choicesEl.addEventListener("click", (ev) => {
       const btn = ev.target.closest("button.choice");
       if (!btn) return;
@@ -279,7 +298,6 @@
       const choiceId = btn.dataset.choiceId || null;
       gotoNode(nextId, choiceId);
     });
-
     choicesEl.dataset.amorviaMiniBound = "1";
   }
 
@@ -303,10 +321,10 @@
         state.scenario = scn || {};
         state.meters = Object.assign(
           { trust: 0, tension: 0, childStress: 0 },
-          scn.meters || {}
+          (scn && scn.meters) || {}
         );
-        buildLookupTables(scn);
-        const startId = computeStartNodeId(scn);
+        buildLookupTables(scn || {});
+        const startId = computeStartNodeId(scn || {});
         state.currentNodeId = startId;
         renderCurrentNode();
         wireChoiceClicks();
@@ -327,7 +345,6 @@
       console.warn("[AmorviaMini] No #scenarioPicker found.");
       return;
     }
-
     if (!select.dataset.amorviaMiniBound) {
       select.addEventListener("change", (ev) => {
         const newId = ev.target.value;
@@ -341,7 +358,6 @@
   function populatePicker() {
     const select = $(SELECTORS.picker);
     if (!select || !state.index || !Array.isArray(state.index.scenarios)) return;
-
     select.innerHTML = "";
     state.index.scenarios.forEach((s) => {
       const opt = document.createElement("option");
@@ -355,12 +371,11 @@
   function pickInitialScenarioId() {
     const fromUrl = getScenarioFromUrl();
     if (fromUrl) return fromUrl;
-
     const fromStorage = loadLastScenario();
     if (fromStorage) return fromStorage;
-
     if (state.index && Array.isArray(state.index.scenarios) && state.index.scenarios.length) {
-      return state.index.scenarios[0].id || state.index.scenarios[0].slug || null;
+      const s0 = state.index.scenarios[0];
+      return s0.id || s0.slug || null;
     }
     return null;
   }
@@ -368,21 +383,18 @@
   function loadIndex() {
     ensureStatusBadge();
     setStatus(STATUS.LOADING, "loading");
-
     return fetchJsonNoStore("/data/v2-index.json")
       .then((idx) => {
         state.index = idx;
         buildPickerUI();
         populatePicker();
-
         const initialId = pickInitialScenarioId();
         if (initialId) {
           const select = $(SELECTORS.picker);
           if (select) select.value = initialId;
           return loadScenarioById(initialId);
-        } else {
-          setStatus(STATUS.READY, "ok");
         }
+        setStatus(STATUS.READY, "ok");
       })
       .catch((err) => {
         console.error("[AmorviaMini] Failed to load v2 index", err);
@@ -403,11 +415,10 @@
     init();
   }
 
-  // Expose for debugging
   window.AmorviaMini = {
     state,
     loadScenarioById,
-    syncHUD,
     loadIndex,
+    syncHUD,
   };
 })();
