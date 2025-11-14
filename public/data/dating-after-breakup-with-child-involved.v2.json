@@ -182,140 +182,160 @@
         }
       ]
     },
-    {
-      "id": "act2s1",
-      "act": "act2",
-      "speaker": "Narrator",
-      "text": "Saturday morning. Sunlight spills across your phone. The dating app icon is still there — waiting. You hesitate before tapping it.",
-      "tone": "tentative · curious",
-      "choices": [
-        {
-          "id": "a2s1c1",
-          "label": "I’ll open it. Just curious who’s out there.",
-          "text": "I’ll open it. Just curious who’s out there.",
-          "tone": "open · cautious",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0, "meters": { "trust": 0, "tension": 1, "childStress": 0 } },
-          "next": "a2s2",
-          "to": "a2s2"
-        },
-        {
-          "id": "a2s1c2",
-          "label": "No, not yet. I don’t want to rush into anything.",
-          "text": "No, not yet. I don’t want to rush into anything.",
-          "tone": "measured · patient",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0, "meters": { "trust": 1, "tension": -1, "childStress": 0 } },
-          "next": "a2s2",
-          "to": "a2s2"
-        }
-      ]
-    },
-    {
-      "id": "a2s2",
-      "act": "act2",
-      "speaker": "Narrator",
-      "text": "You scroll through a few profiles — smiles, bios, small talk hooks. It’s both exciting and exhausting.",
-      "tone": "ambivalent · overstimulated",
-      "choices": [
-        {
-          "id": "a2s2c1",
-          "label": "Swipe right on someone interesting — what’s the harm?",
-          "text": "Swipe right on someone interesting — what’s the harm?",
-          "tone": "playful · testing waters",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0, "meters": { "trust": 0, "tension": 1, "childStress": 0 } },
-          "next": "a2s3",
-          "to": "a2s3"
-        },
-        {
-          "id": "a2s2c2",
-          "label": "Close the app. This doesn’t feel like me right now.",
-          "text": "Close the app. This doesn’t feel like me right now.",
-          "tone": "self-preserving · clear boundary",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0, "meters": { "trust": 1, "tension": -1, "childStress": 0 } },
-          "next": "a2s3",
-          "to": "a2s3"
-        }
-      ]
-    },
-    {
-      "id": "a2s3",
-      "act": "act2",
-      "speaker": "Narrator",
-      "text": "Just then, your child’s photo pops up on your lock screen — a reminder from the shared album with your ex.",
-      "tone": "tender · grounding",
-      "choices": [
-        {
-          "id": "a2s3c1",
-          "label": "Smile softly — they look happy. That’s what matters.",
-          "text": "Smile softly — they look happy. That’s what matters.",
-          "tone": "warm · reassured",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1, "meters": { "trust": 1, "tension": -1, "childStress": -1 } },
-          "next": "a2s4",
-          "to": "a2s4"
-        },
-        {
-          "id": "a2s3c2",
-          "label": "Feel a sting of guilt — maybe this isn’t the time to date.",
-          "text": "Feel a sting of guilt — maybe this isn’t the time to date.",
-          "tone": "guilty · conflicted",
-          "effects": { "trust": 0, "tension": 1, "childStress": 1, "meters": { "trust": 0, "tension": 1, "childStress": 1 } },
-          "next": "a2s4",
-          "to": "a2s4"
-        }
-      ]
-    },
-    {
-      "id": "a2s4",
-      "act": "act2",
-      "speaker": "Friend",
-      "text": "“So, any cute matches yet?”",
-      "tone": "light · slightly teasing",
-      "choices": [
-        {
-          "id": "a2s4c1",
-          "label": "Be honest: 'I tried it, but it felt weird.'",
-          "text": "Be honest: 'I tried it, but it felt weird.'",
-          "tone": "honest · self-aware",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0, "meters": { "trust": 1, "tension": -1, "childStress": 0 } },
-          "next": "a2end",
-          "to": "a2end"
-        },
-        {
-          "id": "a2s4c2",
-          "label": "Joke: 'Already planning the wedding.'",
-          "text": "Joke: 'Already planning the wedding.'",
-          "tone": "humorous · deflecting",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0, "meters": { "trust": 0, "tension": 1, "childStress": 0 } },
-          "next": "a2end",
-          "to": "a2end"
-        }
-      ]
-    },
-    {
-      "id": "a2end",
-      "act": "act2",
-      "speaker": "Narrator",
-      "text": "As the weekend closes, you realize this was the first time you let yourself think about your own happiness — not just responsibilities.",
-      "tone": "soft · contemplative",
-      "choices": [
-        {
-          "id": "a2endc1",
-          "label": "Continue to Act 3.",
-          "text": "Continue to Act 3.",
-          "effects": { "meters": {} },
-          "nextAct": "act3",
-          "next": "a3s1",
-          "to": "a3s1"
-        },
-        {
-          "id": "a2endc2",
-          "label": "Pause here (return to menu).",
-          "text": "Pause here (return to menu).",
-          "effects": { "meters": {} },
-          "next": "menu",
-          "to": "menu"
-        }
-      ]
-    },
+  {
+    "id": "a2s1",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Narrator",
+    "title": "Back on the App",
+    "text": "The phone screen glows in the dim room. The dating app you deleted long ago is back. Picture after picture, profile after profile — but this time you're not just looking for chemistry. You're looking for someone who can understand that you share your life with your child.",
+    "tone": "reflective · cautious",
+    "choices": [
+      {
+        "id": "a2s1c1",
+        "label": "Be honest — mention your child in your profile.",
+        "text": "You decide to be straightforward from the start. Your profile now clearly says that you have a child and that parenting is central to your life.",
+        "tone": "honest · grounded",
+        "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+        "next": "a2s2",
+        "to": "a2s2"
+      },
+      {
+        "id": "a2s1c2",
+        "label": "Skip mentioning your child for now.",
+        "text": "You decide to leave that detail out for now. If something becomes serious, you'll explain later.",
+        "tone": "avoidant · anxious",
+        "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+        "next": "a2s2",
+        "to": "a2s2"
+      }
+    ]
+  },
+  {
+    "id": "a2s2",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Partner",
+    "title": "First Message",
+    "text": "\"Hey, I really like how you describe yourself. I’m also juggling work and family… What does a regular week look like for you?\" The message is warm and without pressure. You feel a small spark — but also that familiar fear around discussing your child.",
+    "tone": "curious · warm",
+    "choices": [
+      {
+        "id": "a2s2c1",
+        "label": "Be open — explain your parenting schedule.",
+        "text": "You write that you have a child, share custody, and need someone who respects that rhythm.",
+        "tone": "open · brave",
+        "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+        "next": "a2s3a",
+        "to": "a2s3a"
+      },
+      {
+        "id": "a2s2c2",
+        "label": "Keep things vague — avoid mentioning your child.",
+        "text": "You reply with something general about work and hobbies, skipping the parenting part. A knot tightens in your stomach.",
+        "tone": "defensive · avoidant",
+        "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+        "next": "a2s3b",
+        "to": "a2s3b"
+      }
+    ]
+  },
+  {
+    "id": "a2s3a",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Partner",
+    "title": "Reaction to Your Honesty",
+    "text": "\"Thank you for telling me that. I appreciate honesty. If you’d like, we can meet at a time that works for you — I don’t want to disrupt your schedule.\" Your shoulders relax a little.",
+    "tone": "supportive · respectful",
+    "choices": [
+      {
+        "id": "a2s3a1",
+        "label": "Accept the meeting and set clear boundaries.",
+        "text": "You propose a time that fits your parenting schedule and clearly say when you need to be home. No over-explaining, no guilt.",
+        "tone": "assertive · clear",
+        "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+        "next": "a2end_a",
+        "to": "a2end_a"
+      },
+      {
+        "id": "a2s3a2",
+        "label": "Realize you're not ready and step back.",
+        "text": "You thank them for understanding and explain you’re not ready to date yet. You feel both relief and sadness.",
+        "tone": "vulnerable · cautious",
+        "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+        "next": "a2end_pause",
+        "to": "a2end_pause"
+      }
+    ]
+  },
+  {
+    "id": "a2s3b",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Narrator",
+    "title": "A Small Secret",
+    "text": "The conversation continues — jokes, memes, small talk. You enjoy it. But each time you want to relax, the thought appears: \"At some point, I’ll have to explain the whole parenting part.\" You feel like you're building something on half-truths.",
+    "tone": "uneasy · conflicted",
+    "choices": [
+      {
+        "id": "a2s3b1",
+        "label": "Send a correction — tell them about your child.",
+        "text": "After a few messages you write: \"I need to add something important — I have a child and share custody.\" Your heart beats fast while you wait for the reply.",
+        "tone": "corrective · honest",
+        "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+        "next": "a2s3a",
+        "to": "a2s3a"
+      },
+      {
+        "id": "a2s3b2",
+        "label": "Keep hiding it — focus on flirting.",
+        "text": "You push the worry aside and continue flirting. But deep down, you know the conversation about your child will explode sooner or later.",
+        "tone": "avoidant · risky",
+        "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+        "next": "a2end_pause",
+        "to": "a2end_pause"
+      }
+    ]
+  },
+  {
+    "id": "a2end_a",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Narrator",
+    "title": "End of Act 2 — Planned First Date",
+    "text": "The plan is set: time, place, and healthy boundaries. For the first time in a long while, you feel like starting something new doesn’t mean betraying your parenting responsibilities.",
+    "tone": "hopeful · grounded",
+    "choices": [
+      {
+        "id": "a2end_a_c1",
+        "label": "Continue to Act 3",
+        "text": "You move forward to the next stage of the story.",
+        "tone": "neutral",
+        "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+        "next": "a3s1",
+        "to": "a3s1"
+      }
+    ]
+  },
+  {
+    "id": "a2end_pause",
+    "actId": "act2",
+    "type": "dialog",
+    "speaker": "Narrator",
+    "title": "End of Act 2 — Pause or Halfway Point",
+    "text": "Act 2 ends with a sense of being somewhere in the middle. You want connection, but part of you isn’t fully ready. Maybe you just need a little more time — not to avoid dating, but to enter it more consciously.",
+    "tone": "ambivalent · reflective",
+    "choices": [
+      {
+        "id": "a2end_pause_c1",
+        "label": "Acknowledge the pause and continue to Act 3.",
+        "text": "You decide that a pause is not the end — it’s part of the process.",
+        "tone": "self-compassionate",
+        "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+        "next": "a3s1",
+        "to": "a3s1"
+      },
     {
       "id": "a3s1",
       "act": "act3",
