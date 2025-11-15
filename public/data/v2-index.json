@@ -15,6 +15,20 @@
       "path": "data/co-parenting-with-bipolar-partner.v2.json"
     },
     {
+  "id": "step-parenting-conflicts",
+  "title": "Step-Parenting Conflicts",
+  "tags": [
+    "step-parenting",
+    "conflict",
+    "boundaries",
+    "communication",
+    "child-wellbeing"
+  ],
+  "difficulty": "hard",
+  "acts": 1,
+  "path": "data/step-parenting-conflicts.v2.json"
+   },
+    {
       "id": "visitor",
       "title": "Visitor",
       "tags": [
