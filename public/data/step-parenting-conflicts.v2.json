@@ -746,6 +746,183 @@
   ]
 }
  ],
+  {
+  "id": "a5s1",
+  "act": "act5",
+  "speaker": "Narrator",
+  "title": "Morning Light After the Storm",
+  "text": "The next morning feels softer. The house is quiet, sunlight warming the kitchen counter. Your partner joins you, a hesitant calm between you both.",
+  "tone": "gentle · post-conflict · reflective",
+  "choices": [
+    {
+      "id": "a5s1c1",
+      "label": "Acknowledge yesterday and invite closure.",
+      "text": "“Yesterday was rough… but I’d like us to decide how we move forward today.”",
+      "tone": "steady · relational",
+      "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+      "next": "a5s2",
+      "to": "a5s2"
+    },
+    {
+      "id": "a5s1c2",
+      "label": "Avoid the topic and focus on daily tasks.",
+      "text": "“We should get breakfast going. Lots to do today.”",
+      "tone": "avoidant · functional",
+      "effects": { "trust": -1, "tension": 0, "childStress": 0 },
+      "next": "a5s2",
+      "to": "a5s2"
+    },
+    {
+      "id": "a5s1c3",
+      "label": "Show gratitude for the honest conversation.",
+      "text": "“Thank you for talking openly last night. It meant a lot.”",
+      "tone": "warm · appreciative",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a5s2",
+      "to": "a5s2"
+    }
+  ]
+},
+
+{
+  "id": "a5s2",
+  "act": "act5",
+  "speaker": "Child",
+  "title": "The Child's Check-In",
+  "text": "Your child walks into the room with sleepy eyes. “Are you two okay?” The small voice carries more weight than expected.",
+  "tone": "innocent · emotionally attuned",
+  "choices": [
+    {
+      "id": "a5s2c1",
+      "label": "Reassure them gently.",
+      "text": "“We’re okay. Adults have tricky moments too, but we figure them out.”",
+      "tone": "grounding · protective",
+      "effects": { "trust": 1, "tension": -1, "childStress": -2 },
+      "next": "a5s3",
+      "to": "a5s3"
+    },
+    {
+      "id": "a5s2c2",
+      "label": "Shift the focus to the child’s needs.",
+      "text": "“Thanks for checking in. How are you this morning?”",
+      "tone": "attentive · child-centered",
+      "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+      "next": "a5s3",
+      "to": "a5s3"
+    },
+    {
+      "id": "a5s2c3",
+      "label": "Be too honest about the conflict.",
+      "text": "“We’re figuring things out. Things got pretty heated yesterday.”",
+      "tone": "raw · unfiltered",
+      "effects": { "trust": -1, "tension": 1, "childStress": 2 },
+      "next": "a5s3",
+      "to": "a5s3"
+    }
+  ]
+},
+
+{
+  "id": "a5s3",
+  "act": "act5",
+  "speaker": "Narrator",
+  "title": "Rebuilding the Parenting Rhythm",
+  "text": "Later in the day, you find a quiet moment with your partner. The question now is how to build a more stable rhythm that respects both the co-parenting dynamic and the step-parent’s role.",
+  "tone": "constructive · future-focused",
+  "choices": [
+    {
+      "id": "a5s3c1",
+      "label": "Create a shared discipline plan with your partner.",
+      "text": "You say, “Let’s make a simple plan for discipline so we feel consistent and confident.”",
+      "tone": "collaborative · structured",
+      "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+      "next": "a5s4",
+      "to": "a5s4"
+    },
+    {
+      "id": "a5s3c2",
+      "label": "Take full responsibility for discipline to protect them.",
+      "text": "“I’ll handle discipline. You don’t need extra stress.”",
+      "tone": "protective · imbalanced",
+      "effects": { "trust": -1, "tension": 0, "childStress": 1 },
+      "next": "a5s4",
+      "to": "a5s4"
+    },
+    {
+      "id": "a5s3c3",
+      "label": "Delay the conversation.",
+      "text": "“Let’s revisit this later. Today’s been enough.”",
+      "tone": "avoidant · fatigued",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "a5s4",
+      "to": "a5s4"
+    }
+  ]
+},
+
+{
+  "id": "a5s4",
+  "act": "act5",
+  "speaker": "Partner",
+  "title": "Choosing the Path Forward",
+  "text": "Your partner seems more grounded now. “I want to be part of this. I just need to know I’m not stepping on anyone’s toes.”",
+  "tone": "open · cautious",
+  "choices": [
+    {
+      "id": "a5s4c1",
+      "label": "Affirm their role clearly.",
+      "text": "“You’re important here. We’ll navigate this together.”",
+      "tone": "supportive · bonding",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a5end",
+      "to": "a5end"
+    },
+    {
+      "id": "a5s4c2",
+      "label": "Set clear boundaries with both households.",
+      "text": "“Let’s write down what decisions we make together, and which ones stay between me and my ex.”",
+      "tone": "balanced · boundary-setting",
+      "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+      "next": "a5end",
+      "to": "a5end"
+    },
+    {
+      "id": "a5s4c3",
+      "label": "Ask for more time before defining roles.",
+      "text": "“I need a bit more clarity myself before locking anything in.”",
+      "tone": "honest · cautious",
+      "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+      "next": "a5end",
+      "to": "a5end"
+    }
+  ]
+},
+
+{
+  "id": "a5end",
+  "act": "act5",
+  "speaker": "Narrator",
+  "title": "End of Act 5 — Toward Integration",
+  "text": "The day winds down gently. The three of you share a calmer evening, the shape of a more stable rhythm beginning to form. It’s not perfect — but it’s real progress.",
+  "tone": "hopeful · grounded",
+  "choices": [
+    {
+      "id": "a5endc1",
+      "label": "Return to Menu",
+      "text": "You close the scene and take a breath.",
+      "next": "menu",
+      "to": "menu"
+    },
+    {
+      "id": "a5endc2",
+      "label": "Revisit earlier decisions",
+      "text": "You take a moment to reflect and maybe replay key choices.",
+      "next": "a5s1",
+      "to": "a5s1"
+    }
+  ]
+}
+
   "acts": [
     {
       "id": "act1",
@@ -766,5 +943,10 @@
   "id": "act4",
   "title": "Shared vs. Separate Teams",
   "steps": ["a4s1", "a4s2", "a4s3", "a4s4", "a4end"]
+}
+{
+  "id": "act5",
+  "title": "Integration & Rebuilding Stability",
+  "steps": ["a5s1", "a5s2", "a5s3", "a5s4", "a5end"]
 }
 
