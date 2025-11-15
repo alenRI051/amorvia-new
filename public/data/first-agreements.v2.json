@@ -1,131 +1,149 @@
 {
+  "version": 2,
   "id": "scene-first-agreements",
   "title": "Scene: First Agreements",
-  "version": 2,
-
-  "tags": ["co-parenting", "first-agreements", "communication"],
+  "tags": ["co-parenting", "agreements", "negotiation"],
   "actors": {
     "Narrator": {},
     "You": {},
     "Co-Parent": {},
-    "Mediator": {}
+    "Mediator": {},
+    "Child": {}
   },
 
   "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
 
-  "ui": {
-    "hud": { "animate": true, "animated": true },
-    "dialog": { "defaultSpeaker": "Narrator" }
-  },
-
-  "entry": "a1s1",
-  "entryNodeId": "a1s1",
-  "entryId": "a1s1",
-  "entryActId": "act1",
-  "start": "a1s1",
-  "startNodeId": "a1s1",
-
-  "nodes": [
-    {
-      "id": "menu",
-      "speaker": "Narrator",
-      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
-      "choices": [
-        {
-          "id": "menu_c1",
-          "label": "Continue",
-          "text": "Continue",
-          "next": "a1s1",
-          "to": "a1s1"
-        }
-      ]
-    },
-
-    {
-      "id": "a1s1",
-      "act": "act1",
-      "entry": true,
-      "speaker": "Narrator",
-      "title": "Arriving at the Meeting",
-      "text": "A neutral room, two chairs, and a table with water glasses. You and your co-parent sit across from each other, with the mediator between you.",
-      "tone": "tense · cautious",
-      "choices": [
-        {
-          "id": "a1s1c1",
-          "label": "Start by thanking them for coming.",
-          "text": "You take a breath and say: “Thanks for being here. I know this isn’t easy for either of us.”",
-          "tone": "soft · de-escalating",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a1s2",
-          "to": "a1s2"
-        },
-        {
-          "id": "a1s1c2",
-          "label": "Jump straight into the problem.",
-          "text": "You lean forward: “We need to talk about pickups and drop-offs because this can’t keep going like it has.”",
-          "tone": "direct · slightly sharp",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
-          "next": "a1s2",
-          "to": "a1s2"
-        }
-      ]
-    },
-
-    {
-      "id": "a1s2",
-      "act": "act1",
-      "speaker": "Mediator",
-      "title": "Naming the Goal",
-      "text": "The mediator nods and summarizes: “It sounds like both of you want less chaos around hand-overs and more predictability for your child.”",
-      "tone": "neutral · structuring",
-      "choices": [
-        {
-          "id": "a1s2c1",
-          "label": "Agree and focus on the child’s needs.",
-          "text": "You say: “Yes. I want her to feel safe and know what to expect.”",
-          "tone": "child-focused · cooperative",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1end",
-          "to": "a1end"
-        },
-        {
-          "id": "a1s2c2",
-          "label": "Bring up how exhausted you are.",
-          "text": "You sigh: “I’m exhausted. I’m always the one adjusting last-minute.”",
-          "tone": "tired · frustrated",
-          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
-          "next": "a1end",
-          "to": "a1end"
-        }
-      ]
-    },
-
-    {
-      "id": "a1end",
-      "act": "act1",
-      "speaker": "Narrator",
-      "title": "First Small Agreement",
-      "text": "By the end of the meeting, you’ve drafted a simple agreement: fixed pickup times, a shared calendar, and a rule that changes are requested at least 24 hours ahead whenever possible.",
-      "tone": "measured · cautiously hopeful",
-      "choices": [
-        {
-          "id": "a1endc1",
-          "label": "Save this agreement and return to menu.",
-          "text": "You mentally file this as a first step, not a magic fix.",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "menu",
-          "to": "menu"
-        }
-      ]
-    }
-  ],
+  "startAct": "act4",
+  "entryActId": "act4",
+  "entryId": "a4s1",
 
   "acts": [
     {
-      "id": "act1",
-      "title": "First Agreements",
-      "steps": ["a1s1", "a1s2", "a1end"]
+      "id": "act4",
+      "title": "First Agreements at the Table",
+      "steps": [
+        {
+          "id": "a4s1",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "You and your co-parent sit at opposite ends of the table. No lawyers, no judges, just two tired parents trying to draw the first clear lines after a difficult breakup.",
+          "tone": "grounded · cautious",
+          "choices": [
+            {
+              "id": "a4s1c1",
+              "label": "Start with the child’s routine.",
+              "text": "You say: “Can we start with our child’s routine? Bedtime, school, handovers — if that feels stable, everything else is easier.”",
+              "tone": "child-focused · practical",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a4s2_routine"
+            },
+            {
+              "id": "a4s1c2",
+              "label": "Start with your frustrations.",
+              "text": "You jump in: “I can’t keep doing last-minute changes. It’s exhausting and it’s not fair.”",
+              "tone": "frustrated · honest",
+              "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+              "next": "a4s2_conflict"
+            }
+          ]
+        },
+
+        {
+          "id": "a4s2_routine",
+          "type": "dialog",
+          "speaker": "Co-Parent",
+          "text": "They nod slowly. “Okay… routine. I can work with that. I just don’t want to feel like I’m losing time with them.”",
+          "tone": "defensive · softening",
+          "choices": [
+            {
+              "id": "a4s2_routine_c1",
+              "label": "Acknowledge their fear and suggest a written plan.",
+              "text": "You answer: “I get that. What if we write down a schedule that feels fair to both of us — so we’re not fighting on WhatsApp every week?”",
+              "tone": "empathic · structured",
+              "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+              "next": "a4s3_bridge"
+            },
+            {
+              "id": "a4s2_routine_c2",
+              "label": "Insist on your own proposal only.",
+              "text": "You slide your own printed schedule across the table. “This is what I think is best, let’s just sign this.”",
+              "tone": "controlling · rigid",
+              "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+              "next": "a4s3_bridge"
+            }
+          ]
+        },
+
+        {
+          "id": "a4s2_conflict",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "The room tightens. Old arguments hover just under the surface, ready to explode.",
+          "tone": "tense · volatile",
+          "choices": [
+            {
+              "id": "a4s2_conflict_c1",
+              "label": "Slow down and bring the focus back to the child.",
+              "text": "You take a breath. “Look, I’m angry, yes. But I don’t want us to keep fighting in front of our child — or about them. Can we focus on what they need first?”",
+              "tone": "self-regulating · re-focusing",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a4s3_bridge"
+            },
+            {
+              "id": "a4s2_conflict_c2",
+              "label": "Keep pushing your point.",
+              "text": "You lean forward. “You say you’re doing everything, but that’s not true and you know it.”",
+              "tone": "accusatory · escalating",
+              "effects": { "trust": -2, "tension": 3, "childStress": 1 },
+              "next": "a4s3_bridge"
+            }
+          ]
+        },
+
+        {
+          "id": "a4s3_bridge",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "A beat of silence. Both of you know this conversation could still go badly — or become a turning point.",
+          "tone": "balanced · fragile · hopeful",
+          "choices": [
+            {
+              "id": "a4s3c1",
+              "label": "Propose 1–2 concrete agreements for the next month.",
+              "text": "You suggest: “What if we agree on pickup times and overnights just for the next month — and then revisit? Short, clear, and written down.”",
+              "tone": "practical · doable",
+              "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+              "next": "a4end"
+            },
+            {
+              "id": "a4s3c2",
+              "label": "Say you’re overwhelmed and ask to pause.",
+              "text": "You admit: “I’m overwhelmed. I don’t want to say something I’ll regret. Can we pause here and schedule another talk, maybe with a mediator?”",
+              "tone": "vulnerable · self-aware",
+              "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+              "next": "a4end"
+            }
+          ]
+        },
+
+        {
+          "id": "a4end",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "You leave the table with at least one small agreement — or at least a clearer sense of what you need next. It’s not a miracle fix, but it’s not another screaming match either.",
+          "tone": "realistic · cautiously hopeful",
+          "choices": [
+            {
+              "id": "a4endc1",
+              "label": "Return to main menu.",
+              "text": "End this scene and go back to the scenario menu.",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "menu"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
