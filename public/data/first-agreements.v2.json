@@ -3,29 +3,25 @@
   "title": "Scene: First Agreements",
   "version": 2,
 
-  "tags": ["co-parenting", "first-agreements", "mediation"],
+  "tags": ["co-parenting", "first-agreements", "communication"],
   "actors": {
     "Narrator": {},
     "You": {},
-    "Ex-Partner": {},
-    "Mediator": {},
-    "Child": {}
+    "Co-Parent": {},
+    "Mediator": {}
   },
 
-  "meters": {
-    "trust": 0,
-    "tension": 0,
-    "childStress": 0
-  },
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
 
   "ui": {
-    "hud": { "animate": true },
+    "hud": { "animate": true, "animated": true },
     "dialog": { "defaultSpeaker": "Narrator" }
   },
 
   "entry": "a1s1",
   "entryNodeId": "a1s1",
+  "entryId": "a1s1",
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
@@ -34,12 +30,12 @@
     {
       "id": "menu",
       "speaker": "Narrator",
-      "text": "Main menu placeholder for Scene: First Agreements. Choose “Continue” to replay the scene.",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
       "choices": [
         {
           "id": "menu_c1",
           "label": "Continue",
-          "text": "Continue the scene.",
+          "text": "Continue",
           "next": "a1s1",
           "to": "a1s1"
         }
@@ -51,32 +47,27 @@
       "act": "act1",
       "entry": true,
       "speaker": "Narrator",
-      "text": "You’re in a small meeting room. The mediator sits between you and your co-parent. This is the first time you’re trying to put your new parenting schedule into clear written agreements.",
-      "tone": "calm · slightly tense",
+      "title": "Arriving at the Meeting",
+      "text": "A neutral room, two chairs, and a table with water glasses. You and your co-parent sit across from each other, with the mediator between you.",
+      "tone": "tense · cautious",
       "choices": [
         {
           "id": "a1s1c1",
-          "label": "Start with the child’s needs first.",
-          "text": "You say: “Before anything else, I’d like us to focus on what keeps our child feeling safe and stable.”",
-          "tone": "child-focused · steady",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
-          "next": "a1s2"
+          "label": "Start by thanking them for coming.",
+          "text": "You take a breath and say: “Thanks for being here. I know this isn’t easy for either of us.”",
+          "tone": "soft · de-escalating",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
         },
         {
           "id": "a1s1c2",
-          "label": "Jump straight into your frustrations.",
-          "text": "You say: “I’m still upset about how the last handover went. We can’t keep doing it like that.”",
-          "tone": "frustrated · pressured",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
-          "next": "a1s2"
-        },
-        {
-          "id": "a1s1c3",
-          "label": "Stay very quiet and let the mediator lead.",
-          "text": "You sit back and say little, letting the mediator start the conversation.",
-          "tone": "withdrawn · cautious",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1s2"
+          "label": "Jump straight into the problem.",
+          "text": "You lean forward: “We need to talk about pickups and drop-offs because this can’t keep going like it has.”",
+          "tone": "direct · slightly sharp",
+          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
         }
       ]
     },
@@ -85,66 +76,27 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Mediator",
-      "text": "The mediator nods and summarizes: “Let’s choose one concrete area for today: drop-offs and pick-ups. What would a realistic, child-friendly routine look like for both of you?”",
-      "tone": "structured · neutral",
+      "title": "Naming the Goal",
+      "text": "The mediator nods and summarizes: “It sounds like both of you want less chaos around hand-overs and more predictability for your child.”",
+      "tone": "neutral · structuring",
       "choices": [
         {
           "id": "a1s2c1",
-          "label": "Propose a clear, simple routine.",
-          "text": "You suggest: “Same days every week, same time and same place — so our child always knows what to expect.”",
-          "tone": "practical · stabilizing",
+          "label": "Agree and focus on the child’s needs.",
+          "text": "You say: “Yes. I want her to feel safe and know what to expect.”",
+          "tone": "child-focused · cooperative",
           "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1s3"
+          "next": "a1end",
+          "to": "a1end"
         },
         {
           "id": "a1s2c2",
-          "label": "Ask for maximum flexibility.",
-          "text": "You say: “My work shifts change, so I need us to stay flexible and adjust week by week.”",
-          "tone": "understandable · potentially confusing",
-          "effects": { "trust": 0, "tension": 1, "childStress": 1 },
-          "next": "a1s3"
-        },
-        {
-          "id": "a1s2c3",
-          "label": "Focus on what your ex is doing wrong.",
-          "text": "You respond: “Honestly, the problem is that you’re always late. Until that changes, no schedule will work.”",
-          "tone": "blaming · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
-          "next": "a1s3"
-        }
-      ]
-    },
-
-    {
-      "id": "a1s3",
-      "act": "act1",
-      "speaker": "Ex-Partner",
-      "text": "Your co-parent shifts in their chair. They look tired, defensive, and a little sad.",
-      "tone": "mixed · vulnerable",
-      "choices": [
-        {
-          "id": "a1s3c1",
-          "label": "Acknowledge something they’re doing well.",
-          "text": "You add: “I know you care about being there for our child. I see how much effort you put in, even when we disagree.”",
-          "tone": "validating · softening",
-          "effects": { "trust": 2, "tension": -2, "childStress": -1 },
-          "next": "a1end"
-        },
-        {
-          "id": "a1s3c2",
-          "label": "Stay purely factual and distant.",
-          "text": "You stick to logistics only: times, locations, and backup plans — nothing personal, nothing emotional.",
-          "tone": "businesslike · emotionally guarded",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1end"
-        },
-        {
-          "id": "a1s3c3",
-          "label": "Let your anger speak for you.",
-          "text": "You say: “You say you care, but your actions don’t match. I’m tired of cleaning up the mess.”",
-          "tone": "angry · attacking",
-          "effects": { "trust": -2, "tension": 3, "childStress": 2 },
-          "next": "a1end"
+          "label": "Bring up how exhausted you are.",
+          "text": "You sigh: “I’m exhausted. I’m always the one adjusting last-minute.”",
+          "tone": "tired · frustrated",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "next": "a1end",
+          "to": "a1end"
         }
       ]
     },
@@ -153,14 +105,15 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "By the end of the session, some things are still unresolved — that’s normal. But there is at least the outline of a plan, and a clearer sense of what helps the child feel safe.",
-      "tone": "realistic · gently hopeful",
+      "title": "First Small Agreement",
+      "text": "By the end of the meeting, you’ve drafted a simple agreement: fixed pickup times, a shared calendar, and a rule that changes are requested at least 24 hours ahead whenever possible.",
+      "tone": "measured · cautiously hopeful",
       "choices": [
         {
           "id": "a1endc1",
-          "label": "Reflect and return to menu.",
-          "text": "You mentally note which parts of the conversation calmed things — and which parts spiked the tension.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "label": "Save this agreement and return to menu.",
+          "text": "You mentally file this as a first step, not a magic fix.",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "menu",
           "to": "menu"
         }
@@ -171,10 +124,8 @@
   "acts": [
     {
       "id": "act1",
-      "title": "First Agreements at the Table",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
+      "title": "First Agreements",
+      "steps": ["a1s1", "a1s2", "a1end"]
     }
   ]
 }
-
-
