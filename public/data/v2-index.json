@@ -29,6 +29,14 @@
   "path": "data/step-parenting-conflicts.v2.json"
    },
     {
+  "id": "scene-tense-pickups-and-dropoffs",
+  "title": "Scene: Tense Pickups & Dropoffs",
+  "tags": ["pickups", "dropoffs", "exchange-day", "co-parenting", "conflict"],
+  "difficulty": "easy",
+  "acts": 5,
+  "path": "data/scene-tense-pickups-and-dropoffs.v2.json"
+},
+    {
       "id": "visitor",
       "title": "Visitor",
       "tags": [
