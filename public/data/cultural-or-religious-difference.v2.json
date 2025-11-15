@@ -1,339 +1,358 @@
 {
-  "version": 2,
   "id": "cultural-or-religious-difference",
-  "title": "Cultural or Religious Difference",
+  "title": "Cultural or Religious Difference in Co-Parenting",
+  "version": 2,
   "tags": [
-    "traditions",
-    "respect",
-    "planning"
+    "co-parenting",
+    "culture",
+    "religion",
+    "values",
+    "extended-family"
   ],
-  "difficulty": "normal",
-  "meters": {
-    "trust": {
-      "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
-    },
-    "tension": {
-      "label": "Tension",
-      "start": 22,
-      "min": 0,
-      "max": 100
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
-    }
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Co-Parent": {},
+    "Mediator": {},
+    "Grandparent": {}
   },
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meterOrder": ["trust", "tension", "childStress"],
+  "ui": {
+    "hud": { "animate": true, "animated": true },
+    "dialog": { "defaultSpeaker": "Narrator" }
+  },
+
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+
+  "nodes": [
+    {
+      "id": "menu",
+      "speaker": "Narrator",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
+      "choices": [
+        {
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "The Holiday Invitation",
+      "text": "Your co-parent sends a message: “My family wants our child at the main holiday ceremony this year. It’s important to us.” The ceremony is tied to a tradition you don’t personally follow.",
+      "tone": "tense · emotionally loaded",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Pause and ask for more details before reacting.",
+          "text": "You reply: “Can you tell me more about what happens there and what it would look like for our child?”",
+          "tone": "curious · regulating",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Say no immediately — your values feel threatened.",
+          "text": "You respond quickly: “No. I don’t want our child involved in that kind of ritual.”",
+          "tone": "protective · abrupt",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c3",
+          "label": "Say yes, even though you feel uneasy.",
+          "text": "You write: “Fine, if it’s important to your family, we can do it,” while your stomach knots.",
+          "tone": "appeasing · self-silencing",
+          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "Co-Parent",
+      "title": "What the Tradition Means",
+      "text": "Your co-parent responds with a voice note, sounding both emotional and hopeful: they explain stories from childhood, pressure from their parents, and how they worry their culture will fade out of your child’s life.",
+      "tone": "vulnerable · pressured",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Name both realities: culture AND the child’s comfort.",
+          "text": "“I hear this matters a lot to you and your family. I also want to make sure our child feels safe and not forced into anything scary or confusing.”",
+          "tone": "balancing · empathetic",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Focus only on your discomfort.",
+          "text": "“This just doesn’t sit right with me. I don’t want our child learning those things.”",
+          "tone": "rigid · reactive",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Defer completely to their side to avoid conflict.",
+          "text": "“Do what you think is best, I don’t want to fight about this anymore,” you say, shutting down your own needs.",
+          "tone": "withdrawn · conflict-avoidant",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1end",
+          "to": "a1end"
+        }
+      ]
+    },
+
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Decision Point",
+      "text": "The holiday is a few weeks away. The bigger question is no longer just “yes or no,” but how to handle ongoing differences in culture and belief so your child doesn’t become the battleground.",
+      "tone": "reflective · zoomed-out",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Suggest a structured conversation with clear goals.",
+          "text": "You propose setting a time to talk through long-term cultural and religious questions, not just this one holiday.",
+          "tone": "proactive · structured",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1_to_act2",
+          "to": "a1_to_act2"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Put it off and hope it sorts itself out.",
+          "text": "You postpone the conversation, telling yourself you’ll “deal with it later.”",
+          "tone": "avoidant · short-term relief",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "next": "a1_to_act2",
+          "to": "a1_to_act2"
+        },
+        {
+          "id": "a1endc3",
+          "label": "Return to menu instead of continuing.",
+          "text": "You pause the scenario here.",
+          "tone": "neutral",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+
+    {
+      "id": "a1_to_act2",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Setting the Tone",
+      "text": "You choose a calmer moment and suggest talking about culture and belief as an ongoing theme, not just a one-off crisis.",
+      "tone": "grounded · intentional",
+      "choices": [
+        {
+          "id": "a1_to_act2_c1",
+          "label": "Continue to Act 2.",
+          "text": "You both agree to sit down and map out how to share traditions in a way that feels fair and safe.",
+          "tone": "hopeful",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a2s1",
+          "to": "a2s1"
+        }
+      ]
+    },
+
+    {
+      "id": "a2s1",
+      "act": "act2",
+      "speaker": "Mediator",
+      "title": "Naming Core Values",
+      "text": "You’re sitting with a neutral mediator (or imagine one in your mind if not in real life). They ask each of you: “What are your top two values you want your child to learn from your culture or beliefs?”",
+      "tone": "structured · clarifying",
+      "choices": [
+        {
+          "id": "a2s1c1",
+          "label": "Choose values that overlap (kindness, respect, family).",
+          "text": "You highlight shared values: kindness, respect, curiosity — things both traditions already encourage.",
+          "tone": "bridge-building · collaborative",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a2s2",
+          "to": "a2s2"
+        },
+        {
+          "id": "a2s1c2",
+          "label": "Insist on distinct identity markers (\"my\" side vs \"their\" side).",
+          "text": "You focus on what separates you: “In my family we do X, not Y. I don’t want them mixing that up.”",
+          "tone": "dividing · rigid",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a2s2",
+          "to": "a2s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a2s2",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "Designing the Holiday Plan",
+      "text": "With values now on the table, you turn to practical questions: holidays, ceremonies, and family visits. The mediator asks: “How can your child experience both worlds without feeling like they’re betraying either parent?”",
+      "tone": "practical · emotionally aware",
+      "choices": [
+        {
+          "id": "a2s2c1",
+          "label": "Alternate major holidays and create a small ritual from each home.",
+          "text": "You suggest alternating who has the child on the main holiday each year and creating smaller traditions from both sides in every home.",
+          "tone": "creative · balanced",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a2s3",
+          "to": "a2s3"
+        },
+        {
+          "id": "a2s2c2",
+          "label": "Give one side full control over holidays.",
+          "text": "You (or your co-parent) push for one tradition to “win,” framing the other as optional or secondary.",
+          "tone": "imbalanced · pressured",
+          "effects": { "trust": -2, "tension": 2, "childStress": 2 },
+          "next": "a2s3",
+          "to": "a2s3"
+        },
+        {
+          "id": "a2s2c3",
+          "label": "Stay vague to avoid conflict; no written plan.",
+          "text": "You both shrug: “We’ll just see each year,” leaving the child in the middle of future tug-of-war.",
+          "tone": "avoidant · unclear",
+          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
+          "next": "a2s3",
+          "to": "a2s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a2s3",
+      "act": "act2",
+      "speaker": "Grandparent",
+      "title": "Extended Family Pressure",
+      "text": "Later, a grandparent corners you after a family visit: “We don’t want our traditions watered down. The child should be raised properly, like we did with you.”",
+      "tone": "pressuring · nostalgic",
+      "choices": [
+        {
+          "id": "a2s3c1",
+          "label": "Set a respectful boundary about co-parent decisions.",
+          "text": "You answer: “We’re grateful for your traditions, but decisions about our child’s upbringing are between us as co-parents.”",
+          "tone": "firm · respectful",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a2end",
+          "to": "a2end"
+        },
+        {
+          "id": "a2s3c2",
+          "label": "Side with the grandparent to avoid their criticism.",
+          "text": "You nod along, promising more participation without checking in with your co-parent.",
+          "tone": "appeasing · triangulating",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a2end",
+          "to": "a2end"
+        },
+        {
+          "id": "a2s3c3",
+          "label": "Argue intensely with the grandparent in front of the child.",
+          "text": "You snap back in front of your child, turning the hallway into a debate stage.",
+          "tone": "explosive · uncontained",
+          "effects": { "trust": -2, "tension": 3, "childStress": 3 },
+          "next": "a2end",
+          "to": "a2end"
+        }
+      ]
+    },
+
+    {
+      "id": "a2end",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "How the Child Sees It",
+      "text": "That night, you imagine your child’s perspective: different languages, foods, ceremonies — and the way adults talk about them. Are these differences framed as richness… or as a problem?",
+      "tone": "reflective · child-centered",
+      "choices": [
+        {
+          "id": "a2endc1",
+          "label": "Commit to reviewing the plan once or twice a year.",
+          "text": "You and your co-parent agree to revisit cultural and religious agreements regularly, updating them as your child grows and asks more questions.",
+          "tone": "long-term · flexible",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a2reflect",
+          "to": "a2reflect"
+        },
+        {
+          "id": "a2endc2",
+          "label": "End the scene and return to menu.",
+          "text": "You pause here, letting the questions sit for now.",
+          "tone": "neutral",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+
+    {
+      "id": "a2reflect",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "Quick Reflection",
+      "text": "When you look back on these conversations, what do you hope your child remembers more: the arguments, or the way you tried to build a bridge between worlds for them?",
+      "tone": "gentle · integrative",
+      "choices": [
+        {
+          "id": "a2reflectc1",
+          "label": "Notice the bridge-building moments.",
+          "text": "You focus on the times you named shared values and looked for both/and solutions.",
+          "tone": "encouraging · self-compassionate",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a2reflectc2",
+          "label": "Notice how intense it felt — and plan support.",
+          "text": "You recognize how draining this is and consider getting cultural, legal, or therapeutic support to keep things grounded.",
+          "tone": "realistic · resourced",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    }
+  ],
+
   "acts": [
     {
-      "title": "Act 1 — Upcoming Holiday",
       "id": "act1",
-      "steps": [
-        {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "a1s1",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "a1s1": {
-            "id": "a1s1",
-            "text": "A holiday with strong cultural meaning is approaching. Each home celebrates differently.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "a1s2": {
-            "id": "a1s2",
-            "text": "You draft a plan.",
-            "choices": [
-              {
-                "label": "Alternate years and share schedule now",
-                "effects": {
-                  "trust": 4,
-                  "tension": -3
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s20",
-                "next": "act1_end"
-              },
-              {
-                "label": "Split the day between homes",
-                "effects": {
-                  "trust": 2
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s21",
-                "next": "act1_end"
-              },
-              {
-                "label": "Insist your way is the right way",
-                "effects": {
-                  "tension": 7,
-                  "childStress": 5
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s22",
-                "next": "act1_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a1s3": {
-            "id": "a1s3",
-            "text": "Your message sets the tone.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "act1_end": {
-            "id": "act1_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a1s1",
-          "choices": [
-            {
-              "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a1s1]"
-        }
-      ],
-      "start": "start"
+      "title": "The Holiday Dilemma",
+      "steps": ["a1s1", "a1s2", "a1end", "a1_to_act2"]
     },
     {
-      "title": "Act 2 — Symbols & Food",
       "id": "act2",
-      "steps": [
-        {
-          "a2s1": {
-            "id": "a2s1",
-            "text": "Your child asks questions about ceremonies, symbols, and what’s ‘allowed’ in each home.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act2_end"
-              }
-            ]
-          },
-          "a2s2": {
-            "id": "a2s2",
-            "text": "You decide how to talk about differences.",
-            "choices": [
-              {
-                "label": "Explain respectfully: 'Different homes, shared values of care.'",
-                "effects": {
-                  "trust": 3,
-                  "childStress": -2
-                },
-                "to": "a2s3",
-                "id": "auto_c_a2s20",
-                "next": "act2_end"
-              },
-              {
-                "label": "Contrast critically",
-                "effects": {
-                  "tension": 5,
-                  "childStress": 4
-                },
-                "to": "a2s3",
-                "id": "auto_c_a2s21",
-                "next": "act2_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a2s3": {
-            "id": "a2s3",
-            "text": "Your child internalizes your framing.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act2_end"
-              }
-            ]
-          },
-          "act2_end": {
-            "id": "act2_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a2s1",
-          "choices": [
-            {
-              "id": "a2s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a2s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a2s1]"
-        }
-      ],
-      "start": "a2s1"
-    },
-    {
-      "title": "Act 3 — Keepsakes",
-      "id": "act3",
-      "steps": [
-        {
-          "a3s1": {
-            "id": "a3s1",
-            "text": "The child wants to bring a keepsake between homes.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act3_end"
-              }
-            ]
-          },
-          "a3s2": {
-            "id": "a3s2",
-            "text": "Decide on the boundary.",
-            "choices": [
-              {
-                "label": "Allow with care instructions and respect",
-                "effects": {
-                  "trust": 2,
-                  "tension": -2
-                },
-                "to": "a3s3",
-                "id": "auto_c_a3s20",
-                "next": "act3_end"
-              },
-              {
-                "label": "Disallow; keep items in one home",
-                "effects": {
-                  "tension": 2
-                },
-                "to": "a3s3",
-                "id": "auto_c_a3s21",
-                "next": "act3_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a3s3": {
-            "id": "a3s3",
-            "text": "You close the holiday plan.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act3_end"
-              }
-            ]
-          },
-          "act3_end": {
-            "id": "act3_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a3s1",
-          "choices": [
-            {
-              "id": "a3s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a3s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a3s1]"
-        }
-      ],
-      "start": "a3s1"
+      "title": "Designing a Mixed-Traditions Plan",
+      "steps": ["a2s1", "a2s2", "a2s3", "a2end", "a2reflect"]
     }
-  ],
-  "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "start"
-  }
+  ]
 }
