@@ -2,15 +2,17 @@
   "id": "scene-de-escalation",
   "title": "Scene: De-escalation",
   "version": 2,
-  "tags": ["de-escalation", "communication", "conflict"],
+  "tags": ["communication", "conflict", "regulation", "co-parenting"],
   "actors": {
     "Narrator": {},
     "You": {},
     "Co-Parent": {},
     "Child": {}
   },
+
   "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
+
   "ui": {
     "hud": { "animate": true, "animated": true },
     "dialog": { "defaultSpeaker": "Narrator" }
@@ -26,15 +28,9 @@
     {
       "id": "menu",
       "speaker": "Narrator",
-      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
+      "text": "Main menu placeholder. Choose “Continue” to begin the scene.",
       "choices": [
-        {
-          "id": "menu_continue",
-          "label": "Continue",
-          "text": "Continue",
-          "next": "a1s1",
-          "to": "a1s1"
-        }
+        { "id": "menu_c1", "label": "Continue", "text": "Continue", "next": "a1s1", "to": "a1s1" }
       ]
     },
 
@@ -42,25 +38,34 @@
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "The Message",
-      "text": "Your phone buzzes. A long message from your co-parent — sharp tone, quick accusations, and a few things that feel unfair.",
-      "tone": "alert · simmering tension",
+      "title": "The Trigger Moment",
+      "text": "The door slams hard enough to shake the frame. Your co-parent storms into the room, holding an unpacked school bag. Your child watches from the hallway, frozen.",
+      "tone": "sudden · volatile",
       "choices": [
         {
           "id": "a1s1c1",
-          "label": "Pause before replying.",
-          "text": "You set the phone down and breathe for five seconds.",
-          "tone": "self-regulating · steady",
+          "label": "Stay still and take one slow breath.",
+          "text": "You ground yourself before reacting.",
+          "tone": "regulated · intentional",
           "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a1s2",
           "to": "a1s2"
         },
         {
           "id": "a1s1c2",
-          "label": "Reply instantly with your frustration.",
-          "text": "You fire back: “This is not okay. Stop attacking me every time something happens.”",
-          "tone": "reactive · sharp",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "label": "React immediately and raise your voice.",
+          "text": "“What is this now? Why are you slamming doors?”",
+          "tone": "reactive · escalating",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c3",
+          "label": "Send the child to their room gently.",
+          "text": "You turn and quietly tell the child: “Sweetie, give us a minute, okay?”",
+          "tone": "protective · decisive",
+          "effects": { "trust": 0, "tension": 0, "childStress": -2 },
           "next": "a1s2",
           "to": "a1s2"
         }
@@ -71,34 +76,34 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Co-Parent",
-      "title": "The Response",
-      "text": "Their reply is fast and hot: “So now it’s MY fault again? You never listen. I’m done being the only one putting in effort.”",
-      "tone": "escalated · defensive",
+      "title": "The Explosion",
+      "text": "“I asked you ONE thing — ONE — and you still forgot to pack the homework folder! Do you understand how embarrassing this is for me?” Their voice is sharp, brittle.",
+      "tone": "accusatory · overwhelmed",
       "choices": [
         {
           "id": "a1s2c1",
-          "label": "Reflect the emotion, not the accusation.",
-          "text": "“I hear you’re overwhelmed. This sounds like a lot for you today.”",
-          "tone": "de-escalating · empathetic",
-          "effects": { "trust": 1, "tension": -2, "childStress": -1 },
+          "label": "Use a grounding phrase.",
+          "text": "“I hear you're upset. Let’s talk about this without yelling.”",
+          "tone": "calming · boundary-setting",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c2",
-          "label": "Clarify your intention gently.",
-          "text": "“I’m not trying to blame you. Let’s slow this down a bit.”",
-          "tone": "soft · boundary-setting",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "label": "Deflect responsibility.",
+          "text": "“It’s not my fault. Maybe check the bag before leaving the house.”",
+          "tone": "defensive · sharp",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c3",
-          "label": "Counter the accusation.",
-          "text": "“Putting in effort? You know that’s not fair.”",
-          "tone": "defensive · escalating",
-          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "label": "Acknowledge the intensity, not the blame.",
+          "text": "“This sounds really stressful. Let’s slow down a second.”",
+          "tone": "empathetic · stabilizing",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
           "next": "a1s3",
           "to": "a1s3"
         }
@@ -109,72 +114,34 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Stabilizing or Spiraling",
-      "text": "You sense the fragile moment where things can tilt either way — into clarity or chaos.",
-      "tone": "balancing · mindful",
+      "title": "The Turning Point",
+      "text": "The co-parent exhales sharply, pacing. Their anger isn’t just about the folder — it’s about the whole week. You can feel the situation wobbling between repair or escalation.",
+      "tone": "tense · pivotal",
       "choices": [
         {
           "id": "a1s3c1",
-          "label": "State one shared goal.",
-          "text": "“Both of us want our child to feel safe. Let’s start from that.”",
-          "tone": "shared-purpose · grounding",
-          "effects": { "trust": 2, "tension": -2, "childStress": -1 },
-          "next": "a1s4",
-          "to": "a1s4"
+          "label": "Offer a reset moment.",
+          "text": "“Let’s pause. Do you want a glass of water before we keep talking?”",
+          "tone": "de-escalating · compassionate",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
         },
         {
           "id": "a1s3c2",
-          "label": "Slow the tempo.",
-          "text": "“Can we pause for ten minutes? I want to give a thoughtful answer.”",
-          "tone": "regulated · pacing",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a1s4",
-          "to": "a1s4"
+          "label": "Push back on their tone.",
+          "text": "“You don’t get to talk to me like this. Calm down first.”",
+          "tone": "assertive · but inflaming",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
         },
         {
           "id": "a1s3c3",
-          "label": "Point out contradictions in their message.",
-          "text": "“You say you’re the only one trying, but last week you asked me to cover extra days.”",
-          "tone": "logic-focused · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
-          "next": "a1s4",
-          "to": "a1s4"
-        }
-      ]
-    },
-
-    {
-      "id": "a1s4",
-      "act": "act1",
-      "speaker": "Co-Parent",
-      "title": "Breaking Point or Breakthrough",
-      "text": "Their next message is slower: “I’m tired. I just… feel like everything lands on me.”",
-      "tone": "softened · vulnerable",
-      "choices": [
-        {
-          "id": "a1s4c1",
-          "label": "Acknowledge the emotion honestly.",
-          "text": "“I hear you. It *is* exhausting sometimes. Let’s figure out a way that feels fair.”",
-          "tone": "compassionate · collaborative",
-          "effects": { "trust": 2, "tension": -2, "childStress": -1 },
-          "next": "a1end",
-          "to": "a1end"
-        },
-        {
-          "id": "a1s4c2",
-          "label": "Offer one concrete adjustment you can make.",
-          "text": "“Would it help if I handled school pickup twice next week?”",
-          "tone": "solution-focused · practical",
+          "label": "Shift toward collaboration.",
+          "text": "“Let’s fix the morning routine so this doesn’t happen again.”",
+          "tone": "solution-focused · steady",
           "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a1end",
-          "to": "a1end"
-        },
-        {
-          "id": "a1s4c3",
-          "label": "Dismiss the vulnerability.",
-          "text": "“We’re all tired. That’s parenting.”",
-          "tone": "minimizing · cold",
-          "effects": { "trust": -2, "tension": 1, "childStress": 1 },
           "next": "a1end",
           "to": "a1end"
         }
@@ -185,15 +152,21 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "End of Scene",
-      "text": "De-escalation isn’t magic — it’s a series of small choices that move storms toward calmer ground. Tonight, you practiced the art of slowing the fire instead of feeding it.",
-      "tone": "reflective · steady",
+      "title": "A Breath Before Act 2",
+      "text": "The air eases just slightly. A crack in the storm — small, but enough to shift the direction.",
+      "tone": "regulating · transitional",
       "choices": [
         {
           "id": "a1endc1",
-          "label": "Return to menu",
-          "text": "The scene ends.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "label": "Continue to Act 2 — Emotional De-escalation",
+          "text": "You move carefully into the next phase.",
+          "next": "a2s1",
+          "to": "a2s1"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Return to Menu",
+          "text": "Pause the scene here.",
           "next": "menu",
           "to": "menu"
         }
@@ -204,8 +177,8 @@
   "acts": [
     {
       "id": "act1",
-      "title": "De-escalating a Heated Exchange",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end"]
+      "title": "The Trigger Moment",
+      "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
     }
   ]
 }
