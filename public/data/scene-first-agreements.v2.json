@@ -142,8 +142,7 @@
         }
       ]
     },
-
-    {
+        {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
@@ -159,10 +158,46 @@
           "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "menu",
           "to": "menu"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Take a moment to reflect on what you learned.",
+          "text": "You pause for a moment before leaving the table and ask yourself what actually went well tonight.",
+          "tone": "introspective · slow",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1reflect",
+          "to": "a1reflect"
+        }
+      ]
+    },
+    {
+      "id": "a1reflect",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Quick Reflection",
+      "text": "If you replay this conversation in your mind, what stands out more: the conflict, or the fact that you both stayed at the table long enough to reach a starting point?",
+      "tone": "gentle · debrief",
+      "choices": [
+        {
+          "id": "a1reflectc1",
+          "label": "Notice the progress — even if small.",
+          "text": "You focus on the fact that you created at least one concrete agreement together.",
+          "tone": "self-compassionate · encouraging",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a1reflectc2",
+          "label": "Notice how drained you feel.",
+          "text": "You register how exhausting these talks are and make a note to plan recovery time next time as well.",
+          "tone": "honest · tired but aware",
+          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
         }
       ]
     }
-  ],
 
   "acts": [
     {
