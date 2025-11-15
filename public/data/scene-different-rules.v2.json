@@ -1,130 +1,211 @@
 {
-  "version": 2,
   "id": "scene-different-rules",
   "title": "Scene: Different Rules",
-  "meters": {
-    "trust": {
-      "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
-    },
-    "tension": {
-      "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
-    }
+  "version": 2,
+  "tags": ["consistency", "household-rules", "child-wellbeing"],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Child": {},
+    "Co-Parent": {}
   },
-  "acts": [
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meterOrder": ["trust", "tension", "childStress"],
+  "ui": {
+    "hud": { "animate": true, "animated": true },
+    "dialog": { "defaultSpeaker": "Narrator" }
+  },
+
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+
+  "nodes": [
     {
-      "title": "Act 1",
-      "id": "act1",
-      "steps": [
+      "id": "menu",
+      "speaker": "Narrator",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
+      "choices": [
         {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "auto_lm13es",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_lm13es": {
-            "id": "auto_lm13es",
-            "type": "goto",
-            "text": "",
-            "to": "**Unified rules**: One list for the household, reviewed weekly.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_z3r8cl": {
-            "id": "auto_z3r8cl",
-            "type": "goto",
-            "text": "",
-            "to": "**Zones of control**: Each parent leads in specific domains.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_6aekeh": {
-            "id": "auto_6aekeh",
-            "type": "goto",
-            "text": "",
-            "to": "**Coach mode**: Agree on consistent consequences and rewards.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "act1_end": {
-            "id": "act1_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a1s1",
-          "choices": [
-            {
-              "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a1s1]"
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
         }
-      ],
-      "start": "start"
+      ]
+    },
+
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Pickup Time",
+      "text": "You’re buckling your child into the car seat after pickup. They seem unsettled, glancing out the window.",
+      "tone": "noticing · gentle alert",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Ask if something feels off today.",
+          "text": "“Hey, you look a bit quiet. Everything alright?”",
+          "tone": "soft · open",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Talk about the fun plans you have to distract them.",
+          "text": "You jump into distraction mode: “Guess what? We can watch your favourite movie later!”",
+          "tone": "cheerful · avoidance",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c3",
+          "label": "Stay silent and hope it passes.",
+          "text": "You decide not to press. Maybe they’re just tired.",
+          "tone": "neutral · cautious",
+          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "Child",
+      "title": "Confusion",
+      "text": "After a few minutes, they speak quietly: “At mom’s house I can stay up as late as I want. But here I can’t. I don’t get it.”",
+      "tone": "confused · vulnerable",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Validate the feeling and explain simply.",
+          "text": "“I hear you. It can be confusing when the rules are different in two homes.”",
+          "tone": "warm · grounded",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Compare homes and imply the other parent is careless.",
+          "text": "“Yeah, well… things are more organised here. That’s just how it is.”",
+          "tone": "judgmental · defensive",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Ignore the topic and change conversation.",
+          "text": "“Let’s not talk about that right now — what do you want for dinner?”",
+          "tone": "avoidant",
+          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s3",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Deciding What To Say",
+      "text": "You’re at a crossroads: keep focusing only on the child, or bring this up with the co-parent too?",
+      "tone": "weighing · thoughtful",
+      "choices": [
+        {
+          "id": "a1s3c1",
+          "label": "Focus on the child’s feelings first.",
+          "text": "You keep the car ride centred on them: “What part feels the hardest?”",
+          "tone": "attuned · child-led",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s4",
+          "to": "a1s4"
+        },
+        {
+          "id": "a1s3c2",
+          "label": "Immediately plan to confront the co-parent.",
+          "text": "You think: “We need to fix this tonight. I’ll call as soon as we get home.”",
+          "tone": "urgent · escalatory",
+          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "next": "a1s4",
+          "to": "a1s4"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s4",
+      "act": "act1",
+      "speaker": "Co-Parent",
+      "title": "Later That Evening",
+      "text": "You send a short message: “Hey, our kid mentioned different bedtime rules. Can we sync up a bit?” The reply comes quickly: “Are you saying I’m doing something wrong?”",
+      "tone": "reactive · defensive",
+      "choices": [
+        {
+          "id": "a1s4c1",
+          "label": "Reassure them you’re not blaming — focus on the child’s stability.",
+          "text": "“Not at all. I just want things to feel consistent for them. Maybe we can pick one thing to align on?”",
+          "tone": "calm · collaborative",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s4c2",
+          "label": "Double down on criticism.",
+          "text": "“Well… it *is* confusing for them. You can’t just let them do whatever.”",
+          "tone": "critical · confrontational",
+          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s4c3",
+          "label": "Drop the topic entirely to keep peace.",
+          "text": "“Never mind, it’s fine. Forget I asked.”",
+          "tone": "dismissive · short-term soothing",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1end",
+          "to": "a1end"
+        }
+      ]
+    },
+
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Closing the Scene",
+      "text": "Consistency between homes isn’t about identical rules — it’s about safety, predictability, and being able to talk without fear. Tonight, you took one step toward that.",
+      "tone": "reflective · soft landing",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Return to menu.",
+          "text": "The scene ends.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
     }
   ],
-  "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "start"
-  }
+
+  "acts": [
+    {
+      "id": "act1",
+      "title": "Different Rules in Two Homes",
+      "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end"]
+    }
+  ]
 }
