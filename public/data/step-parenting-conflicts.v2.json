@@ -251,6 +251,182 @@
       ]
     }
   ],
+{
+  "id": "a2s1",
+  "act": "act2",
+  "speaker": "Narrator",
+  "title": "Dinner Tension",
+  "text": "Later that evening, the child sits at the table pushing vegetables around the plate. Your partner quietly says, “We agreed we’d all eat the same meal, remember?” The child freezes. You feel the familiar pull — between protecting the child and supporting your partner.",
+  "tone": "tense · domestic conflict",
+  "choices": [
+    {
+      "id": "a2s1c1",
+      "label": "Back up your partner kindly.",
+      "text": "“Hey sweetheart, let’s try a few bites together. Then we can pick something else if you need to.”",
+      "tone": "gentle · collaborative",
+      "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+      "next": "a2s2",
+      "to": "a2s2"
+    },
+    {
+      "id": "a2s1c2",
+      "label": "Side with the child to avoid a blow-up.",
+      "text": "“It’s fine, today’s been a lot. They don’t have to eat it.” Your partner immediately deflates.",
+      "tone": "appeasing · unbalanced",
+      "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+      "next": "a2s2",
+      "to": "a2s2"
+    },
+    {
+      "id": "a2s1c3",
+      "label": "Ask for a quick reset between you and your partner.",
+      "text": "“Give me a second.” You gesture your partner into the hallway for a whisper-talk.",
+      "tone": "boundary-aware · tactical",
+      "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+      "next": "a2s2",
+      "to": "a2s2"
+    }
+  ]
+},
+
+{
+  "id": "a2s2",
+  "act": "act2",
+  "speaker": "Partner",
+  "title": "What’s Really Happening",
+  "text": "Your partner’s voice is tight. “I’m trying to help give the kid structure… but every time I say something, I feel like the outsider. Like I’m just here to observe — not actually parent.”",
+  "tone": "vulnerable · insecure",
+  "choices": [
+    {
+      "id": "a2s2c1",
+      "label": "Reassure and clarify the roles.",
+      "text": "“You’re not an outsider. You matter here — we just need steady signals for the kid to understand everyone’s place.”",
+      "tone": "soothing · empathetic",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a2s3",
+      "to": "a2s3"
+    },
+    {
+      "id": "a2s2c2",
+      "label": "Defend the child instead, without addressing partner’s insecurity.",
+      "text": "“They’re going through a lot. You need to give them space.”",
+      "tone": "dismissive · partial",
+      "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+      "next": "a2s3",
+      "to": "a2s3"
+    },
+    {
+      "id": "a2s2c3",
+      "label": "Admit you feel torn too.",
+      "text": "“Honestly? I feel stuck in the middle. I want to support you — and keep things safe for them.”",
+      "tone": "honest · connective",
+      "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+      "next": "a2s3",
+      "to": "a2s3"
+    }
+  ]
+},
+
+{
+  "id": "a2s3",
+  "act": "act2",
+  "speaker": "Narrator",
+  "title": "Unexpected Comment From the Child",
+  "text": "From the dining room you hear a small voice: “Why do you always listen to them more than to me?” The question hits harder than expected.",
+  "tone": "emotional · loyalty conflict",
+  "choices": [
+    {
+      "id": "a2s3c1",
+      "label": "Reassure the child directly.",
+      "text": "You kneel beside them: “I always listen to you. Sometimes grownups talk to figure things out too.”",
+      "tone": "warm · grounding",
+      "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+      "next": "a2s4",
+      "to": "a2s4"
+    },
+    {
+      "id": "a2s3c2",
+      "label": "Ask your partner to step back for a moment.",
+      "text": "“Give us a minute.” Your partner nods, quietly leaving the room.",
+      "tone": "protective · direct",
+      "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+      "next": "a2s4",
+      "to": "a2s4"
+    },
+    {
+      "id": "a2s3c3",
+      "label": "Minimize the child’s concern to avoid drama.",
+      "text": "“That’s not true, you’re overreacting.” The child shrinks back slightly.",
+      "tone": "invalidating · distancing",
+      "effects": { "trust": -1, "tension": 2, "childStress": 2 },
+      "next": "a2s4",
+      "to": "a2s4"
+    }
+  ]
+},
+
+{
+  "id": "a2s4",
+  "act": "act2",
+  "speaker": "Narrator",
+  "title": "A Line in the Sand",
+  "text": "The three of you sit in the living room — an uncomfortable triangle. Everyone’s emotions are simmering. Something needs to be named clearly, or this dynamic will repeat every weekend.",
+  "tone": "pivotal · clarifying",
+  "choices": [
+    {
+      "id": "a2s4c1",
+      "label": "Establish a simple house-rules framework.",
+      "text": "“Let’s agree on three rules — not ten — just the basics. Same rules for everyone, including us.”",
+      "tone": "structured · stabilizing",
+      "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+      "next": "a2end",
+      "to": "a2end"
+    },
+    {
+      "id": "a2s4c2",
+      "label": "Ask your partner to step into a secondary role temporarily.",
+      "text": "“I think it’s better if I handle discipline for now — until the kid feels more secure.”",
+      "tone": "protective · cautious",
+      "effects": { "trust": 0, "tension": -1, "childStress": -1 },
+      "next": "a2end",
+      "to": "a2end"
+    },
+    {
+      "id": "a2s4c3",
+      "label": "Let the conflict fade without addressing it.",
+      "text": "You change the subject and let everyone drift into separate corners of the house.",
+      "tone": "avoidant · temporary relief",
+      "effects": { "trust": 0, "tension": 1, "childStress": 1 },
+      "next": "a2end",
+      "to": "a2end"
+    }
+  ]
+},
+
+{
+  "id": "a2end",
+  "act": "act2",
+  "speaker": "Narrator",
+  "title": "End of Act 2 — A Small Step Toward Stability",
+  "text": "The house quiets down. Small progress or small fractures — either way, the shape of the family is changing. Slowly.",
+  "tone": "reflective · softly heavy",
+  "choices": [
+    {
+      "id": "a2endc1",
+      "label": "Continue to Act 3 — Loyalty Binds",
+      "text": "Each bond pulls in a different direction.",
+      "next": "a3s1",
+      "to": "a3s1"
+    },
+    {
+      "id": "a2endc2",
+      "label": "Return to Menu",
+      "text": "Pause the scene here.",
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
+}
 
   "acts": [
     {
@@ -258,6 +434,11 @@
       "title": "First Weekend Together",
       "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end", "a1reflect"]
     }
+    {
+  "id": "act2",
+  "title": "House Rules Clash",
+  "steps": ["a2s1", "a2s2", "a2s3", "a2s4", "a2end"]
+}
   ]
 }
 
