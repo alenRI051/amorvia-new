@@ -1,130 +1,223 @@
 {
-  "version": 2,
   "id": "scene-new-introductions",
   "title": "Scene: New Introductions",
-  "meters": {
-    "trust": {
-      "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
-    },
-    "tension": {
-      "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
-    }
+  "version": 2,
+  "tags": ["introductions", "child-focus"],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Child": {},
+    "New Partner": {},
+    "Co-Parent": {}
   },
-  "acts": [
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meterOrder": ["trust", "tension", "childStress"],
+  "ui": {
+    "hud": { "animate": true, "animated": true },
+    "dialog": { "defaultSpeaker": "Narrator" }
+  },
+
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+
+  "nodes": [
     {
-      "title": "Act 1",
-      "id": "act1",
-      "steps": [
+      "id": "menu",
+      "speaker": "Narrator",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
+      "choices": [
         {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "auto_e285qb",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_e285qb": {
-            "id": "auto_e285qb",
-            "type": "goto",
-            "text": "",
-            "to": "**Slow lane:** Wait 3–6 months and discuss expectations with your ex.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_as9w8u": {
-            "id": "auto_as9w8u",
-            "type": "goto",
-            "text": "",
-            "to": "**Guided intro:** Short, neutral, child-focused activity first.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_kozuq8": {
-            "id": "auto_kozuq8",
-            "type": "goto",
-            "text": "",
-            "to": "**Not yet:** Prioritize child's stability; revisit in Act 3.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "act1_end": {
-            "id": "act1_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a1s1",
-          "choices": [
-            {
-              "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a1s1]"
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
         }
-      ],
-      "start": "start"
+      ]
+    },
+
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "On the Way to the Park",
+      "text": "You’re walking to the park with your child. Today, your new partner will join you for the first time. Your child knows ‘a friend’ might come, but not much more.",
+      "tone": "anticipatory · slightly anxious",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Name what’s happening in a simple, honest way.",
+          "text": "You say: “Hey, my friend Alex is joining us today. We’ve been spending some time together and I’d like you to meet.”",
+          "tone": "clear · child-focused",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Keep it vague and avoid defining the relationship.",
+          "text": "You say: “A friend might show up later,” and quickly change the subject.",
+          "tone": "avoidant · protective",
+          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c3",
+          "label": "Overload the child with details about the relationship.",
+          "text": "You launch into a long explanation about how you met, why it matters, and how nothing will change at home.",
+          "tone": "overexplaining · anxious",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "New Partner",
+      "title": "First Hello",
+      "text": "At the park, your new partner waves and walks over. Your child hides slightly behind you, peeking out with curiosity and caution.",
+      "tone": "gentle · uncertain",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Model a warm but low-pressure introduction.",
+          "text": "You say: “Alex, this is Maya. Maya, this is Alex. You don’t have to talk yet if you don’t feel like it.”",
+          "tone": "reassuring · spacious",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Prompt the child to be extra friendly.",
+          "text": "You nudge: “Come on, say hi properly, don’t be rude.”",
+          "tone": "pressuring · image-focused",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Let your partner take the lead completely.",
+          "text": "You stay quiet as Alex kneels down and starts talking directly to the child without checking in with you first.",
+          "tone": "passive · unanchored",
+          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s3",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Shared Activity",
+      "text": "The three of you end up near the swings. The child watches, still gauging if this new person is ‘safe’ in their world.",
+      "tone": "observant · delicate",
+      "choices": [
+        {
+          "id": "a1s3c1",
+          "label": "Invite a simple joint activity the child can opt into.",
+          "text": "You ask: “Do you want us to push you on the swing together, or should I push and Alex watch?”",
+          "tone": "choice-giving · respectful",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s3c2",
+          "label": "Step aside and let your partner bond quickly and intensely.",
+          "text": "You suggest Alex take over the swing completely while you scroll your phone nearby.",
+          "tone": "sudden · disconnecting",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s3c3",
+          "label": "Keep your partner at a distance to ‘protect’ the child.",
+          "text": "You keep chatting only with your child, barely including Alex in the interaction.",
+          "tone": "guarded · ambiguous",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1end",
+          "to": "a1end"
+        }
+      ]
+    },
+
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "End of the Outing",
+      "text": "On the way home, your child is quieter than usual. They’re processing. The introduction may have been small on the outside, but it was big on the inside.",
+      "tone": "reflective · gently serious",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Invite a light, open check-in with the child.",
+          "text": "You ask: “How was it for you meeting Alex today? Anything you liked or didn’t like?”",
+          "tone": "curious · non-pressuring",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1reflect",
+          "to": "a1reflect"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Avoid the topic to ‘keep things calm’.",
+          "text": "You talk about homework and dinner instead, filing the whole day under “don’t stir the waters.”",
+          "tone": "avoidant · short-term soothing",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1reflect",
+          "to": "a1reflect"
+        }
+      ]
+    },
+
+    {
+      "id": "a1reflect",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Quick Reflection",
+      "text": "Every introduction carries a message: not just who this new person is, but whether the child’s pace and feelings are allowed to matter.",
+      "tone": "gentle · debrief",
+      "choices": [
+        {
+          "id": "a1reflectc1",
+          "label": "Notice what you did to protect the child’s pace.",
+          "text": "You recognize the moments where you gave the child choice, information, or space.",
+          "tone": "self-compassionate · learning-focused",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a1reflectc2",
+          "label": "Notice what you’d handle differently next time.",
+          "text": "You mentally circle one thing you’d tweak for the next introduction or hangout.",
+          "tone": "honest · growth-oriented",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
     }
   ],
-  "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "start"
-  }
+
+  "acts": [
+    {
+      "id": "act1",
+      "title": "First Time Meeting the New Partner",
+      "steps": ["a1s1", "a1s2", "a1s3", "a1end", "a1reflect"]
+    }
+  ]
 }
+
