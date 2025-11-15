@@ -15,6 +15,7 @@
     "hud": { "animate": true, "animated": true },
     "dialog": { "defaultSpeaker": "Narrator" }
   },
+
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryActId": "act1",
@@ -27,99 +28,135 @@
       "speaker": "Narrator",
       "text": "Main menu placeholder. Choose “Continue” to start the scene.",
       "choices": [
-        { "id": "menu_c1", "label": "Continue", "text": "Continue", "next": "a1s1", "to": "a1s1" }
+        {
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
+        }
       ]
     },
+
     {
       "id": "a1s1",
-      "entry": true,
       "act": "act1",
       "speaker": "Narrator",
       "title": "Sitting Down at the Table",
-      "text": "You and your co-parent sit across from each other. The goal today is simple on paper: agree on a basic weekly routine for your child.",
-      "tone": "steady · slightly tense · structured",
+      "text": "You and your co-parent sit across from each other. The air is stiff but both of you agreed: tonight is about making some basic agreements for the child.",
+      "tone": "tense · willing to try",
       "choices": [
         {
           "id": "a1s1c1",
-          "label": "Open with appreciation and a clear goal.",
-          "text": "You start with…",
+          "label": "Start with something positive about the co-parent.",
+          "text": "You begin: “Thanks for meeting. I know this isn’t easy, but I appreciate that you’re here.”",
+          "tone": "softening · respectful",
           "effects": { "trust": 1, "tension": -1, "childStress": 0 },
           "next": "a1s2",
           "to": "a1s2"
         },
         {
           "id": "a1s1c2",
-          "label": "Open with frustration about the past weeks.",
-          "text": "You start with…",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "label": "Dive straight into problems about the schedule.",
+          "text": "You skip the warm-up: “This schedule is not working. We need to fix it.”",
+          "tone": "direct · impatient",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
           "next": "a1s2",
           "to": "a1s2"
         }
       ]
     },
+
     {
       "id": "a1s2",
       "act": "act1",
       "speaker": "Co-Parent",
-      "title": "What the Child Needs",
-      "text": "Your co-parent takes a breath…",
-      "tone": "concerned",
+      "title": "What Matters Most?",
+      "text": "Your co-parent shifts in their chair. “I just want things to be fair. I feel like I’m carrying more than you.”",
+      "tone": "defensive · hurt",
       "choices": [
         {
           "id": "a1s2c1",
-          "label": "Reflect back concern.",
-          "text": "You reply…",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "label": "Bring the focus back to the child.",
+          "text": "“I get that. Can we talk about what our child needs first, and then look at what’s fair for us?”",
+          "tone": "child-focused · de-escalating",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c2",
-          "label": "Point out faults.",
-          "text": "You answer…",
+          "label": "Defend yourself point by point.",
+          "text": "“That’s not true. I’m doing a lot too, you just don’t see it.”",
+          "tone": "defensive · escalating",
           "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Acknowledge feelings but park the debate.",
+          "text": "“I hear that you feel that way. Can we write down what each of us does later and first agree on a basic weekly plan?”",
+          "tone": "validating · structured",
+          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
           "next": "a1s3",
           "to": "a1s3"
         }
       ]
     },
+
     {
       "id": "a1s3",
       "act": "act1",
-      "speaker": "Mediator",
+      "speaker": "Narrator",
       "title": "Drafting the First Agreement",
-      "text": "The mediator leans in…",
-      "tone": "calming",
+      "text": "You pull out a piece of paper or open a shared note. The question is simple but loaded: where does the child sleep on school nights?",
+      "tone": "practical · emotionally loaded",
       "choices": [
         {
           "id": "a1s3c1",
-          "label": "Propose simple plan.",
-          "text": "You suggest…",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "label": "Propose a clear, realistic plan with built-in review.",
+          "text": "You suggest: “Let’s try this schedule for four weeks and then review. If it’s not working, we adjust together.”",
+          "tone": "structured · flexible",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
           "next": "a1end",
           "to": "a1end"
         },
         {
           "id": "a1s3c2",
-          "label": "Push for perfect plan.",
-          "text": "You insist…",
+          "label": "Push for a plan that mostly suits you.",
+          "text": "You push for a schedule that gives you the days you prefer, brushing off the co-parent’s concerns.",
+          "tone": "self-focused · rigid",
           "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s3c3",
+          "label": "Keep everything vague to avoid conflict for now.",
+          "text": "You say, “Let’s just keep it flexible and see how it goes,” and avoid writing anything down.",
+          "tone": "conflict-avoidant · unclear",
+          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
           "next": "a1end",
           "to": "a1end"
         }
       ]
     },
+
     {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "End of Scene – First Agreements",
-      "text": "By the end of the meeting…",
+      "title": "Closing the Conversation",
+      "text": "The conversation winds down. The plan may not be perfect, but it’s a starting point. The way you both showed up tonight will echo in how safe the child feels.",
+      "tone": "reflective · gently hopeful",
       "choices": [
         {
           "id": "a1endc1",
-          "label": "Return to main menu.",
-          "text": "Return to menu",
+          "label": "End scene and return to menu.",
+          "text": "You take a breath, thank each other, and close the notebook.",
+          "tone": "neutral",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "menu",
           "to": "menu"
         }
@@ -130,9 +167,8 @@
   "acts": [
     {
       "id": "act1",
-      "title": "First Agreements Session",
+      "title": "First Agreements at the Table",
       "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
     }
   ]
 }
-
