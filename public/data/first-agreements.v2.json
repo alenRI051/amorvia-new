@@ -1,9 +1,9 @@
 {
-  "version": 2,
   "id": "scene-first-agreements",
   "title": "Scene: First Agreements",
-  "tags": ["co-parenting", "first-agreements", "negotiation"],
+  "version": 2,
 
+  "tags": ["agreements", "planning", "co-parenting"],
   "actors": {
     "Narrator": {},
     "You": {},
@@ -30,12 +30,12 @@
     {
       "id": "menu",
       "speaker": "Narrator",
-      "text": "Main menu placeholder for this scene. Choose “Continue” to start the first agreements conversation.",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
       "choices": [
         {
           "id": "menu_c1",
           "label": "Continue",
-          "text": "Continue",
+          "text": "Continue the scene.",
           "next": "a1s1",
           "to": "a1s1"
         }
@@ -47,25 +47,25 @@
       "entry": true,
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Setting the Table",
-      "text": "You and your co-parent sit across from each other, not in a courtroom but at a neutral table. The goal today isn’t to win — it’s to find the first few agreements that make everyday life calmer.",
-      "tone": "neutral · cautiously hopeful",
+      "title": "Sitting Down at the Table",
+      "text": "You and your co-parent sit across from each other. The goal today is simple on paper: agree on a basic weekly routine for your child.",
+      "tone": "steady · slightly tense · structured",
       "choices": [
         {
           "id": "a1s1c1",
-          "label": "Start with something small and practical.",
-          "text": "You suggest starting with school mornings — who does what, and when.",
-          "tone": "pragmatic · focused",
+          "label": "Open with appreciation and a clear goal.",
+          "text": "You start with: “Thank you for meeting. I’d like us to leave with one clear plan for school days and weekends.”",
+          "tone": "collaborative · intentional",
           "effects": { "trust": 1, "tension": -1, "childStress": 0 },
           "next": "a1s2",
           "to": "a1s2"
         },
         {
           "id": "a1s1c2",
-          "label": "Start by naming how tense things have been.",
-          "text": "You say that the last months have been intense for everyone and you’d like less fighting in front of the child.",
-          "tone": "vulnerable · direct",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "label": "Open with frustration about the past weeks.",
+          "text": "You start with: “This can’t keep going like it has. The last few weeks have been a mess.”",
+          "tone": "frustrated · reactive",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
           "next": "a1s2",
           "to": "a1s2"
         }
@@ -76,25 +76,25 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Co-Parent",
-      "title": "First Reaction",
-      "text": "Your co-parent crosses their arms. “Fine. What exactly do you want to change? Because I feel like I’m carrying most of this.”",
-      "tone": "defensive · tired",
+      "title": "What the Child Needs",
+      "text": "Your co-parent takes a breath. “Look… I just want her mornings to be calmer. She’s tired and keeps saying she doesn’t know where she’ll wake up.”",
+      "tone": "concerned · semi-defensive",
       "choices": [
         {
           "id": "a1s2c1",
-          "label": "Acknowledge their effort before proposing a change.",
-          "text": "You start with: “I see how much you’re doing. I don’t want to erase that. I’d like us to write down who does which mornings so we both know where we stand.”",
-          "tone": "acknowledging · collaborative",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "label": "Reflect back their concern and link it to structure.",
+          "text": "You reply: “I hear you. Calm mornings matter. Maybe we start with fixed school-night rules, then build from there?”",
+          "tone": "empathic · practical",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c2",
-          "label": "Go straight into your complaints.",
-          "text": "You reply: “You’re not carrying everything. I’m always adjusting my schedule at the last minute.”",
-          "tone": "irritated · sharp",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "label": "Point out everything they’re doing wrong.",
+          "text": "You answer: “She’s confused because you keep changing pickup times. That’s on you.”",
+          "tone": "blaming · sharp",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
           "next": "a1s3",
           "to": "a1s3"
         }
@@ -104,26 +104,26 @@
     {
       "id": "a1s3",
       "act": "act1",
-      "speaker": "Narrator",
+      "speaker": "Mediator",
       "title": "Drafting the First Agreement",
-      "text": "A draft begins to form: who handles which mornings, when changes must be requested, and how last-minute emergencies are handled.",
-      "tone": "structured · practical",
+      "text": "The mediator leans in. “Let’s write one concrete agreement you both can live with for the next two weeks. We can adjust later if needed.”",
+      "tone": "structured · calming",
       "choices": [
         {
           "id": "a1s3c1",
-          "label": "Put the child’s routine at the center of the agreement.",
-          "text": "You ask: “What schedule would feel calmest for our child? Let’s start there and then see what each of us can realistically sustain.”",
-          "tone": "child-focused · thoughtful",
+          "label": "Propose a simple, testable plan.",
+          "text": "You suggest: “For the next two weeks, school nights are with you, weekends alternate. We text each Sunday to confirm pick-up times.”",
+          "tone": "solution-focused",
           "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a1end",
           "to": "a1end"
         },
         {
           "id": "a1s3c2",
-          "label": "Focus mostly on what’s convenient for you.",
-          "text": "You steer the conversation toward what fits your work and social life best, hoping they’ll adapt.",
-          "tone": "self-focused · short-sighted",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "label": "Push for a perfect long-term solution now.",
+          "text": "You insist on finalizing holidays, vacations, and every tiny detail today. The room tightens again.",
+          "tone": "rigid · pressured",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
           "next": "a1end",
           "to": "a1end"
         }
@@ -135,13 +135,13 @@
       "act": "act1",
       "speaker": "Narrator",
       "title": "End of Scene – First Agreements",
-      "text": "You leave the table with at least one written agreement — imperfect, but real. For the first time in a while, the next school morning doesn’t feel like a cliff edge.",
-      "tone": "measured · quietly hopeful",
+      "text": "By the end of the meeting, you either leave with a small, workable plan or at least a clearer sense of what still blocks agreement. Either way, this was a step forward from reacting text by text.",
+      "tone": "grounded · realistic · gently hopeful",
       "choices": [
         {
           "id": "a1endc1",
-          "label": "Return to menu.",
-          "text": "Return to the scenario menu.",
+          "label": "Return to main menu.",
+          "text": "Wrap up the scene and return to the menu.",
           "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "menu",
           "to": "menu"
