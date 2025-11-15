@@ -185,61 +185,70 @@
       ]
     },
     {
-      "id": "a1end",
-      "act": "act1",
-      "speaker": "Narrator",
-      "title": "End of Act 1 – The Triangle Appears",
-      "text": "By evening, one thing is clear: this isn’t just between you and your child anymore. Every small decision now moves inside a triangle — you, your partner, and a kid who is still figuring out where it’s safe to land.",
-      "tone": "reflective · slightly heavy",
-      "choices": [
-        {
-          "id": "a1endc1",
-          "label": "Take a quiet moment to reflect.",
-          "text": "You step into the bathroom or balcony, just to breathe and notice how the day actually felt.",
-          "tone": "introspective",
-          "effects": { "trust": 0, "tension": -1, "childStress": 0 },
-          "next": "a1reflect",
-          "to": "a1reflect"
-        },
-        {
-          "id": "a1endc2",
-          "label": "Return to menu.",
-          "text": "You mentally bookmark the day and move on for now.",
-          "tone": "neutral",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "menu",
-          "to": "menu"
-        }
-      ]
+  "id": "a1end",
+  "act": "act1",
+  "speaker": "Narrator",
+  "title": "End of Act 1 – The Triangle Appears",
+  "text": "By evening, one thing is clear: this isn’t just between you and your child anymore. Every small decision now moves inside a triangle — you, your partner, and a kid who is still figuring out where it’s safe to land.",
+  "tone": "reflective · slightly heavy",
+  "choices": [
+    {
+      "id": "a1endc1",
+      "label": "Continue to Act 2 — House Rules Clash",
+      "text": "You decide to keep going and see how this plays out around everyday routines.",
+      "tone": "forward-moving · engaged",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "a2s1",
+      "to": "a2s1"
     },
     {
-      "id": "a1reflect",
-      "act": "act1",
-      "speaker": "Narrator",
-      "title": "Quick Reflection",
-      "text": "When you replay the day, what stands out more — the awkward moments, or the fact that everyone is still trying to fit into a new shape of \"family\"?",
-      "tone": "gentle · debrief",
-      "choices": [
-        {
-          "id": "a1reflectc1",
-          "label": "Notice the attempts to connect.",
-          "text": "You register the small efforts — the partner’s smile, the child’s glance, your own choices to slow down instead of explode.",
-          "tone": "self-compassionate · hopeful",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "menu",
-          "to": "menu"
-        },
-        {
-          "id": "a1reflectc2",
-          "label": "Notice how stretched you feel.",
-          "text": "You admit to yourself that standing between partner, child, and co-parent is exhausting — and that you’ll need support, not just willpower.",
-          "tone": "honest · sober",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "menu",
-          "to": "menu"
-        }
-      ]
+      "id": "a1endc2",
+      "label": "Take a quiet moment to reflect before Act 2.",
+      "text": "You step into the bathroom or balcony, just to breathe and notice how the day actually felt.",
+      "tone": "introspective",
+      "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+      "next": "a1reflect",
+      "to": "a1reflect"
     },
+    {
+      "id": "a1endc3",
+      "label": "Return to menu.",
+      "text": "You mentally bookmark the day and move on for now.",
+      "tone": "neutral",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
+},
+    {
+  "id": "a1reflect",
+  "act": "act1",
+  "speaker": "Narrator",
+  "title": "Quick Reflection",
+  "text": "When you replay the day, what stands out more — the awkward moments, or the fact that everyone is still trying to fit into a new shape of \"family\"?",
+  "tone": "gentle · debrief",
+  "choices": [
+    {
+      "id": "a1reflectc1",
+      "label": "Notice the attempts to connect and continue.",
+      "text": "You register the small efforts — the partner’s smile, the child’s glance, your own choices to slow down instead of explode — and decide to keep going.",
+      "tone": "self-compassionate · hopeful",
+      "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+      "next": "a2s1",
+      "to": "a2s1"
+    },
+    {
+      "id": "a1reflectc2",
+      "label": "Notice how stretched you feel and pause.",
+      "text": "You admit to yourself that standing between partner, child, and co-parent is exhausting — and that you’ll need support, not just willpower.",
+      "tone": "honest · sober",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
+},
     {
       "id": "a2s1",
       "act": "act2",
