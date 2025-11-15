@@ -142,7 +142,8 @@
         }
       ]
     },
-        {
+
+    {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
@@ -170,6 +171,7 @@
         }
       ]
     },
+
     {
       "id": "a1reflect",
       "act": "act1",
@@ -198,12 +200,14 @@
         }
       ]
     }
+  ],
 
   "acts": [
     {
       "id": "act1",
       "title": "First Agreements at the Table",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
+      "steps": ["a1s1", "a1s2", "a1s3", "a1end", "a1reflect"]
     }
   ]
 }
+
