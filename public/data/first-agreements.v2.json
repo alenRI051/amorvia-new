@@ -1,7 +1,14 @@
 {
   "version": 2,
-  "id": "first-agreements",
+  "id": "scene-first-agreements",
   "title": "Scene: First Agreements",
+  "tags": ["micro-scene", "first-agreements", "co-parenting"],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Ex-Partner": {},
+    "Child": {}
+  },
   "meters": {
     "tension": {
       "label": "Tension",
@@ -22,116 +29,168 @@
       "start": 15
     }
   },
+  "startAct": "act1",
   "acts": [
     {
-      "id": "act-4",
-      "title": "Act 4",
-      "start": "a4c1",
+      "id": "act1",
+      "title": "First Agreements After Separation",
+      "start": "a1s1",
       "steps": [
         {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "a4c1",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "end"
-              }
-            ]
-          },
-          "a4c1": {
-            "id": "a4c1",
-            "type": "choice",
-            "prompt": "Choose a path",
-            "choices": [
-              {
-                "label": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r",
-                "to": "a4n1",
-                "effects": [
-                  {
-                    "meter": "tension",
-                    "delta": 0
-                  }
-                ],
-                "id": "auto_c_a4c10",
-                "next": "end"
-              },
-              {
-                "id": "auto_continue",
-                "label": "Continue",
-                "to": "a4n1",
-                "effects": [
-                  {
-                    "meter": "tension",
-                    "delta": 0
-                  }
-                ],
-                "next": "end"
-              }
-            ],
-            "text": ""
-          },
-          "a4n1": {
-            "id": "a4n1",
-            "type": "line",
-            "speaker": "narrator",
-            "text": ". You finish with a workable plan or a clear pause.\\\" }\\r\\n ]\\r\\n }\\r\\n ]\\r\\n}\\r\\n\\r\\n# New scenario: Scene - First Agreements\\r\\nfirst_agreements = {\\r\\n \\\"version\\\": 2,\\r\\n \\\"id\\\": \\\"scene-first-agreements\\\",\\r\\n \\\"title\\\": \\\"Scene: First Agreements\\\",\\r\\n \\\"meters\\\": {\\r\\n \\\"tension\\\": {\\\"",
-            "to": "end",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "end"
-              }
-            ]
-          },
-          "end": {
-            "id": "end",
-            "type": "end",
-            "summary": "End of act.",
-            "text": "",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "end"
-              }
-            ]
-          },
           "id": "a1s1",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "The child is finally asleep. Toys are scattered near the hallway, and two mugs sit on the kitchen table. For once, you and your ex are in the same room without rushing somewhere. It feels like a fragile chance to talk about how this will actually work.",
+          "tone": "cautious · opportunity · low-key tension",
           "choices": [
             {
               "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "label": "Start with the child: \"Can we talk about what feels best for them first?\"",
+              "text": "You take a breath and lead with the one thing you both care about: your child.",
+              "tone": "child-focused · calm",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "next": "a1s2a"
             },
             {
               "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "label": "Start with frustration: \"This schedule is impossible for me.\"",
+              "text": "The words come out sharp; your stress about work and logistics spills into the room.",
+              "tone": "frustrated · reactive",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 1
+              },
+              "next": "a1s2b"
             }
-          ],
-          "text": "[a1s1]"
+          ]
+        },
+        {
+          "id": "a1s2a",
+          "type": "dialog",
+          "speaker": "Ex-Partner",
+          "text": "\"I know,\" they say, rubbing their forehead. \"I just don’t want her to feel like she’s living out of a suitcase.\" The edge softens a bit; it’s not exactly peaceful, but it’s not war either.",
+          "tone": "softened · still tense but reachable",
+          "choices": [
+            {
+              "id": "a1s2ac1",
+              "label": "Propose a simple, child-friendly routine.",
+              "text": "\"What if we try something predictable: same days each week, and we review after a month?\"",
+              "tone": "structured · collaborative",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "next": "a1s3"
+            },
+            {
+              "id": "a1s2ac2",
+              "label": "Keep it vague: \"We’ll just see how it goes.\"",
+              "text": "You avoid committing to specifics. The conversation stays abstract, floating above the real problems.",
+              "tone": "avoidant · temporarily soothing",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "next": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s2b",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "Your ex stiffens. \"So now I’m the problem?\" The air tightens for a moment. You can feel the old fight trying to reappear.",
+          "tone": "defensive · rising tension",
+          "choices": [
+            {
+              "id": "a1s2bc1",
+              "label": "Repair: bring the focus back to the child.",
+              "text": "\"I’m not saying you’re the problem. I’m exhausted and scared of messing this up for them. Can we look at what works for her first?\"",
+              "tone": "repairing · vulnerable",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "next": "a1s3"
+            },
+            {
+              "id": "a1s2bc2",
+              "label": "Double down: argue about fairness.",
+              "text": "\"You get the easy days and I get the hard ones. That’s not okay.\" Voices rise a little.",
+              "tone": "escalating · fairness-focused",
+              "effects": {
+                "trust": -2,
+                "tension": 3,
+                "childStress": 1
+              },
+              "next": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s3",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "After a few back-and-forths, one truth becomes obvious: without some basic agreements, every week will feel like a new negotiation.",
+          "tone": "realistic · reflective",
+          "choices": [
+            {
+              "id": "a1s3c1",
+              "label": "Suggest writing down two or three concrete agreements.",
+              "text": "\"Can we just write down a few things we both agree on? Nothing perfect, just a starting point.\"",
+              "tone": "practical · stabilizing",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "next": "a1end"
+            },
+            {
+              "id": "a1s3c2",
+              "label": "Leave everything verbal and \"understood\".",
+              "text": "\"Look, we both know what we mean. Let’s just try to be flexible.\" You leave it in the air.",
+              "tone": "ambiguous · fragile",
+              "effects": {
+                "trust": -1,
+                "tension": 1,
+                "childStress": 0
+              },
+              "next": "a1end"
+            }
+          ]
+        },
+        {
+          "id": "a1end",
+          "type": "dialog",
+          "speaker": "Narrator",
+          "text": "By the time the mugs are empty, you haven’t solved everything. But you either walk away with a rough written plan, or a clear reminder that \"no agreement\" is also a kind of decision.",
+          "tone": "grounded · mildly hopeful",
+          "choices": [
+            {
+              "id": "a1endc1",
+              "label": "Pause here and return to the main menu.",
+              "text": "You mentally bookmark what worked — and what didn’t — for next time.",
+              "tone": "reflective · learning-focused",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "next": "menu"
+            }
+          ]
         }
       ]
     }
-  ],
-  "startAct": "act-4",
-  "start": "a4c1",
-  "startNode": "a4c1",
-  "entryNode": "a4c1",
-  "entry": {
-    "actId": "act-4",
-    "nodeId": "a4c1"
-  }
+  ]
 }
+
