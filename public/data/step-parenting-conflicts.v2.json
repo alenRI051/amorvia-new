@@ -427,6 +427,146 @@
     }
   ]
 }
+{
+  "id": "a3s1",
+  "act": "act3",
+  "speaker": "Narrator",
+  "title": "Back From the Other Home",
+  "text": "The front door clicks. Your child comes back from time with the other parent. Shoes half-off, backpack half-open. They drop their things and say casually: “Mama/Tata said I don’t have to listen to [Partner’s name] if I don’t want to.” The words land like a stone.",
+  "tone": "heavy · loyalty pull",
+  "choices": [
+    {
+      "id": "a3s1c1",
+      "label": "Stay curious instead of reacting.",
+      "text": "“Oh? What exactly did they say?” You keep your voice calm, even though your chest tightens.",
+      "tone": "curious · steady",
+      "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+      "next": "a3s2",
+      "to": "a3s2"
+    },
+    {
+      "id": "a3s1c2",
+      "label": "Defend your partner immediately.",
+      "text": "“That’s not okay to say. [Partner] is an adult in this house and deserves respect.”",
+      "tone": "protective · sharp",
+      "effects": { "trust": 0, "tension": 1, "childStress": 1 },
+      "next": "a3s2",
+      "to": "a3s2"
+    },
+    {
+      "id": "a3s1c3",
+      "label": "Brush it off with a joke.",
+      "text": "“Wow, sounds like a lot of bosses in your life, huh?” You chuckle, but the knot stays.",
+      "tone": "avoidant · light",
+      "effects": { "trust": -1, "tension": 0, "childStress": 0 },
+      "next": "a3s2",
+      "to": "a3s2"
+    }
+  ]
+},
+
+{
+  "id": "a3s2",
+  "act": "act3",
+  "speaker": "Partner",
+  "title": "The Sting",
+  "text": "Later, in the kitchen, your partner speaks quietly, not looking at you: “So… I’m the optional adult now? That’s how it is?” There’s hurt underneath the sarcasm.",
+  "tone": "hurt · insecure",
+  "choices": [
+    {
+      "id": "a3s2c1",
+      "label": "Validate their feelings and name the dynamic.",
+      "text": "“It hurts, I get that. This is a loyalty thing, not a verdict on you. We’re in the middle of their tug-of-war.”",
+      "tone": "validating · clear-eyed",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a3s3",
+      "to": "a3s3"
+    },
+    {
+      "id": "a3s2c2",
+      "label": "Minimize it to keep peace.",
+      "text": "“Don’t take it so personally. Kids say stuff.”",
+      "tone": "minimizing · dismissive",
+      "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+      "next": "a3s3",
+      "to": "a3s3"
+    },
+    {
+      "id": "a3s2c3",
+      "label": "Shift to problem-solving immediately.",
+      "text": "“Okay, yes, that sucks. Let’s figure out how we respond next time together.”",
+      "tone": "practical · connecting",
+      "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+      "next": "a3s3",
+      "to": "a3s3"
+    }
+  ]
+},
+
+{
+  "id": "a3s3",
+  "act": "act3",
+  "speaker": "Co-Parent",
+  "title": "The Message",
+  "text": "Your phone buzzes. A new message from your ex: “I heard [Partner] is telling our child what to do again. They’re NOT a parent. I won’t let them replace me.” The familiar wave of anger and exhaustion rises.",
+  "tone": "provocative · possessive",
+  "choices": [
+    {
+      "id": "a3s3c1",
+      "label": "Set a clear boundary around respect.",
+      "text": "You type: “No one is replacing you. But in this home, all adults treat each other with respect — especially in front of our child.”",
+      "tone": "firm · respectful",
+      "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+      "next": "a3end",
+      "to": "a3end"
+    },
+    {
+      "id": "a3s3c2",
+      "label": "Defend your partner aggressively.",
+      "text": "You fire back: “Maybe if you were more consistent, [Partner] wouldn’t have to pick up the slack.”",
+      "tone": "angry · attacking",
+      "effects": { "trust": -1, "tension": 2, "childStress": 2 },
+      "next": "a3end",
+      "to": "a3end"
+    },
+    {
+      "id": "a3s3c3",
+      "label": "Avoid the conflict for now.",
+      "text": "You leave the message on read, telling yourself you’ll deal with it “later”.",
+      "tone": "avoidant · postponing",
+      "effects": { "trust": 0, "tension": 0, "childStress": 1 },
+      "next": "a3end",
+      "to": "a3end"
+    }
+  ]
+},
+
+{
+  "id": "a3end",
+  "act": "act3",
+  "speaker": "Narrator",
+  "title": "End of Act 3 — Invisible Lines",
+  "text": "As the night settles, you notice how many invisible lines criss-cross this family: who is “real”, who is “optional”, who gets loyalty when people feel scared. You can’t erase the lines — but you can choose how you walk them.",
+  "tone": "reflective · bittersweet",
+  "choices": [
+    {
+      "id": "a3endc1",
+      "label": "Continue to Act 4 — Shared vs. Separate Teams",
+      "text": "You get ready to look at how to build a team without erasing anyone.",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "a4s1",
+      "to": "a4s1"
+    },
+    {
+      "id": "a3endc2",
+      "label": "Return to Menu",
+      "text": "Pause the scene here.",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
+}
 
   "acts": [
     {
@@ -440,5 +580,10 @@
   "steps": ["a2s1", "a2s2", "a2s3", "a2s4", "a2end"]
 }
   ]
+}
+{
+  "id": "act3",
+  "title": "Loyalty Binds",
+  "steps": ["a3s1", "a3s2", "a3s3", "a3end"]
 }
 
