@@ -566,6 +566,184 @@
       "to": "menu"
     }
   ]
+},
+    {
+  "id": "a4s1",
+  "act": "act4",
+  "speaker": "Narrator",
+  "title": "Two Worlds, One Child",
+  "text": "Dinner is quiet. Your partner is still distant. Your child talks about school, then suddenly: “Why do things have to be different in this house?” The question is innocent— but it slices right into the heart of the problem.",
+  "tone": "tender · destabilizing",
+  "choices": [
+    {
+      "id": "a4s1c1",
+      "label": "Invite your partner into the conversation.",
+      "text": "You look at your partner: “Do you want to share how you see it?”",
+      "tone": "inclusive · bridging",
+      "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+      "next": "a4s2",
+      "to": "a4s2"
+    },
+    {
+      "id": "a4s1c2",
+      "label": "Answer alone to avoid awkwardness.",
+      "text": "“Every home is different, sweetheart. Adults have different rules sometimes.”",
+      "tone": "protective · distancing",
+      "effects": { "trust": -1, "tension": 0, "childStress": 0 },
+      "next": "a4s2",
+      "to": "a4s2"
+    },
+    {
+      "id": "a4s1c3",
+      "label": "Shift the topic to something lighter.",
+      "text": "“Hey, didn’t you say you had a funny story from school today?”",
+      "tone": "avoidant · soothing",
+      "effects": { "trust": 0, "tension": 0, "childStress": -1 },
+      "next": "a4s2",
+      "to": "a4s2"
+    }
+  ]
+},
+
+{
+  "id": "a4s2",
+  "act": "act4",
+  "speaker": "Partner",
+  "title": "The Missing Team",
+  "text": "After the child leaves the table, your partner finally speaks: “Sometimes I feel like… it’s you and your ex over there, in that world. And I’m just the outsider trying not to step wrong.”",
+  "tone": "vulnerable · raw",
+  "choices": [
+    {
+      "id": "a4s2c1",
+      "label": "Reassure them directly.",
+      "text": "“You’re not an outsider. You're part of this family, part of this team.”",
+      "tone": "warm · stabilizing",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a4s3",
+      "to": "a4s3"
+    },
+    {
+      "id": "a4s2c2",
+      "label": "Make it about co-parenting logistics.",
+      "text": "“It’s not like that. I just have to coordinate with my ex because of the schedule, that’s all.”",
+      "tone": "rationalizing · minimizing",
+      "effects": { "trust": -1, "tension": 0, "childStress": 0 },
+      "next": "a4s3",
+      "to": "a4s3"
+    },
+    {
+      "id": "a4s2c3",
+      "label": "Ask a curious question.",
+      "text": "“What moments make you feel outside? I want to understand this better.”",
+      "tone": "curious · connecting",
+      "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+      "next": "a4s3",
+      "to": "a4s3"
+    }
+  ]
+},
+
+{
+  "id": "a4s3",
+  "act": "act4",
+  "speaker": "Co-Parent",
+  "title": "The Email That Complicates Everything",
+  "text": "As if summoned by the stress itself, your phone buzzes. An email from your ex: “We need to talk. I’m concerned about how your partner disciplines our child.” Your partner’s eyes narrow as they read your expression.",
+  "tone": "provocative · destabilizing",
+  "choices": [
+    {
+      "id": "a4s3c1",
+      "label": "Share the email honestly.",
+      "text": "You hand your partner the phone: “This came in just now.”",
+      "tone": "transparent · risky",
+      "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+      "next": "a4s4",
+      "to": "a4s4"
+    },
+    {
+      "id": "a4s3c2",
+      "label": "Hide the email to prevent hurt.",
+      "text": "You turn the phone over: “It can wait. We’re already dealing with enough.”",
+      "tone": "avoidant · protective",
+      "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+      "next": "a4s4",
+      "to": "a4s4"
+    },
+    {
+      "id": "a4s3c3",
+      "label": "Summarize it softly.",
+      "text": "“My ex is questioning how we handle discipline. We can talk about it when things are calmer.”",
+      "tone": "gentle · buffered honesty",
+      "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+      "next": "a4s4",
+      "to": "a4s4"
+    }
+  ]
+},
+
+{
+  "id": "a4s4",
+  "act": "act4",
+  "speaker": "Narrator",
+  "title": "The Choice of Loyalty",
+  "text": "You stand between two realities — the co-parenting world where your ex still has influence, and the home where your partner wants to feel secure. You inhale, knowing your next move defines the team dynamic.",
+  "tone": "heavy · decisive",
+  "choices": [
+    {
+      "id": "a4s4c1",
+      "label": "Affirm your partner as a legitimate adult in the home.",
+      "text": "“Your role matters. I’m backing you, and we can address concerns together.”",
+      "tone": "affirming · bonding",
+      "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+      "next": "a4end",
+      "to": "a4end"
+    },
+    {
+      "id": "a4s4c2",
+      "label": "Try to stay neutral to avoid conflict with either side.",
+      "text": "“Let’s keep communication clean. I don’t want any side feeling attacked.”",
+      "tone": "neutral · self-protective",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "a4end",
+      "to": "a4end"
+    },
+    {
+      "id": "a4s4c3",
+      "label": "Prioritize peace with the ex to prevent escalation.",
+      "text": "“I’ll talk to my ex first — I need things calm between households.”",
+      "tone": "strategic · distancing",
+      "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+      "next": "a4end",
+      "to": "a4end"
+    }
+  ]
+},
+
+{
+  "id": "a4end",
+  "act": "act4",
+  "speaker": "Narrator",
+  "title": "End of Act 4 — The Line Between Houses",
+  "text": "The night closes softly, but the question lingers: how do you build one team across two households without tearing anyone apart? You feel the weight — but also the first real clarity.",
+  "tone": "contemplative · steady",
+  "choices": [
+    {
+      "id": "a4endc1",
+      "label": "Continue to Act 5 — Integration",
+      "text": "You step forward into the next phase.",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "a5s1",
+      "to": "a5s1"
+    },
+    {
+      "id": "a4endc2",
+      "label": "Return to Menu",
+      "text": "Pause the scene here.",
+      "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
 }
  ],
   "acts": [
@@ -583,5 +761,10 @@
   "id": "act3",
   "title": "Loyalty Binds",
   "steps": ["a3s1", "a3s2", "a3s3", "a3end"]
+},
+{
+  "id": "act4",
+  "title": "Shared vs. Separate Teams",
+  "steps": ["a4s1", "a4s2", "a4s3", "a4s4", "a4end"]
 }
 
