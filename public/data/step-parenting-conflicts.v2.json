@@ -2,12 +2,12 @@
   "id": "step-parenting-conflicts",
   "title": "Step-Parenting Conflicts",
   "version": 2,
-  "tags": ["step-parenting", "conflict", "boundaries", "communication"],
+  "tags": ["step-parenting", "blended-family", "boundaries", "loyalty"],
   "actors": {
     "Narrator": {},
     "You": {},
+    "Partner": {},
     "Co-Parent": {},
-    "Step-Parent": {},
     "Child": {}
   },
 
@@ -29,9 +29,15 @@
     {
       "id": "menu",
       "speaker": "Narrator",
-      "text": "Main menu placeholder. Choose “Continue” to begin the scenario.",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
       "choices": [
-        { "id": "menu_c1", "label": "Continue", "text": "Continue", "next": "a1s1", "to": "a1s1" }
+        {
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
+        }
       ]
     },
 
@@ -39,34 +45,34 @@
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "A Tense Afternoon",
-      "text": "You walk into the living room and hear raised voices. Your child sits small on the couch. The co-parent and step-parent are arguing about discipline.",
-      "tone": "tense · escalating",
+      "title": "Arrival for the Weekend",
+      "text": "The doorbell rings. Your child is here for the weekend. Your partner stands a few steps behind you, suddenly very interested in the hallway plant. You can feel the tension between wanting things to be warm… and not wanting anything to feel forced.",
+      "tone": "anticipatory · slightly tense",
       "choices": [
         {
           "id": "a1s1c1",
-          "label": "Step between them calmly.",
-          "text": "You raise your hands gently: “Okay, let’s pause. What’s going on?”",
-          "tone": "grounding · de-escalating",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "label": "Invite your partner to come to the door with you.",
+          "text": "You turn and say quietly: “Come with me, it’s okay. We’re doing this together.”",
+          "tone": "inclusive · gentle",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
           "next": "a1s2",
           "to": "a1s2"
         },
         {
           "id": "a1s1c2",
-          "label": "Take the co-parent's side immediately.",
-          "text": "You cut in: “Hey, if we agreed on rules, they need to be followed.”",
-          "tone": "aligned · confrontational toward step-parent",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "label": "Go alone and keep your partner in the background.",
+          "text": "You open the door alone. “Hey buddy, I’m so glad you’re here.” Your partner stays out of sight.",
+          "tone": "cautious · protective",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "a1s2",
           "to": "a1s2"
         },
         {
           "id": "a1s1c3",
-          "label": "Take the step-parent’s side immediately.",
-          "text": "You step in: “They’re trying their best. Don’t attack them like this.”",
-          "tone": "protective · reactive",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "label": "Let your partner open the door first.",
+          "text": "You gesture to your partner: “You open, I’ll grab the bag.” The child sees them first, reading their face for clues.",
+          "tone": "abrupt · slightly risky",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
           "next": "a1s2",
           "to": "a1s2"
         }
@@ -76,35 +82,35 @@
     {
       "id": "a1s2",
       "act": "act1",
-      "speaker": "Co-Parent",
-      "title": "Whose Rules?",
-      "text": "The co-parent turns: “They keep changing the rules! One day bedtime is flexible, the next it’s strict. How is our child supposed to feel safe?”",
-      "tone": "frustrated · protective",
+      "speaker": "Narrator",
+      "title": "First Minutes Together",
+      "text": "Shoes are half on, half off. The weekend bag is spilling clothes. Your partner tries a friendly smile and says, “Hey, it’s good to see you again.” The child answers with a mumble and keeps their eyes on you.",
+      "tone": "awkward · fragile",
       "choices": [
         {
           "id": "a1s2c1",
-          "label": "Acknowledge the inconsistency.",
-          "text": "“Fair point. Consistency matters. Let’s figure out where the rules misalign.”",
-          "tone": "validating · constructive",
+          "label": "Bridge the interaction gently.",
+          "text": "“You remember Alex, right? They made that silly pancake last time.” You give the child a small smile and stay close.",
+          "tone": "supportive · bridging",
           "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c2",
-          "label": "Shift blame to the co-parent.",
-          "text": "“Maybe if you communicated more clearly, things wouldn’t be confusing.”",
-          "tone": "provocative · escalating",
-          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "label": "Let the silence sit and hope it fixes itself.",
+          "text": "You busy yourself with the bag, pretending not to notice the tension.",
+          "tone": "avoidant · uneasy",
+          "effects": { "trust": 0, "tension": 1, "childStress": 1 },
           "next": "a1s3",
           "to": "a1s3"
         },
         {
           "id": "a1s2c3",
-          "label": "Focus on the child instead of blame.",
-          "text": "“Let’s pause blaming and look at how this argument feels for our child.”",
-          "tone": "child-focused · calming",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "label": "Pressure the child to be more polite.",
+          "text": "“Hey, say hello properly. That’s rude.” The child stiffens and looks smaller.",
+          "tone": "controlling · sharp",
+          "effects": { "trust": -1, "tension": 2, "childStress": 2 },
           "next": "a1s3",
           "to": "a1s3"
         }
@@ -114,35 +120,73 @@
     {
       "id": "a1s3",
       "act": "act1",
-      "speaker": "Step-Parent",
-      "title": "Feeling Left Out",
-      "text": "The step-parent sighs: “I feel like I’m expected to help, but the moment I set a limit, I’m overstepping. I don’t know what role I’m allowed to have.”",
-      "tone": "vulnerable · uncertain",
+      "speaker": "Narrator",
+      "title": "The First Micro-Conflict",
+      "text": "Later, the child flops onto the couch with a tablet. Your partner glances at the clock. “Didn’t you say screen time is limited on weekends?” The child hears it and clutches the tablet a little tighter.",
+      "tone": "everyday · simmering",
       "choices": [
         {
           "id": "a1s3c1",
-          "label": "Clarify their role kindly.",
-          "text": "“You’re part of this home. Let’s define together what boundaries feel respectful for everyone.”",
-          "tone": "inclusive · soothing",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
-          "next": "a1end",
-          "to": "a1end"
+          "label": "Align with your partner in front of the child.",
+          "text": "“Yeah, we did say that. Let’s do 20 more minutes, then we pick a game together.” You say it calmly, staying next to the child.",
+          "tone": "aligned · containing",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s4",
+          "to": "a1s4"
         },
         {
           "id": "a1s3c2",
-          "label": "Minimize their feelings.",
-          "text": "“This isn’t about you. We’re talking about the child.”",
-          "tone": "dismissive · harsh",
-          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "label": "Undermine your partner to keep the peace with the child.",
+          "text": "“It’s fine, it’s just this once.” Your partner goes quiet, hurt flickering across their face.",
+          "tone": "appeasing · divisive",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "next": "a1s4",
+          "to": "a1s4"
+        },
+        {
+          "id": "a1s3c3",
+          "label": "Ask for a quick sidebar with your partner.",
+          "text": "“Give me a second.” You step into the kitchen with your partner to talk out of earshot.",
+          "tone": "boundary-aware · strategic",
+          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "next": "a1s4",
+          "to": "a1s4"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s4",
+      "act": "act1",
+      "speaker": "Partner",
+      "title": "Between You and Your Partner",
+      "text": "“I’m trying to help,” your partner says quietly. “But sometimes I feel like the bad cop, or like I should just stay out of it.” The words land heavier than they sound.",
+      "tone": "vulnerable · tense",
+      "choices": [
+        {
+          "id": "a1s4c1",
+          "label": "Validate their effort and define a shared role.",
+          "text": "“I know this is tough. I do want you involved — we just need to agree how we do it so our child doesn’t feel ganged up on.”",
+          "tone": "collaborative · reassuring",
+          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
           "next": "a1end",
           "to": "a1end"
         },
         {
-          "id": "a1s3c3",
-          "label": "Ask each adult to share one boundary they need.",
-          "text": "“Why don’t we try this—each of us names one boundary that would help us feel grounded?”",
-          "tone": "structured · collaborative",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "id": "a1s4c2",
+          "label": "Ask them to back off for now.",
+          "text": "“Maybe just let me handle discipline this weekend. It’s still new for them.”",
+          "tone": "protective · distancing",
+          "effects": { "trust": 0, "tension": 1, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s4c3",
+          "label": "Get defensive about their complaint.",
+          "text": "“You’re not the only one who has feelings here. I’m stuck in the middle all the time.”",
+          "tone": "defensive · escalating",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
           "next": "a1end",
           "to": "a1end"
         }
@@ -153,15 +197,54 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Pause or Progress",
-      "text": "The tension softens. It’s not perfect and not final, but the conversation shifts from conflict to clarity. The child looks relieved.",
-      "tone": "steady · cautiously hopeful",
+      "title": "End of Act 1 – The Triangle Appears",
+      "text": "By evening, one thing is clear: this isn’t just between you and your child anymore. Every small decision now moves inside a triangle — you, your partner, and a kid who is still figuring out where it’s safe to land.",
+      "tone": "reflective · slightly heavy",
       "choices": [
         {
           "id": "a1endc1",
-          "label": "End Scene — Return to Menu",
-          "text": "You decide to end the scene here.",
-          "effects": {},
+          "label": "Take a quiet moment to reflect.",
+          "text": "You step into the bathroom or balcony, just to breathe and notice how the day actually felt.",
+          "tone": "introspective",
+          "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+          "next": "a1reflect",
+          "to": "a1reflect"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Return to menu.",
+          "text": "You mentally bookmark the day and move on for now.",
+          "tone": "neutral",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+
+    {
+      "id": "a1reflect",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Quick Reflection",
+      "text": "When you replay the day, what stands out more — the awkward moments, or the fact that everyone is still trying to fit into a new shape of “family”?",
+      "tone": "gentle · debrief",
+      "choices": [
+        {
+          "id": "a1reflectc1",
+          "label": "Notice the attempts to connect.",
+          "text": "You register the small efforts — the partner’s smile, the child’s glance, your own choices to slow down instead of explode.",
+          "tone": "self-compassionate · hopeful",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a1reflectc2",
+          "label": "Notice how stretched you feel.",
+          "text": "You admit to yourself that standing between partner, child, and co-parent is exhausting — and that you’ll need support, not just willpower.",
+          "tone": "honest · sober",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "menu",
           "to": "menu"
         }
@@ -172,8 +255,9 @@
   "acts": [
     {
       "id": "act1",
-      "title": "The Conflict at Home",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
+      "title": "First Weekend Together",
+      "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end", "a1reflect"]
     }
   ]
 }
+
