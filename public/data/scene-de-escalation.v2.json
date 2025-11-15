@@ -1,130 +1,212 @@
 {
-  "version": 2,
   "id": "scene-de-escalation",
   "title": "Scene: De-escalation",
-  "meters": {
-    "trust": {
-      "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
-    },
-    "tension": {
-      "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
-    }
+  "version": 2,
+  "tags": ["de-escalation", "communication", "conflict"],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Co-Parent": {},
+    "Child": {}
   },
-  "acts": [
+  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meterOrder": ["trust", "tension", "childStress"],
+  "ui": {
+    "hud": { "animate": true, "animated": true },
+    "dialog": { "defaultSpeaker": "Narrator" }
+  },
+
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+
+  "nodes": [
     {
-      "title": "Act 1",
-      "id": "act1",
-      "steps": [
+      "id": "menu",
+      "speaker": "Narrator",
+      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
+      "choices": [
         {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "auto_eoo7pg",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_eoo7pg": {
-            "id": "auto_eoo7pg",
-            "type": "goto",
-            "text": "",
-            "to": "Use brief, concrete messages.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_64gq1z": {
-            "id": "auto_64gq1z",
-            "type": "goto",
-            "text": "",
-            "to": "Avoid late-night heavy topics.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "auto_1246yw": {
-            "id": "auto_1246yw",
-            "type": "goto",
-            "text": "",
-            "to": "Confirm understanding in writing.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "act1_end": {
-            "id": "act1_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
-          "id": "a1s1",
-          "choices": [
-            {
-              "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            },
-            {
-              "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
-            }
-          ],
-          "text": "[a1s1]"
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
         }
-      ],
-      "start": "start"
+      ]
+    },
+
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "The Message",
+      "text": "Your phone buzzes. A long message from your co-parent — sharp tone, quick accusations, and a few things that feel unfair.",
+      "tone": "alert · simmering tension",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Pause before replying.",
+          "text": "You set the phone down and breathe for five seconds.",
+          "tone": "self-regulating · steady",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Reply instantly with your frustration.",
+          "text": "You fire back: “This is not okay. Stop attacking me every time something happens.”",
+          "tone": "reactive · sharp",
+          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "next": "a1s2",
+          "to": "a1s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "Co-Parent",
+      "title": "The Response",
+      "text": "Their reply is fast and hot: “So now it’s MY fault again? You never listen. I’m done being the only one putting in effort.”",
+      "tone": "escalated · defensive",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Reflect the emotion, not the accusation.",
+          "text": "“I hear you’re overwhelmed. This sounds like a lot for you today.”",
+          "tone": "de-escalating · empathetic",
+          "effects": { "trust": 1, "tension": -2, "childStress": -1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Clarify your intention gently.",
+          "text": "“I’m not trying to blame you. Let’s slow this down a bit.”",
+          "tone": "soft · boundary-setting",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Counter the accusation.",
+          "text": "“Putting in effort? You know that’s not fair.”",
+          "tone": "defensive · escalating",
+          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "next": "a1s3",
+          "to": "a1s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s3",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Stabilizing or Spiraling",
+      "text": "You sense the fragile moment where things can tilt either way — into clarity or chaos.",
+      "tone": "balancing · mindful",
+      "choices": [
+        {
+          "id": "a1s3c1",
+          "label": "State one shared goal.",
+          "text": "“Both of us want our child to feel safe. Let’s start from that.”",
+          "tone": "shared-purpose · grounding",
+          "effects": { "trust": 2, "tension": -2, "childStress": -1 },
+          "next": "a1s4",
+          "to": "a1s4"
+        },
+        {
+          "id": "a1s3c2",
+          "label": "Slow the tempo.",
+          "text": "“Can we pause for ten minutes? I want to give a thoughtful answer.”",
+          "tone": "regulated · pacing",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1s4",
+          "to": "a1s4"
+        },
+        {
+          "id": "a1s3c3",
+          "label": "Point out contradictions in their message.",
+          "text": "“You say you’re the only one trying, but last week you asked me to cover extra days.”",
+          "tone": "logic-focused · escalating",
+          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "next": "a1s4",
+          "to": "a1s4"
+        }
+      ]
+    },
+
+    {
+      "id": "a1s4",
+      "act": "act1",
+      "speaker": "Co-Parent",
+      "title": "Breaking Point or Breakthrough",
+      "text": "Their next message is slower: “I’m tired. I just… feel like everything lands on me.”",
+      "tone": "softened · vulnerable",
+      "choices": [
+        {
+          "id": "a1s4c1",
+          "label": "Acknowledge the emotion honestly.",
+          "text": "“I hear you. It *is* exhausting sometimes. Let’s figure out a way that feels fair.”",
+          "tone": "compassionate · collaborative",
+          "effects": { "trust": 2, "tension": -2, "childStress": -1 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s4c2",
+          "label": "Offer one concrete adjustment you can make.",
+          "text": "“Would it help if I handled school pickup twice next week?”",
+          "tone": "solution-focused · practical",
+          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s4c3",
+          "label": "Dismiss the vulnerability.",
+          "text": "“We’re all tired. That’s parenting.”",
+          "tone": "minimizing · cold",
+          "effects": { "trust": -2, "tension": 1, "childStress": 1 },
+          "next": "a1end",
+          "to": "a1end"
+        }
+      ]
+    },
+
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "End of Scene",
+      "text": "De-escalation isn’t magic — it’s a series of small choices that move storms toward calmer ground. Tonight, you practiced the art of slowing the fire instead of feeding it.",
+      "tone": "reflective · steady",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Return to menu",
+          "text": "The scene ends.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
     }
   ],
-  "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "start"
-  }
+
+  "acts": [
+    {
+      "id": "act1",
+      "title": "De-escalating a Heated Exchange",
+      "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end"]
+    }
+  ]
 }
+
