@@ -124,28 +124,6 @@
       "difficulty": "info",
       "acts": 1,
       "path": "data/brzi-kontakti.v2.json"
-    },
-    {
-      "id": "direction",
-      "title": "Direction",
-      "tags": [
-        "art",
-        "direction"
-      ],
-      "difficulty": "info",
-      "acts": 1,
-      "path": "data/direction.v2.json"
-    },
-    {
-      "id": "to-do",
-      "title": "To Do",
-      "tags": [
-        "internal",
-        "a11y"
-      ],
-      "difficulty": "info",
-      "acts": 1,
-      "path": "data/to-do.v2.json"
     }
   ]
 }
