@@ -47,4 +47,49 @@ Cypress.Commands.add('walkScenarioSteps', (maxSteps = 6) => {
 
   step(0);
 });
+// Select a scenario by visible label in the dropdown and click Start
+Cypress.Commands.add('selectScenarioAndStart', (labelText) => {
+  cy.contains('label', 'Scenario')
+    .parent()
+    .find('select')
+    .select(labelText);
+
+  cy.contains('button', /start/i).click();
+});
+
+// Returns all visible "choice" buttons (excluding Start/Restart/etc)
+// You can refine this selector if you add data-testid attributes later.
+Cypress.Commands.add('getChoiceButtons', () => {
+  return cy
+    .get('button')
+    .filter((_, el) => {
+      const text = el.innerText.trim().toLowerCase();
+      if (!text) return false;
+      // Filter out generic app controls
+      return !['start', 'restart', 'menu', 'back', 'close'].includes(text);
+    });
+});
+
+// Simple helper: click a few choices in a row to ensure no crashes
+Cypress.Commands.add('walkScenarioSteps', (steps = 3) => {
+  for (let i = 0; i < steps; i += 1) {
+    cy.getChoiceButtons()
+      .then($btns => {
+        if ($btns.length === 0) {
+          // No more choices – probably end of path; just stop
+          return;
+        }
+        // Click the first available choice
+        cy.wrap($btns.eq(0)).click();
+      });
+
+    // After each click, ensure some text still exists on screen
+    cy.get('body').should('not.be.empty');
+  }
+});
+
+// HUD helpers – we already know these data-testids from your other test
+Cypress.Commands.add('getHudMeters', () => {
+  return cy.get('[data-testid="meter-trust"], [data-testid="meter-tension"], [data-testid="meter-childStress"]');
+});
 
