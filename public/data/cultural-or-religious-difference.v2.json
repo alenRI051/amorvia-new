@@ -294,15 +294,24 @@
       "choices": [
         {
           "id": "a2endc1",
-          "label": "Commit to reviewing the plan once or twice a year.",
-          "text": "You and your co-parent agree to revisit cultural and religious agreements regularly, updating them as your child grows and asks more questions.",
-          "tone": "long-term · flexible",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "label": "Continue to Act 3 – Pressure From the Family Tree.",
+          "text": "You decide to pay attention to how extended family pressure shows up in the next days.",
+          "tone": "curious · observant",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a3s1",
+          "to": "a3s1"
+        },
+        {
+          "id": "a2endc2",
+          "label": "Reflect briefly before pausing.",
+          "text": "You pause to notice how intense it feels and consider whether you need extra support.",
+          "tone": "thoughtful · resourced",
+          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "a2reflect",
           "to": "a2reflect"
         },
         {
-          "id": "a2endc2",
+          "id": "a2endc3",
           "label": "End the scene and return to menu.",
           "text": "You pause here, letting the questions sit for now.",
           "tone": "neutral",
@@ -340,6 +349,467 @@
           "to": "menu"
         }
       ]
+    },
+
+    {
+      "id": "a3s1",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "The Grandparent Intervention",
+      "text": "You’re packing your child’s school lunch when your phone rings. It’s your co-parent’s mother.\n\nShe doesn’t bother with greetings.\n\n“I heard you’re teaching the child your traditions this year. That’s not how we do things in our family.”\n\nThe emphasis on “our” lands like a slap.\n\nYour co-parent stands in the background, embarrassed but silent.",
+      "tone": "intrusive · destabilizing",
+      "choices": [
+        {
+          "id": "a3s1c1",
+          "label": "Respond politely but firmly.",
+          "text": "“Thank you for your concern, but parenting decisions are between the two of us.”",
+          "tone": "boundaried · respectful",
+          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+          "next": "a3s2",
+          "to": "a3s2"
+        },
+        {
+          "id": "a3s1c2",
+          "label": "Let the grandparent talk over you.",
+          "text": "“I… understand. We’ll see,” you say, letting the conversation roll over your discomfort.",
+          "tone": "submissive · overwhelmed",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "next": "a3s2",
+          "to": "a3s2"
+        },
+        {
+          "id": "a3s1c3",
+          "label": "Snap back.",
+          "text": "“I don’t need approval from your side of the family,” you answer sharply.",
+          "tone": "defensive · escalating",
+          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "next": "a3s2",
+          "to": "a3s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a3s2",
+      "act": "act3",
+      "speaker": "Co-Parent",
+      "title": "The Co-Parent Reaction",
+      "text": "After the call, your co-parent exhales sharply.\n\n“I’m sorry. My mom means well… but she thinks our culture is the ‘real one.’ She thinks yours is… optional.”\n\nThey look away, embarrassed.\n\nYou realize the conflict isn’t only between you and them — it’s between generations.",
+      "tone": "conflicted · ashamed",
+      "choices": [
+        {
+          "id": "a3s2c1",
+          "label": "Say you understand family pressure.",
+          "text": "“I get it. Cultures run deep. But we need to be the ones deciding, not your mother.”",
+          "tone": "empathetic · partnering",
+          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+          "next": "a3s3",
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2c2",
+          "label": "Accuse them of not defending you.",
+          "text": "“You could’ve said something instead of letting her talk to me like that,” you say, hurt.",
+          "tone": "hurt · reactive",
+          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "next": "a3s3",
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2c3",
+          "label": "Minimize your feelings.",
+          "text": "“It’s fine, whatever,” you mutter, pushing the feeling down.",
+          "tone": "avoidant · bottled-up",
+          "effects": { "trust": -1, "tension": 0, "childStress": 0 },
+          "next": "a3s3",
+          "to": "a3s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a3s3",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "Extended-Family Argument",
+      "text": "That evening, you overhear a heated conversation on the co-parent’s side:\n\n“I don’t want our traditions diluted!”\n“This child needs to know where they come from!”\n\nEvery sentence feels like a tug-of-war for your child’s identity.\n\nYour co-parent approaches you afterward.\n\n“I know my family is intense. But I don’t agree with everything they say.”",
+      "tone": "tense · revealing",
+      "choices": [
+        {
+          "id": "a3s3c1",
+          "label": "Invite the co-parent to form a united front.",
+          "text": "“Then let’s decide the plan ourselves before anyone else pressures us.”",
+          "tone": "collaborative",
+          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+          "next": "a3end",
+          "to": "a3end"
+        },
+        {
+          "id": "a3s3c2",
+          "label": "Ask them to confront the family more strongly.",
+          "text": "“I need you to speak up when they disrespect my background,” you say clearly.",
+          "tone": "assertive",
+          "effects": { "trust": 1, "tension": 1, "childStress": 0 },
+          "next": "a3end",
+          "to": "a3end"
+        },
+        {
+          "id": "a3s3c3",
+          "label": "Withdraw emotionally.",
+          "text": "“I don’t want to deal with your whole family dynamic,” you answer, pulling back.",
+          "tone": "avoidant",
+          "effects": { "trust": -2, "tension": 1, "childStress": 1 },
+          "next": "a3end",
+          "to": "a3end"
+        }
+      ]
+    },
+
+    {
+      "id": "a3end",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "End of Act 3 – Pressure From the Family Tree",
+      "text": "Cultural identity isn’t just about holidays — it’s about history, pride, belonging, and generational expectations.\n\nAnd now those expectations are pushing into your parenting decisions.\n\nBut something shifted today: your co-parent seemed torn, but not opposed. They might actually want to build a shared path forward.",
+      "tone": "reflective · serious",
+      "choices": [
+        {
+          "id": "a3endc1",
+          "label": "Continue to Act 4 – The Child’s Identity Moment.",
+          "text": "You decide to watch more closely how your child is making sense of all this.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a4s1",
+          "to": "a4s1"
+        },
+        {
+          "id": "a3endc2",
+          "label": "Return to menu.",
+          "text": "You pause the scenario here.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+
+    {
+      "id": "a4s1",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "Mixed Traditions",
+      "text": "It’s a quiet afternoon. Your child is at the table doing a craft project — scissors, glue, colored paper.\n\nWhen you look closer, you realize they’re mixing symbols from both sides of your families:\n- your holiday’s star\n- the co-parent’s candle symbol\n- writing a greeting in the “wrong” language, then crossing it out\n\nThey frown, frustrated.\n\n“Which one am I supposed to do?” Their voice is small, but the question is enormous.",
+      "tone": "gentle · observant",
+      "choices": [
+        {
+          "id": "a4s1c1",
+          "label": "Help them combine both traditions intentionally.",
+          "text": "“You can use both — they both belong to you,” you say, helping them place the symbols side by side.",
+          "tone": "inclusive · empowering",
+          "effects": { "trust": 2, "tension": -1, "childStress": -2 },
+          "next": "a4s2",
+          "to": "a4s2"
+        },
+        {
+          "id": "a4s1c2",
+          "label": "Tell them to choose one for now.",
+          "text": "“Let’s just pick one today to make it easier,” you suggest.",
+          "tone": "simplifying · limiting",
+          "effects": { "trust": -1, "tension": 0, "childStress": 1 },
+          "next": "a4s2",
+          "to": "a4s2"
+        },
+        {
+          "id": "a4s1c3",
+          "label": "Avoid the topic.",
+          "text": "“It’s just a craft. Don’t worry about it,” you say, waving it off.",
+          "tone": "dismissive",
+          "effects": { "trust": -1, "tension": 0, "childStress": 2 },
+          "next": "a4s2",
+          "to": "a4s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a4s2",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "The Big Question",
+      "text": "Your child sets the markers down.\n\n“But… do I belong to your culture, or their culture? Grandma said I need to learn ‘our ways,’ but you said I should learn yours too.”\n\nThey look up at you with eyes that want a simple answer, but identity is anything but simple.",
+      "tone": "confused · vulnerable",
+      "choices": [
+        {
+          "id": "a4s2c1",
+          "label": "Affirm dual identity.",
+          "text": "“You belong to both. You have two cultures — that’s your superpower,” you say.",
+          "tone": "validating · identity-building",
+          "effects": { "trust": 3, "tension": -1, "childStress": -2 },
+          "next": "a4s3",
+          "to": "a4s3"
+        },
+        {
+          "id": "a4s2c2",
+          "label": "Explain adult conflict.",
+          "text": "“Your families don’t always agree about traditions,” you begin, feeling the weight of grown-up tension spill into the room.",
+          "tone": "honest · too heavy",
+          "effects": { "trust": -1, "tension": 1, "childStress": 2 },
+          "next": "a4s3",
+          "to": "a4s3"
+        },
+        {
+          "id": "a4s2c3",
+          "label": "Deflect because it’s uncomfortable.",
+          "text": "“You don’t need to think about that right now,” you say, changing the subject.",
+          "tone": "avoidant",
+          "effects": { "trust": -1, "tension": 0, "childStress": 2 },
+          "next": "a4s3",
+          "to": "a4s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a4s3",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "Co-Parent Arrives",
+      "text": "Your co-parent arrives to pick up the child and kneels beside them.\n\n“What are you making?”\n\nYour child points at the mixed-tradition craft.\n\n“I don’t know which one I’m supposed to be…” they say, looking between the two of you.\n\nYour co-parent freezes — the weight of generational expectations suddenly visible in their expression. They look at you. You look at them.\n\nThis is the moment where cooperation matters more than pride.",
+      "tone": "gentle · thoughtful",
+      "choices": [
+        {
+          "id": "a4s3c1",
+          "label": "Invite your co-parent into a united response.",
+          "text": "“Maybe we can tell them together?” you suggest.",
+          "tone": "collaborative · child-first",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a4s4",
+          "to": "a4s4"
+        },
+        {
+          "id": "a4s3c2",
+          "label": "Let the co-parent answer alone.",
+          "text": "You stay quiet and watch, letting your co-parent take the lead.",
+          "tone": "passive",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a4s4",
+          "to": "a4s4"
+        },
+        {
+          "id": "a4s3c3",
+          "label": "Contradict the co-parent in front of the child.",
+          "text": "You jump in quickly: “That’s not what we talked about,” you say, in front of your child.",
+          "tone": "undermining",
+          "effects": { "trust": -2, "tension": 2, "childStress": 2 },
+          "next": "a4s4",
+          "to": "a4s4"
+        }
+      ]
+    },
+
+    {
+      "id": "a4s4",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "The Shared Message",
+      "text": "You and your co-parent both kneel next to the child.\n\nYour co-parent begins: “You’re part of my traditions…”\n\nYou finish the sentence: “…and part of mine.”\n\nYour child looks between you, soaking in every word.\n\nYou add together: “You don’t have to choose. You get both. That’s what makes you you.”\n\nTheir shoulders drop. A small smile forms. Identity confusion gives way to belonging.",
+      "tone": "aligned · reassuring",
+      "choices": [
+        {
+          "id": "a4s4c1",
+          "label": "Move to Act 5 – Integration & Long-Term Agreements.",
+          "text": "You and your co-parent decide to turn this shared message into a concrete plan.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a5s1",
+          "to": "a5s1"
+        },
+        {
+          "id": "a4s4c2",
+          "label": "Return to menu.",
+          "text": "You pause the scenario here.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+
+    {
+      "id": "a5s1",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "The Calendar Decision",
+      "text": "A few days later, you and your co-parent sit across from each other at a café. For once, the atmosphere is calm — almost collaborative.\n\nYou both pull out your phones at the same time, laugh awkwardly, and place them face down.\n\n“Okay,” your co-parent says. “Let’s make a real plan. Something we can stick to — not just for the holidays, but year-round.”\n\nYou open a shared calendar. This is the moment where tradition becomes logistics.",
+      "tone": "structured · forward-looking",
+      "choices": [
+        {
+          "id": "a5s1c1",
+          "label": "Create a balanced yearly schedule.",
+          "text": "“Let’s alternate major holidays and include both traditions where possible,” you propose.",
+          "tone": "fair · intentional",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a5s2",
+          "to": "a5s2"
+        },
+        {
+          "id": "a5s1c2",
+          "label": "Let your tradition lead this year, with rotation later.",
+          "text": "“Since last year leaned toward your side, maybe we can shift balance this year?” you suggest.",
+          "tone": "assertive · diplomatic",
+          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "next": "a5s2",
+          "to": "a5s2"
+        },
+        {
+          "id": "a5s1c3",
+          "label": "Insist that your tradition must dominate.",
+          "text": "“My culture needs to come first. That’s non-negotiable,” you say.",
+          "tone": "rigid · adversarial",
+          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "next": "a5s2",
+          "to": "a5s2"
+        }
+      ]
+    },
+
+    {
+      "id": "a5s2",
+      "act": "act5",
+      "speaker": "Co-Parent",
+      "title": "Extended Family Boundaries",
+      "text": "Your co-parent inhales deeply.\n\n“There’s something else… My mom. She’s going to have opinions. I want her involved, but I don’t want her deciding how our child identifies.”\n\nThey look at you, eyes clearer than before.\n\n“I need boundaries for my family — but I need your help holding them.”",
+      "tone": "reflective · honest",
+      "choices": [
+        {
+          "id": "a5s2c1",
+          "label": "Set united boundaries for both sides of the family.",
+          "text": "“Yes. Let’s agree that cultural teaching comes from us — not grandparents,” you say.",
+          "tone": "united · protective",
+          "effects": { "trust": 3, "tension": -1, "childStress": -1 },
+          "next": "a5s3",
+          "to": "a5s3"
+        },
+        {
+          "id": "a5s2c2",
+          "label": "Set boundaries only for their family.",
+          "text": "“Your mom is the only problem. Mine is fine,” you reply.",
+          "tone": "biased · unbalanced",
+          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "next": "a5s3",
+          "to": "a5s3"
+        },
+        {
+          "id": "a5s2c3",
+          "label": "Avoid setting any boundaries.",
+          "text": "“I don’t want to cause more conflict. Let them all do what they want,” you say.",
+          "tone": "avoidant · risky",
+          "effects": { "trust": -2, "tension": 1, "childStress": 2 },
+          "next": "a5s3",
+          "to": "a5s3"
+        }
+      ]
+    },
+
+    {
+      "id": "a5s3",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "The Child’s Role in the Plan",
+      "text": "You show the co-parent a photo from earlier — your child proudly holding the mixed-traditions craft they made.\n\nYour co-parent smiles softly.\n\n“They look happy there… like they don’t feel torn anymore.”\n\nYou nod.\n\n“We have to protect that feeling.”\n\nYour co-parent adds: “And teach them why they get both cultures, so they grow up proud — not confused.”",
+      "tone": "warm · developmental",
+      "choices": [
+        {
+          "id": "a5s3c1",
+          "label": "Create a ‘two-roots’ identity plan.",
+          "text": "“Let’s teach them stories, symbols, and languages from both sides — intentionally,” you suggest.",
+          "tone": "visionary · nurturing",
+          "effects": { "trust": 3, "tension": -1, "childStress": -2 },
+          "next": "a5s4",
+          "to": "a5s4"
+        },
+        {
+          "id": "a5s3c2",
+          "label": "Focus primarily on holidays only.",
+          "text": "“Let’s just handle traditions when they come up,” you say.",
+          "tone": "simplified · surface-level",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a5s4",
+          "to": "a5s4"
+        },
+        {
+          "id": "a5s3c3",
+          "label": "Suggest keeping cultures separate.",
+          "text": "“Maybe it’s easier if we keep traditions apart so they don’t mix,” you propose.",
+          "tone": "segregated · low-trust",
+          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "next": "a5s4",
+          "to": "a5s4"
+        }
+      ]
+    },
+
+    {
+      "id": "a5s4",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "Long-Term Agreements",
+      "text": "As the meeting wraps up, you both finalize the foundational agreements:\n- both cultures get celebrated every year\n- extended-family opinions are secondary, not primary\n- you will present as a united front for the child\n- you will alternate teaching days and attend each other’s traditions when possible\n- the child will never be asked to “choose sides”\n- identity is additive, not competitive\n\nYour co-parent looks relieved.\n\n“This… this actually feels good. Like we’re building something that lasts.”",
+      "tone": "resolved · mature",
+      "choices": [
+        {
+          "id": "a5s4c1",
+          "label": "Affirm the connection and close the loop.",
+          "text": "“We are. And our child will benefit most from this,” you say.",
+          "tone": "warm · confident",
+          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "next": "a5end",
+          "to": "a5end"
+        },
+        {
+          "id": "a5s4c2",
+          "label": "Close neutrally.",
+          "text": "“Okay. Let’s stick to the plan,” you reply.",
+          "tone": "steady · detached",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a5end",
+          "to": "a5end"
+        },
+        {
+          "id": "a5s4c3",
+          "label": "Add a snarky comment about their family.",
+          "text": "“Let’s see what your mother says about all this…” you add wryly.",
+          "tone": "reactive · undermining",
+          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
+          "next": "a5end",
+          "to": "a5end"
+        }
+      ]
+    },
+
+    {
+      "id": "a5end",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "End of Act 5 – Integration, Respect & Stability",
+      "text": "Cultural differences didn’t disappear — they were woven together.\n\nNot by ignoring conflict, not by choosing sides, but by building a bridge your child can walk across without fear of losing part of themselves.\n\nYou step outside into the evening air. For the first time in months, your family — both sides of it — feels like something that can grow instead of fracture.",
+      "tone": "reflective · hopeful",
+      "choices": [
+        {
+          "id": "a5endc1",
+          "label": "Return to menu.",
+          "text": "You end the scenario here and step back to the main menu.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a5endc2",
+          "label": "Replay from Act 1.",
+          "text": "You decide to revisit the story from the first holiday invitation.",
+          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "next": "a1s1",
+          "to": "a1s1"
+        }
+      ]
     }
   ],
 
@@ -353,6 +823,22 @@
       "id": "act2",
       "title": "Designing a Mixed-Traditions Plan",
       "steps": ["a2s1", "a2s2", "a2s3", "a2end", "a2reflect"]
+    },
+    {
+      "id": "act3",
+      "title": "Pressure From the Family Tree",
+      "steps": ["a3s1", "a3s2", "a3s3", "a3end"]
+    },
+    {
+      "id": "act4",
+      "title": "The Child’s Identity Moment",
+      "steps": ["a4s1", "a4s2", "a4s3", "a4s4"]
+    },
+    {
+      "id": "act5",
+      "title": "Integration, Respect & Stability",
+      "steps": ["a5s1", "a5s2", "a5s3", "a5s4", "a5end"]
     }
   ]
 }
+
