@@ -1,7 +1,5 @@
 // cypress/e2e/scenario_beta_deep.cy.js
 
-// cypress/e2e/scenario_beta_deep.cy.js
-
 // Scenario IDs + dropdown labels
 const COMPLETED_SCENARIOS = [
   {
@@ -44,41 +42,42 @@ const COMPLETED_SCENARIOS = [
 ];
 
 describe('Amorvia – completed scenarios deep test', () => {
-  beforeEach(() => {
-    cy.visit('/');
-  });
+  COMPLETED_SCENARIOS.forEach(({ id, label }) => {
+    describe(label, () => {
+      beforeEach(() => {
+        // Force v2 / branching mode before app bootstraps
+        cy.visit('/', {
+          onBeforeLoad(win) {
+            win.localStorage.setItem('amorvia:mode', 'v2');
+          }
+        });
 
-  COMPLETED_SCENARIOS.forEach((title) => {
-    describe(title, () => {
+        // Sad čekaj da app bude Ready
+        cy.get('[data-amorvia-status]', { timeout: 10000 })
+          .should('contain.text', 'Ready');
+
+        // Pick scenario from dropdown and start
+        cy.selectScenarioAndStart(label);
+      });
+
       it('loads, shows dialog content, and HUD meters', () => {
-        cy.selectScenarioAndStart(title);
+        cy.expectDialogHasText();
 
-        // Some visible text on screen (at least one paragraph or div with text)
-        cy.get('body')
-          .contains(/./) // any non-empty text
-          .should('be.visible');
-
-        // HUD meters visible
         cy.getHudMeters().should('have.length.at.least', 1);
       });
 
-      it('has at least one choice and choices remain available for several steps', () => {
-        cy.selectScenarioAndStart(title);
-
-        cy.getChoiceButtons()
-          .its('length')
-          .should('be.greaterThan', 0);
-
-        cy.walkScenarioSteps(5);
+      it('has choices and can walk several steps without crashing', () => {
+        cy.walkScenarioSteps(6);
       });
 
-      it('eventually changes at least one meter after several choices', () => {
-        cy.selectScenarioAndStart(title);
-
-        // Capture initial HUD values (assuming text or aria-label contains numeric value)
+      it('eventually changes at least one HUD meter after several choices', () => {
         const getMeterSnapshot = () =>
           cy.getHudMeters().then(($meters) =>
-            [...$meters].map(el => el.innerText.trim() || el.getAttribute('aria-valuenow') || '')
+            [...$meters].map((el) => {
+              const text = el.innerText.trim();
+              const aria = el.getAttribute('aria-valuenow');
+              return text || aria || '';
+            })
           );
 
         let beforeSnapshot;
@@ -86,12 +85,12 @@ describe('Amorvia – completed scenarios deep test', () => {
         getMeterSnapshot().then((snap) => {
           beforeSnapshot = snap;
 
-          // Walk multiple steps to trigger effects
-          cy.walkScenarioSteps(6);
+          cy.walkScenarioSteps(8);
 
           getMeterSnapshot().then((afterSnap) => {
-            // Check that at least one position changed
-            const changed = afterSnap.some((value, idx) => value !== beforeSnapshot[idx]);
+            const changed = afterSnap.some(
+              (value, idx) => value !== beforeSnapshot[idx]
+            );
             expect(changed, 'at least one HUD meter value changed').to.be.true;
           });
         });
@@ -99,3 +98,4 @@ describe('Amorvia – completed scenarios deep test', () => {
     });
   });
 });
+
