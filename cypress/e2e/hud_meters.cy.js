@@ -1,50 +1,69 @@
 // cypress/e2e/hud_meters.cy.js
 
-// This spec focuses on one scenario + path where we know
-// the very first real choice has meter effects.
-// It gives us a clean, deterministic check that the HUD
-// responds to choices.
-
 describe('HUD meters – respond to choices', () => {
-  it('updates at least one meter after a concrete choice', () => {
-    // 1) Load a scenario with guaranteed meter effects on the first real choice
+  it('updates at least one meter after a concrete choice in a HUD-enabled scenario', () => {
+    // Use a scenario we know has non-zero meter effects on the first choice
     cy.visitScenario('dating-after-breakup-with-child-involved');
 
-    // 2) From the scenario menu, click "Continue" into the first content node (a1s1)
-    cy.contains('button, a', /continue/i).click();
+    // Make sure the scenario actually started and dialog is visible
+    cy.expectDialogHasText();
 
-    // 3) Make sure the HUD is actually present
+    // Assert that HUD meters are present for this scenario
     cy.getHudMeters().should('have.length.at.least', 1);
 
-    // Helper: take a snapshot of current HUD meter "values"
-    const takeHudSnapshot = () =>
-      cy.getHudMeters().then(($meters) => {
+    // Helper to snapshot HUD meter values in a robust way
+    const snapshotMeters = () =>
+      cy.getHudMeters().then($meters => {
         const values = [];
-        $meters.each((_, el) => {
-          const attrValue =
-            el.getAttribute('data-value') ||
-            (el.style && el.style.width) ||
-            (el.textContent || '').trim();
 
-          values.push(attrValue);
+        $meters.each((_, el) => {
+          // Prefer a data-value attribute if you expose one
+          const valueAttr = el.getAttribute('data-value');
+          if (valueAttr != null) {
+            values.push(valueAttr);
+            return;
+          }
+
+          // Fallback to style width (common for bar meters)
+          if (el.style && el.style.width) {
+            values.push(el.style.width);
+            return;
+          }
+
+          // Final fallback: text content
+          values.push((el.textContent || '').trim());
         });
+
         return values;
       });
 
-    // 4) Snapshot meters before any choice
-    takeHudSnapshot().then((before) => {
-      // 5) Click the first choice in this node
-      // (for a1s1 both choices carry meter effects, so whichever we choose
-      //  should adjust at least one meter)
-      cy.getChoiceButtons().first().click();
+    let beforeValues;
 
-      // 6) Snapshot meters after the choice and compare
-      takeHudSnapshot().then((after) => {
+    // Take initial snapshot
+    cy.then(() => {
+      return snapshotMeters().then(vals => {
+        beforeValues = vals;
+      });
+    });
+
+    // Click the first available choice on the current node
+    cy.getChoiceButtons()
+      .should('have.length.at.least', 1)
+      .first()
+      .click();
+
+    // Give the UI a tiny moment to update (in case of animations)
+    cy.wait(200);
+
+    // Take snapshot after the choice and assert change
+    cy.then(() => {
+      return snapshotMeters().then(afterValues => {
         expect(
-          after,
-          'HUD meter snapshot should change after one meaningful choice'
-        ).to.not.deep.equal(before);
+          afterValues,
+          'HUD meter values should change after a meaningful choice'
+        ).to.not.deep.equal(beforeValues);
       });
     });
   });
 });
+
