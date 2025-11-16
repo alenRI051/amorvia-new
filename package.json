@@ -22,7 +22,7 @@
     "dev": "http-server -p 3000 public",
     "pretest:e2e": "npm run convert:v2 && npm run lint:schemas",
     "test:e2e": "CI=1 xvfb-run -a cypress run --browser electron",
-    "test:e2e:spec": "CI=1 xvfb-run -a cypress run --browser electron --spec",
+    "test:smoke": "CI=1 xvfb-run -a cypress run --browser electron --spec cypress/e2e/scenario_smoke.cy.js",
     "test:e2e:open": "xvfb-run -a cypress open",
     "serve:static": "http-server -p 3000 .",
     "setup:dev": "bash tools/setup-dev.sh",
