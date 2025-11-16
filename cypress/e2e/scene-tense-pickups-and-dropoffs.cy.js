@@ -15,18 +15,19 @@ describe('Scene: Tense Pickups & Dropoffs – smoke test', () => {
     cy.contains('button', /start/i).click();
 
     // 4. Assert that the first scene text appears (Act 1 intro)
+    //    (Use any stable phrase from the first node – adjust if needed)
     cy.contains(/school\s+yard/i, { timeout: 8000 }).should('be.visible');
 
-    // 5. HUD meters should be visible somewhere on the screen
-    cy.contains(/trust/i).should('be.visible');
-    cy.contains(/tension/i).should('be.visible');
-    cy.contains(/child\s*stress/i).should('be.visible');
+    // 5. HUD meters should be visible – use the SAME selectors as in hud_meters.cy.js
+    //    If your test IDs differ, change them here to match.
+    cy.get('[data-testid="meter-trust"]').should('be.visible');
+    cy.get('[data-testid="meter-tension"]').should('be.visible');
+    cy.get('[data-testid="meter-childStress"]').should('be.visible');
 
-    // 6. At least one choice button should be present
+    // 6. At least one choice button should be present with non-empty text
     cy.get('button')
       .filter((_, el) => el.innerText.trim().length > 0)
       .its('length')
       .should('be.greaterThan', 0);
   });
 });
-
