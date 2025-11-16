@@ -294,27 +294,39 @@
       ]
     },
     {
-      "id": "a2end",
-      "act": "act2",
-      "type": "dialog",
-      "speaker": "Narrator",
-      "text": "You put the pen down. The situation is still complex, but at least you have a plan that doesn’t rely solely on midnight messages.",
-      "tone": "measured · cautiously hopeful",
-      "choices": [
-        {
-          "id": "a2endc1",
-          "label": "Return to menu.",
-          "text": "You pause the scenario here.",
-          "effects": {
-            "trust": 0,
-            "tension": 0,
-            "childStress": 0
-          },
-          "next": "menu",
-          "to": "menu"
-        }
-      ]
+  "id": "a2end",
+  "act": "act2",
+  "type": "dialog",
+  "speaker": "Narrator",
+  "text": "You put the pen down. The situation is still complex, but at least you have a plan that doesn’t rely solely on midnight messages.",
+  "tone": "measured · cautiously hopeful",
+  "choices": [
+    {
+      "id": "a2endc1",
+      "label": "Continue to Act 3 – The Crash After the Storm.",
+      "text": "You decide to pay attention to how the next days unfold, knowing the cycle hasn’t finished yet.",
+      "effects": {
+        "trust": 0,
+        "tension": 0,
+        "childStress": 0
+      },
+      "next": "a3s1",
+      "to": "a3s1"
     },
+    {
+      "id": "a2endc2",
+      "label": "Return to menu.",
+      "text": "You pause the scenario here.",
+      "effects": {
+        "trust": 0,
+        "tension": 0,
+        "childStress": 0
+      },
+      "next": "menu",
+      "to": "menu"
+    }
+  ]
+},
     {
       "id": "a3s1",
       "act": "act3",
