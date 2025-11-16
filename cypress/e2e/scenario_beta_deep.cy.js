@@ -41,23 +41,15 @@ const COMPLETED_SCENARIOS = [
   // add more as they hit “beta”
 ];
 
+// cypress/e2e/scenario_beta_deep.cy.js
+
 describe('Amorvia – completed scenarios deep test', () => {
   COMPLETED_SCENARIOS.forEach(({ id, label }) => {
     describe(label, () => {
       beforeEach(() => {
-        // Force v2 / branching mode before app bootstraps
-        cy.visit('/', {
-          onBeforeLoad(win) {
-            win.localStorage.setItem('amorvia:mode', 'v2');
-          }
-        });
-
-        // Sad čekaj da app bude Ready
-        cy.get('[data-amorvia-status]', { timeout: 10000 })
-          .should('contain.text', 'Ready');
-
-        // Pick scenario from dropdown and start
-        cy.selectScenarioAndStart(label);
+        // Use the same path as hud_meters & mini-engine:
+        // /?scenario=<id> + v2 mode, waiting for [data-amorvia-status="Ready"]
+        cy.visitScenario(id);
       });
 
       it('loads, shows dialog content, and HUD meters', () => {
