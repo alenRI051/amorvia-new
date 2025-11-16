@@ -3,7 +3,13 @@
 // Posjeti Amorviu s određenim scenarijem i čekaj da bude Ready
 Cypress.Commands.add('visitScenario', (id) => {
   const qs = id ? `?scenario=${encodeURIComponent(id)}` : '';
-  cy.visit('/' + qs);
+
+  cy.visit('/' + qs, {
+    onBeforeLoad(win) {
+      // Force v2 / branching mode (HUD)
+      win.localStorage.setItem('amorvia:mode', 'v2');
+    }
+  });
 
   cy.get('[data-amorvia-status]', { timeout: 10000 })
     .should('contain.text', 'Ready');
