@@ -18,21 +18,54 @@ Cypress.Commands.add('expectDialogHasText', () => {
     });
 });
 
-// Prošetaj kroz nekoliko koraka scenarija — *samo ako postoje choices*
+// Select a scenario by visible label in the dropdown and click Start
+// (korisno za ručne / legacy testove)
+Cypress.Commands.add('selectScenarioAndStart', (labelText) => {
+  cy.contains('label', 'Scenario')
+    .parent()
+    .find('select')
+    .select(labelText);
+
+  cy.contains('button', /start/i).click();
+});
+
+// Returns all visible "choice" buttons (excluding Start/Restart/etc)
+// Fallback ako nema data-testid="choices"
+Cypress.Commands.add('getChoiceButtons', () => {
+  return cy
+    .get('button')
+    .filter((_, el) => {
+      const text = el.innerText.trim().toLowerCase();
+      if (!text) return false;
+      // Filter out generic app controls
+      return !['start', 'restart', 'menu', 'back', 'close'].includes(text);
+    });
+});
+
+// Prošetaj kroz nekoliko koraka scenarija — koristi choices, ili fallback na generičke gumbe
 Cypress.Commands.add('walkScenarioSteps', (maxSteps = 6) => {
   function step(current) {
     if (current >= maxSteps) return;
 
     cy.get('body').then(($body) => {
-      const buttons = $body.find('[data-testid="choices"] button');
-      if (!buttons.length) {
-        // nema choices → scenario je vjerojatno infopanel ili je završio
+      let $buttons = $body.find('[data-testid="choices"] button');
+
+      if (!$buttons.length) {
+        // fallback na generičke choice gumbe
+        $buttons = $body.find('button').filter((_, el) => {
+          const text = el.innerText.trim().toLowerCase();
+          if (!text) return false;
+          return !['start', 'restart', 'menu', 'back', 'close'].includes(text);
+        });
+      }
+
+      if (!$buttons.length) {
         cy.log('No choices available at step ' + current);
         return;
       }
 
       // klikni prvi choice
-      cy.wrap(buttons.eq(0)).click();
+      cy.wrap($buttons.eq(0)).click();
 
       // dialog i dalje mora imati tekst
       cy.get('[data-testid="dialog"]')
@@ -47,49 +80,10 @@ Cypress.Commands.add('walkScenarioSteps', (maxSteps = 6) => {
 
   step(0);
 });
-// Select a scenario by visible label in the dropdown and click Start
-Cypress.Commands.add('selectScenarioAndStart', (labelText) => {
-  cy.contains('label', 'Scenario')
-    .parent()
-    .find('select')
-    .select(labelText);
 
-  cy.contains('button', /start/i).click();
-});
-
-// Returns all visible "choice" buttons (excluding Start/Restart/etc)
-// You can refine this selector if you add data-testid attributes later.
-Cypress.Commands.add('getChoiceButtons', () => {
-  return cy
-    .get('button')
-    .filter((_, el) => {
-      const text = el.innerText.trim().toLowerCase();
-      if (!text) return false;
-      // Filter out generic app controls
-      return !['start', 'restart', 'menu', 'back', 'close'].includes(text);
-    });
-});
-
-// Simple helper: click a few choices in a row to ensure no crashes
-Cypress.Commands.add('walkScenarioSteps', (steps = 3) => {
-  for (let i = 0; i < steps; i += 1) {
-    cy.getChoiceButtons()
-      .then($btns => {
-        if ($btns.length === 0) {
-          // No more choices – probably end of path; just stop
-          return;
-        }
-        // Click the first available choice
-        cy.wrap($btns.eq(0)).click();
-      });
-
-    // After each click, ensure some text still exists on screen
-    cy.get('body').should('not.be.empty');
-  }
-});
-
-// HUD helpers – we already know these data-testids from your other test
+// HUD helpers – data-testid već postoji
 Cypress.Commands.add('getHudMeters', () => {
-  return cy.get('[data-testid="meter-trust"], [data-testid="meter-tension"], [data-testid="meter-childStress"]');
+  return cy.get(
+    '[data-testid="meter-trust"], [data-testid="meter-tension"], [data-testid="meter-childStress"]'
+  );
 });
-
