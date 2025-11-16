@@ -1,75 +1,50 @@
 // cypress/e2e/hud_meters.cy.js
 
-const SCENARIO_ID = 'co-parenting-with-bipolar-partner';
-
-function metersChanged(before, after) {
-  const keys = ['trust', 'tension', 'childStress'];
-
-  return keys.some((k) => {
-    const a = before?.[k];
-    const b = after?.[k];
-    return typeof a === 'number' && typeof b === 'number' && a !== b;
-  });
-}
+// This spec focuses on one scenario + path where we know
+// the very first real choice has meter effects.
+// It gives us a clean, deterministic check that the HUD
+// responds to choices.
 
 describe('HUD meters – respond to choices', () => {
-  it('eventually changes at least one meter after several choices', () => {
-    cy.visitScenario(SCENARIO_ID);
-    cy.expectDialogHasText();
+  it('updates at least one meter after a concrete choice', () => {
+    // 1) Load a scenario with guaranteed meter effects on the first real choice
+    cy.visitScenario('dating-after-breakup-with-child-involved');
 
-    let initialMeters;
+    // 2) From the scenario menu, click "Continue" into the first content node (a1s1)
+    cy.contains('button, a', /continue/i).click();
 
-    // uzmi početne vrijednosti metara iz mini-engine stanja
-    cy.window()
-      .its('AmorviaMini.state.meters')
-      .should('exist')
-      .then((meters) => {
-        initialMeters = { ...meters };
-        cy.log('Initial meters:', JSON.stringify(initialMeters));
-      })
-      .then(() => {
-        // helper koji klika kroz nekoliko koraka dok se nešto ne promijeni
-        function clickUntilChanged(step = 0, maxSteps = 8) {
-          if (step >= maxSteps) {
-            throw new Error(`Meters did not change after ${maxSteps} steps`);
-          }
+    // 3) Make sure the HUD is actually present
+    cy.getHudMeters().should('have.length.at.least', 1);
 
-          cy.get('body').then(($body) => {
-            const buttons = $body.find('[data-testid="choices"] button');
+    // Helper: take a snapshot of current HUD meter "values"
+    const takeHudSnapshot = () =>
+      cy.getHudMeters().then(($meters) => {
+        const values = [];
+        $meters.each((_, el) => {
+          const attrValue =
+            el.getAttribute('data-value') ||
+            (el.style && el.style.width) ||
+            (el.textContent || '').trim();
 
-            expect(
-              buttons.length,
-              `step ${step + 1}: must have at least one choice to drive meters`
-            ).to.be.greaterThan(0);
-
-            cy.wrap(buttons.eq(0)).click(); // za sada klikamo prvi choice
-
-            cy.window()
-              .its('AmorviaMini.state.meters')
-              .then((currentMeters) => {
-                const changed = metersChanged(initialMeters, currentMeters);
-
-                cy.log(
-                  `Step ${step + 1} meters:`,
-                  JSON.stringify(currentMeters),
-                  'changed =',
-                  changed
-                );
-
-                if (!changed) {
-                  // još uvijek ista slika – probaj dalje
-                  clickUntilChanged(step + 1, maxSteps);
-                } else {
-                  expect(
-                    changed,
-                    `At least one HUD meter changed within ${step + 1} steps`
-                  ).to.be.true;
-                }
-              });
-          });
-        }
-
-        clickUntilChanged(0, 8);
+          values.push(attrValue);
+        });
+        return values;
       });
+
+    // 4) Snapshot meters before any choice
+    takeHudSnapshot().then((before) => {
+      // 5) Click the first choice in this node
+      // (for a1s1 both choices carry meter effects, so whichever we choose
+      //  should adjust at least one meter)
+      cy.getChoiceButtons().first().click();
+
+      // 6) Snapshot meters after the choice and compare
+      takeHudSnapshot().then((after) => {
+        expect(
+          after,
+          'HUD meter snapshot should change after one meaningful choice'
+        ).to.not.deep.equal(before);
+      });
+    });
   });
 });
