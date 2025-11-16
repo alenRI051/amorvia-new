@@ -1,17 +1,46 @@
 // cypress/e2e/scenario_beta_deep.cy.js
 
-// Titles must match the dropdown options exactly
+// cypress/e2e/scenario_beta_deep.cy.js
+
+// Scenario IDs + dropdown labels
 const COMPLETED_SCENARIOS = [
-  'Co-Parenting with a Bipolar Partner',
-  'Cultural or Religious Difference in Co-Parenting',
-  'Scene: Tense Pickups & Dropoffs',
-  'Dating After Breakup (With Child Involved)',
-  'Scene: First Agreements',
-  'Scene: New Introductions',
-  'Scene: Different Rules',
-  'Scene: De-escalation',
-  'Step-Parenting Conflicts'
-  // Add more as they reach “beta” quality
+  {
+    id: 'co-parenting-with-bipolar-partner',
+    label: 'Co-Parenting with Bipolar Partner'
+  },
+  {
+    id: 'cultural-or-religious-difference',
+    label: 'Cultural or Religious Difference in Co-Parenting'
+  },
+  {
+    id: 'scene-tense-pickups-and-dropoffs',
+    label: 'Scene: Tense Pickups & Dropoffs'
+  },
+  {
+    id: 'dating-after-breakup-with-child-involved',
+    label: 'Dating After Breakup (With Child Involved)'
+  },
+  {
+    id: 'scene-first-agreements',
+    label: 'Scene: First Agreements'
+  },
+  {
+    id: 'scene-new-introductions',
+    label: 'Scene: New Introductions'
+  },
+  {
+    id: 'scene-different-rules',
+    label: 'Scene: Different Rules'
+  },
+  {
+    id: 'scene-de-escalation',
+    label: 'Scene: De-escalation'
+  },
+  {
+    id: 'step-parenting-conflicts',
+    label: 'Step-Parenting Conflicts'
+  }
+  // add more as they hit “beta”
 ];
 
 describe('Amorvia – completed scenarios deep test', () => {
