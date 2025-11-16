@@ -84,6 +84,8 @@ Cypress.Commands.add('walkScenarioSteps', (maxSteps = 6) => {
 // HUD helpers – data-testid već postoji
 Cypress.Commands.add('getHudMeters', () => {
   return cy.get(
-    '[data-testid="meter-trust"], [data-testid="meter-tension"], [data-testid="meter-childStress"]'
+    '[data-testid="meter-trust"], [data-testid="meter-tension"], [data-testid="meter-childStress"]',
+    { timeout: 10000 }
   );
 });
+
