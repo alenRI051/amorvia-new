@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "threads": [
+    {
+      "id": "thread-co-parenting-intense",
+      "title": "Intense Co-Parenting Crises",
+      "description": "High-conflict co-parenting situations that test stability, safety, and long-term collaboration.",
+      "scenarioIds": [
+        "co-parenting-with-bipolar-partner",
+        "cultural-or-religious-difference",
+        "step-parenting-conflicts"
+      ]
+    },
+    {
+      "id": "thread-transition-moments",
+      "title": "Transitions & Handover Moments",
+      "description": "Pickups, dropoffs, new routines and agreements where tensions spike quickly.",
+      "scenarioIds": [
+        "scene-tense-pickups-and-dropoffs",
+        "scene-first-agreements",
+        "scene-new-introductions",
+        "scene-different-rules",
+        "scene-de-escalation"
+      ]
+    },
+    {
+      "id": "thread-dating-after-breakup",
+      "title": "Dating After Breakup (With Child)",
+      "description": "Bringing new partners into a shared-parenting reality.",
+      "scenarioIds": [
+        "dating-after-breakup-with-child-involved"
+      ]
+    },
+    {
+      "id": "thread-boundaries-and-safety",
+      "title": "Boundaries & Safety",
+      "description": "Scenarios where physical or emotional safety and boundaries come first.",
+      "scenarioIds": [
+        "visitor"
+      ]
+    },
+    {
+      "id": "thread-support-network",
+      "title": "Support Network & Resources",
+      "description": "Reference and resource scenarios that support real-life crisis navigation.",
+      "scenarioIds": [
+        "brzi-kontakti"
+      ]
+    }
+  ]
+}
