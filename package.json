@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "lint:schemas": "ajv validate -s public/schema/scenario.v2.schema.json -d 'public/data/*.v2.json' --spec=draft2020 --strict=false",
+    "lint:data": "node tools/check-data-integrity.mjs",
     "lint:schemas:ci": "node validator.mjs --ci",
     "lint:v2": "node scripts/validate-v2.js",
     "fix:v2": "node scripts/fix-v2.js",
