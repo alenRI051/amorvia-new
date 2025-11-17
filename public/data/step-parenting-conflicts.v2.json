@@ -2,7 +2,12 @@
   "id": "step-parenting-conflicts",
   "title": "Step-Parenting Conflicts",
   "version": 2,
-  "tags": ["step-parenting", "blended-family", "boundaries", "loyalty"],
+  "tags": [
+    "step-parenting",
+    "blended-family",
+    "boundaries",
+    "loyalty"
+  ],
   "actors": {
     "Narrator": {},
     "You": {},
@@ -10,8 +15,16 @@
     "Co-Parent": {},
     "Child": {}
   },
-  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
-  "meterOrder": ["trust", "tension", "childStress"],
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
   "ui": {
     "showHud": true,
     "showActBadge": true,
@@ -25,32 +38,16 @@
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-       "acts": [
+  "acts": [
     {
       "id": "act1",
       "title": "Act 1 – Invisible Lines",
       "summary": "Tension builds around unspoken expectations and small boundary slips.",
       "nodes": [
         {
-          "id": "act1-schema-anchor",
+          "id": "act1",
           "speaker": "Narrator",
-          "text": "Schema anchor node for Act 1 (engine uses top-level nodes).",
-          "choices": [
-            {
-              "id": "act1_anchor_c1",
-              "label": "Start Act 1 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a1s1"
-            },
-            {
-              "id": "act1_anchor_c2",
-              "label": "Alternate start Act 1 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a1s1"
-            }
-          ]
+          "text": "In this Act, you’ll move through a typical “small” conflict that reveals big unspoken expectations.\n\nYou’ll practice noticing when you’re being pulled into a parent role versus a supportive step-parent role, and how to name that without attacking anyone.\n\nMeters will shift more around trust and tension here, while childStress stays relatively low but present."
         }
       ]
     },
@@ -60,25 +57,9 @@
       "summary": "The child is caught in the middle; you decide how to respond.",
       "nodes": [
         {
-          "id": "act2-schema-anchor",
+          "id": "act2",
           "speaker": "Narrator",
-          "text": "Schema anchor node for Act 2 (engine uses top-level nodes).",
-          "choices": [
-            {
-              "id": "act2_anchor_c1",
-              "label": "Start Act 2 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a2s1"
-            },
-            {
-              "id": "act2_anchor_c2",
-              "label": "Alternate start Act 2 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a2s1"
-            }
-          ]
+          "text": "In Act 2, the focus moves directly to the child’s inner world.\n\nYou’ll see how small comments from adults can turn into loyalty tests in the child’s mind.\n\nHere, childStress becomes more sensitive to your choices, while trust and tension move in subtler ways."
         }
       ]
     },
@@ -88,25 +69,9 @@
       "summary": "You work toward a clearer, more stable two-home plan.",
       "nodes": [
         {
-          "id": "act3-schema-anchor",
+          "id": "act3",
           "speaker": "Narrator",
-          "text": "Schema anchor node for Act 3 (engine uses top-level nodes).",
-          "choices": [
-            {
-              "id": "act3_anchor_c1",
-              "label": "Start Act 3 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a3s1"
-            },
-            {
-              "id": "act3_anchor_c2",
-              "label": "Alternate start Act 3 (debug only)",
-              "tone": "neutral",
-              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "to": "a3s1"
-            }
-          ]
+          "text": "Act 3 invites all three adults into the frame.\n\nYou’ll experiment with language that treats everyone as part of the same extended team, even if there are old hurts.\n\nThe focus is on small, realistic agreements rather than a perfect resolution. Meters can all move here, but the emphasis is on long-term stability for the child."
         }
       ]
     }
@@ -116,32 +81,40 @@
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "text": [
-        "Friday evening. You’re in the hallway, one shoe off, one shoe on. Your partner’s child is standing by the door, backpack on, waiting for the co-parent to arrive.",
-        "You hear your partner say from the living room, \u201cPut that back in your room, they don\u2019t like toys in the hallway.\u201d",
-        "The child hesitates and glances at you, like you\u2019re the judge of what\u2019s allowed."
-      ],
+      "text": "Friday evening. You’re in the hallway, one shoe off, one shoe on. Your partner’s child is standing by the door, backpack on, waiting for the co-parent to arrive.\n\nYou hear your partner say from the living room, “Put that back in your room, they don’t like toys in the hallway.”\n\nThe child hesitates and glances at you, like you’re the judge of what’s allowed.",
       "choices": [
         {
           "id": "a1s1_c1",
           "label": "Reassure the child and gently clarify the rule.",
           "tone": "soft · inclusive",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a1s2"
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a1s2"
         },
         {
           "id": "a1s1_c2",
           "label": "Stay silent and let your partner handle it.",
           "tone": "neutral · observing",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1s2"
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a1s2"
         },
         {
           "id": "a1s1_c3",
           "label": "Correct your partner in front of the child.",
           "tone": "sharp · reactive",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
-          "next": "a1s2"
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "to": "a1s2"
         }
       ]
     },
@@ -149,32 +122,40 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Narrator",
-      "text": [
-        "A few minutes later, the co-parent arrives. The hallway feels tight: shoes, backpacks, and invisible history all in one place.",
-        "The co-parent hugs the child and throws a quick glance at you – polite, but distant.",
-        "Your partner says, \u201cWe\u2019re trying to keep the hallway clear now, right?\u201d and looks at you for backup."
-      ],
+      "text": "A few minutes later, the co-parent arrives. The hallway feels tight: shoes, backpacks, and invisible history all in one place.\n\nThe co-parent hugs the child and throws a quick glance at you – polite, but distant.\n\nYour partner says, “We’re trying to keep the hallway clear now, right?” and looks at you for backup.",
       "choices": [
         {
           "id": "a1s2_c1",
           "label": "Offer a neutral, practical summary instead of taking sides.",
           "tone": "calm · diplomatic",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a1s3"
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a1s3"
         },
         {
           "id": "a1s2_c2",
           "label": "Make a small joke to diffuse the tension.",
           "tone": "light · deflecting",
-          "effects": { "trust": 0, "tension": -1, "childStress": 0 },
-          "next": "a1s3"
+          "effects": {
+            "trust": 0,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a1s3"
         },
         {
           "id": "a1s2_c3",
           "label": "Point out how often the child leaves things everywhere.",
           "tone": "critical · escalating",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
-          "next": "a1s3"
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "to": "a1s3"
         }
       ]
     },
@@ -182,32 +163,40 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "text": [
-        "Later that night, the house is finally quiet. The hallway is empty again, but the feeling isn\u2019t.",
-        "Your partner sits at the kitchen table and sighs.",
-        "\u201cI feel like you\u2019re either too strict or too soft,\u201d they say. \u201cI never know what to expect from you with the rules.\u201d"
-      ],
+      "text": "Later that night, the house is finally quiet. The hallway is empty again, but the feeling isn’t.\n\nYour partner sits at the kitchen table and sighs.\n\n“I feel like you’re either too strict or too soft,” they say. “I never know what to expect from you with the rules.”",
       "choices": [
         {
           "id": "a1s3_c1",
           "label": "Acknowledge the confusion and ask for one small area to define together.",
           "tone": "curious · collaborative",
-          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
-          "next": "a1s4"
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a1s4"
         },
         {
           "id": "a1s3_c2",
           "label": "Defend your intentions and explain why you reacted the way you did.",
           "tone": "self-explaining · mixed",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1s4"
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a1s4"
         },
         {
           "id": "a1s3_c3",
           "label": "Point out all the times you felt undermined as a step-parent.",
           "tone": "resentful · unloading",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
-          "next": "a1s4"
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 0
+          },
+          "to": "a1s4"
         }
       ]
     },
@@ -215,18 +204,18 @@
       "id": "a1s4",
       "act": "act1",
       "speaker": "Narrator",
-      "text": [
-        "By the end of the conversation, it\u2019s clear: nobody has ever sat down to say out loud what your role as a step-parent is supposed to be.",
-        "The hallway incident wasn\u2019t really about shoes. It was about who gets to say \u201cwe\u201d when it comes to the child.",
-        "Act 1 closes with a gentle realization: if the three adults don\u2019t name the boundaries, the child will keep guessing where they are."
-      ],
+      "text": "By the end of the conversation, it’s clear: nobody has ever sat down to say out loud what your role as a step-parent is supposed to be.\n\nThe hallway incident wasn’t really about shoes. It was about who gets to say “we” when it comes to the child.\n\nAct 1 closes with a gentle realization: if the three adults don’t name the boundaries, the child will keep guessing where they are.",
       "choices": [
         {
           "id": "a1s4_c1",
-          "label": "Move into Act 2 – focusing on the child\u2019s loyalty tug-of-war.",
+          "label": "Move into Act 2 – focusing on the child’s loyalty tug-of-war.",
           "tone": "reflective · forward-looking",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
-          "next": "a2s1"
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a2s1"
         }
       ]
     },
@@ -234,32 +223,40 @@
       "id": "a2s1",
       "act": "act2",
       "speaker": "Narrator",
-      "text": [
-        "A few weeks later, it\u2019s Sunday evening. The child is back from the co-parent\u2019s home and seems unusually quiet.",
-        "They hover near you while you cook, then blurt out:",
-        "\u201cAt Mom\u2019s house I don\u2019t have to ask about snacks. Here I have to ask *you* and *them*.\u201d"
-      ],
+      "text": "A few weeks later, it’s Sunday evening. The child is back from the co-parent’s home and seems unusually quiet.\n\nThey hover near you while you cook, then blurt out:\n\n“At Mom’s house I don’t have to ask about snacks. Here I have to ask *you* and *them*.”",
       "choices": [
         {
           "id": "a2s1_c1",
-          "label": "Validate the child\u2019s feelings and thank them for telling you.",
+          "label": "Validate the child’s feelings and thank them for telling you.",
           "tone": "warm · validating",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
-          "next": "a2s2"
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a2s2"
         },
         {
           "id": "a2s1_c2",
           "label": "Explain the rule differences like a teacher, focusing on structure.",
           "tone": "informative · structured",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a2s2"
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a2s2"
         },
         {
           "id": "a2s1_c3",
           "label": "Remind them that \"every house has different rules\" and change the subject.",
           "tone": "minimizing · avoidant",
-          "effects": { "trust": -1, "tension": 0, "childStress": 1 },
-          "next": "a2s2"
+          "effects": {
+            "trust": -1,
+            "tension": 0,
+            "childStress": 1
+          },
+          "to": "a2s2"
         }
       ]
     },
@@ -267,32 +264,40 @@
       "id": "a2s2",
       "act": "act2",
       "speaker": "Narrator",
-      "text": [
-        "Later, after the child goes to play, your partner comes in from a call with the co-parent.",
-        "Their voice is tight. \u201cThey said you\u2019re confusing the kid. That you\u2019re acting like a second parent instead of a support.\u201d",
-        "The phrase \u201cacting like a second parent\u201d lands like a stone in your stomach."
-      ],
+      "text": "Later, after the child goes to play, your partner comes in from a call with the co-parent.\n\nTheir voice is tight. “They said you’re confusing the kid. That you’re acting like a second parent instead of a support.”\n\nThe phrase “acting like a second parent” lands like a stone in your stomach.",
       "choices": [
         {
           "id": "a2s2_c1",
           "label": "Name how that comment hits you, without attacking anyone.",
           "tone": "transparent · self-aware",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a2s3"
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a2s3"
         },
         {
           "id": "a2s2_c2",
           "label": "Ask your partner what *they* think, before reacting to the co-parent.",
           "tone": "curious · connective",
-          "effects": { "trust": 2, "tension": 0, "childStress": 0 },
-          "next": "a2s3"
+          "effects": {
+            "trust": 2,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a2s3"
         },
         {
           "id": "a2s2_c3",
           "label": "Suggest limiting your involvement to avoid drama.",
           "tone": "protective · withdrawing",
-          "effects": { "trust": -1, "tension": -1, "childStress": 0 },
-          "next": "a2s3"
+          "effects": {
+            "trust": -1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a2s3"
         }
       ]
     },
@@ -300,32 +305,40 @@
       "id": "a2s3",
       "act": "act2",
       "speaker": "Narrator",
-      "text": [
-        "As the evening goes on, the \u201cWho am I allowed to be?\u201d question keeps floating between you and your partner.",
-        "Is your role more like a coach, a bonus parent, a housemate, an aunt/uncle?",
-        "You both realize nobody has ever said this out loud with the co-parent present, and the child has been left to interpret the silence."
-      ],
+      "text": "As the evening goes on, the “Who am I allowed to be?” question keeps floating between you and your partner.\n\nIs your role more like a coach, a bonus parent, a housemate, an aunt/uncle?\n\nYou both realize nobody has ever said this out loud with the co-parent present, and the child has been left to interpret the silence.",
       "choices": [
         {
           "id": "a2s3_c1",
-          "label": "Propose a three-adult conversation focused on the child\u2019s sense of safety.",
+          "label": "Propose a three-adult conversation focused on the child’s sense of safety.",
           "tone": "intentional · child-centered",
-          "effects": { "trust": 2, "tension": 0, "childStress": -1 },
-          "next": "a2s4"
+          "effects": {
+            "trust": 2,
+            "tension": 0,
+            "childStress": -1
+          },
+          "to": "a2s4"
         },
         {
           "id": "a2s3_c2",
           "label": "Ask to at least define some language you and your partner will use consistently.",
           "tone": "practical · step-by-step",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
-          "next": "a2s4"
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "to": "a2s4"
         },
         {
           "id": "a2s3_c3",
-          "label": "Decide to wait and \u201csee how things evolve\u201d without any plan.",
+          "label": "Decide to wait and “see how things evolve” without any plan.",
           "tone": "passive · postponing",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
-          "next": "a2s4"
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "to": "a2s4"
         }
       ]
     },
@@ -333,18 +346,18 @@
       "id": "a2s4",
       "act": "act2",
       "speaker": "Narrator",
-      "text": [
-        "Act 2 closes not with a \u201cwin\u201d, but with a clearer map:",
-        "• The child is being loyal to *all* of you.\n• Each home has different rules and different emotional climates.\n• Your role as step-parent is real, but unnamed roles create extra stress.",
-        "You and your partner agree: whatever happens next needs to be less about who is right, and more about what will make life predictable for the child."
-      ],
+      "text": "Act 2 closes not with a “win”, but with a clearer map:\n\n• The child is being loyal to *all* of you.\n• Each home has different rules and different emotional climates.\n• Your role as step-parent is real, but unnamed roles create extra stress.\n\nYou and your partner agree: whatever happens next needs to be less about who is right, and more about what will make life predictable for the child.",
       "choices": [
         {
           "id": "a2s4_c1",
-          "label": "Move into Act 3 – drafting a more stable \u201ctwo-home\u201d plan.",
+          "label": "Move into Act 3 – drafting a more stable “two-home” plan.",
           "tone": "grounded · constructive",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
-          "next": "a3s1"
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a3s1"
         }
       ]
     },
@@ -352,32 +365,40 @@
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
-      "text": [
-        "You\u2019re all at a neutral place – a café near the park. You, your partner, and the co-parent.",
-        "The child is within sight on the playground, laughing with other kids. For once, all three adults are in the same frame.",
-        "You take a breath. This could become just another round of blame. Or something else."
-      ],
+      "text": "You’re all at a neutral place – a café near the park. You, your partner, and the co-parent.\n\nThe child is within sight on the playground, laughing with other kids. For once, all three adults are in the same frame.\n\nYou take a breath. This could become just another round of blame. Or something else.",
       "choices": [
         {
           "id": "a3s1_c1",
           "label": "Open with appreciation for what each adult is trying to do.",
           "tone": "appreciative · disarming",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
-          "next": "a3s2"
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a3s2"
         },
         {
           "id": "a3s1_c2",
-          "label": "Start by naming the child\u2019s stress and your wish to reduce it.",
+          "label": "Start by naming the child’s stress and your wish to reduce it.",
           "tone": "focused · child-centered",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a3s2"
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a3s2"
         },
         {
           "id": "a3s1_c3",
           "label": "Lead with specific complaints about past conflicts.",
           "tone": "historical · loaded",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
-          "next": "a3s2"
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
+          "to": "a3s2"
         }
       ]
     },
@@ -385,32 +406,40 @@
       "id": "a3s2",
       "act": "act3",
       "speaker": "Narrator",
-      "text": [
-        "Slowly, the conversation turns toward practical questions:",
-        "• Who explains rule differences to the child?\n• How will you talk about your role when new partners enter the picture?\n• What words do you *all* feel comfortable with for \u201cstep-parent\u201d?",
-        "It\u2019s not perfectly smooth. There are eye rolls, pauses, and some hard swallows. But it\u2019s happening."
-      ],
+      "text": "Slowly, the conversation turns toward practical questions:\n\n• Who explains rule differences to the child?\n• How will you talk about your role when new partners enter the picture?\n• What words do you *all* feel comfortable with for “step-parent”?\n\nIt’s not perfectly smooth. There are eye rolls, pauses, and some hard swallows. But it’s happening.",
       "choices": [
         {
           "id": "a3s2_c1",
           "label": "Suggest writing down 3 shared principles to test for a month.",
           "tone": "solution-focused · modest",
-          "effects": { "trust": 2, "tension": 0, "childStress": -1 },
-          "next": "a3s3"
+          "effects": {
+            "trust": 2,
+            "tension": 0,
+            "childStress": -1
+          },
+          "to": "a3s3"
         },
         {
           "id": "a3s2_c2",
           "label": "Ask for a commitment to check in again after a few weeks.",
           "tone": "realistic · process-oriented",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
-          "next": "a3s3"
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a3s3"
         },
         {
           "id": "a3s2_c3",
           "label": "Insist on resolving *everything* in this one conversation.",
           "tone": "urgent · all-or-nothing",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
-          "next": "a3s3"
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 0
+          },
+          "to": "a3s3"
         }
       ]
     },
@@ -418,18 +447,18 @@
       "id": "a3s3",
       "act": "act3",
       "speaker": "Narrator",
-      "text": [
-        "By the end of the meeting, you haven\u2019t redesigned the whole family system. But something is different:",
-        "There are a few written agreements. A plan to talk again. And a shared sentence you all agree to use when the child asks about rules or loyalty.",
-        "It sounds something like:\n\u201cYou don\u2019t have to choose between us. All of us are trying to keep you safe, even if our houses work a little differently.\u201d"
-      ],
+      "text": "By the end of the meeting, you haven’t redesigned the whole family system. But something is different:\n\nThere are a few written agreements. A plan to talk again. And a shared sentence you all agree to use when the child asks about rules or loyalty.\n\nIt sounds something like:\n“You don’t have to choose between us. All of us are trying to keep you safe, even if our houses work a little differently.”",
       "choices": [
         {
           "id": "a3s3_c1",
           "label": "Close the scenario with a brief reflection on your preferred next step.",
           "tone": "integrating · reflective",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
-          "next": "ending"
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "ending"
         }
       ]
     },
@@ -437,12 +466,7 @@
       "id": "ending",
       "act": "act3",
       "speaker": "Narrator",
-      "text": [
-        "This scenario doesn\u2019t end with a perfect blend of families.",
-        "Instead, it ends with something more realistic and more powerful:",
-        "• clearer language for your role,\n• a few shared principles between the adults,\n• and a slightly lighter load on the child\u2019s shoulders.",
-        "You can replay the scenario making different choices to explore how trust, tension, and child stress shift over time."
-      ],
+      "text": "This scenario doesn’t end with a perfect blend of families.\n\nInstead, it ends with something more realistic and more powerful:\n\n• clearer language for your role,\n• a few shared principles between the adults,\n• and a slightly lighter load on the child’s shoulders.\n\nYou can replay the scenario making different choices to explore how trust, tension, and child stress shift over time.",
       "choices": []
     }
   ]
