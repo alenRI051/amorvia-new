@@ -5,45 +5,31 @@
     {
       "id": "co-parenting-with-bipolar-partner",
       "title": "Co-Parenting with Bipolar Partner",
-      "tags": [
-        "handoff",
-        "communication",
-        "de-escalation"
-      ],
+      "tags": ["handoff", "communication", "de-escalation"],
       "difficulty": "hard",
-      "acts": 1,
+      "acts": 5,
       "path": "data/co-parenting-with-bipolar-partner.v2.json"
     },
     {
-  "id": "step-parenting-conflicts",
-  "title": "Step-Parenting Conflicts",
-  "tags": [
-    "step-parenting",
-    "conflict",
-    "boundaries",
-    "communication",
-    "child-wellbeing"
-  ],
-  "difficulty": "hard",
-  "acts": 1,
-  "path": "data/step-parenting-conflicts.v2.json"
-   },
+      "id": "step-parenting-conflicts",
+      "title": "Step-Parenting Conflicts",
+      "tags": ["step-parenting", "conflict", "boundaries", "communication", "child-wellbeing"],
+      "difficulty": "hard",
+      "acts": 1,
+      "path": "data/step-parenting-conflicts.v2.json"
+    },
     {
-  "id": "scene-tense-pickups-and-dropoffs",
-  "title": "Scene: Tense Pickups & Dropoffs",
-  "tags": ["pickups", "dropoffs", "exchange-day", "co-parenting", "conflict"],
-  "difficulty": "easy",
-  "acts": 5,
-  "path": "data/scene-tense-pickups-and-dropoffs.v2.json"
-},
+      "id": "scene-tense-pickups-and-dropoffs",
+      "title": "Scene: Tense Pickups & Dropoffs",
+      "tags": ["pickups", "dropoffs", "exchange-day", "co-parenting", "conflict"],
+      "difficulty": "easy",
+      "acts": 5,
+      "path": "data/scene-tense-pickups-and-dropoffs.v2.json"
+    },
     {
       "id": "visitor",
       "title": "Visitor",
-      "tags": [
-        "boundaries",
-        "safety",
-        "co-parenting"
-      ],
+      "tags": ["boundaries", "safety", "co-parenting"],
       "difficulty": "normal",
       "acts": 3,
       "path": "data/visitor.v2.json"
@@ -51,24 +37,15 @@
     {
       "id": "dating-after-breakup-with-child-involved",
       "title": "Dating After Breakup (With Child Involved)",
-      "tags": [
-        "co-parenting",
-        "dating",
-        "boundaries",
-        "communication",
-        "child-wellbeing"
-      ],
+      "tags": ["co-parenting", "dating", "boundaries", "communication", "child-wellbeing"],
       "difficulty": "medium",
-      "acts": 4,
+      "acts": 5,
       "path": "data/dating-after-breakup-with-child-involved.v2.json"
     },
     {
       "id": "scene-first-agreements",
       "title": "Scene: First Agreements",
-      "tags": [
-        "agreements",
-        "planning"
-      ],
+      "tags": ["agreements", "planning"],
       "difficulty": "easy",
       "acts": 1,
       "path": "data/scene-first-agreements.v2.json"
@@ -76,10 +53,7 @@
     {
       "id": "scene-new-introductions",
       "title": "Scene: New Introductions",
-      "tags": [
-        "introductions",
-        "child-focus"
-      ],
+      "tags": ["introductions", "child-focus"],
       "difficulty": "easy",
       "acts": 1,
       "path": "data/scene-new-introductions.v2.json"
@@ -87,10 +61,7 @@
     {
       "id": "scene-different-rules",
       "title": "Scene: Different Rules",
-      "tags": [
-        "consistency",
-        "household-rules"
-      ],
+      "tags": ["consistency", "household-rules"],
       "difficulty": "easy",
       "acts": 1,
       "path": "data/scene-different-rules.v2.json"
@@ -98,29 +69,23 @@
     {
       "id": "scene-de-escalation",
       "title": "Scene: De-escalation",
-      "tags": [
-        "de-escalation",
-        "communication"
-      ],
+      "tags": ["de-escalation", "communication"],
       "difficulty": "easy",
       "acts": 1,
       "path": "data/scene-de-escalation.v2.json"
     },
     {
-  "id": "cultural-or-religious-difference",
-  "title": "Cultural or Religious Difference in Co-Parenting",
-  "tags": ["co-parenting", "culture", "religion", "values"],
-  "difficulty": "hard",
-  "acts": 2,
-  "path": "data/cultural-or-religious-difference.v2.json"
+      "id": "cultural-or-religious-difference",
+      "title": "Cultural or Religious Difference in Co-Parenting",
+      "tags": ["co-parenting", "culture", "religion", "values"],
+      "difficulty": "hard",
+      "acts": 5,
+      "path": "data/cultural-or-religious-difference.v2.json"
     },
     {
       "id": "brzi-kontakti",
       "title": "Brzi kontakti",
-      "tags": [
-        "contacts",
-        "croatian"
-      ],
+      "tags": ["contacts", "croatian"],
       "difficulty": "info",
       "acts": 1,
       "path": "data/brzi-kontakti.v2.json"
