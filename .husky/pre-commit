@@ -1,10 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🔎 Pre-commit: convert + lint + quick smoke"
+echo "🔎 Pre-commit: convert + lint + data guard + quick smoke"
 
-npm run convert:v2 || exit 1
-npm run lint:schemas || exit 1
-
-# Run only the fast scenario_smoke.cy.js test
-npm run test:smoke || exit 1
+npm run convert:v2
+npm run lint:schemas
+npm run lint:data
+npm run test:smoke
