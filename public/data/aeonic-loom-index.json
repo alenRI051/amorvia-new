@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "foundations",
+      "title": "Relationship Foundations",
+      "exercises": [
+        {
+          "id": "truth-layer",
+          "title": "Truth Layer",
+          "text": "Name one truth you avoid and explore why."
+        },
+        {
+          "id": "intention-braid",
+          "title": "Intention Braid",
+          "text": "State three intentions for the next 7 days."
+        }
+      ]
+    }
+  ]
+}
