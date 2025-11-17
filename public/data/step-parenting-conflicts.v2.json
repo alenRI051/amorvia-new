@@ -29,17 +29,20 @@
     {
       "id": "act1",
       "title": "Act 1 – Invisible Lines",
-      "summary": "Tension builds around unspoken expectations and small boundary slips."
+      "summary": "Tension builds around unspoken expectations and small boundary slips.",
+      "nodes": []
     },
     {
       "id": "act2",
       "title": "Act 2 – The Loyalty Tug-of-War",
-      "summary": "The child is caught in the middle; you decide how to respond."
+      "summary": "The child is caught in the middle; you decide how to respond.",
+      "nodes": []
     },
     {
       "id": "act3",
       "title": "Act 3 – Building a Team",
-      "summary": "You work toward a clearer, more stable two-home plan."
+      "summary": "You work toward a clearer, more stable two-home plan.",
+      "nodes": []
     }
   ],
   "nodes": [
