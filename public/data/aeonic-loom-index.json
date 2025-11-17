@@ -1,19 +1,228 @@
 {
   "version": 1,
+  "generatedAt": "2025-11-17T00:00:00Z",
   "categories": [
     {
-      "id": "foundations",
-      "title": "Relationship Foundations",
+      "id": "warmup-checkins",
+      "title": "Warm-Up Check-Ins",
+      "description": "Short prompts to land in your body and name what’s happening before you start a scenario.",
+      "tags": ["warmup", "check-in", "self-awareness"],
       "exercises": [
         {
-          "id": "truth-layer",
-          "title": "Truth Layer",
-          "text": "Name one truth you avoid and explore why."
+          "id": "body-scan-60s",
+          "title": "60-Second Body Scan",
+          "type": "reflection",
+          "duration": "1–2 min",
+          "suggestedUse": "Before any scenario",
+          "text": "Close your eyes if that feels safe. For 60 seconds, move your attention from head to toes and simply notice: tension, warmth, tightness, energy, numbness. Don’t fix, just notice.\n\nThen complete this sentence: “Right now my body feels…”. Write one sentence or a few words."
         },
         {
-          "id": "intention-braid",
-          "title": "Intention Braid",
-          "text": "State three intentions for the next 7 days."
+          "id": "emotion-label",
+          "title": "Name The Top Emotion",
+          "type": "reflection",
+          "duration": "2–3 min",
+          "suggestedUse": "Before any scenario or hard conversation",
+          "text": "Look at this list and pick one primary emotion you feel most strongly right now: anger, sadness, fear, shame, guilt, joy, relief, confusion.\n\nFill this in: “The main emotion I feel right now is ____, because ____.” Don’t argue with it. Just name it."
+        },
+        {
+          "id": "intention-one-line",
+          "title": "Set One Line of Intention",
+          "type": "intention",
+          "duration": "1–2 min",
+          "suggestedUse": "Before any scenario",
+          "text": "Write ONE clear intention for this session with Amorvia.\n\nUse this template: “For the next 15–30 minutes, I want to practice ____ for the sake of ____.”\n\nExample: “I want to practice slowing down my reactions for the sake of our kid feeling safer.”"
+        }
+      ]
+    },
+    {
+      "id": "co-parenting-handoff-days",
+      "title": "Co-Parenting: Handoff Days",
+      "description": "Exercises to prepare and debrief around tense pickups & dropoffs.",
+      "tags": ["co-parenting", "handoff", "exchange-day"],
+      "exercises": [
+        {
+          "id": "handoff-preview",
+          "title": "Preview the Handoff",
+          "type": "planning",
+          "duration": "3–5 min",
+          "suggestedUse": "Before pickup/dropoff scenes",
+          "text": "Imagine the next pickup or dropoff as if it were a short movie scene. Answer:\n\n1) What’s one thing I usually do that adds TENSION? (tone of voice, sarcasm, eye-rolling, arriving late, etc.)\n2) What’s one small behavior I could try that might add TRUST or STABILITY? (arrive 5 minutes early, neutral tone, brief greeting, child-focused comment.)\n\nWrite:\n- “One thing I usually do that makes it worse is…\"\n- “Today I’ll experiment with…\""
+        },
+        {
+          "id": "kid-eye-view",
+          "title": "Kid’s Eye View",
+          "type": "perspective-take",
+          "duration": "4–6 min",
+          "suggestedUse": "For any tense co-parenting interaction",
+          "text": "Answer as if you were your child watching handoffs:\n\n1) “When you and the other parent argue at handoff, I feel…\"\n2) “What I wish I could tell you both is…\"\n\nThen, as yourself, write one sentence: “If I keep this in mind, I might behave differently by…\""
+        },
+        {
+          "id": "handoff-script-lite",
+          "title": "Lite Handoff Script",
+          "type": "planning",
+          "duration": "3–5 min",
+          "suggestedUse": "Before practicing scenarios about pickups & dropoffs",
+          "text": "Write a 3-line micro-script you can realistically use:\n\n1) Greeting: “Hi ____. How’s your day been?” (or simpler if needed).\n2) Kid focus: One neutral sentence about the child (school, snack, sleep, etc.).\n3) Closing: “Okay, thanks. See you on __.”\n\nYou don’t have to use it perfectly. It’s a baseline, not prison."
+        }
+      ]
+    },
+    {
+      "id": "conflict-deescalation",
+      "title": "Conflict & De-Escalation",
+      "description": "Train your nervous system and language for moments when things heat up.",
+      "tags": ["conflict", "de-escalation", "communication"],
+      "exercises": [
+        {
+          "id": "early-warning-signs",
+          "title": "Spot Your Early Warning Signs",
+          "type": "reflection",
+          "duration": "5–7 min",
+          "suggestedUse": "Before de-escalation scenes",
+          "text": "Think of the last 2–3 fights. What were your early warning signs?\n\nBody: (tight chest, hot face, clenched jaw, shallow breathing…)\nThoughts: (“Here we go again”, “They never listen”…)\nUrges: (interrupt, walk away, raise voice, send long text…)\n\nList 3–5 early warning signs. Then write one sentence:\n\n“When I notice __, __, or __, I will aim to PAUSE instead of pushing harder.”"
+        },
+        {
+          "id": "pause-move-name",
+          "title": "Pause – Move – Name",
+          "type": "skill-practice",
+          "duration": "3–5 min",
+          "suggestedUse": "De-escalation and tense dialogue scenes",
+          "text": "Create a tiny 3-step protocol for yourself:\n\n1) PAUSE: What will you do for 5–20 seconds when you notice escalation? (sip water, look away, 3 breaths)\n2) MOVE: What neutral movement can you add? (relax shoulders, lower voice, lean back)\n3) NAME: One short sentence that names the moment without attacking.\n\nExample: “I’m getting worked up, I need 10 seconds to breathe so I don’t say something rough.”\n\nWrite your own version for each step."
+        },
+        {
+          "id": "from-attack-to-need",
+          "title": "Translate Attack Into Need",
+          "type": "language-practice",
+          "duration": "5–8 min",
+          "suggestedUse": "Any conflict-heavy scenario",
+          "text": "Pick 2–3 sentences you often say or think in conflict, like:\n- “You never help with anything.”\n- “You only care about yourself.”\n\nFor each, translate it into a NEED + OBSERVATION format:\n\n1) Observation (more specific, less absolute).\n2) Need (what you’re actually longing for).\n\nExample:\n- Attack: “You never help with anything!”\n- Translation: “When I handle bedtime alone most nights, I feel overwhelmed. I need clearer teamwork around evening routines.”\n\nWrite your own 2–3 translations."
+        }
+      ]
+    },
+    {
+      "id": "boundaries-and-rules",
+      "title": "Boundaries & Rules Across Homes",
+      "description": "Clarify your own limits and where flexibility is actually okay.",
+      "tags": ["boundaries", "rules", "household", "co-parenting"],
+      "exercises": [
+        {
+          "id": "non-negotiables",
+          "title": "Define 3 Non-Negotiables",
+          "type": "clarity",
+          "duration": "5–7 min",
+          "suggestedUse": "Before “Different Rules” type scenes",
+          "text": "List **exactly three** things that are truly non-negotiable for you in co-parenting (safety, health, legal issues, violence, etc.).\n\nFor each, write:\n- “The rule is…\"\n- “Because I believe…\"\n- “I’m willing to discuss HOW we do it, but not WHETHER we do it.”\n\nIf you have more than 3, keep a longer list somewhere else, but mark the top 3 as priority."
+        },
+        {
+          "id": "flex-zone",
+          "title": "Discover Your Flex Zone",
+          "type": "clarity",
+          "duration": "4–6 min",
+          "suggestedUse": "Any scenario about rules and routines",
+          "text": "Now list 3–5 areas where you COULD be more flexible than you tend to be (bedtime timing, screens on weekends, snacks at the other home, etc.).\n\nFor each, answer:\n- “What is the MINIMUM I need to feel okay here?”\n- “What is the MAXIMUM I can tolerate before I feel it’s harmful?”\n\nThis builds a realistic zone instead of an unrealistic ideal."
+        },
+        {
+          "id": "boundary-script",
+          "title": "Boundary Script: Calm Version",
+          "type": "language-practice",
+          "duration": "5–7 min",
+          "suggestedUse": "Before or after boundary-heavy scenes",
+          "text": "Pick ONE situation where you need a boundary (messages at night, dropoff location, new partner introductions, etc.).\n\nWrite a 3-part script:\n1) Observation: “When __ happens…\"\n2) Boundary: “…I will / will not __.”\n3) Non-attack closing: “I’m choosing this because __, not to punish you.”\n\nExample: “When messages come after 10pm that aren’t urgent about our child, I won’t reply until the next morning. I’m choosing this because constant late-night tension is too much for me.”"
+        }
+      ]
+    },
+    {
+      "id": "dating-after-breakup",
+      "title": "Dating After Breakup (With Child Involved)",
+      "description": "Exercises to align dating behavior with your values and your child’s needs.",
+      "tags": ["dating", "post-breakup", "child", "values"],
+      "exercises": [
+        {
+          "id": "why-date-now",
+          "title": "Why Am I Dating Now?",
+          "type": "reflection",
+          "duration": "5–8 min",
+          "suggestedUse": "Before or during dating-related scenarios",
+          "text": "Write freely for a few minutes on these:\n\n1) “The honest reasons I want to date right now are…” (include both beautiful and messy ones).\n2) “The risks for my child if I ignore their pace or needs are…”\n3) “The kind of partner behavior I do NOT want my child to learn from my example is…”\n\nEnd with one line: “To protect my kid and myself, I want to remember…\""
+        },
+        {
+          "id": "introduction-readiness",
+          "title": "Introduction Readiness Check",
+          "type": "checklist",
+          "duration": "6–10 min",
+          "suggestedUse": "Before any imagined or real introduction of a new partner",
+          "text": "Answer each with Yes / No / Unsure:\n\n1) “Has this relationship been stable for at least a few months?”\n2) “Have we talked about my child’s needs and pacing?”\n3) “Do I have a clear plan for what happens if we break up after my child meets them?”\n4) “Is my child currently in a relatively stable phase (school, health, living situation)?”\n5) “Have I discussed timing/plan with the other parent or a trusted professional (if appropriate)?”\n\nWrite: “Given my answers, my current readiness level feels: Low / Medium / High. Therefore, my next wise step is…”"
+        },
+        {
+          "id": "two-compasses",
+          "title": "Two Compasses: Lover & Parent",
+          "type": "values",
+          "duration": "5–7 min",
+          "suggestedUse": "Any time you feel torn between romantic needs and parenting needs",
+          "text": "Draw two short lists.\n\nCompass 1 – LOVER: “In dating, I want to feel…” (desired, alive, safe, playful, respected, etc.).\nCompass 2 – PARENT: “As a parent, I want my child to feel…” (secure, not replaced, important, listened to).\n\nWrite one bridging sentence:\n\n“When these two compasses conflict, I will try to choose ___ at least 60–70% of the time, and here’s why…”"
+        }
+      ]
+    },
+    {
+      "id": "crisis-self-regulation",
+      "title": "Crisis & Self-Regulation",
+      "description": "Micro-tools for when you are overwhelmed, triggered, or close to shutdown.",
+      "tags": ["crisis", "regulation", "grounding"],
+      "exercises": [
+        {
+          "id": "five-senses-ground",
+          "title": "Ground With Five Senses",
+          "type": "grounding",
+          "duration": "2–4 min",
+          "suggestedUse": "During high emotional activation",
+          "text": "Wherever you are, look around and name:\n- 5 things you can see\n- 4 things you can touch\n- 3 things you can hear\n- 2 things you can smell (or remember)\n- 1 thing you can taste (or imagine)\n\nThen write one line: “After this, my intensity is now about __ / 10.”"
+        },
+        {
+          "id": "safe-person-note",
+          "title": "Message to a Safe Person (Even If You Don’t Send It)",
+          "type": "emotional-processing",
+          "duration": "5–7 min",
+          "suggestedUse": "After a very rough interaction or scenario",
+          "text": "Write a short message as if you were texting or emailing someone who is safe and kind.\n\nComplete:\n- “Today was hard because…”\n- “Right now I’m afraid that…”\n- “What I most need to hear from someone I trust is…”\n\nYou don’t have to send it. The point is to let the feelings exist somewhere outside your body."
+        },
+        {
+          "id": "small-next-step",
+          "title": "Shrink the Next Step",
+          "type": "planning",
+          "duration": "3–5 min",
+          "suggestedUse": "When overwhelmed by everything that needs to change",
+          "text": "List 3 things you feel pressured to fix all at once (legal stuff, money, co-parenting conflict, new partner, housing, etc.).\n\nFor each, ask: “What is the next step that would take 5–15 minutes, not 5–15 days?”\n\nWrite just ONE tiny action you can realistically take in the next 24 hours. Circle it or highlight it."
+        }
+      ]
+    },
+    {
+      "id": "integration-and-planning",
+      "title": "Integration & Planning",
+      "description": "Help your brain connect what you practice in Amorvia to real-world micro-changes.",
+      "tags": ["integration", "planning", "habit-change"],
+      "exercises": [
+        {
+          "id": "one-scene-one-shift",
+          "title": "From One Scene to One Shift",
+          "type": "integration",
+          "duration": "4–6 min",
+          "suggestedUse": "Right after finishing any scenario",
+          "text": "Think of the last scenario you played.\n\nAnswer:\n1) “The moment in the scenario that hit me hardest was…”\n2) “In that moment, the version of me I WANT to become would probably…”\n\nThen commit to one tiny shift: “In the next real interaction, I will experiment with __ instead of __.”"
+        },
+        {
+          "id": "meters-diaries",
+          "title": "Trust / Tension / Child Stress Diary",
+          "type": "tracking",
+          "duration": "5–10 min",
+          "suggestedUse": "After a few scenarios or real-life conflicts",
+          "text": "On a piece of paper or note app, make three columns:\n- TRUST (0–10)\n- TENSION (0–10)\n- CHILD STRESS (0–10, based on your best guess)\n\nFor 3 recent real interactions, quickly rate each meter, then note ONE thing that nudged the number up or down.\n\nExample: “Dropoff Sunday: Trust 3, Tension 7, Child Stress 6 – My sarcasm about money probably pushed Tension +2.”"
+        },
+        {
+          "id": "weekly-micro-plan",
+          "title": "Weekly Micro-Plan",
+          "type": "planning",
+          "duration": "6–10 min",
+          "suggestedUse": "Once per week, ideally same weekday",
+          "text": "Answer these four questions for the coming 7 days:\n\n1) “One situation I want to handle 5% better is…”\n2) “One phrase I want to practice using instead is…”\n3) “One boundary I want to hold just a little more consistently is…”\n4) “One thing I want my kid to feel more of this week is… and I can support that by…”\n\nKeep it realistic and small. Micro-shifts compound."
         }
       ]
     }
