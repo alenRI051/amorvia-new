@@ -25,7 +25,7 @@
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-     "acts": [
+       "acts": [
     {
       "id": "act1",
       "title": "Act 1 – Invisible Lines",
@@ -41,14 +41,14 @@
               "label": "Start Act 1 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a1s1"
+              "to": "a1s1"
             },
             {
               "id": "act1_anchor_c2",
               "label": "Alternate start Act 1 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a1s1"
+              "to": "a1s1"
             }
           ]
         }
@@ -69,14 +69,14 @@
               "label": "Start Act 2 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a2s1"
+              "to": "a2s1"
             },
             {
               "id": "act2_anchor_c2",
               "label": "Alternate start Act 2 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a2s1"
+              "to": "a2s1"
             }
           ]
         }
@@ -97,14 +97,14 @@
               "label": "Start Act 3 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a3s1"
+              "to": "a3s1"
             },
             {
               "id": "act3_anchor_c2",
               "label": "Alternate start Act 3 (debug only)",
               "tone": "neutral",
               "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-              "next": "a3s1"
+              "to": "a3s1"
             }
           ]
         }
