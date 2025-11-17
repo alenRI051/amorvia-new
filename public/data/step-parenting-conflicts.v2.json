@@ -25,7 +25,7 @@
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-   "acts": [
+     "acts": [
     {
       "id": "act1",
       "title": "Act 1 – Invisible Lines",
@@ -35,7 +35,22 @@
           "id": "act1-schema-anchor",
           "speaker": "Narrator",
           "text": "Schema anchor node for Act 1 (engine uses top-level nodes).",
-          "choices": []
+          "choices": [
+            {
+              "id": "act1_anchor_c1",
+              "label": "Start Act 1 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a1s1"
+            },
+            {
+              "id": "act1_anchor_c2",
+              "label": "Alternate start Act 1 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a1s1"
+            }
+          ]
         }
       ]
     },
@@ -48,7 +63,22 @@
           "id": "act2-schema-anchor",
           "speaker": "Narrator",
           "text": "Schema anchor node for Act 2 (engine uses top-level nodes).",
-          "choices": []
+          "choices": [
+            {
+              "id": "act2_anchor_c1",
+              "label": "Start Act 2 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a2s1"
+            },
+            {
+              "id": "act2_anchor_c2",
+              "label": "Alternate start Act 2 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a2s1"
+            }
+          ]
         }
       ]
     },
@@ -61,7 +91,22 @@
           "id": "act3-schema-anchor",
           "speaker": "Narrator",
           "text": "Schema anchor node for Act 3 (engine uses top-level nodes).",
-          "choices": []
+          "choices": [
+            {
+              "id": "act3_anchor_c1",
+              "label": "Start Act 3 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a3s1"
+            },
+            {
+              "id": "act3_anchor_c2",
+              "label": "Alternate start Act 3 (debug only)",
+              "tone": "neutral",
+              "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+              "next": "a3s1"
+            }
+          ]
         }
       ]
     }
