@@ -421,4 +421,11 @@
     loadIndex,
     syncHUD,
   };
+  document.getElementById("openLoom")?.addEventListener("click", () => {
+    try {
+        AeonicLoom.load();
+    } catch (e) {
+        console.error("Aeonic Loom failed:", e);
+    }
+});
 })();
