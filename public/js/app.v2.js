@@ -28,6 +28,29 @@
     LOADING: "Loading…",
     ERROR: "Error",
   };
+    const BG_SELECTORS = {
+    select: "#bgSelect",
+    img: "#bgImg",
+  };
+
+  const BACKGROUNDS = {
+    default: "/assets/backgrounds/room.svg",
+    hallway: "/assets/backgrounds/hallway.svg",
+    // future-safe:
+    // kitchen: "/assets/backgrounds/kitchen.svg",
+    // cafe: "/assets/backgrounds/cafe.svg",
+    // park: "/assets/backgrounds/park.svg",
+  };
+
+  // Per-scenario / per-act overrides
+  // For now: only Step-Parenting Conflicts, Act 1 → hallway
+  const SCENE_BG_OVERRIDES = {
+    "step-parenting-conflicts": {
+      act1: "hallway",
+      // act2: "default",
+      // act3: "default",
+    },
+  };
 
   const state = {
     index: null,
