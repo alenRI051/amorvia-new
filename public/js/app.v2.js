@@ -281,7 +281,9 @@
       if (actBadge) actBadge.textContent = "Act -";
       return;
     }
-
+    // Apply background for this node (scenario + act aware)
+    applyBackgroundForNode(node);
+    
     // Act badge
     if (actBadge) {
       let actLabel = "Act -";
