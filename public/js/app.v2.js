@@ -225,25 +225,25 @@
       });
     }
   }
-    function applyBackgroundForNode(node) {
+      function applyBackgroundForNode(node) {
     if (!node) return;
 
     const bgImg = $(BG_SELECTORS.img);
     if (!bgImg) return;
 
-    const bgSelect = $(BG_SELECTORS.select);
+    const scenarioId = state.currentScenarioId;
+    const overrides = scenarioId && SCENE_BG_OVERRIDES[scenarioId];
 
+    // If this scenario has no dynamic background mapping, do nothing
+    if (!overrides) return;
+
+    const actId = node.act || null;
     let src = BACKGROUNDS.default;
 
-    const scenarioId = state.currentScenarioId;
-    if (scenarioId && SCENE_BG_OVERRIDES[scenarioId]) {
-      const perScenario = SCENE_BG_OVERRIDES[scenarioId];
-      const actId = node.act || null;
-      if (actId && perScenario[actId]) {
-        const key = perScenario[actId];
-        if (BACKGROUNDS[key]) {
-          src = BACKGROUNDS[key];
-        }
+    if (actId && overrides[actId]) {
+      const key = overrides[actId]; // e.g. "hallway"
+      if (BACKGROUNDS[key]) {
+        src = BACKGROUNDS[key];
       }
     }
 
@@ -252,7 +252,8 @@
       bgImg.setAttribute("src", src);
     }
 
-    // If the dropdown knows about this value, sync it too
+    // Try to sync dropdown *only if* it has this exact src as an option
+    const bgSelect = $(BG_SELECTORS.select);
     if (bgSelect) {
       const hasOption = Array.from(bgSelect.options || []).some(
         (opt) => opt.value === src
@@ -262,6 +263,7 @@
       }
     }
   }
+
 
   function renderCurrentNode() {
     const node = state.nodeById[state.currentNodeId];
