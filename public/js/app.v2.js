@@ -225,6 +225,43 @@
       });
     }
   }
+    function applyBackgroundForNode(node) {
+    if (!node) return;
+
+    const bgImg = $(BG_SELECTORS.img);
+    if (!bgImg) return;
+
+    const bgSelect = $(BG_SELECTORS.select);
+
+    let src = BACKGROUNDS.default;
+
+    const scenarioId = state.currentScenarioId;
+    if (scenarioId && SCENE_BG_OVERRIDES[scenarioId]) {
+      const perScenario = SCENE_BG_OVERRIDES[scenarioId];
+      const actId = node.act || null;
+      if (actId && perScenario[actId]) {
+        const key = perScenario[actId];
+        if (BACKGROUNDS[key]) {
+          src = BACKGROUNDS[key];
+        }
+      }
+    }
+
+    // Update <img id="bgImg">
+    if (bgImg.getAttribute("src") !== src) {
+      bgImg.setAttribute("src", src);
+    }
+
+    // If the dropdown knows about this value, sync it too
+    if (bgSelect) {
+      const hasOption = Array.from(bgSelect.options || []).some(
+        (opt) => opt.value === src
+      );
+      if (hasOption) {
+        bgSelect.value = src;
+      }
+    }
+  }
 
   function renderCurrentNode() {
     const node = state.nodeById[state.currentNodeId];
