@@ -1,4 +1,3 @@
-
 // app.v2.js – Amorvia V2 Mini-Engine + Scenario Picker + HUD hook
 // ---------------------------------------------------------------
 // Works directly with *.v2.json v2 scenarios. Relies on:
@@ -28,7 +27,9 @@
     LOADING: "Loading…",
     ERROR: "Error",
   };
-    const BG_SELECTORS = {
+
+  // Background wiring
+  const BG_SELECTORS = {
     select: "#bgSelect",
     img: "#bgImg",
   };
@@ -36,14 +37,13 @@
   const BACKGROUNDS = {
     default: "/assets/backgrounds/room.svg",
     hallway: "/assets/backgrounds/hallway.svg",
-    // future-safe:
+    // Future-safe:
     // kitchen: "/assets/backgrounds/kitchen.svg",
     // cafe: "/assets/backgrounds/cafe.svg",
     // park: "/assets/backgrounds/park.svg",
   };
 
-  // Per-scenario / per-act overrides
-  // For now: only Step-Parenting Conflicts, Act 1 → hallway
+  // Fallback per-scenario overrides (used if scenario.ui.backgrounds is absent)
   const SCENE_BG_OVERRIDES = {
     "step-parenting-conflicts": {
       act1: "hallway",
@@ -106,7 +106,7 @@
     let url;
     try {
       url = new URL(window.location.href);
-    } catch {
+    } catch (e) {
       return;
     }
     if (id) url.searchParams.set("scenario", id);
@@ -126,7 +126,7 @@
     try {
       const v = localStorage.getItem(STORAGE_KEYS.LAST_SCENARIO);
       return v || null;
-    } catch {
+    } catch (e) {
       return null;
     }
   }
@@ -135,7 +135,7 @@
     try {
       const url = new URL(window.location.href);
       return url.searchParams.get("scenario");
-    } catch {
+    } catch (e) {
       return null;
     }
   }
@@ -180,7 +180,7 @@
     });
   }
 
-  // ------------ Rendering ------------
+  // ------------ Rendering helpers ------------
 
   function computeStartNodeId(scn) {
     if (!scn) return null;
@@ -225,25 +225,53 @@
       });
     }
   }
-      function applyBackgroundForNode(node) {
+
+  // Apply background, using scenario.ui.backgrounds first, then overrides
+  function applyBackgroundForNode(node) {
     if (!node) return;
 
     const bgImg = $(BG_SELECTORS.img);
     if (!bgImg) return;
 
-    const scenarioId = state.currentScenarioId;
-    const overrides = scenarioId && SCENE_BG_OVERRIDES[scenarioId];
-
-    // If this scenario has no dynamic background mapping, do nothing
-    if (!overrides) return;
-
-    const actId = node.act || null;
+    const bgSelect = $(BG_SELECTORS.select);
     let src = BACKGROUNDS.default;
 
-    if (actId && overrides[actId]) {
-      const key = overrides[actId]; // e.g. "hallway"
-      if (BACKGROUNDS[key]) {
-        src = BACKGROUNDS[key];
+    const scenarioId = state.currentScenarioId;
+    const scn = state.scenario || {};
+    const ui = scn.ui || {};
+    const cfg = ui.backgrounds || null;
+
+    if (cfg) {
+      // Scenario-level config wins if present
+      if (typeof cfg.default === "string" && cfg.default) {
+        src = cfg.default;
+      }
+      const actId = node.act || null;
+      if (
+        actId &&
+        cfg.act &&
+        typeof cfg.act === "object" &&
+        Object.prototype.hasOwnProperty.call(cfg.act, actId)
+      ) {
+        const keyOrPath = cfg.act[actId];
+        if (typeof keyOrPath === "string" && keyOrPath) {
+          // Allow either a key into BACKGROUNDS or a full path
+          if (BACKGROUNDS[keyOrPath]) {
+            src = BACKGROUNDS[keyOrPath];
+          } else {
+            src = keyOrPath;
+          }
+        }
+      }
+    } else if (scenarioId && SCENE_BG_OVERRIDES[scenarioId]) {
+      // Fallback map if no scenario-level backgrounds configured
+      const perScenario = SCENE_BG_OVERRIDES[scenarioId];
+      const actId = node.act || null;
+      if (actId && perScenario[actId]) {
+        const key = perScenario[actId];
+        if (BACKGROUNDS[key]) {
+          src = BACKGROUNDS[key];
+        }
       }
     }
 
@@ -252,18 +280,16 @@
       bgImg.setAttribute("src", src);
     }
 
-    // Try to sync dropdown *only if* it has this exact src as an option
-    const bgSelect = $(BG_SELECTORS.select);
+    // If the dropdown knows about this value, sync it too
     if (bgSelect) {
-      const hasOption = Array.from(bgSelect.options || []).some(
-        (opt) => opt.value === src
-      );
+      const hasOption = Array.from(bgSelect.options || []).some(function (opt) {
+        return opt.value === src;
+      });
       if (hasOption) {
         bgSelect.value = src;
       }
     }
   }
-
 
   function renderCurrentNode() {
     const node = state.nodeById[state.currentNodeId];
@@ -283,9 +309,10 @@
       if (actBadge) actBadge.textContent = "Act -";
       return;
     }
-    // Apply background for this node (scenario + act aware)
+
+    // Background for this node (scenario + act aware)
     applyBackgroundForNode(node);
-    
+
     // Act badge
     if (actBadge) {
       let actLabel = "Act -";
@@ -300,13 +327,21 @@
 
     // Scene title
     if (sceneTitle) {
-      sceneTitle.textContent = state.scenario && state.scenario.title
-        ? state.scenario.title
-        : "Scenario";
+      sceneTitle.textContent =
+        state.scenario && state.scenario.title
+          ? state.scenario.title
+          : "Scenario";
     }
 
-    // Dialog text
-    dialogEl.textContent = (node.text || "").trim() || " ";
+    // Dialog text (v2 uses string; if array sneaks in, join safely)
+    const rawText = node.text;
+    let textStr = "";
+    if (Array.isArray(rawText)) {
+      textStr = rawText.join("\n\n");
+    } else if (typeof rawText === "string") {
+      textStr = rawText;
+    }
+    dialogEl.textContent = textStr.trim() || " ";
 
     // Choices
     while (choicesEl.firstChild) choicesEl.removeChild(choicesEl.firstChild);
@@ -333,7 +368,9 @@
 
     // Apply choice effects
     if (choiceId) {
-      const choice = (current.choices || []).find((c) => c && c.id === choiceId);
+      const choice = (current.choices || []).find(function (c) {
+        return c && c.id === choiceId;
+      });
       if (choice && choice.effects) applyEffects(choice.effects);
     }
 
@@ -355,7 +392,7 @@
   function wireChoiceClicks() {
     const choicesEl = $(SELECTORS.choices);
     if (!choicesEl || choicesEl.dataset.amorviaMiniBound === "1") return;
-    choicesEl.addEventListener("click", (ev) => {
+    choicesEl.addEventListener("click", function (ev) {
       const btn = ev.target.closest("button.choice");
       if (!btn) return;
       const nextId = btn.dataset.next || "";
@@ -410,7 +447,7 @@
       return;
     }
     if (!select.dataset.amorviaMiniBound) {
-      select.addEventListener("change", (ev) => {
+      select.addEventListener("change", function (ev) {
         const newId = ev.target.value;
         if (!newId) return;
         loadScenarioById(newId);
@@ -437,7 +474,11 @@
     if (fromUrl) return fromUrl;
     const fromStorage = loadLastScenario();
     if (fromStorage) return fromStorage;
-    if (state.index && Array.isArray(state.index.scenarios) && state.index.scenarios.length) {
+    if (
+      state.index &&
+      Array.isArray(state.index.scenarios) &&
+      state.index.scenarios.length
+    ) {
       const s0 = state.index.scenarios[0];
       return s0.id || s0.slug || null;
     }
@@ -479,17 +520,27 @@
     init();
   }
 
+  // Expose a tiny API for dev tools / tests
   window.AmorviaMini = {
-    state,
-    loadScenarioById,
-    loadIndex,
-    syncHUD,
+    state: state,
+    loadScenarioById: loadScenarioById,
+    loadIndex: loadIndex,
+    syncHUD: syncHUD,
   };
-  document.getElementById("openLoom")?.addEventListener("click", () => {
-    try {
-        AeonicLoom.load();
-    } catch (e) {
-        console.error("Aeonic Loom failed:", e);
-    }
-});
+
+  // Aeonic Loom launcher
+  var loomBtn = document.getElementById("openLoom");
+  if (loomBtn) {
+    loomBtn.addEventListener("click", function () {
+      try {
+        if (window.AeonicLoom && typeof AeonicLoom.load === "function") {
+          AeonicLoom.load();
+        } else {
+          console.warn("[AmorviaMini] AeonicLoom is not available yet.");
+        }
+      } catch (e) {
+        console.error("[AmorviaMini] Aeonic Loom failed:", e);
+      }
+    });
+  }
 })();
