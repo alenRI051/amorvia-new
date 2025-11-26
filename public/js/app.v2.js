@@ -37,9 +37,9 @@
   const BACKGROUNDS = {
     default: "/assets/backgrounds/room.svg",
     hallway: "/assets/backgrounds/hallway.svg",
+    cafe: "/assets/backgrounds/cafe.svg",
     // Future-safe:
     // kitchen: "/assets/backgrounds/kitchen.svg",
-    // cafe: "/assets/backgrounds/cafe.svg",
     // park: "/assets/backgrounds/park.svg",
   };
 
