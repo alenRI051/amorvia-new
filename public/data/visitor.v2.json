@@ -1,360 +1,360 @@
 {
-  "version": 2,
   "id": "visitor",
   "title": "Visitor",
+  "version": 2,
   "tags": [
     "boundaries",
     "safety",
-    "co-parenting"
+    "co-parenting",
+    "handoff"
   ],
-  "difficulty": "normal",
-  "meters": {
-    "trust": {
-      "label": "Trust",
-      "start": 50,
-      "min": 0,
-      "max": 100
-    },
-    "tension": {
-      "label": "Tension",
-      "start": 20,
-      "min": 0,
-      "max": 100
-    },
-    "childStress": {
-      "label": "Child Stress",
-      "start": 10,
-      "min": 0,
-      "max": 100
-    }
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Co-Parent": {},
+    "Visitor": {},
+    "Child": {}
   },
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
+  "ui": {
+    "showHud": true,
+    "showActBadge": true,
+    "showActTitle": true,
+    "showSpeaker": true,
+    "showChildStress": true
+  },
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
   "acts": [
     {
-      "title": "Act 1 — Surprise Knock",
       "id": "act1",
-      "steps": [
+      "title": "Act 1 – At the Door",
+      "summary": "An unannounced visitor arrives during hand-off, quietly testing old agreements about who comes to the door.",
+      "nodes": [
         {
-          "start": {
-            "id": "start",
-            "type": "goto",
-            "text": "",
-            "to": "a1s1",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "a1s1": {
-            "id": "a1s1",
-            "text": "There’s an unexpected knock. Your ex arrives unannounced during your parenting time with your child.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "a1s2": {
-            "id": "a1s2",
-            "text": "They say they ‘just want a quick chat’ and step closer to the doorway.",
-            "choices": [
-              {
-                "label": "Calmly step outside and close the door behind you",
-                "effects": {
-                  "tension": -5,
-                  "trust": 2
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s20",
-                "next": "act1_end"
-              },
-              {
-                "label": "Let them in briefly",
-                "effects": {
-                  "tension": 3,
-                  "childStress": 5
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s21",
-                "next": "act1_end"
-              },
-              {
-                "label": "Set a firm boundary: 'Now isn’t a good time. Please text to schedule.'",
-                "effects": {
-                  "tension": -2,
-                  "trust": 3
-                },
-                "to": "a1s3",
-                "id": "auto_c_a1s22",
-                "next": "act1_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a1s3": {
-            "id": "a1s3",
-            "text": "Your tone sets the stage for what happens next.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act1_end"
-              }
-            ]
-          },
-          "act1_end": {
-            "id": "act1_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
           "id": "a1s1",
+          "act": "act1",
+          "speaker": "Narrator",
+          "text": "Late afternoon. Handover time.\n\nThe hallway is already tight with shoes, jackets and the usual invisible tension. Your child waits by the door with their backpack on.\n\nThe doorbell rings. When you open it, your co-parent is there – and beside them stands someone you did not expect: a new partner or close relative, the \"visitor\".\n\nYou remember an earlier agreement: hand-offs would be just the two parents, to keep things simple and safe for the child.",
           "choices": [
             {
-              "id": "a1s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a1s1_c1",
+              "label": "Greet everyone neutrally and focus on your child.",
+              "tone": "calm · child-focused",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a1s2"
             },
             {
-              "id": "a1s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a1s1_c2",
+              "label": "Remind your co-parent about the agreement at the door.",
+              "tone": "firm · boundary-setting",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 1
+              },
+              "to": "a1s2"
+            },
+            {
+              "id": "a1s1_c3",
+              "label": "Say nothing and step back, freezing a little.",
+              "tone": "quiet · withdrawing",
+              "effects": {
+                "trust": -1,
+                "tension": 0,
+                "childStress": 1
+              },
+              "to": "a1s2"
             }
-          ],
-          "text": "[a1s1]"
+          ]
+        },
+        {
+          "id": "a1s2",
+          "act": "act1",
+          "speaker": "Narrator",
+          "text": "The visitor smiles and says a quick hello to your child. Your co-parent gives you a look that says: \"This is not a big deal.\"\n\nYour child clings to your sleeve for a second longer than usual before taking the co-parent's hand.\n\nThere is a tiny moment where all eyes are on you – waiting to see if this becomes a scene, or just a slightly awkward hand-off.",
+          "choices": [
+            {
+              "id": "a1s2_c1",
+              "label": "Keep the goodbye short and warm, saving any talk for later.",
+              "tone": "contained · protective",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              },
+              "to": "a1s3"
+            },
+            {
+              "id": "a1s2_c2",
+              "label": "Ask the child in front of everyone if they are comfortable.",
+              "tone": "concerned · exposing",
+              "effects": {
+                "trust": -1,
+                "tension": 1,
+                "childStress": 1
+              },
+              "to": "a1s3"
+            },
+            {
+              "id": "a1s2_c3",
+              "label": "Make a joking comment about \"visitors\" to break the tension.",
+              "tone": "light · indirect",
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a1s3"
+            }
+          ]
+        },
+        {
+          "id": "a1s3",
+          "act": "act1",
+          "speaker": "Narrator",
+          "text": "The elevator doors close or the car pulls away. The hallway is quiet again, but your nervous system is not.\n\nPart of you is angry about the surprise. Another part wonders if you are overreacting. Mostly, you are thinking about what this means for the next time.",
+          "choices": [
+            {
+              "id": "a1s3_c1",
+              "label": "Decide to message your co-parent later about what happened.",
+              "tone": "thoughtful · intentional",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a2s1"
+            },
+            {
+              "id": "a1s3_c2",
+              "label": "Decide to let it go for now and just observe.",
+              "tone": "watchful · hesitant",
+              "effects": {
+                "trust": 0,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a2s1"
+            }
+          ]
         }
-      ],
-      "start": "start"
+      ]
     },
     {
-      "title": "Act 2 — Negotiation",
       "id": "act2",
-      "steps": [
+      "title": "Act 2 – Safety and Story",
+      "summary": "You check in with your child and your co-parent, trying to balance safety, emotion and the story the child is building in their head.",
+      "nodes": [
         {
-          "a2s1": {
-            "id": "a2s1",
-            "text": "They ask to see your child ‘just for a minute’. Your child is in the living room listening.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act2_end"
-              }
-            ]
-          },
-          "a2s2": {
-            "id": "a2s2",
-            "text": "You weigh the options.",
-            "choices": [
-              {
-                "label": "Offer a video call instead",
-                "effects": {
-                  "trust": 2,
-                  "tension": -3
-                },
-                "to": "a2s3",
-                "id": "auto_c_a2s20",
-                "next": "act2_end"
-              },
-              {
-                "label": "Suggest a specific time tomorrow",
-                "effects": {
-                  "trust": 3,
-                  "tension": -2
-                },
-                "to": "a2s3",
-                "id": "auto_c_a2s21",
-                "next": "act2_end"
-              },
-              {
-                "label": "Decline without alternatives",
-                "effects": {
-                  "tension": 5,
-                  "childStress": 3
-                },
-                "to": "a2s3",
-                "id": "auto_c_a2s22",
-                "next": "act2_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a2s3": {
-            "id": "a2s3",
-            "text": "You communicate the boundary and alternative.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act2_end"
-              }
-            ]
-          },
-          "act2_end": {
-            "id": "act2_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
           "id": "a2s1",
+          "act": "act2",
+          "speaker": "Narrator",
+          "text": "Later that evening, you video call or see your child again.\n\nThey casually mention the visitor – what they joked about in the car, how long they stayed, whether they came inside.\n\nYou hear details that make the situation feel either more harmless, more worrying, or a bit of both.",
           "choices": [
             {
-              "id": "a2s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a2s1_c1",
+              "label": "Ask gentle, open questions about how your child felt.",
+              "tone": "curious · validating",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a2s2"
             },
             {
-              "id": "a2s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a2s1_c2",
+              "label": "Reassure them quickly and change the subject.",
+              "tone": "soothing · avoidant",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 1
+              },
+              "to": "a2s2"
+            },
+            {
+              "id": "a2s1_c3",
+              "label": "Ask many detailed questions that make them a bit tense.",
+              "tone": "intense · investigative",
+              "effects": {
+                "trust": -1,
+                "tension": 1,
+                "childStress": 1
+              },
+              "to": "a2s2"
             }
-          ],
-          "text": "[a2s1]"
+          ]
+        },
+        {
+          "id": "a2s2",
+          "act": "act2",
+          "speaker": "Narrator",
+          "text": "After the call, you draft a message to your co-parent.\n\nYou want to balance three things:\n\n• safety at the door,\n• your child’s emotional comfort,\n• and some basic respect for agreements between adults.",
+          "choices": [
+            {
+              "id": "a2s2_c1",
+              "label": "Send a clear, calm message naming the old agreement and asking to plan visitors together.",
+              "tone": "direct · collaborative",
+              "effects": {
+                "trust": 2,
+                "tension": 0,
+                "childStress": -1
+              },
+              "to": "a2s3"
+            },
+            {
+              "id": "a2s2_c2",
+              "label": "Send a long, emotional message listing past boundary slips.",
+              "tone": "overloaded · historical",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 0
+              },
+              "to": "a2s3"
+            },
+            {
+              "id": "a2s2_c3",
+              "label": "Decide not to send anything and just wait for the next hand-off.",
+              "tone": "silent · hoping",
+              "effects": {
+                "trust": 0,
+                "tension": 1,
+                "childStress": 0
+              },
+              "to": "a2s3"
+            }
+          ]
+        },
+        {
+          "id": "a2s3",
+          "act": "act2",
+          "speaker": "Narrator",
+          "text": "Your co-parent replies – or doesn’t.\n\nMaybe they apologise. Maybe they defend the visitor. Maybe they simply say, \"It won’t happen often.\"\n\nEither way, you are left with a choice: keep this as a one-off irritation, or treat it as a signal to build a clearer plan.",
+          "choices": [
+            {
+              "id": "a2s3_c1",
+              "label": "Suggest a short, focused conversation just about visitors.",
+              "tone": "structured · forward-looking",
+              "effects": {
+                "trust": 1,
+                "tension": -1,
+                "childStress": 0
+              },
+              "to": "a3s1"
+            },
+            {
+              "id": "a2s3_c2",
+              "label": "Let it slide and hope the situation doesn’t repeat.",
+              "tone": "tired · hands-off",
+              "effects": {
+                "trust": -1,
+                "tension": 0,
+                "childStress": 1
+              },
+              "to": "a3s1"
+            }
+          ]
         }
-      ],
-      "start": "a2s1"
+      ]
     },
     {
-      "title": "Act 3 — Resolution",
       "id": "act3",
-      "steps": [
+      "title": "Act 3 – A Small Agreement",
+      "summary": "You and your co-parent move toward a simple, realistic visitor plan that reduces surprise for the child.",
+      "nodes": [
         {
-          "a3s1": {
-            "id": "a3s1",
-            "text": "They react to your boundary. Your child watches your emotional tone closely.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act3_end"
-              }
-            ]
-          },
-          "a3s2": {
-            "id": "a3s2",
-            "text": "Choose your closing move.",
-            "choices": [
-              {
-                "label": "Thank them for understanding and follow up by text",
-                "effects": {
-                  "trust": 4,
-                  "tension": -4
-                },
-                "to": "a3s3",
-                "id": "auto_c_a3s20",
-                "next": "act3_end"
-              },
-              {
-                "label": "Restate the boundary and end the conversation",
-                "effects": {
-                  "tension": -2
-                },
-                "to": "a3s3",
-                "id": "auto_c_a3s21",
-                "next": "act3_end"
-              },
-              {
-                "label": "Argue about past behavior",
-                "effects": {
-                  "tension": 8,
-                  "childStress": 6
-                },
-                "to": "a3s3",
-                "id": "auto_c_a3s22",
-                "next": "act3_end"
-              }
-            ],
-            "type": "line"
-          },
-          "a3s3": {
-            "id": "a3s3",
-            "text": "The visit ends. Your child mirrors your calm—or your stress.",
-            "type": "line",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Continue",
-                "effects": [],
-                "next": "act3_end"
-              }
-            ]
-          },
-          "act3_end": {
-            "id": "act3_end",
-            "text": "Scenario segment ends here.",
-            "choices": [
-              {
-                "id": "E",
-                "label": "Finish",
-                "effects": [],
-                "next": null
-              }
-            ]
-          },
           "id": "a3s1",
+          "act": "act3",
+          "speaker": "Narrator",
+          "text": "You and your co-parent talk – in person, by phone, or by messages that are calmer than before.\n\nThe visitor is not the main character anymore. The child is.\n\nYou both name what you are trying to protect: safety at the door, predictable routines, and not turning every hand-off into a test of loyalty.",
           "choices": [
             {
-              "id": "a3s1c1",
-              "label": "Continue",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a3s1_c1",
+              "label": "Propose a simple rule: visitors only join hand-off if you both agree ahead of time.",
+              "tone": "simple · child-focused",
+              "effects": {
+                "trust": 2,
+                "tension": -1,
+                "childStress": -1
+              },
+              "to": "a3s2"
             },
             {
-              "id": "a3s1c2",
-              "label": "Return to menu",
-              "tone": "neutral",
-              "effects": {},
-              "to": "menu"
+              "id": "a3s1_c2",
+              "label": "Suggest a time-limited trial: try a visitor rule for one month, then review.",
+              "tone": "practical · experimental",
+              "effects": {
+                "trust": 1,
+                "tension": 0,
+                "childStress": -1
+              },
+              "to": "a3s2"
+            },
+            {
+              "id": "a3s1_c3",
+              "label": "Ask for a strict \"no visitors ever\" rule, without room for exceptions.",
+              "tone": "rigid · protective",
+              "effects": {
+                "trust": -1,
+                "tension": 2,
+                "childStress": 0
+              },
+              "to": "a3s2"
             }
-          ],
-          "text": "[a3s1]"
+          ]
+        },
+        {
+          "id": "a3s2",
+          "act": "act3",
+          "speaker": "Narrator",
+          "text": "By the end of the conversation, you do not solve everything about new partners, relatives or future guests.\n\nBut you leave with at least one shared sentence you can both use:\n\n\"We will tell each other in advance if someone new will be at the door, so it is not a surprise for our child.\"\n\nThe next time the doorbell rings, you may still feel a spike of emotion – but there will be more predictability, and a little less guesswork for the smallest person in the story.",
+          "choices": [
+            {
+              "id": "a3s2_c1",
+              "label": "Replay the scenario from the beginning with different choices.",
+              "tone": "reflective · practice-oriented",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a1s1"
+            },
+            {
+              "id": "a3s2_c2",
+              "label": "Replay from Act 2 to experiment with safety and story.",
+              "tone": "targeted · experimental",
+              "effects": {
+                "trust": 0,
+                "tension": 0,
+                "childStress": 0
+              },
+              "to": "a2s1"
+            }
+          ]
         }
-      ],
-      "start": "a3s1"
+      ]
     }
-  ],
-  "startAct": "act1",
-  "start": "start",
-  "startNode": "start",
-  "entryNode": "start",
-  "entry": {
-    "actId": "act1",
-    "nodeId": "start"
-  }
+  ]
 }
+
