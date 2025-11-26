@@ -507,17 +507,34 @@
   }
 
   function populatePicker() {
-    const select = $(SELECTORS.picker);
-    if (!select || !state.index || !Array.isArray(state.index.scenarios)) return;
-    select.innerHTML = "";
-    state.index.scenarios.forEach((s) => {
-      const opt = document.createElement("option");
-      const id = s.id || s.slug;
-      opt.value = id;
-      opt.textContent = s.title || id || "(untitled)";
-      select.appendChild(opt);
-    });
-  }
+  const select = $(SELECTORS.picker);
+  if (!select || !state.index || !Array.isArray(state.index.scenarios)) return;
+
+  select.innerHTML = "";
+
+  state.index.scenarios.forEach((s) => {
+    const opt = document.createElement("option");
+    const id = s.id || s.slug;
+    const title = s.title || id || "(untitled)";
+    const difficulty = s.difficulty || "";
+    const tags = Array.isArray(s.tags) ? s.tags.join(", ") : "";
+
+    opt.value = id;
+
+    // Label: "Title [difficulty]" if present, otherwise just Title
+    opt.textContent = difficulty ? `${title} [${difficulty}]` : title;
+
+    // Tooltip: difficulty + tags
+    const parts = [];
+    if (difficulty) parts.push(`Difficulty: ${difficulty}`);
+    if (tags) parts.push(`Tags: ${tags}`);
+    if (parts.length) {
+      opt.title = parts.join(" • ");
+    }
+
+    select.appendChild(opt);
+  });
+}
 
   function pickInitialScenarioId() {
     const fromUrl = getScenarioFromUrl();
