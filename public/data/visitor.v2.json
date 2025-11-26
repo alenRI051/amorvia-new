@@ -30,7 +30,7 @@
     "showActBadge": true,
     "showActTitle": true,
     "showSpeaker": true,
-    "showChildStress": true
+    "showChildStress": true,
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
