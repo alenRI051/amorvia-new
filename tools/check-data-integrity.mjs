@@ -52,6 +52,9 @@ const allowedNonScenarioJson = new Set([
   "scene-new-introductions.json",
   "direction.json",
   "to-do.json",
+  "aeonic-loom-index.json",
+  "aeonic-loom.config.v1.json",
+  "backgrounds.v1.json",
 ]);
 
 // --- 3. Walk public/data and collect files ---
