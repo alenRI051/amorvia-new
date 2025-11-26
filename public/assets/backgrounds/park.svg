@@ -1,0 +1,61 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="park-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="60%" stop-color="#020617"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="park-grass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#022c22"/>
+      <stop offset="100%" stop-color="#064e3b"/>
+    </linearGradient>
+    <linearGradient id="park-path" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect x="0" y="0" width="1280" height="420" fill="url(#park-sky)"/>
+
+  <!-- Grass -->
+  <rect x="0" y="420" width="1280" height="300" fill="url(#park-grass)"/>
+
+  <!-- Horizon trees (silhouette) -->
+  <ellipse cx="150" cy="380" rx="120" ry="70" fill="#022c22"/>
+  <ellipse cx="340" cy="360" rx="150" ry="90" fill="#022c22"/>
+  <ellipse cx="640" cy="370" rx="190" ry="90" fill="#022c22"/>
+  <ellipse cx="940" cy="360" rx="160" ry="90" fill="#022c22"/>
+  <ellipse cx="1160" cy="380" rx="120" ry="70" fill="#022c22"/>
+
+  <!-- Path -->
+  <path d="M 0 520 C 200 480 380 460 640 470 C 900 480 1080 510 1280 560 L 1280 720 L 0 720 Z"
+        fill="url(#park-path)" opacity="0.95"/>
+
+  <!-- Bench left -->
+  <rect x="230" y="430" width="170" height="18" rx="4" fill="#0b1120"/>
+  <rect x="230" y="448" width="170" height="16" rx="4" fill="#020617"/>
+  <rect x="240" y="410" width="150" height="16" rx="4" fill="#020617"/>
+  <rect x="250" y="464" width="10" height="40" fill="#020617"/>
+  <rect x="360" y="464" width="10" height="40" fill="#020617"/>
+
+  <!-- Bench right -->
+  <rect x="880" y="450" width="170" height="18" rx="4" fill="#0b1120"/>
+  <rect x="880" y="468" width="170" height="16" rx="4" fill="#020617"/>
+  <rect x="890" y="432" width="150" height="16" rx="4" fill="#020617"/>
+  <rect x="890" y="484" width="10" height="38" fill="#020617"/>
+  <rect x="1000" y="484" width="10" height="38" fill="#020617"/>
+
+  <!-- Lamps -->
+  <rect x="150" y="350" width="6" height="120" fill="#020617"/>
+  <circle cx="153" cy="345" r="10" fill="#facc15" opacity="0.8"/>
+
+  <rect x="1120" y="350" width="6" height="120" fill="#020617"/>
+  <circle cx="1123" cy="345" r="10" fill="#facc15" opacity="0.8"/>
+
+  <!-- Moon -->
+  <circle cx="1040" cy="120" r="24" fill="#e5e7eb" opacity="0.6"/>
+
+  <!-- Vignette -->
+  <rect x="0" y="0" width="1280" height="720" fill="#020617" opacity="0.10"/>
+</svg>
