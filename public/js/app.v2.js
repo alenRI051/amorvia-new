@@ -519,7 +519,26 @@
     const difficulty = s.difficulty || "";
     const tags = Array.isArray(s.tags) ? s.tags.join(", ") : "";
 
+    // Value = stable id (used by tests if they want)
     opt.value = id;
+
+    // IMPORTANT: keep visible text EXACTLY as before so Cypress can still find it
+    // e.g. "Co-Parenting with Bipolar Partner"
+    opt.textContent = title;
+
+    // Tooltip: show difficulty + tags
+    const parts = [];
+    if (difficulty) parts.push(`Difficulty: ${difficulty}`);
+    if (tags) parts.push(`Tags: ${tags}`);
+    if (parts.length) {
+      opt.title = parts.join(" • ");
+      // optional: also set label attr; browsers mostly ignore but harmless
+      opt.setAttribute("label", title);
+    }
+
+    select.appendChild(opt);
+  });
+}
 
     // Label: "Title [difficulty]" if present, otherwise just Title
     opt.textContent = difficulty ? `${title} [${difficulty}]` : title;
