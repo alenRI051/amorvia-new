@@ -2,7 +2,15 @@
   "id": "scene-tense-pickups-and-dropoffs",
   "title": "Scene: Tense Pickups & Dropoffs",
   "version": 2,
-  "tags": ["pickups", "dropoffs", "exchange-day", "co-parenting", "conflict", "de-escalation", "child-wellbeing"],
+  "tags": [
+    "pickups",
+    "dropoffs",
+    "exchange-day",
+    "co-parenting",
+    "conflict",
+    "de-escalation",
+    "child-wellbeing"
+  ],
 
   "actors": {
     "Narrator": {},
@@ -12,10 +20,14 @@
     "Grandparent": {}
   },
 
-  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
   "meterOrder": ["trust", "tension", "childStress"],
 
-    "ui": {
+  "ui": {
     "showHud": true,
     "showActBadge": true,
     "showActTitle": true,
@@ -24,17 +36,18 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/room.svg",   
-        "act2": "/assets/backgrounds/hallway.svg",   
-        "act3": "/assets/backgrounds/park.svg",      
-        "act4": "/assets/backgrounds/cafe.svg",      
-        "act5": "/assets/backgrounds/room.svg"       
+        "act1": "/assets/backgrounds/room.svg",
+        "act2": "/assets/backgrounds/hallway.svg",
+        "act3": "/assets/backgrounds/park.svg",
+        "act4": "/assets/backgrounds/cafe.svg",
+        "act5": "/assets/backgrounds/room.svg"
       }
     }
   },
 
   "entry": "a1s1",
   "entryNodeId": "a1s1",
+  "entryId": "a1s1",
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
@@ -68,7 +81,11 @@
           "label": "Walk up together at a calm, steady pace.",
           "text": "You take your child’s hand and walk toward the gate without rushing, breathing slowly.",
           "tone": "grounded · intentional",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1s2",
           "to": "a1s2"
         },
@@ -77,7 +94,11 @@
           "label": "Rush ahead to “get it over with”.",
           "text": "You hurry across the parking lot, heart racing, wanting the exchange done as fast as possible.",
           "tone": "anxious · avoidant",
-          "effects": { "trust": 0, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a1s2",
           "to": "a1s2"
         },
@@ -86,7 +107,11 @@
           "label": "Send the child ahead while you hang back.",
           "text": "“Go on, they’re right there,” you say, staying closer to the car than the gate.",
           "tone": "distancing · self-protective",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a1s2",
           "to": "a1s2"
         }
@@ -106,7 +131,11 @@
           "label": "Answer briefly and keep the focus on the child.",
           "text": "“Traffic was slow. Let’s get them settled first, we can talk later.”",
           "tone": "contained · child-focused",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1s3",
           "to": "a1s3"
         },
@@ -115,7 +144,11 @@
           "label": "Defend yourself in detail.",
           "text": "“I’m three minutes late. Last week you were ten minutes late and I didn’t say anything.”",
           "tone": "defensive · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "next": "a1s3",
           "to": "a1s3"
         },
@@ -124,7 +157,11 @@
           "label": "Ignore the comment and talk only to the child.",
           "text": "You crouch down: “Have a good time, okay? Call me if you need anything.”",
           "tone": "protective · avoidant",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a1s3",
           "to": "a1s3"
         }
@@ -144,7 +181,11 @@
           "label": "Name the transition out loud for the child.",
           "text": "“Okay, now it’s time with Mom/Dad. I’ll see you on Sunday like we planned.”",
           "tone": "predictable · soothing",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1end",
           "to": "a1end"
         },
@@ -153,7 +194,11 @@
           "label": "Let the adults’ tension speak louder than words.",
           "text": "You stay silent, your jaw set, while the co-parent mutters something about the schedule.",
           "tone": "frozen · tense",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a1end",
           "to": "a1end"
         },
@@ -162,7 +207,11 @@
           "label": "Offer a short, neutral pleasantry.",
           "text": "“Have a good weekend,” you say, keeping your tone as even as you can.",
           "tone": "polite · restrained",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a1end",
           "to": "a1end"
         }
@@ -181,7 +230,11 @@
           "id": "a1endc1",
           "label": "Continue to Act 2 — Child in the Middle",
           "text": "You move into the next phase of the exchange day.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a2s1",
           "to": "a2s1"
         },
@@ -189,7 +242,11 @@
           "id": "a1endc2",
           "label": "Return to menu.",
           "text": "Pause the scene here.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         }
@@ -209,7 +266,11 @@
           "label": "Acknowledge the feeling and stay steady.",
           "text": "“It’s okay to feel weird on switch days. And yes, it’s our time now. I’m here.”",
           "tone": "validating · firm",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a2s2",
           "to": "a2s2"
         },
@@ -218,7 +279,11 @@
           "label": "Put pressure on them to hurry up.",
           "text": "“Come on, we’re late. Stop making this harder than it is.”",
           "tone": "impatient · pressured",
-          "effects": { "trust": -1, "tension": 2, "childStress": 2 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2
+          },
           "next": "a2s2",
           "to": "a2s2"
         },
@@ -227,7 +292,11 @@
           "label": "Ask the other parent to step away for a moment.",
           "text": "“Can you give us a second?” you ask calmly, closing the car door halfway.",
           "tone": "boundary-setting · protective",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
           "next": "a2s2",
           "to": "a2s2"
         }
@@ -247,7 +316,11 @@
           "label": "Address the comment firmly but briefly.",
           "text": "“Please don’t bring courts into this in front of them. We can talk about logistics later.”",
           "tone": "firm · de-escalating",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a2s3",
           "to": "a2s3"
         },
@@ -256,7 +329,11 @@
           "label": "Fire back with your own legal threat.",
           "text": "“If anyone talks to a judge, it’ll be me, about this kind of comment.”",
           "tone": "combative · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 2 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2
+          },
           "next": "a2s3",
           "to": "a2s3"
         },
@@ -265,7 +342,11 @@
           "label": "Ignore it and focus only on the child.",
           "text": "You choose not to respond, turning your full attention back to the child’s face.",
           "tone": "protective · partial avoidance",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a2s3",
           "to": "a2s3"
         }
@@ -285,7 +366,11 @@
           "label": "Give a simple, predictable script.",
           "text": "“First we drive home, then snack, then you can choose: drawing or a show.”",
           "tone": "structured · calming",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a2end",
           "to": "a2end"
         },
@@ -294,7 +379,11 @@
           "label": "Vent about the co-parent once the door closes.",
           "text": "“You know, these comments from your other parent are really unfair.”",
           "tone": "offloading · misdirected",
-          "effects": { "trust": -1, "tension": 1, "childStress": 2 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 2
+          },
           "next": "a2end",
           "to": "a2end"
         },
@@ -303,7 +392,11 @@
           "label": "Drive in silence, lost in thoughts.",
           "text": "You start the engine and say nothing, replaying the scene in your head.",
           "tone": "dissociated · quiet",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
           "next": "a2end",
           "to": "a2end"
         }
@@ -322,7 +415,11 @@
           "id": "a2endc1",
           "label": "Continue to Act 3 — Schedules & Blame",
           "text": "You move into the next segment of the story.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a3s1",
           "to": "a3s1"
         },
@@ -330,7 +427,11 @@
           "id": "a2endc2",
           "label": "Return to menu.",
           "text": "Pause the scene here.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         }
@@ -350,7 +451,11 @@
           "label": "Pause before replying.",
           "text": "You put the phone face down, take three slow breaths, and tell yourself you’ll answer in ten minutes.",
           "tone": "regulated · intentional",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a3s2",
           "to": "a3s2"
         },
@@ -359,7 +464,11 @@
           "label": "Reply immediately with your own list of complaints.",
           "text": "You start typing fast, matching each criticism with a counter-attack.",
           "tone": "reactive · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "next": "a3s2",
           "to": "a3s2"
         },
@@ -368,7 +477,11 @@
           "label": "Say nothing and stew in silence.",
           "text": "You read everything twice, respond to nothing, and feel the anger simmer under your skin.",
           "tone": "shut-down · resentful",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
           "next": "a3s2",
           "to": "a3s2"
         }
@@ -388,7 +501,11 @@
           "label": "Keep the focus on concrete logistics.",
           "text": "“Let’s look at exact times and days and see what we can realistically commit to.”",
           "tone": "practical · grounded",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a3s3",
           "to": "a3s3"
         },
@@ -397,7 +514,11 @@
           "label": "Bring up old emotional history.",
           "text": "“This is exactly how you used to act when we were together.”",
           "tone": "historical · inflaming",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "next": "a3s3",
           "to": "a3s3"
         },
@@ -406,7 +527,11 @@
           "label": "Suggest a mediated discussion.",
           "text": "“If this keeps blowing up, I’d rather talk about the schedule with a mediator present.”",
           "tone": "structured · protective",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
           "next": "a3s3",
           "to": "a3s3"
         }
@@ -426,7 +551,11 @@
           "label": "Close the conversation and check in with the child.",
           "text": "You put the phone away and go to them: “Hey, everything okay?”",
           "tone": "present · caring",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a3end",
           "to": "a3end"
         },
@@ -435,7 +564,11 @@
           "label": "Keep typing while telling them it’s “nothing”.",
           "text": "“Go to bed, it’s grown-up stuff,” you say, eyes still on the phone.",
           "tone": "dismissive · tense",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a3end",
           "to": "a3end"
         },
@@ -444,7 +577,11 @@
           "label": "Vent out loud about the co-parent in front of them.",
           "text": "“Your other parent is impossible to reason with,” slips out before you can catch it.",
           "tone": "unfiltered · misdirected",
-          "effects": { "trust": -2, "tension": 2, "childStress": 2 },
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2
+          },
           "next": "a3end",
           "to": "a3end"
         }
@@ -463,7 +600,11 @@
           "id": "a3endc1",
           "label": "Continue to Act 4 — Choosing De-escalation",
           "text": "You step into the next attempt at doing this differently.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a4s1",
           "to": "a4s1"
         },
@@ -471,7 +612,11 @@
           "id": "a3endc2",
           "label": "Return to menu.",
           "text": "Pause the scene here.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         }
@@ -491,7 +636,11 @@
           "label": "Set an intention with yourself before getting out.",
           "text": "You put a hand on the steering wheel and think: “My priority is keeping this low-tension for the child.”",
           "tone": "mindful · anchored",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a4s2",
           "to": "a4s2"
         },
@@ -500,7 +649,11 @@
           "label": "Replay last week’s argument in your head.",
           "text": "You rehearse comebacks and think of everything you “should have said”.",
           "tone": "ruminative · agitated",
-          "effects": { "trust": 0, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a4s2",
           "to": "a4s2"
         },
@@ -509,7 +662,11 @@
           "label": "Numb out and go on autopilot.",
           "text": "You barely remember the drive, just the knot in your stomach.",
           "tone": "shut-down · detached",
-          "effects": { "trust": 0, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
           "next": "a4s2",
           "to": "a4s2"
         }
@@ -529,7 +686,11 @@
           "label": "Use a de-escalation phrase you prepared.",
           "text": "“I hear you’re frustrated. I’ll bring the jacket this evening. Let’s keep the handoff calm for their sake.”",
           "tone": "steady · de-escalating",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a4s3",
           "to": "a4s3"
         },
@@ -538,7 +699,11 @@
           "label": "Match their tone and escalate.",
           "text": "“You could have packed one yourself. You’re not helpless.”",
           "tone": "sarcastic · inflaming",
-          "effects": { "trust": -2, "tension": 2, "childStress": 2 },
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2
+          },
           "next": "a4s3",
           "to": "a4s3"
         },
@@ -547,7 +712,11 @@
           "label": "Step physically back and say you’ll discuss later.",
           "text": "“I’m not doing this in front of them. I’ll message you about jackets later.”",
           "tone": "boundaried · firm",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
           "next": "a4s3",
           "to": "a4s3"
         }
@@ -567,7 +736,11 @@
           "label": "Give the child a simple, reassuring sentence.",
           "text": "“Grownups sometimes get prickly, but we’re sorting it out. You’re not in trouble.”",
           "tone": "reassuring · gentle",
-          "effects": { "trust": 2, "tension": -1, "childStress": -2 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -2
+          },
           "next": "a4end",
           "to": "a4end"
         },
@@ -576,7 +749,11 @@
           "label": "Say nothing and hope they forget.",
           "text": "You usher them along, pretending everything is fine.",
           "tone": "avoidant · brittle",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a4end",
           "to": "a4end"
         },
@@ -585,7 +762,11 @@
           "label": "Make a snide comment that the child overhears.",
           "text": "“Some people love drama,” you mutter just loud enough.",
           "tone": "snarky · misdirected",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "next": "a4end",
           "to": "a4end"
         }
@@ -604,7 +785,11 @@
           "id": "a4endc1",
           "label": "Continue to Act 5 — The Ride Home",
           "text": "You move into the last part of the scene.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a5s1",
           "to": "a5s1"
         },
@@ -612,7 +797,11 @@
           "id": "a4endc2",
           "label": "Return to menu.",
           "text": "Pause the scene here.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         }
@@ -632,7 +821,11 @@
           "label": "Invite a gentle check-in.",
           "text": "“How did that feel for you just now?” you ask, keeping your voice soft.",
           "tone": "curious · attuned",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a5s2",
           "to": "a5s2"
         },
@@ -641,7 +834,11 @@
           "label": "Shift to light small talk.",
           "text": "“So, tell me about the most ridiculous thing that happened at school this week.”",
           "tone": "light · distracting",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a5s2",
           "to": "a5s2"
         },
@@ -650,7 +847,11 @@
           "label": "Say nothing and let the radio fill the silence.",
           "text": "You turn the volume up just enough that talking feels optional.",
           "tone": "neutral · slightly distant",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a5s2",
           "to": "a5s2"
         }
@@ -670,7 +871,11 @@
           "label": "Share your own reflection in a child-friendly way.",
           "text": "“We’re trying to practice calmer handoffs. You deserve that.”",
           "tone": "open · reassuring",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a5s3",
           "to": "a5s3"
         },
@@ -679,7 +884,11 @@
           "label": "Just say “Yeah” and move on.",
           "text": "“Yeah,” you say, leaving it at that.",
           "tone": "low-energy · non-committal",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a5s3",
           "to": "a5s3"
         },
@@ -688,7 +897,11 @@
           "label": "Ask if they noticed anything that still felt hard.",
           "text": "“Was there anything today that still felt yucky or confusing?”",
           "tone": "exploratory · supportive",
-          "effects": { "trust": 1, "tension": 0, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
           "next": "a5s3",
           "to": "a5s3"
         }
@@ -708,7 +921,11 @@
           "label": "Notice the specific de-escalation choices you made.",
           "text": "You mentally list the moments you chose breath over comeback, boundary over explosion.",
           "tone": "self-compassionate · reinforcing",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a5end",
           "to": "a5end"
         },
@@ -717,7 +934,11 @@
           "label": "Focus only on what went wrong.",
           "text": "You zoom in on every awkward pause and sharp word, ignoring the small repairs.",
           "tone": "self-critical · heavy",
-          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 0
+          },
           "next": "a5end",
           "to": "a5end"
         },
@@ -726,7 +947,11 @@
           "label": "Decide to talk to a neutral support (friend, therapist, mediator).",
           "text": "You make a note to schedule a chat with someone who isn’t in the triangle.",
           "tone": "resourced · proactive",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a5end",
           "to": "a5end"
         }
@@ -745,7 +970,11 @@
           "id": "a5endc1",
           "label": "Return to menu.",
           "text": "You close the scene and take a breath.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         },
@@ -753,7 +982,11 @@
           "id": "a5endc2",
           "label": "Revisit the exchange from the beginning.",
           "text": "You choose to replay the scenario to experiment with different choices.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "a1s1",
           "to": "a1s1"
         }
