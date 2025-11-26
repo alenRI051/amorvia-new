@@ -24,7 +24,7 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/bedroom.svg",   
+        "act1": "/assets/backgrounds/room.svg",   
         "act2": "/assets/backgrounds/hallway.svg",   
         "act3": "/assets/backgrounds/park.svg",      
         "act4": "/assets/backgrounds/cafe.svg",      
