@@ -21,7 +21,7 @@
     "backgrounds": {
       "default": "/assets/backgrounds/park.svg",
       "act": {
-        "act1": "/assets/backgrounds/park.svg"   // “first meeting” outside
+        "act1": "/assets/backgrounds/park.svg"   
       }
     }
   },
