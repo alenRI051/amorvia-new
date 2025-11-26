@@ -24,11 +24,11 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/bedroom.svg",   // getting ready / packing
-        "act2": "/assets/backgrounds/hallway.svg",   // door / stairwell exchange
-        "act3": "/assets/backgrounds/park.svg",      // outside / parking lot feel
-        "act4": "/assets/backgrounds/cafe.svg",      // debrief with partner/friend
-        "act5": "/assets/backgrounds/room.svg"       // home reflection
+        "act1": "/assets/backgrounds/bedroom.svg",   
+        "act2": "/assets/backgrounds/hallway.svg",   
+        "act3": "/assets/backgrounds/park.svg",      
+        "act4": "/assets/backgrounds/cafe.svg",      
+        "act5": "/assets/backgrounds/room.svg"       
       }
     }
   },
