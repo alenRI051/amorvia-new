@@ -15,9 +15,22 @@
   "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
 
-  "ui": {
-    "hud": { "animate": true, "animated": true },
-    "dialog": { "defaultSpeaker": "Narrator" }
+    "ui": {
+    "showHud": true,
+    "showActBadge": true,
+    "showActTitle": true,
+    "showSpeaker": true,
+    "showChildStress": true,
+    "backgrounds": {
+      "default": "/assets/backgrounds/room.svg",
+      "act": {
+        "act1": "/assets/backgrounds/bedroom.svg",   // getting ready / packing
+        "act2": "/assets/backgrounds/hallway.svg",   // door / stairwell exchange
+        "act3": "/assets/backgrounds/park.svg",      // outside / parking lot feel
+        "act4": "/assets/backgrounds/cafe.svg",      // debrief with partner/friend
+        "act5": "/assets/backgrounds/room.svg"       // home reflection
+      }
+    }
   },
 
   "entry": "a1s1",
