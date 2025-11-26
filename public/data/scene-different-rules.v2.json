@@ -2,16 +2,30 @@
   "id": "scene-different-rules",
   "title": "Scene: Different Rules",
   "version": 2,
-  "tags": ["consistency", "household-rules", "child-wellbeing"],
+  "tags": [
+    "co-parenting",
+    "different-rules",
+    "consistency",
+    "child-experience"
+  ],
   "actors": {
     "Narrator": {},
     "You": {},
+    "Co-Parent": {},
     "Child": {},
-    "Co-Parent": {}
+    "Teacher": {}
   },
-  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
-  "meterOrder": ["trust", "tension", "childStress"],
-    "ui": {
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
+  "ui": {
     "showHud": true,
     "showActBadge": true,
     "showActTitle": true,
@@ -20,201 +34,404 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/room.svg"   
+        "act1": "/assets/backgrounds/hallway.svg",
+        "act2": "/assets/backgrounds/room.svg",
+        "act3": "/assets/backgrounds/park.svg"
       }
     }
   },
-
   "entry": "a1s1",
   "entryNodeId": "a1s1",
+  "entryId": "a1s1",
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-
   "nodes": [
-    {
-      "id": "menu",
-      "speaker": "Narrator",
-      "text": "Main menu placeholder. Choose “Continue” to start the scene.",
-      "choices": [
-        {
-          "id": "menu_continue",
-          "label": "Continue",
-          "text": "Continue",
-          "next": "a1s1",
-          "to": "a1s1"
-        }
-      ]
-    },
-
     {
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Pickup Time",
-      "text": "You’re buckling your child into the car seat after pickup. They seem unsettled, glancing out the window.",
-      "tone": "noticing · gentle alert",
+      "text": "Late afternoon at the pickup point. One backpack, one tired child, and two different worlds of rules.\n\nThe child shuffles toward you and blurts out, loud enough for the co-parent to hear:\n\n“At Dad’s/Mom’s I can eat in the living room. Here I can’t do anything.”\n\nYou feel both pairs of adult eyes flick to each other for a split second.",
+      "tone": "tense · revealing",
       "choices": [
         {
-          "id": "a1s1c1",
-          "label": "Ask if something feels off today.",
-          "text": "“Hey, you look a bit quiet. Everything alright?”",
-          "tone": "soft · open",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1s2",
+          "id": "a1s1_c1",
+          "label": "First, connect with the child and park the adult conflict for later.",
+          "tone": "grounding · child-centered",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "to": "a1s2"
         },
         {
-          "id": "a1s1c2",
-          "label": "Talk about the fun plans you have to distract them.",
-          "text": "You jump into distraction mode: “Guess what? We can watch your favourite movie later!”",
-          "tone": "cheerful · avoidance",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1s2",
+          "id": "a1s1_c2",
+          "label": "Answer defensively in front of everyone: “That’s not true, you have lots of freedom here.”",
+          "tone": "defensive · escalating",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "to": "a1s2"
         },
         {
-          "id": "a1s1c3",
-          "label": "Stay silent and hope it passes.",
-          "text": "You decide not to press. Maybe they’re just tired.",
-          "tone": "neutral · cautious",
-          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
-          "next": "a1s2",
+          "id": "a1s1_c3",
+          "label": "Half-joke: “Different homes, different rules, kiddo,” and quickly change the subject.",
+          "tone": "light · slightly avoidant",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "to": "a1s2"
         }
       ]
     },
-
     {
       "id": "a1s2",
       "act": "act1",
-      "speaker": "Child",
-      "title": "Confusion",
-      "text": "After a few minutes, they speak quietly: “At mom’s house I can stay up as late as I want. But here I can’t. I don’t get it.”",
-      "tone": "confused · vulnerable",
+      "speaker": "Narrator",
+      "text": "The co-parent adjusts their bag and steps a little closer.\n\n“We’ve talked about this,” they say, trying to sound neutral. “They’re allowed to relax a bit at my place. It doesn’t have to be so strict all the time.”\n\nThere’s a choice to make: do you have this conversation right here, or do you move it somewhere calmer?",
+      "tone": "charged · fork-in-the-road",
       "choices": [
         {
-          "id": "a1s2c1",
-          "label": "Validate the feeling and explain simply.",
-          "text": "“I hear you. It can be confusing when the rules are different in two homes.”",
-          "tone": "warm · grounded",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1s3",
+          "id": "a1s2_c1",
+          "label": "Suggest a later talk: “Let’s get them settled first, then you and I can sync on rules.”",
+          "tone": "de-escalating · respectful",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "to": "a1s3"
         },
         {
-          "id": "a1s2c2",
-          "label": "Compare homes and imply the other parent is careless.",
-          "text": "“Yeah, well… things are more organised here. That’s just how it is.”",
-          "tone": "judgmental · defensive",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
-          "next": "a1s3",
+          "id": "a1s2_c2",
+          "label": "Compare households in front of the child.",
+          "tone": "comparative · triangle-building",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2
+          },
           "to": "a1s3"
         },
         {
-          "id": "a1s2c3",
-          "label": "Ignore the topic and change conversation.",
-          "text": "“Let’s not talk about that right now — what do you want for dinner?”",
-          "tone": "avoidant",
-          "effects": { "trust": 0, "tension": 0, "childStress": 1 },
-          "next": "a1s3",
+          "id": "a1s2_c3",
+          "label": "Say nothing and end the exchange as quickly as possible.",
+          "tone": "shutting-down · protective",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "to": "a1s3"
         }
       ]
     },
-
     {
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Deciding What To Say",
-      "text": "You’re at a crossroads: keep focusing only on the child, or bring this up with the co-parent too?",
-      "tone": "weighing · thoughtful",
+      "text": "Later, at home, the backpack is on the floor and the child is half-watching cartoons.\n\nYou notice little frictions everywhere: shoes, snacks, screen time.\n\nIt hits you: you and the co-parent have never really named which rules must match and which can safely differ.",
+      "tone": "reflective · pattern-spotting",
       "choices": [
         {
-          "id": "a1s3c1",
-          "label": "Focus on the child’s feelings first.",
-          "text": "You keep the car ride centred on them: “What part feels the hardest?”",
-          "tone": "attuned · child-led",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1s4",
-          "to": "a1s4"
-        },
-        {
-          "id": "a1s3c2",
-          "label": "Immediately plan to confront the co-parent.",
-          "text": "You think: “We need to fix this tonight. I’ll call as soon as we get home.”",
-          "tone": "urgent · escalatory",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
-          "next": "a1s4",
-          "to": "a1s4"
-        }
-      ]
-    },
-
-    {
-      "id": "a1s4",
-      "act": "act1",
-      "speaker": "Co-Parent",
-      "title": "Later That Evening",
-      "text": "You send a short message: “Hey, our kid mentioned different bedtime rules. Can we sync up a bit?” The reply comes quickly: “Are you saying I’m doing something wrong?”",
-      "tone": "reactive · defensive",
-      "choices": [
-        {
-          "id": "a1s4c1",
-          "label": "Reassure them you’re not blaming — focus on the child’s stability.",
-          "text": "“Not at all. I just want things to feel consistent for them. Maybe we can pick one thing to align on?”",
-          "tone": "calm · collaborative",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
-          "next": "a1end",
+          "id": "a1s3_c1",
+          "label": "Decide to list the “non-negotiable” rules you want to align.",
+          "tone": "intentional · planning",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a1end"
         },
         {
-          "id": "a1s4c2",
-          "label": "Double down on criticism.",
-          "text": "“Well… it *is* confusing for them. You can’t just let them do whatever.”",
-          "tone": "critical · confrontational",
-          "effects": { "trust": -2, "tension": 2, "childStress": 1 },
-          "next": "a1end",
-          "to": "a1end"
-        },
-        {
-          "id": "a1s4c3",
-          "label": "Drop the topic entirely to keep peace.",
-          "text": "“Never mind, it’s fine. Forget I asked.”",
-          "tone": "dismissive · short-term soothing",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "a1end",
+          "id": "a1s3_c2",
+          "label": "Tell yourself, “It’s pointless, they’ll never agree,” and drop the idea.",
+          "tone": "resigned · protective",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "to": "a1end"
         }
       ]
     },
-
     {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "title": "Closing the Scene",
-      "text": "Consistency between homes isn’t about identical rules — it’s about safety, predictability, and being able to talk without fear. Tonight, you took one step toward that.",
-      "tone": "reflective · soft landing",
+      "text": "Act 1 closes with a simple truth:\n\nThe child is not keeping score on who has the “better” rules.\nThey’re trying to understand how to be one kid in two different systems.\n\nThe question now is whether the adults are willing to give them a clearer map.",
+      "tone": "summarizing · gently challenging",
       "choices": [
         {
-          "id": "a1endc1",
-          "label": "Return to menu.",
-          "text": "The scene ends.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
-          "next": "menu",
-          "to": "menu"
+          "id": "a1end_c1",
+          "label": "Move into Act 2 – adult sync on rules.",
+          "tone": "forward-looking",
+          "effects": {},
+          "to": "a2s1"
         }
       ]
+    },
+
+    {
+      "id": "a2s1",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "A few days later, you and the co-parent are on a call. No child in earshot this time.\n\nThey sigh. “Look, they’re already under enough stress. I don’t want to fight about whether they can eat on the couch.”\n\nThis might be the moment to separate comfort rules from safety rules.",
+      "tone": "practical · slightly defensive",
+      "choices": [
+        {
+          "id": "a2s1_c1",
+          "label": "Start by validating: “I agree, they are under stress. Can we pick a few rules to match so life feels less confusing?”",
+          "tone": "validating · collaborative",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a2s2"
+        },
+        {
+          "id": "a2s1_c2",
+          "label": "Lead with criticism: “You’re too lenient, that’s the whole problem.”",
+          "tone": "blaming · confrontational",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 1
+          },
+          "to": "a2s2"
+        },
+        {
+          "id": "a2s1_c3",
+          "label": "Stay vague: “Yeah, it’s complicated,” and keep things fuzzy.",
+          "tone": "noncommittal · postponing",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a2s2"
+        }
+      ]
+    },
+    {
+      "id": "a2s2",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "You pull up a quick list on your phone or a scrap of paper.\n\nYou jot down:\n• Sleep time\n• Homework\n• Screens\n• Food / snacks\n\nThe co-parent adds: “And how we talk about each other’s houses.”",
+      "tone": "structured · concrete",
+      "choices": [
+        {
+          "id": "a2s2_c1",
+          "label": "Sort the list into two columns: “must match” vs “can differ safely.”",
+          "tone": "solution-focused · realistic",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a2s3"
+        },
+        {
+          "id": "a2s2_c2",
+          "label": "Argue item by item without any shared framework.",
+          "tone": "fragmented · exhausting",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
+          "to": "a2s3"
+        }
+      ]
+    },
+    {
+      "id": "a2s3",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "Slowly, some shape appears:\n\nYou both agree that sleep and basic safety should be similar.\nYou can live with different snack rules and different “tidy up” styles.\n\nThe hardest part is how each of you talks about the other house in front of the child.",
+      "tone": "emerging-clarity · still tender",
+      "choices": [
+        {
+          "id": "a2s3_c1",
+          "label": "Propose a simple shared line: “Both homes have rules to keep you safe, even if they look a bit different.”",
+          "tone": "child-centered · inclusive",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a2end"
+        },
+        {
+          "id": "a2s3_c2",
+          "label": "Leave that part undefined: “We’ll just improvise as we go.”",
+          "tone": "ambiguous · risky",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "to": "a2end"
+        }
+      ]
+    },
+    {
+      "id": "a2end",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "Act 2 doesn’t end with perfect alignment, but something important has shifted:\n\nThe rules are no longer a secret power struggle.\nThey’re items on a list that both of you can see and adjust over time.",
+      "tone": "realistic · cautiously hopeful",
+      "choices": [
+        {
+          "id": "a2end_c1",
+          "label": "Move into Act 3 – giving the child a clearer map.",
+          "tone": "forward-moving",
+          "effects": {},
+          "to": "a3s1"
+        }
+      ]
+    },
+
+    {
+      "id": "a3s1",
+      "act": "act3",
+      "speaker": "Teacher",
+      "text": "A week later, a teacher quietly pulls you aside at school pickup.\n\n“They mentioned they’re worried about ‘getting in trouble’ for doing things differently at each house,” the teacher says. “They seem a bit on edge about making mistakes.”",
+      "tone": "concerned · observant",
+      "choices": [
+        {
+          "id": "a3s1_c1",
+          "label": "Thank the teacher and decide to talk with the child using the new shared language.",
+          "tone": "responsive · collaborative",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "a3s2"
+        },
+        {
+          "id": "a3s1_c2",
+          "label": "Minimize it: “They’re fine, we’re just going through a phase.”",
+          "tone": "dismissive · avoidant",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "to": "a3s2"
+        }
+      ]
+    },
+    {
+      "id": "a3s2",
+      "act": "act3",
+      "speaker": "Child",
+      "text": "At home, the child hovers in the doorway.\n\n“Is it bad if I forget whose rules are whose?” they ask quietly.\n\nYou can feel how much they want a simple, steady answer.",
+      "tone": "vulnerable · small voice",
+      "choices": [
+        {
+          "id": "a3s2_c1",
+          "label": "Use the shared sentence: “Both homes have rules to keep you safe; we’ll remind you, you don’t have to remember everything alone.”",
+          "tone": "reassuring · co-regulating",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -2
+          },
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2_c2",
+          "label": "Respond with pressure: “You’re old enough to remember. You have to keep track.”",
+          "tone": "pressuring · anxious",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2
+          },
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2_c3",
+          "label": "Half comfort, half confusion: “Just do your best; it’s complicated.”",
+          "tone": "mixed · unclear",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "to": "a3s3"
+        }
+      ]
+    },
+    {
+      "id": "a3s3",
+      "act": "act3",
+      "speaker": "Narrator",
+      "text": "Later that night, as they fall asleep, you notice their shoulders soften just a little.\n\nDifferent rules still exist.\nBut the story around those rules has changed from “don’t mess up” to “the adults will guide you.”",
+      "tone": "quiet · integrating",
+      "choices": [
+        {
+          "id": "a3s3_c1",
+          "label": "Close the scene and return to the scenario menu.",
+          "tone": "closure · reflective",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "to": "ending"
+        }
+      ]
+    },
+    {
+      "id": "ending",
+      "act": "act3",
+      "speaker": "Narrator",
+      "text": "This scene doesn’t magically unify two households.\n\nInstead, it offers a more realistic win:\n\n• a shortlist of rules that truly need to match,\n• fewer casual comparisons of “who is stricter,”\n• and a child who hears one steady message about safety across both homes.\n\nYou can replay the scene making different choices to feel how trust, tension, and child stress shift when the rules stay hidden versus when you bring them into the open.",
+      "tone": "summative · gently empowering",
+      "choices": []
     }
   ],
-
   "acts": [
     {
       "id": "act1",
-      "title": "Different Rules in Two Homes",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1s4", "a1end"]
+      "title": "Act 1 – Mixed Messages at Pickup",
+      "steps": [
+        "a1s1",
+        "a1s2",
+        "a1s3",
+        "a1end"
+      ]
+    },
+    {
+      "id": "act2",
+      "title": "Act 2 – Adult Sync on Rules",
+      "steps": [
+        "a2s1",
+        "a2s2",
+        "a2s3",
+        "a2end"
+      ]
+    },
+    {
+      "id": "act3",
+      "title": "Act 3 – Giving the Child a Map",
+      "steps": [
+        "a3s1",
+        "a3s2",
+        "a3s3",
+        "ending"
+      ]
     }
   ]
 }
