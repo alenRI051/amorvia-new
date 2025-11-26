@@ -25,21 +25,21 @@
     "tension",
     "childStress"
   ],
-      "ui": {
-    "showHud": true,
-    "showActBadge": true,
-    "showActTitle": true,
-    "showSpeaker": true,
-    "showChildStress": true,
-    "backgrounds": {
-      "default": "/assets/backgrounds/room.svg",
-      "act": {
-        "act1": "/assets/backgrounds/hallway.svg",
-        "act2": "/assets/backgrounds/room.svg",
-        "act3": "/assets/backgrounds/cafe.svg"
-      }
+  "ui": {
+  "showHud": true,
+  "showActBadge": true,
+  "showActTitle": true,
+  "showSpeaker": true,
+  "showChildStress": true,
+  "backgrounds": {
+    "default": "default",   // uses BACKGROUNDS.default → room
+    "act": {
+      "act1": "hallway",    // BACKGROUNDS.hallway → hallway.svg
+      "act2": "default",    // reuse room
+      "act3": "cafe"        // BACKGROUNDS.cafe → cafe.svg
     }
-  },
+  }
+},   
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryId": "a1s1",
