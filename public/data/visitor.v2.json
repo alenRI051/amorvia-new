@@ -37,6 +37,8 @@
         "act1": "/assets/backgrounds/hallway.svg",  
         "act2": "/assets/backgrounds/room.svg",     
         "act3": "/assets/backgrounds/bedroom.svg"
+   }
+    }     
   },
   "entry": "a1s1",
   "entryNodeId": "a1s1",
