@@ -1,0 +1,34 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bedroom-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="60%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wall / floor -->
+  <rect width="1280" height="720" fill="url(#bedroom-bg)" />
+  <rect y="430" width="1280" height="290" fill="#020617"/>
+
+  <!-- Bed -->
+  <rect x="160" y="360" width="420" height="140" rx="18" fill="#1e293b"/>
+  <rect x="160" y="340" width="420" height="40" rx="16" fill="#0f172a"/>
+  <rect x="185" y="375" width="180" height="90" rx="14" fill="#334155"/>
+  <rect x="375" y="375" width="180" height="90" rx="14" fill="#334155"/>
+
+  <!-- Pillow -->
+  <rect x="190" y="350" width="80" height="30" rx="10" fill="#e5e7eb" opacity="0.9"/>
+
+  <!-- Window -->
+  <rect x="830" y="140" width="230" height="170" rx="18" fill="#020617" stroke="#1f2937" stroke-width="4"/>
+  <rect x="840" y="150" width="210" height="150" rx="14" fill="#0f172a"/>
+  <circle cx="945" cy="190" r="35" fill="#1d4ed8" opacity="0.6"/>
+
+  <!-- Lamp -->
+  <rect x="640" y="230" width="16" height="130" rx="8" fill="#1f2937"/>
+  <path d="M610 230h76l-12-60h-52z" fill="#0f172a"/>
+  <circle cx="648" cy="170" r="10" fill="#fbbf24"/>
+
+  <!-- Subtle vignette -->
+  <rect width="1280" height="720" fill="#000000" opacity="0.10"/>
+</svg>
