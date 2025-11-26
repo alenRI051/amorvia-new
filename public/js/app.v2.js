@@ -51,7 +51,8 @@
       // act3: "default",
     },
   };
-    const BG_STATE = {
+
+  const BG_STATE = {
     loaded: false,
   };
 
@@ -59,7 +60,8 @@
     if (!data || !Array.isArray(data.backgrounds)) return;
 
     const select = $(BG_SELECTORS.select);
-    const currentSrc = $(BG_SELECTORS.img)?.getAttribute("src") || null;
+    const imgEl = $(BG_SELECTORS.img);
+    const currentSrc = imgEl ? imgEl.getAttribute("src") : null;
 
     // Extend BACKGROUNDS map from index
     data.backgrounds.forEach((bg) => {
@@ -102,6 +104,7 @@
         console.warn("[AmorviaMini] Failed to load backgrounds index:", err);
       });
   }
+
   const state = {
     index: null,
     scenario: null,
@@ -507,53 +510,37 @@
   }
 
   function populatePicker() {
-  const select = $(SELECTORS.picker);
-  if (!select || !state.index || !Array.isArray(state.index.scenarios)) return;
+    const select = $(SELECTORS.picker);
+    if (!select || !state.index || !Array.isArray(state.index.scenarios)) return;
 
-  select.innerHTML = "";
+    select.innerHTML = "";
 
-  state.index.scenarios.forEach((s) => {
-    const opt = document.createElement("option");
-    const id = s.id || s.slug;
-    const title = s.title || id || "(untitled)";
-    const difficulty = s.difficulty || "";
-    const tags = Array.isArray(s.tags) ? s.tags.join(", ") : "";
+    state.index.scenarios.forEach((s) => {
+      const opt = document.createElement("option");
+      const id = s.id || s.slug;
+      const title = s.title || id || "(untitled)";
+      const difficulty = s.difficulty || "";
+      const tags = Array.isArray(s.tags) ? s.tags.join(", ") : "";
 
-    // Value = stable id (used by tests if they want)
-    opt.value = id;
+      // Value = stable id (used by tests)
+      opt.value = id;
 
-    // IMPORTANT: keep visible text EXACTLY as before so Cypress can still find it
-    // e.g. "Co-Parenting with Bipolar Partner"
-    opt.textContent = title;
+      // Visible text MUST stay as pure title so Cypress cy.select()
+      // calls like "Co-Parenting with Bipolar Partner" still work.
+      opt.textContent = title;
 
-    // Tooltip: show difficulty + tags
-    const parts = [];
-    if (difficulty) parts.push(`Difficulty: ${difficulty}`);
-    if (tags) parts.push(`Tags: ${tags}`);
-    if (parts.length) {
-      opt.title = parts.join(" • ");
-      // optional: also set label attr; browsers mostly ignore but harmless
-      opt.setAttribute("label", title);
-    }
+      // Tooltip: difficulty + tags
+      const parts = [];
+      if (difficulty) parts.push(`Difficulty: ${difficulty}`);
+      if (tags) parts.push(`Tags: ${tags}`);
+      if (parts.length) {
+        opt.title = parts.join(" • ");
+        opt.setAttribute("label", title);
+      }
 
-    select.appendChild(opt);
-  });
-}
-
-    // Label: "Title [difficulty]" if present, otherwise just Title
-    opt.textContent = difficulty ? `${title} [${difficulty}]` : title;
-
-    // Tooltip: difficulty + tags
-    const parts = [];
-    if (difficulty) parts.push(`Difficulty: ${difficulty}`);
-    if (tags) parts.push(`Tags: ${tags}`);
-    if (parts.length) {
-      opt.title = parts.join(" • ");
-    }
-
-    select.appendChild(opt);
-  });
-}
+      select.appendChild(opt);
+    });
+  }
 
   function pickInitialScenarioId() {
     const fromUrl = getScenarioFromUrl();
@@ -631,3 +618,4 @@
     });
   }
 })();
+
