@@ -27,8 +27,8 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/room.svg",   // home conflict / tension
-        "act2": "/assets/backgrounds/cafe.svg"    // neutral talk / bridge-building
+        "act1": "/assets/backgrounds/room.svg",   
+        "act2": "/assets/backgrounds/cafe.svg"    
       }
     }
   },
