@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "generatedAt": "2025-11-26T16:19:55.843Z",
+  "backgrounds": [
+    {
+      "id": "bedroom",
+      "label": "Bedroom",
+      "src": "/assets/backgrounds/bedroom.svg",
+      "used": true
+    },
+    {
+      "id": "cafe",
+      "label": "Cafe",
+      "src": "/assets/backgrounds/cafe.svg",
+      "used": true
+    },
+    {
+      "id": "hallway",
+      "label": "Hallway",
+      "src": "/assets/backgrounds/hallway.svg",
+      "used": true
+    },
+    {
+      "id": "kitchen",
+      "label": "Kitchen",
+      "src": "/assets/backgrounds/kitchen.svg",
+      "used": false
+    },
+    {
+      "id": "livingroom",
+      "label": "Livingroom",
+      "src": "/assets/backgrounds/livingroom.svg",
+      "used": true
+    },
+    {
+      "id": "mediationroom",
+      "label": "Mediationroom",
+      "src": "/assets/backgrounds/mediationroom.svg",
+      "used": true
+    },
+    {
+      "id": "park",
+      "label": "Park",
+      "src": "/assets/backgrounds/park.svg",
+      "used": true
+    },
+    {
+      "id": "playground_day",
+      "label": "Playground Day",
+      "src": "/assets/backgrounds/playground_day.svg",
+      "used": false
+    },
+    {
+      "id": "room",
+      "label": "Room",
+      "src": "/assets/backgrounds/room.svg",
+      "used": true
+    }
+  ]
+}
