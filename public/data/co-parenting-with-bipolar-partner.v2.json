@@ -62,8 +62,18 @@
   "ui": {
     "theme": "default",
     "showMeters": true,
-    "showActTitle": true
-  },
+    "showActTitle": true,
+    "backgrounds": {
+    "default": "/assets/backgrounds/room.svg",
+    "act": {
+      "act1": "/assets/backgrounds/bedroom.svg",
+      "act2": "/assets/backgrounds/livingroom.svg",
+      "act3": "/assets/backgrounds/mediationroom.svg",
+      "act4": "/assets/backgrounds/hallway.svg",
+      "act5": "/assets/backgrounds/park.svg"
+    }
+  }
+},
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryId": "a1s1",
