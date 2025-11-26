@@ -1,0 +1,30 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="med-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="70%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#med-bg)"/>
+  <rect y="430" width="1280" height="290" fill="#020617"/>
+
+  <!-- Table -->
+  <rect x="310" y="390" width="660" height="40" rx="16" fill="#0f172a"/>
+  <rect x="340" y="430" width="80" height="110" rx="16" fill="#020617"/>
+  <rect x="860" y="430" width="80" height="110" rx="16" fill="#020617"/>
+
+  <!-- Chairs -->
+  <rect x="250" y="340" width="140" height="110" rx="24" fill="#1e293b"/>
+  <rect x="890" y="340" width="140" height="110" rx="24" fill="#1e293b"/>
+  <rect x="520" y="350" width="120" height="100" rx="22" fill="#111827"/>
+  <rect x="640" y="350" width="120" height="100" rx="22" fill="#111827"/>
+
+  <!-- Whiteboard -->
+  <rect x="380" y="120" width="520" height="190" rx="20" fill="#020617" stroke="#1f2937" stroke-width="4"/>
+  <rect x="395" y="135" width="490" height="160" rx="16" fill="#020617"/>
+  <line x1="420" y1="180" x2="820" y2="180" stroke="#1e293b" stroke-width="3"/>
+  <line x1="420" y1="215" x2="820" y2="215" stroke="#1e293b" stroke-width="2"/>
+
+  <rect width="1280" height="720" fill="#000000" opacity="0.12"/>
+</svg>
