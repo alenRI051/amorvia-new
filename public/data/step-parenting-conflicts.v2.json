@@ -25,7 +25,7 @@
     "tension",
     "childStress"
   ],
-    "ui": {
+      "ui": {
     "showHud": true,
     "showActBadge": true,
     "showActTitle": true,
@@ -36,7 +36,7 @@
       "act": {
         "act1": "/assets/backgrounds/hallway.svg",
         "act2": "/assets/backgrounds/room.svg",
-        "act3": "/assets/backgrounds/room.svg"
+        "act3": "/assets/backgrounds/cafe.svg"
       }
     }
   },
