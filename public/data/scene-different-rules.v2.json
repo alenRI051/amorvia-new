@@ -20,7 +20,7 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/room.svg"   // household rules comparison
+        "act1": "/assets/backgrounds/room.svg"   
       }
     }
   },
