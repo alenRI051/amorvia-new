@@ -12,7 +12,7 @@
   },
   "meters": { "trust": 0, "tension": 0, "childStress": 0 },
   "meterOrder": ["trust", "tension", "childStress"],
-    "ui": {
+  "ui": {
     "showHud": true,
     "showActBadge": true,
     "showActTitle": true,
@@ -21,7 +21,7 @@
     "backgrounds": {
       "default": "/assets/backgrounds/park.svg",
       "act": {
-        "act1": "/assets/backgrounds/park.svg"   
+        "act1": "/assets/backgrounds/park.svg"
       }
     }
   },
@@ -53,7 +53,7 @@
       "act": "act1",
       "speaker": "Narrator",
       "title": "On the Way to the Park",
-      "text": "You’re walking to the park with your child. Today, your new partner will join you for the first time. Your child knows ‘a friend’ might come, but not much more.",
+      "text": "The walk to the park is familiar — cracks in the pavement, the smell of leaves, the rhythm of your child’s steps beside you. But today, something is different.\n\nYour new partner will join you for the first time. Your child knows that ‘a friend’ might come, but the meaning of that word is still floating unspoken between you.",
       "tone": "anticipatory · slightly anxious",
       "choices": [
         {
@@ -68,7 +68,7 @@
         {
           "id": "a1s1c2",
           "label": "Keep it vague and avoid defining the relationship.",
-          "text": "You say: “A friend might show up later,” and quickly change the subject.",
+          "text": "You say: “A friend might show up later,” then quickly change the subject, hoping not to stir worry.",
           "tone": "avoidant · protective",
           "effects": { "trust": 0, "tension": 1, "childStress": 0 },
           "next": "a1s2",
@@ -77,7 +77,7 @@
         {
           "id": "a1s1c3",
           "label": "Overload the child with details about the relationship.",
-          "text": "You launch into a long explanation about how you met, why it matters, and how nothing will change at home.",
+          "text": "You launch into how you met Alex, what you’ve talked about, and why nothing will change at home. Your child looks overwhelmed.",
           "tone": "overexplaining · anxious",
           "effects": { "trust": -1, "tension": 1, "childStress": 1 },
           "next": "a1s2",
@@ -91,7 +91,7 @@
       "act": "act1",
       "speaker": "New Partner",
       "title": "First Hello",
-      "text": "At the park, your new partner waves and walks over. Your child hides slightly behind you, peeking out with curiosity and caution.",
+      "text": "At the park entrance, Alex spots you and waves. Your child subtly shifts behind you — not hiding, but watching, taking everything in.\n\nAlex approaches with kind eyes and an uncertain smile.",
       "tone": "gentle · uncertain",
       "choices": [
         {
@@ -106,7 +106,7 @@
         {
           "id": "a1s2c2",
           "label": "Prompt the child to be extra friendly.",
-          "text": "You nudge: “Come on, say hi properly, don’t be rude.”",
+          "text": "You gently push: “Come on, say hi properly, don’t be rude.” The child stiffens.",
           "tone": "pressuring · image-focused",
           "effects": { "trust": -1, "tension": 1, "childStress": 1 },
           "next": "a1s3",
@@ -115,7 +115,7 @@
         {
           "id": "a1s2c3",
           "label": "Let your partner take the lead completely.",
-          "text": "You stay quiet as Alex kneels down and starts talking directly to the child without checking in with you first.",
+          "text": "You stay quiet as Alex kneels and begins chatting directly to your child without any warm-up from you.",
           "tone": "passive · unanchored",
           "effects": { "trust": 0, "tension": 0, "childStress": 1 },
           "next": "a1s3",
@@ -129,13 +129,13 @@
       "act": "act1",
       "speaker": "Narrator",
       "title": "Shared Activity",
-      "text": "The three of you end up near the swings. The child watches, still gauging if this new person is ‘safe’ in their world.",
+      "text": "The three of you drift toward the swings. Your child studies Alex in tiny glances — the kind that reveal everything. They’re deciding if this new person is safe, kind, and aware of their world.",
       "tone": "observant · delicate",
       "choices": [
         {
           "id": "a1s3c1",
           "label": "Invite a simple joint activity the child can opt into.",
-          "text": "You ask: “Do you want us to push you on the swing together, or should I push and Alex watch?”",
+          "text": "You ask gently: “Do you want us to push you together, or should I push and Alex watch?”",
           "tone": "choice-giving · respectful",
           "effects": { "trust": 2, "tension": -1, "childStress": -1 },
           "next": "a1end",
@@ -144,7 +144,7 @@
         {
           "id": "a1s3c2",
           "label": "Step aside and let your partner bond quickly and intensely.",
-          "text": "You suggest Alex take over the swing completely while you scroll your phone nearby.",
+          "text": "You tell Alex to go ahead and push while you scroll your phone. Your child’s eyes widen — too much, too fast.",
           "tone": "sudden · disconnecting",
           "effects": { "trust": -1, "tension": 1, "childStress": 1 },
           "next": "a1end",
@@ -153,7 +153,7 @@
         {
           "id": "a1s3c3",
           "label": "Keep your partner at a distance to ‘protect’ the child.",
-          "text": "You keep chatting only with your child, barely including Alex in the interaction.",
+          "text": "You hover close, speaking only with your child, barely acknowledging Alex’s presence.",
           "tone": "guarded · ambiguous",
           "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "a1end",
@@ -167,7 +167,7 @@
       "act": "act1",
       "speaker": "Narrator",
       "title": "End of the Outing",
-      "text": "On the way home, your child is quieter than usual. They’re processing. The introduction may have been small on the outside, but it was big on the inside.",
+      "text": "On the walk home, your child holds your hand tightly. They’re quieter than usual — not upset, just sorting the day into pieces.\n\nNew people mean new shapes in their emotional world. Even small introductions have weight.",
       "tone": "reflective · gently serious",
       "choices": [
         {
@@ -182,7 +182,7 @@
         {
           "id": "a1endc2",
           "label": "Avoid the topic to ‘keep things calm’.",
-          "text": "You talk about homework and dinner instead, filing the whole day under “don’t stir the waters.”",
+          "text": "You talk about homework, dinner, and tomorrow’s plans — leaving their feelings unspoken.",
           "tone": "avoidant · short-term soothing",
           "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "a1reflect",
@@ -196,13 +196,13 @@
       "act": "act1",
       "speaker": "Narrator",
       "title": "Quick Reflection",
-      "text": "Every introduction carries a message: not just who this new person is, but whether the child’s pace and feelings are allowed to matter.",
+      "text": "Introductions are never just about the new person — they’re about the child’s pace, the family’s history, and the invisible tug of feeling safe.\n\nYou take a breath, noticing today with clearer eyes.",
       "tone": "gentle · debrief",
       "choices": [
         {
           "id": "a1reflectc1",
           "label": "Notice what you did to protect the child’s pace.",
-          "text": "You recognize the moments where you gave the child choice, information, or space.",
+          "text": "You replay small moments where you offered choice, space, or clarity — the foundation of trust.",
           "tone": "self-compassionate · learning-focused",
           "effects": { "trust": 1, "tension": -1, "childStress": -1 },
           "next": "menu",
@@ -211,7 +211,7 @@
         {
           "id": "a1reflectc2",
           "label": "Notice what you’d handle differently next time.",
-          "text": "You mentally circle one thing you’d tweak for the next introduction or hangout.",
+          "text": "You identify one shift — a phrasing, a pause, a tone — that will make the next introduction smoother.",
           "tone": "honest · growth-oriented",
           "effects": { "trust": 0, "tension": 0, "childStress": 0 },
           "next": "menu",
@@ -229,4 +229,5 @@
     }
   ]
 }
+
 
