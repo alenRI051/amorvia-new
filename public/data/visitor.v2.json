@@ -31,6 +31,12 @@
     "showActTitle": true,
     "showSpeaker": true,
     "showChildStress": true
+    "backgrounds": {
+      "default": "/assets/backgrounds/room.svg",
+      "act": {
+        "act1": "/assets/backgrounds/hallway.svg",  // arrival / doorway
+        "act2": "/assets/backgrounds/room.svg",     // visit in living room
+        "act3": "/assets/backgrounds/bedroom.svg"
   },
   "entry": "a1s1",
   "entryNodeId": "a1s1",
