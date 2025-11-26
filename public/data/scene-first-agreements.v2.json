@@ -20,7 +20,9 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/room.svg"
+        "act1": "/assets/backgrounds/cafe.svg",
+        "act2": "/assets/backgrounds/room.svg",
+        "act3": "/assets/backgrounds/park.svg"
       }
     }
   },
