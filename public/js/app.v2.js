@@ -51,7 +51,57 @@
       // act3: "default",
     },
   };
+    const BG_STATE = {
+    loaded: false,
+  };
 
+  function applyBackgroundIndex(data) {
+    if (!data || !Array.isArray(data.backgrounds)) return;
+
+    const select = $(BG_SELECTORS.select);
+    const currentSrc = $(BG_SELECTORS.img)?.getAttribute("src") || null;
+
+    // Extend BACKGROUNDS map from index
+    data.backgrounds.forEach((bg) => {
+      if (!bg || !bg.id || !bg.src) return;
+      BACKGROUNDS[bg.id] = bg.src;
+    });
+
+    if (select) {
+      // Rebuild the dropdown
+      select.innerHTML = "";
+      data.backgrounds.forEach((bg) => {
+        if (!bg || !bg.src) return;
+        const opt = document.createElement("option");
+        opt.value = bg.src;
+        opt.textContent = bg.label || bg.id || bg.src;
+        select.appendChild(opt);
+      });
+
+      // Try to preserve currently active background, if it exists
+      if (currentSrc) {
+        const hasMatch = Array.from(select.options).some(
+          (opt) => opt.value === currentSrc
+        );
+        if (hasMatch) {
+          select.value = currentSrc;
+        }
+      }
+    }
+
+    BG_STATE.loaded = true;
+  }
+
+  function loadBackgroundIndex() {
+    // Non-fatal; just logs on failure and keeps hard-coded defaults
+    return fetchJsonNoStore("/data/backgrounds.v1.json")
+      .then((data) => {
+        applyBackgroundIndex(data);
+      })
+      .catch((err) => {
+        console.warn("[AmorviaMini] Failed to load backgrounds index:", err);
+      });
+  }
   const state = {
     index: null,
     scenario: null,
