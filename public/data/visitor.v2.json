@@ -34,8 +34,8 @@
     "backgrounds": {
       "default": "/assets/backgrounds/room.svg",
       "act": {
-        "act1": "/assets/backgrounds/hallway.svg",  // arrival / doorway
-        "act2": "/assets/backgrounds/room.svg",     // visit in living room
+        "act1": "/assets/backgrounds/hallway.svg",  
+        "act2": "/assets/backgrounds/room.svg",     
         "act3": "/assets/backgrounds/bedroom.svg"
   },
   "entry": "a1s1",
