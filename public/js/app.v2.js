@@ -560,6 +560,7 @@
   // ------------ Init ------------
 
   function init() {
+    loadBackgroundIndex();
     loadIndex();
     wireChoiceClicks();
   }
