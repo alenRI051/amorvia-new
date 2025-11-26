@@ -25,21 +25,21 @@
     "tension",
     "childStress"
   ],
-  "ui": {
-  "showHud": true,
-  "showActBadge": true,
-  "showActTitle": true,
-  "showSpeaker": true,
-  "showChildStress": true,
-  "backgrounds": {
-    "default": "default",   // uses BACKGROUNDS.default → room
-    "act": {
-      "act1": "hallway",    // BACKGROUNDS.hallway → hallway.svg
-      "act2": "default",    // reuse room
-      "act3": "cafe"        // BACKGROUNDS.cafe → cafe.svg
+    "ui": {
+    "showHud": true,
+    "showActBadge": true,
+    "showActTitle": true,
+    "showSpeaker": true,
+    "showChildStress": true,
+    "backgrounds": {
+      "default": "default",
+      "act": {
+        "act1": "hallway",
+        "act2": "default",
+        "act3": "cafe"
+      }
     }
-  }
-},   
+  },
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryId": "a1s1",
