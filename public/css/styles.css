@@ -73,12 +73,7 @@
   padding-bottom: .75rem;              /* room at the bottom */
 }
 
-/* Amorvia UI v9.8 – act badge pop */
-
-#actBadge {
-  transition: opacity 160ms ease-out, transform 160ms ease-out;
-}
-
+/* Act badge pop animation */
 #actBadge.act-change {
   animation: act-badge-pop 240ms ease-out;
 }
@@ -93,6 +88,8 @@
     transform: translateY(0);
   }
 }
+
+/* Act badge – Pill Dark Style (v9.8) */
 #actBadge {
   display: inline-block;
   padding: 4px 14px;
@@ -106,6 +103,7 @@
   margin-bottom: 6px;
   transition: opacity 160ms ease-out, transform 160ms ease-out;
 }
+
 /* Ensure HUD renders above any overlapping siblings */
 #hud {
   position: relative;
