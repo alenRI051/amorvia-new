@@ -367,16 +367,30 @@
     applyBackgroundForNode(node);
 
     // Act badge
-    if (actBadge) {
-      let actLabel = "Act -";
-      if (node.act && state.actsById[node.act]) {
-        const meta = state.actsById[node.act];
-        actLabel = meta.title || meta.id || "Act -";
-      } else if (node.act) {
-        actLabel = node.act;
-      }
-      actBadge.textContent = actLabel;
-    }
+if (actBadge) {
+  let actLabel = "Act -";
+  let actId = null;
+
+  if (node.act && state.actsById[node.act]) {
+    const meta = state.actsById[node.act];
+    actId = meta.id || node.act;
+    actLabel = meta.title || meta.id || "Act -";
+  } else if (node.act) {
+    actId = node.act;
+    actLabel = node.act;
+  }
+
+  // ako se act promijenio, pokreni malu animaciju
+  if (actId && actId !== state.lastActId) {
+    actBadge.classList.remove("act-change");
+    // reflow trik da se resetira animacija
+    void actBadge.offsetWidth;
+    actBadge.classList.add("act-change");
+    state.lastActId = actId;
+  }
+
+  actBadge.textContent = actLabel;
+}
 
     // Scene title
     if (sceneTitle) {
