@@ -64,16 +64,16 @@
     "showMeters": true,
     "showActTitle": true,
     "backgrounds": {
-    "default": "/assets/backgrounds/room.svg",
-    "act": {
-      "act1": "/assets/backgrounds/bedroom.svg",
-      "act2": "/assets/backgrounds/livingroom.svg",
-      "act3": "/assets/backgrounds/mediationroom.svg",
-      "act4": "/assets/backgrounds/hallway.svg",
-      "act5": "/assets/backgrounds/park.svg"
+      "default": "/assets/backgrounds/room.svg",
+      "act": {
+        "act1": "/assets/backgrounds/bedroom.svg",
+        "act2": "/assets/backgrounds/livingroom.svg",
+        "act3": "/assets/backgrounds/mediationroom.svg",
+        "act4": "/assets/backgrounds/hallway.svg",
+        "act5": "/assets/backgrounds/park.svg"
+      }
     }
-  }
-},
+  },
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryId": "a1s1",
@@ -120,17 +120,16 @@
       "text": "You leave the scenario. You can return anytime if you want to explore different paths or try other acts.",
       "choices": []
     },
-
     {
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "It\u2019s early morning. Your phone buzzes with a long message from your ex-partner.\n\nYou see only the first line on the lock screen:\n\n\u201cI can\u2019t do this anymore, everything is too much\u2026\u201d",
+      "text": "It’s early morning. Your phone buzzes with a long message from your ex-partner.\n\nYou see only the first line on the lock screen:\n\n“I can’t do this anymore, everything is too much…” You already know that a single line like this can set the emotional weather for the whole day before anyone has even finished breakfast.",
       "choices": [
         {
           "id": "a1s1c1",
           "label": "Open the message immediately and read everything.",
-          "text": "You swipe and open the message, heart rate spiking before you\u2019ve even had coffee.",
+          "text": "You swipe and open the message, heart rate spiking before you’ve even had coffee.",
           "effects": {
             "trust": 0,
             "tension": 2,
@@ -159,7 +158,7 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "When you finally read the full message, it\u2019s a familiar mix: desperation, blame, and sudden ideas.\n\nYour ex writes about changing the schedule, seeing the child more, then less, then maybe not at all. There are hints of suicidal thinking, and also of anger:\n\n\u201cYou never understood what it\u2019s like in my head.\u201d",
+      "text": "When you finally read the full message, it’s a familiar mix: desperation, blame, and sudden ideas.\n\nYour ex writes about changing the schedule, seeing the child more, then less, then maybe not at all. There are hints of suicidal thinking, and also of anger:\n\n“You never understood what it’s like in my head.” You recognise the pattern by now—like a familiar storm front made of big feelings, sudden plans, and the fear of everything changing overnight.",
       "choices": [
         {
           "id": "a1s2c1",
@@ -193,11 +192,11 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Ex-Partner",
-      "text": "\u201cI\u2019m so tired of being treated like I\u2019m unstable,\u201d your ex replies.\n\nA few messages later, they write:\n\n\u201cActually maybe you should just take full custody. I\u2019m obviously the problem.\u201d",
+      "text": "“I’m so tired of being treated like I’m unstable,” your ex replies.\n\nA few messages later, they write:\n\n“Actually maybe you should just take full custody. I’m obviously the problem.”",
       "choices": [
         {
           "id": "a1s3c1",
-          "label": "Take the offer literally and say \u201cMaybe that\u2019s for the best.\u201d",
+          "label": "Take the offer literally and say “Maybe that’s for the best.”",
           "text": "You respond from a place of exhaustion, not strategy.",
           "effects": {
             "trust": -3,
@@ -211,7 +210,7 @@
         {
           "id": "a1s3c2",
           "label": "Name the crisis language and slow things down.",
-          "text": "You write that you hear how overwhelmed they are, but decisions about custody can\u2019t be made by text in a crisis moment.",
+          "text": "You write that you hear how overwhelmed they are, but decisions about custody can’t be made by text in a crisis moment.",
           "effects": {
             "trust": 2,
             "tension": -1,
@@ -227,7 +226,7 @@
       "id": "a1s4",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "You glance at the clock. In less than an hour, your child will wake up and you\u2019ll both have to navigate the handover today.\n\nThis isn\u2019t just about texts\u2014it\u2019s about what kind of morning your child walks into.",
+      "text": "You glance at the clock. In less than an hour, your child will wake up and you’ll both have to navigate the handover today.\n\nThis isn’t just about texts—it’s about what kind of morning your child walks into. In families touched by bipolar disorder, mornings are not just about routines; they are about choosing what emotional weather your child wakes up into.",
       "choices": [
         {
           "id": "a1s4c1",
@@ -245,7 +244,7 @@
         {
           "id": "a1s4c2",
           "label": "Keep everything in your head and try to push through alone.",
-          "text": "You decide there\u2019s no time to involve anyone else and push all the feelings down.",
+          "text": "You decide there’s no time to involve anyone else and push all the feelings down.",
           "effects": {
             "trust": -1,
             "tension": 2,
@@ -261,7 +260,7 @@
       "id": "a1s5",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Your child\u2019s footsteps pad down the hallway. A small voice asks:\n\n\u201cIs mom/dad coming today?\u201d\n\nYour answer will shape not just this morning, but how safe they feel in the middle of all this.",
+      "text": "Your child’s footsteps pad down the hallway. A small voice asks:\n\n“Is mom/dad coming today?”\n\nYour answer will shape not just this morning, but how safe they feel in the middle of all this.",
       "choices": [
         {
           "id": "a1s5c1",
@@ -278,7 +277,7 @@
         },
         {
           "id": "a1s5c2",
-          "label": "Over-share about the crisis and your ex\u2019s mental state.",
+          "label": "Over-share about the crisis and your ex’s mental state.",
           "text": "You let your frustration spill into details that are too heavy for a child to hold.",
           "effects": {
             "trust": -2,
@@ -295,7 +294,7 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Act 1 closes with a simple scene: a child waiting by the door, and two adults trying \u2014 in very different ways \u2014 to manage a storm.\n\nFrom here, you can reflect, or continue to Act 2 and explore how you prepare for a deeper conversation about bipolar disorder and co-parenting.",
+      "text": "Act 1 closes with a simple scene: a child waiting by the door, and two adults trying — in very different ways — to manage a storm.\n\nFrom here, you can reflect, or continue to Act 2 and explore how you prepare for a deeper conversation about bipolar disorder and co-parenting. For your child, this isn’t just about custody or diagnoses; it’s about which emotional storm they have to walk through just to get to the door.",
       "choices": [
         {
           "id": "a1endc1",
@@ -311,7 +310,7 @@
         },
         {
           "id": "a1endc2",
-          "label": "Continue to Act 2 \u2013 Preparing for a harder conversation.",
+          "label": "Continue to Act 2 – Preparing for a harder conversation.",
           "text": "You move on, ready to think about how to talk more intentionally about bipolar disorder and co-parenting.",
           "effects": {
             "trust": 1,
@@ -323,17 +322,16 @@
         }
       ]
     },
-
     {
       "id": "a2s1",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Later that week, you know you\u2019ll need to talk with your ex in more depth.\n\nTexts and last-minute changes aren\u2019t enough. You\u2019re considering suggesting a more structured conversation\u2014maybe even involving a mediator or therapist.",
+      "text": "Later that week, you know you’ll need to talk with your ex in more depth.\n\nTexts and last-minute changes aren’t enough. You’re considering suggesting a more structured conversation—maybe even involving a mediator or therapist. This time, instead of bracing for the next mood swing, you’re trying to bring a small, handwritten map into a territory that often feels chaotic.",
       "choices": [
         {
           "id": "a2s1c1",
           "label": "Write down your main goals before talking.",
-          "text": "You grab a notebook and list what matters most: safety, stability, and your child\u2019s sense of being loved by both parents.",
+          "text": "You grab a notebook and list what matters most: safety, stability, and your child’s sense of being loved by both parents.",
           "effects": {
             "trust": 2,
             "tension": -1,
@@ -345,8 +343,8 @@
         },
         {
           "id": "a2s1c2",
-          "label": "Go in with no plan and \u201csee what happens.\u201d",
-          "text": "You tell yourself you\u2019ll just react in the moment, even though that hasn\u2019t worked well before.",
+          "label": "Go in with no plan and “see what happens.”",
+          "text": "You tell yourself you’ll just react in the moment, even though that hasn’t worked well before.",
           "effects": {
             "trust": -1,
             "tension": 1,
@@ -362,7 +360,7 @@
       "id": "a2s2",
       "act": "act2",
       "speaker": "You",
-      "text": "You think about the word \u201cbipolar.\u201d\n\nThere\u2019s history there: episodes, hospital visits, moments when your ex was stable and kind, and others when they were frightening or absent.\n\nYou know you can\u2019t change the diagnosis. But you might be able to change how you respond.",
+      "text": "You think about the word “bipolar.”\n\nThere’s history there: episodes, hospital visits, moments when your ex was stable and kind, and others when they were frightening or absent.\n\nYou know you can’t change the diagnosis. But you might be able to change how you respond. You remind yourself that a diagnosis is not a personality, but it does change the kind of scaffolding that keeps everyone safer.",
       "choices": [
         {
           "id": "a2s2c1",
@@ -396,7 +394,7 @@
       "id": "a2s3",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "A trusted professional (therapist, social worker, or doctor) comes to mind.\n\nYou wonder whether to loop them in more actively, or keep everything informal between you and your ex.",
+      "text": "A trusted professional (therapist, social worker, or doctor) comes to mind.\n\nYou wonder whether to loop them in more actively, or keep everything informal between you and your ex. Inviting a professional into the picture can feel exposing, but it also means you’re not the only adult trying to hold back the tide.",
       "choices": [
         {
           "id": "a2s3c1",
@@ -413,7 +411,7 @@
         },
         {
           "id": "a2s3c2",
-          "label": "Decide not to involve professionals to avoid \u201cmaking a big deal.\u201d",
+          "label": "Decide not to involve professionals to avoid “making a big deal.”",
           "text": "You talk yourself out of asking for help, even though the situation already feels like a big deal.",
           "effects": {
             "trust": -1,
@@ -434,8 +432,8 @@
       "choices": [
         {
           "id": "a2s4c1",
-          "label": "Use \u201cI\u201d statements and focus on the child.",
-          "text": "You write about what you\u2019re noticing and what you hope for your child, not what\u2019s \u201cwrong\u201d with them.",
+          "label": "Use “I” statements and focus on the child.",
+          "text": "You write about what you’re noticing and what you hope for your child, not what’s “wrong” with them.",
           "effects": {
             "trust": 2,
             "tension": -1,
@@ -447,7 +445,7 @@
         },
         {
           "id": "a2s4c2",
-          "label": "Lead with labels (\u201cBecause of your bipolar\u2026\u201d).",
+          "label": "Lead with labels (“Because of your bipolar…”).",
           "text": "You put the diagnosis in the very first sentence. It may be accurate, but it lands like an accusation.",
           "effects": {
             "trust": -2,
@@ -464,7 +462,7 @@
       "id": "a2end",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Act 2 ends with a message sent and a plan forming in your mind.\n\nYou haven\u2019t had the big conversation yet, but you\u2019ve thought more carefully about what you want it to do for you, your ex, and your child.",
+      "text": "Act 2 ends with a message sent and a plan forming in your mind.\n\nYou haven’t had the big conversation yet, but you’ve thought more carefully about what you want it to do for you, your ex, and your child. Nothing outside has visibly changed yet, but inside you’re shifting from pure reaction to a more deliberate stance.",
       "choices": [
         {
           "id": "a2endc1",
@@ -492,16 +490,15 @@
         }
       ]
     },
-
     {
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "A few weeks later you and your ex-partner sit in a small mediation room. The mediator has a calm voice and an overfull notepad. Your ex looks tired but alert \u2014 somewhere between stable and fragile.\n\nThe mediator asks you both to name one thing you want for your child from today\u2019s meeting.",
+      "text": "A few weeks later you and your ex-partner sit in a small mediation room. The mediator has a calm voice and an overfull notepad. Your ex looks tired but alert — somewhere between stable and fragile.\n\nThe mediator asks you both to name one thing you want for your child from today’s meeting. The mediation room becomes a kind of buffer zone between intense private history and the small person who still wants both parents to be okay.",
       "choices": [
         {
           "id": "a3s1c1",
-          "label": "Name a child-focused goal (\u201cI want our child to feel safe with both of us\u201d).",
+          "label": "Name a child-focused goal (“I want our child to feel safe with both of us”).",
           "text": "You take a breath and keep the focus on your child, not the diagnosis.",
           "effects": {
             "trust": 2,
@@ -514,7 +511,7 @@
         },
         {
           "id": "a3s1c2",
-          "label": "Lead with frustration (\u201cI\u2019m tired of the chaos and broken promises\u201d).",
+          "label": "Lead with frustration (“I’m tired of the chaos and broken promises”).",
           "text": "Your words are honest, but they land like a punch. The room tightens.",
           "effects": {
             "trust": -2,
@@ -531,7 +528,7 @@
       "id": "a3s2",
       "act": "act3",
       "speaker": "Mediator",
-      "text": "\u201cThank you,\u201d the mediator says. \u201cI\u2019m hearing that stability and safety are big priorities. Let\u2019s talk about what a \u2018stable week\u2019 actually looks like in your home.\u201d",
+      "text": "“Thank you,” the mediator says. “I’m hearing that stability and safety are big priorities. Let’s talk about what a ‘stable week’ actually looks like in your home.” Talking about concrete weeks and routines gives everyone something to stand on that isn’t just mood, fear, or guilt.",
       "choices": [
         {
           "id": "a3s2c1",
@@ -549,7 +546,7 @@
         {
           "id": "a3s2c2",
           "label": "Slide into old arguments about the past.",
-          "text": "Before you know it, you\u2019re listing old hurts from years ago. The mediator gently redirects you.",
+          "text": "Before you know it, you’re listing old hurts from years ago. The mediator gently redirects you.",
           "effects": {
             "trust": -1,
             "tension": 2,
@@ -565,12 +562,12 @@
       "id": "a3s3",
       "act": "act3",
       "speaker": "Ex-Partner",
-      "text": "Your ex shifts in the chair. \u201cI am trying,\u201d they say. \u201cThe medication helps, but when I\u2019m sliding down, I need more structure, not threats.\u201d\n\nYou feel a mix of empathy and exhaustion.",
+      "text": "Your ex shifts in the chair. “I am trying,” they say. “The medication helps, but when I’m sliding down, I need more structure, not threats.”\n\nYou feel a mix of empathy and exhaustion. In their words you can hear both the weight of managing a chronic condition and the plea not to be treated only as a risk factor.",
       "choices": [
         {
           "id": "a3s3c1",
           "label": "Acknowledge their effort, but keep a firm boundary.",
-          "text": "You say you can see they\u2019re trying, and you still need reliable routines for your child.",
+          "text": "You say you can see they’re trying, and you still need reliable routines for your child.",
           "effects": {
             "trust": 2,
             "tension": -1,
@@ -583,7 +580,7 @@
         {
           "id": "a3s3c2",
           "label": "Minimize their effort and focus on failures.",
-          "text": "You list the times they didn\u2019t show up, the nights your child cried. The air gets colder.",
+          "text": "You list the times they didn’t show up, the nights your child cried. The air gets colder.",
           "effects": {
             "trust": -2,
             "tension": 2,
@@ -599,7 +596,7 @@
       "id": "a3s4",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "With the mediator\u2019s help, you sketch out a trial plan: clear pickup times, backup options if your ex is unwell, and a rule that the child does not become the messenger.\n\nIt\u2019s not perfect. But it is written down.",
+      "text": "With the mediator’s help, you sketch out a trial plan: clear pickup times, backup options if your ex is unwell, and a rule that the child does not become the messenger.\n\nIt’s not perfect. But it is written down. Written plans can’t stop episodes from coming, but they can stop the child from becoming the emergency plan.",
       "choices": [
         {
           "id": "a3s4c1",
@@ -633,7 +630,7 @@
       "id": "a3end",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "Act 3 ends with a signed piece of paper on the table. It doesn\u2019t magically fix bipolar disorder, but it gives you a shared map \u2014 at least for now.",
+      "text": "Act 3 ends with a signed piece of paper on the table. It doesn’t magically fix bipolar disorder, but it gives you a shared map — at least for now. For now, the paper on the table is less about trust in the illness and more about trust in the structure around it.",
       "choices": [
         {
           "id": "a3endc1",
@@ -661,12 +658,11 @@
         }
       ]
     },
-
     {
       "id": "a4s1",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Two weeks into the new plan, your ex is late for pickup again. Your child waits with a small backpack and big eyes.\n\nYour phone shows no new messages.",
+      "text": "Two weeks into the new plan, your ex is late for pickup again. Your child waits with a small backpack and big eyes.\n\nYour phone shows no new messages. Your child feels the lateness not as a time issue, but as a question about whether they were worth showing up for.",
       "choices": [
         {
           "id": "a4s1c1",
@@ -698,12 +694,12 @@
       "id": "a4s2",
       "act": "act4",
       "speaker": "Ex-Partner",
-      "text": "An hour later, your ex finally calls. Their voice is shaky. They say they\u2019ve been sliding into a depressive episode and couldn\u2019t get out of bed.\n\nYou feel a wave of anger and, underneath it, concern.",
+      "text": "An hour later, your ex finally calls. Their voice is shaky. They say they’ve been sliding into a depressive episode and couldn’t get out of bed.\n\nYou feel a wave of anger and, underneath it, concern.",
       "choices": [
         {
           "id": "a4s2c1",
           "label": "Hold the boundary and reschedule the visit for another day.",
-          "text": "You explain firmly that pickup is missed and will be rescheduled when they\u2019re stable.",
+          "text": "You explain firmly that pickup is missed and will be rescheduled when they’re stable.",
           "effects": {
             "trust": 1,
             "tension": 1,
@@ -730,12 +726,12 @@
       "id": "a4s3",
       "act": "act4",
       "speaker": "Child",
-      "text": "Later, your child asks: \u201cIs mom/dad sick again? Is it my fault they didn\u2019t come?\u201d The question hits you harder than any missed pickup.",
+      "text": "Later, your child asks: “Is mom/dad sick again? Is it my fault they didn’t come?” The question hits you harder than any missed pickup.",
       "choices": [
         {
           "id": "a4s3c1",
           "label": "Give a simple, age-appropriate explanation about bipolar disorder.",
-          "text": "You explain that grown-up brains can get sick, and it\u2019s not your child\u2019s fault.",
+          "text": "You explain that grown-up brains can get sick, and it’s not your child’s fault.",
           "effects": {
             "trust": 2,
             "tension": -1,
@@ -762,7 +758,7 @@
       "id": "a4s4",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "That night, you jot down notes about what worked and what didn\u2019t. You wonder if the plan needs adjusting \u2014 or if this is simply the reality of co-parenting with bipolar disorder.",
+      "text": "That night, you jot down notes about what worked and what didn’t. You wonder if the plan needs adjusting — or if this is simply the reality of co-parenting with bipolar disorder. You’re slowly collecting these moments like data points, not to build a case against your ex, but to build a clearer picture of what is realistically possible.",
       "choices": [
         {
           "id": "a4s4c1",
@@ -794,12 +790,12 @@
       "id": "a4end",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Act 4 closes on a mixed note: your boundaries are clearer, but so is the emotional cost. You can see how much your child is watching both of you.",
+      "text": "Act 4 closes on a mixed note: your boundaries are clearer, but so is the emotional cost. You can see how much your child is watching both of you. Your child’s nervous system is learning from every missed pickup and every calm response; both leave traces.",
       "choices": [
         {
           "id": "a4endc1",
           "label": "Return to main menu.",
-          "text": "You choose to pause here and digest what you\u2019ve seen.",
+          "text": "You choose to pause here and digest what you’ve seen.",
           "effects": {
             "trust": 0,
             "tension": 0,
@@ -822,12 +818,11 @@
         }
       ]
     },
-
     {
       "id": "a5s1",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "Months pass. Some weeks are calm; others are a storm of missed messages, medication changes, and court paperwork.\n\nYou notice patterns: what escalates things, and what quietly helps.",
+      "text": "Months pass. Some weeks are calm; others are a storm of missed messages, medication changes, and court paperwork.\n\nYou notice patterns: what escalates things, and what quietly helps. Over time, patterns like these become your personal weather report, letting you predict when a storm is likely and how to shelter your child from the worst of it.",
       "choices": [
         {
           "id": "a5s1c1",
@@ -859,7 +854,7 @@
       "id": "a5s2",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "You also decide how much of your ex\u2019s mental health journey is yours to manage.\n\nTheir bipolar disorder is real \u2014 and so are your limits.",
+      "text": "You also decide how much of your ex’s mental health journey is yours to manage.\n\nTheir bipolar disorder is real — and so are your limits. Stepping out of the role of unpaid therapist is not abandonment; it is making sure there is at least one adult whose main job is to stay steady for the child.",
       "choices": [
         {
           "id": "a5s2c1",
@@ -891,7 +886,7 @@
       "id": "a5s3",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "On a quiet evening, your child draws a picture of \u201ctwo homes\u201d and proudly shows you.\n\n\u201cThis is my house,\u201d they say, \u201cand this is mom\u2019s/dad\u2019s. I have two beds!\u201d",
+      "text": "On a quiet evening, your child draws a picture of “two homes” and proudly shows you.\n\n“This is my house,” they say, “and this is mom’s/dad’s. I have two beds!” The drawing is its own quiet proof that a child can hold more than one home in their heart without having to choose sides.",
       "choices": [
         {
           "id": "a5s3c1",
@@ -923,7 +918,7 @@
       "id": "a5end",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "Act 5, and the scenario, end here. The bipolar diagnosis hasn\u2019t vanished. But you\u2019ve experimented with boundaries, plans, and ways of talking that might make life a little steadier for you and your child.\n\nThere is no perfect path \u2014 only more informed next steps.",
+      "text": "Act 5, and the scenario, end here. The bipolar diagnosis hasn’t vanished. But you’ve experimented with boundaries, plans, and ways of talking that might make life a little steadier for you and your child.\n\nThere is no perfect path — only more informed next steps. The diagnosis stays, but the story around it can slowly shift—from ‘everything is chaos’ to ‘the adults are working on their stuff so I can be a kid.’",
       "choices": [
         {
           "id": "a5endc1",
@@ -998,5 +993,3 @@
     }
   ]
 }
-
-
