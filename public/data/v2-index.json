@@ -1,83 +1,123 @@
-[
-  {
-    "id": "co-parenting-with-bipolar-partner",
-    "title": "Co-Parenting with Bipolar Partner",
-    "category": "core",
-    "order": 1,
-    "tags": ["co-parenting", "mental-health", "high-conflict"],
-    "description": "Navigating exchanges, logistics and emotional storms when your co-parent lives with bipolar disorder."
-  },
-  {
-    "id": "scene-first-agreements",
-    "title": "Scene: First Agreements",
-    "category": "foundation",
-    "order": 2,
-    "tags": ["co-parenting", "communication", "agreements"],
-    "description": "Sitting down to craft the first workable parenting agreement after a breakup."
-  },
-  {
-    "id": "scene-new-introductions",
-    "title": "Scene: New Introductions",
-    "category": "foundation",
-    "order": 3,
-    "tags": ["introductions", "child-focus", "new-partner"],
-    "description": "Introducing a new partner at the child’s pace, without overwhelming or sidelining them."
-  },
-  {
-    "id": "scene-different-rules",
-    "title": "Scene: Different Rules",
-    "category": "foundation",
-    "order": 4,
-    "tags": ["co-parenting", "different-rules", "consistency", "child-experience"],
-    "description": "Two homes, two systems of rules — giving the child a clearer map instead of mixed messages."
-  },
-  {
-    "id": "scene-de-escalation",
-    "title": "Scene: De-escalation",
-    "category": "foundation",
-    "order": 5,
-    "tags": ["conflict", "communication", "calming", "co-parenting"],
-    "description": "Catching a fight as it builds and guiding it back down into repair instead of explosion."
-  },
-  {
-    "id": "scene-tense-pickups-and-dropoffs",
-    "title": "Scene: Tense Pickups & Dropoffs",
-    "category": "core",
-    "order": 6,
-    "tags": ["handover", "conflict", "child-stress"],
-    "description": "High-tension handoffs at the curb, and how the ‘weather of the handoff’ shapes the child’s stress."
-  },
-  {
-    "id": "step-parenting-conflicts",
-    "title": "Step-Parenting Conflicts",
-    "category": "core",
-    "order": 7,
-    "tags": ["step-parenting", "loyalty", "boundaries"],
-    "description": "Navigating loyalty binds and role confusion when a step-parent becomes part of the parenting system."
-  },
-  {
-    "id": "dating-after-breakup-with-child-involved",
-    "title": "Dating After Breakup (With Child Involved)",
-    "category": "core",
-    "order": 8,
-    "tags": ["dating", "co-parenting", "boundaries", "child-wellbeing"],
-    "description": "Re-entering dating while protecting your child’s stability, your time, and your own emotional boundaries."
-  },
-  {
-    "id": "cultural-or-religious-difference",
-    "title": "Cultural or Religious Difference in Co-Parenting",
-    "category": "advanced",
-    "order": 9,
-    "tags": ["culture", "religion", "family", "identity"],
-    "description": "When two family cultures or faiths collide, and the child is trying to belong to both without choosing sides."
-  },
-  {
-    "id": "visitor",
-    "title": "Visitor",
-    "category": "bonus",
-    "order": 10,
-    "tags": ["boundaries", "home", "safety"],
-    "description": "A ‘visitor at the door’ moment: setting boundaries about who comes in while keeping the child’s sense of safety intact."
-  }
-]
+{
+  "scenarios": [
+    {
+      "id": "co-parenting-with-bipolar-partner",
+      "title": "Co-Parenting with Bipolar Partner",
+      "file": "co-parenting-with-bipolar-partner.v2.json",
+      "category": "core",
+      "order": 1,
+      "tags": ["co-parenting", "mental-health", "high-conflict"],
+      "description": "Navigating exchanges, logistics and emotional storms when your co-parent lives with bipolar disorder."
+    },
+    {
+      "id": "scene-first-agreements",
+      "title": "Scene: First Agreements",
+      "file": "scene-first-agreements.v2.json",
+      "category": "foundation",
+      "order": 2,
+      "tags": ["co-parenting", "communication", "agreements"],
+      "description": "Sitting down to craft the first workable parenting agreement after a breakup."
+    },
+    {
+      "id": "scene-new-introductions",
+      "title": "Scene: New Introductions",
+      "file": "scene-new-introductions.v2.json",
+      "category": "foundation",
+      "order": 3,
+      "tags": ["introductions", "child-focus", "new-partner"],
+      "description": "Introducing a new partner at the child’s pace, without overwhelming or sidelining them."
+    },
+    {
+      "id": "scene-different-rules",
+      "title": "Scene: Different Rules",
+      "file": "scene-different-rules.v2.json",
+      "category": "foundation",
+      "order": 4,
+      "tags": ["co-parenting", "different-rules", "consistency", "child-experience"],
+      "description": "Two homes, two systems of rules — giving the child a clearer map instead of mixed messages."
+    },
+    {
+      "id": "scene-de-escalation",
+      "title": "Scene: De-escalation",
+      "file": "scene-de-escalation.v2.json",
+      "category": "foundation",
+      "order": 5,
+      "tags": ["conflict", "communication", "calming", "co-parenting"],
+      "description": "Catching a fight as it builds and guiding it back down into repair instead of explosion."
+    },
+    {
+      "id": "scene-tense-pickups-and-dropoffs",
+      "title": "Scene: Tense Pickups & Dropoffs",
+      "file": "scene-tense-pickups-and-dropoffs.v2.json",
+      "category": "core",
+      "order": 6,
+      "tags": ["handover", "conflict", "child-stress"],
+      "description": "High-tension handoffs at the curb, and how the ‘weather of the handoff’ shapes the child’s stress."
+    },
+    {
+      "id": "step-parenting-conflicts",
+      "title": "Step-Parenting Conflicts",
+      "file": "step-parenting-conflicts.v2.json",
+      "category": "core",
+      "order": 7,
+      "tags": ["step-parenting", "loyalty", "boundaries"],
+      "description": "Navigating loyalty binds and role confusion when a step-parent becomes part of the parenting system."
+    },
+    {
+      "id": "dating-after-breakup-with-child-involved",
+      "title": "Dating After Breakup (With Child Involved)",
+      "file": "dating-after-breakup-with-child-involved.v2.json",
+      "category": "core",
+      "order": 8,
+      "tags": ["dating", "co-parenting", "boundaries", "child-wellbeing"],
+      "description": "Re-entering dating while protecting your child’s stability, your time, and your own emotional boundaries."
+    },
+    {
+      "id": "cultural-or-religious-difference",
+      "title": "Cultural or Religious Difference in Co-Parenting",
+      "file": "cultural-or-religious-difference.v2.json",
+      "category": "advanced",
+      "order": 9,
+      "tags": ["culture", "religion", "family", "identity"],
+      "description": "When two family cultures or faiths collide, and the child is trying to belong to both without choosing sides."
+    },
+    {
+      "id": "visitor",
+      "title": "Visitor",
+      "file": "visitor.v2.json",
+      "category": "bonus",
+      "order": 10,
+      "tags": ["boundaries", "home", "safety"],
+      "description": "A ‘visitor at the door’ moment: setting boundaries about who comes in while keeping the child’s sense of safety intact."
+    },
+
+    {
+      "id": "brzi-kontakti",
+      "title": "Brzi kontakti",
+      "file": "brzi-kontakti.v2.json",
+      "category": "system",
+      "order": 90,
+      "tags": ["support", "resources"],
+      "description": "Quick access to crisis and support contacts."
+    },
+    {
+      "id": "direction",
+      "title": "Direction",
+      "file": "direction.v2.json",
+      "category": "system",
+      "order": 91,
+      "tags": ["meta"],
+      "description": "Meta / direction helper scene."
+    },
+    {
+      "id": "to-do",
+      "title": "To-Do",
+      "file": "to-do.v2.json",
+      "category": "system",
+      "order": 92,
+      "tags": ["meta"],
+      "description": "Internal to-do or notes scene."
+    }
+  ]
+}
 
