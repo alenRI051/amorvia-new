@@ -2,7 +2,12 @@
   "id": "scene-de-escalation",
   "title": "Scene: De-escalation",
   "version": 2,
-  "tags": ["conflict", "communication", "calming", "co-parenting"],
+  "tags": [
+    "conflict",
+    "communication",
+    "calming",
+    "co-parenting"
+  ],
   "actors": {
     "Narrator": {},
     "You": {},
@@ -14,7 +19,11 @@
     "tension": 0,
     "childStress": 0
   },
-  "meterOrder": ["trust", "tension", "childStress"],
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
   "ui": {
     "showHud": true,
     "showActBadge": true,
@@ -38,248 +47,326 @@
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-
   "acts": [
     {
       "id": "act1",
       "title": "Act 1 – The Stirring",
-      "steps": ["a1s1", "a1s2"]
+      "steps": [
+        "a1s1",
+        "a1s2"
+      ]
     },
     {
       "id": "act2",
       "title": "Act 2 – Rising Heat",
-      "steps": ["a2s1", "a2s2"]
+      "steps": [
+        "a2s1",
+        "a2s2"
+      ]
     },
     {
       "id": "act3",
       "title": "Act 3 – The Pause",
-      "steps": ["a3s1", "a3s2"]
+      "steps": [
+        "a3s1",
+        "a3s2"
+      ]
     },
     {
       "id": "act4",
       "title": "Act 4 – Repair in Motion",
-      "steps": ["a4s1"]
+      "steps": [
+        "a4s1"
+      ]
     },
     {
       "id": "act5",
       "title": "Act 5 – After the Storm",
-      "steps": ["a5s1"]
+      "steps": [
+        "a5s1"
+      ]
     }
   ],
-
   "nodes": [
     {
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "The apartment feels tight. Your partner is pacing, and you can sense frustration brewing beneath every step.",
+      "text": "The apartment feels tight. Your partner is pacing, and you can sense frustration brewing beneath every step. Even the rhythm of their pacing sets the emotional weather in the room.",
       "tone": "tense · anticipatory",
       "choices": [
         {
           "id": "a1s1_c1",
           "label": "Check in gently: “Hey, what’s going on?”",
           "tone": "soft · attentive",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a1s2"
         },
         {
           "id": "a1s1_c2",
           "label": "Stay quiet and observe before reacting.",
           "tone": "neutral · cautious",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
           "to": "a1s2"
         },
         {
           "id": "a1s1_c3",
           "label": "React defensively: “Why are you already worked up?”",
           "tone": "reactive · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 0 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 0
+          },
           "to": "a1s2"
         }
       ]
     },
-
     {
       "id": "a1s2",
       "act": "act1",
       "speaker": "Partner",
-      "text": "“I’m tired. And I feel like everything lands on me lately.” The words come out sharper than expected.",
+      "text": "“I’m tired. And I feel like everything lands on me lately.” The words come out sharper than expected. Under the sharpness there’s a quieter message: someone scared of being left alone with everything.",
       "tone": "strained · raw",
       "choices": [
         {
           "id": "a1s2_c1",
           "label": "Reflect back: “Sounds like you’re overwhelmed.”",
           "tone": "grounded · validating",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a2s1"
         },
         {
           "id": "a1s2_c2",
           "label": "Offer solutions immediately.",
           "tone": "helpful · slightly rushed",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "to": "a2s1"
         },
         {
           "id": "a1s2_c3",
           "label": "Take it personally: “So now it’s my fault?”",
           "tone": "hurt · defensive",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "to": "a2s1"
         }
       ]
     },
-
     {
       "id": "a2s1",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "The air thickens. You can feel the conversation tilting toward a fight if no one slows it down.",
+      "text": "The air thickens. You can feel the conversation tilting toward a fight if no one slows it down. Fights rarely start with words—they start with breath, posture, and the speed of the heartbeat.",
       "tone": "heavy · rising tension",
       "choices": [
         {
           "id": "a2s1_c1",
           "label": "Name it: “I don’t want this to turn into a fight.”",
           "tone": "clear · de-escalating",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a2s2"
         },
         {
           "id": "a2s1_c2",
           "label": "Switch topics to cool things off.",
           "tone": "avoidant · temporary relief",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
           "to": "a2s2"
         },
         {
           "id": "a2s1_c3",
           "label": "Push back: “You’re not being fair.”",
           "tone": "challenging · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "to": "a2s2"
         }
       ]
     },
-
     {
       "id": "a2s2",
       "act": "act2",
       "speaker": "Partner",
-      "text": "“I just need to feel like we’re a team.” The voice cracks ever so slightly.",
+      "text": "“I just need to feel like we’re a team.” The voice cracks ever so slightly. That one sentence—'I need to feel like we’re a team'—is the soft center beneath the frustration.",
       "tone": "vulnerable · open",
       "choices": [
         {
           "id": "a2s2_c1",
           "label": "Reassure them you’re on the same side.",
           "tone": "warm · steady",
-          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a3s1"
         },
         {
           "id": "a2s2_c2",
           "label": "Ask what “team” means to them right now.",
           "tone": "curious · connecting",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0
+          },
           "to": "a3s1"
         },
         {
           "id": "a2s2_c3",
           "label": "Point out all you’ve already done today.",
           "tone": "irritated · self-defending",
-          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 0
+          },
           "to": "a3s1"
         }
       ]
     },
-
     {
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "A small silence settles — not hostile, just space. You can feel the emotional temperature dropping.",
+      "text": "A small silence settles — not hostile, just space. You can feel the emotional temperature dropping. The silence that follows isn’t distance; it’s the nervous system trying to cool the temperature.",
       "tone": "cooling · reflective",
       "choices": [
         {
           "id": "a3s1_c1",
           "label": "Suggest taking a short breather.",
           "tone": "calm · self-regulating",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a3s2"
         },
         {
           "id": "a3s1_c2",
           "label": "Stay present and wait for their next move.",
           "tone": "steady · patient",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a3s2"
         },
         {
           "id": "a3s1_c3",
           "label": "Nudge the issue again.",
           "tone": "pushing · unstable",
-          "effects": { "trust": -1, "tension": 1, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
           "to": "a3s2"
         }
       ]
     },
-
     {
       "id": "a3s2",
       "act": "act3",
       "speaker": "Partner",
-      "text": "“Thank you. I just needed a moment.” Their shoulders lower a little.",
+      "text": "“Thank you. I just needed a moment.” Their shoulders lower a little. Repair is rarely dramatic—it's built from softened shoulders and small nods toward each other.",
       "tone": "relieved · softening",
       "choices": [
         {
           "id": "a3s2_c1",
           "label": "Invite small next steps toward repair.",
           "tone": "intentional · gentle",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a4s1"
         },
         {
           "id": "a3s2_c2",
           "label": "Wrap up the conversation for tonight.",
           "tone": "practical · calm",
-          "effects": { "trust": 0, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a4s1"
         }
       ]
     },
-
     {
       "id": "a4s1",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "The two of you shift into repair mode — small gestures, softened tones, the beginning of rebuilding harmony.",
+      "text": "The two of you shift into repair mode — small gestures, softened tones, the beginning of rebuilding harmony. Moments like these teach the child more about love than any lecture on communication ever could.",
       "tone": "healing · cooperative",
       "choices": [
         {
           "id": "a4s1_c1",
           "label": "Offer appreciation for something they did this week.",
           "tone": "appreciative · grounding",
-          "effects": { "trust": 2, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": 0
+          },
           "to": "a5s1"
         },
         {
           "id": "a4s1_c2",
           "label": "Share one thing you’ll try to do differently.",
           "tone": "humble · forward-looking",
-          "effects": { "trust": 1, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0
+          },
           "to": "a5s1"
         }
       ]
     },
-
     {
       "id": "a5s1",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "The storm has passed. Not perfectly — but in a way that feels human, reachable, and real. You both did the work.",
+      "text": "The storm has passed. Not perfectly — but in a way that feels human, reachable, and real. You both did the work. Storms pass not because they never happened, but because someone chose to steer gently.",
       "tone": "warm · restorative",
       "choices": []
     }
   ]
 }
-
-
