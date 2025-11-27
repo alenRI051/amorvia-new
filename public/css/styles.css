@@ -73,6 +73,27 @@
   padding-bottom: .75rem;              /* room at the bottom */
 }
 
+/* Amorvia UI v9.8 – act badge pop */
+
+#actBadge {
+  transition: opacity 160ms ease-out, transform 160ms ease-out;
+}
+
+#actBadge.act-change {
+  animation: act-badge-pop 240ms ease-out;
+}
+
+@keyframes act-badge-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Ensure HUD renders above any overlapping siblings */
 #hud {
   position: relative;
