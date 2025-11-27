@@ -1,0 +1,1027 @@
+{
+  "id": "scene-tense-pickups-and-dropoffs",
+  "title": "Scene: Tense Pickups & Dropoffs",
+  "version": 2,
+  "tags": [
+    "pickups",
+    "dropoffs",
+    "exchange-day",
+    "co-parenting",
+    "conflict",
+    "de-escalation",
+    "child-wellbeing"
+  ],
+  "actors": {
+    "Narrator": {},
+    "You": {},
+    "Co-Parent": {},
+    "Child": {},
+    "Grandparent": {}
+  },
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
+  "ui": {
+    "showHud": true,
+    "showActBadge": true,
+    "showActTitle": true,
+    "showSpeaker": true,
+    "showChildStress": true,
+    "backgrounds": {
+      "default": "/assets/backgrounds/room.svg",
+      "act": {
+        "act1": "/assets/backgrounds/room.svg",
+        "act2": "/assets/backgrounds/hallway.svg",
+        "act3": "/assets/backgrounds/park.svg",
+        "act4": "/assets/backgrounds/cafe.svg",
+        "act5": "/assets/backgrounds/room.svg"
+      }
+    }
+  },
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+  "nodes": [
+    {
+      "id": "menu",
+      "speaker": "Narrator",
+      "text": "Main menu placeholder. Choose “Continue” to begin the scene about tense pickups and dropoffs.",
+      "choices": [
+        {
+          "id": "menu_continue",
+          "label": "Continue",
+          "text": "Continue",
+          "next": "a1s1",
+          "to": "a1s1"
+        }
+      ]
+    },
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "Parking Lot Weather",
+      "text": "You park a little further away than necessary. The school yard is full of kids, backpacks, and rushed goodbyes. Somewhere near the gate, your co-parent is already waiting. Your child notices them first and stiffens just slightly. You can already feel the weather of the handoff forming around you.",
+      "tone": "anticipatory · tight",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Walk up together at a calm, steady pace.",
+          "text": "You take your child’s hand and walk toward the gate without rushing, breathing slowly.",
+          "tone": "grounded · intentional",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Rush ahead to “get it over with”.",
+          "text": "You hurry across the parking lot, heart racing, wanting the exchange done as fast as possible.",
+          "tone": "anxious · avoidant",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a1s2",
+          "to": "a1s2"
+        },
+        {
+          "id": "a1s1c3",
+          "label": "Send the child ahead while you hang back.",
+          "text": "“Go on, they’re right there,” you say, staying closer to the car than the gate.",
+          "tone": "distancing · self-protective",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a1s2",
+          "to": "a1s2"
+        }
+      ]
+    },
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "Co-Parent",
+      "title": "First Words at the Gate",
+      "text": "Your co-parent glances at the clock on their phone before looking at you. “You’re late again,” they say, not loudly, but loud enough. Your child’s eyes immediately jump between you two.",
+      "tone": "critical · exposed",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Answer briefly and keep the focus on the child.",
+          "text": "“Traffic was slow. Let’s get them settled first, we can talk later.”",
+          "tone": "contained · child-focused",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Defend yourself in detail.",
+          "text": "“I’m three minutes late. Last week you were ten minutes late and I didn’t say anything.”",
+          "tone": "defensive · escalating",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
+          "next": "a1s3",
+          "to": "a1s3"
+        },
+        {
+          "id": "a1s2c3",
+          "label": "Ignore the comment and talk only to the child.",
+          "text": "You crouch down: “Have a good time, okay? Call me if you need anything.”",
+          "tone": "protective · avoidant",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a1s3",
+          "to": "a1s3"
+        }
+      ]
+    },
+    {
+      "id": "a1s3",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "The Handoff Moment",
+      "text": "The backpack changes hands. Your child’s body leans slightly toward one of you. The co-parent reaches for a quick hug, eyes still flicking with irritation.",
+      "tone": "fraught · emotional",
+      "choices": [
+        {
+          "id": "a1s3c1",
+          "label": "Name the transition out loud for the child.",
+          "text": "“Okay, now it’s time with Mom/Dad. I’ll see you on Sunday like we planned.”",
+          "tone": "predictable · soothing",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s3c2",
+          "label": "Let the adults’ tension speak louder than words.",
+          "text": "You stay silent, your jaw set, while the co-parent mutters something about the schedule.",
+          "tone": "frozen · tense",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a1end",
+          "to": "a1end"
+        },
+        {
+          "id": "a1s3c3",
+          "label": "Offer a short, neutral pleasantry.",
+          "text": "“Have a good weekend,” you say, keeping your tone as even as you can.",
+          "tone": "polite · restrained",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a1end",
+          "to": "a1end"
+        }
+      ]
+    },
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "title": "End of Act 1 – Exchange at the Gate",
+      "text": "The gate closes behind them. The parking lot feels strangely louder and quieter at the same time. Exchange days always leave a trace. Some days the weather of the handoff is a storm, some days just a strong wind.",
+      "tone": "reflective · slightly raw",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Continue to Act 2 — Child in the Middle",
+          "text": "You move into the next phase of the exchange day.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a2s1",
+          "to": "a2s1"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Return to menu.",
+          "text": "Pause the scene here.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+    {
+      "id": "a2s1",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "Car Door Hesitation",
+      "text": "On another exchange day, it’s your turn to pick up. The car door is open, but your child stays strapped in, eyes glued to the other parent. “Do I have to go?” they whisper.",
+      "tone": "tender · anxious",
+      "choices": [
+        {
+          "id": "a2s1c1",
+          "label": "Acknowledge the feeling and stay steady.",
+          "text": "“It’s okay to feel weird on switch days. And yes, it’s our time now. I’m here.”",
+          "tone": "validating · firm",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a2s2",
+          "to": "a2s2"
+        },
+        {
+          "id": "a2s1c2",
+          "label": "Put pressure on them to hurry up.",
+          "text": "“Come on, we’re late. Stop making this harder than it is.”",
+          "tone": "impatient · pressured",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2
+          },
+          "next": "a2s2",
+          "to": "a2s2"
+        },
+        {
+          "id": "a2s1c3",
+          "label": "Ask the other parent to step away for a moment.",
+          "text": "“Can you give us a second?” you ask calmly, closing the car door halfway.",
+          "tone": "boundary-setting · protective",
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
+          "next": "a2s2",
+          "to": "a2s2"
+        }
+      ]
+    },
+    {
+      "id": "a2s2",
+      "act": "act2",
+      "speaker": "Co-Parent",
+      "title": "Side Comments",
+      "text": "The co-parent folds their arms. “If you don’t want to go, you can tell the judge,” they say to the child, not quite under their breath. The sentence hangs in the air like smoke. It’s not the first time court has been invited into the car park like an invisible third adult.",
+      "tone": "manipulative · charged",
+      "choices": [
+        {
+          "id": "a2s2c1",
+          "label": "Address the comment firmly but briefly.",
+          "text": "“Please don’t bring courts into this in front of them. We can talk about logistics later.”",
+          "tone": "firm · de-escalating",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a2s3",
+          "to": "a2s3"
+        },
+        {
+          "id": "a2s2c2",
+          "label": "Fire back with your own legal threat.",
+          "text": "“If anyone talks to a judge, it’ll be me, about this kind of comment.”",
+          "tone": "combative · escalating",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2
+          },
+          "next": "a2s3",
+          "to": "a2s3"
+        },
+        {
+          "id": "a2s2c3",
+          "label": "Ignore it and focus only on the child.",
+          "text": "You choose not to respond, turning your full attention back to the child’s face.",
+          "tone": "protective · partial avoidance",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a2s3",
+          "to": "a2s3"
+        }
+      ]
+    },
+    {
+      "id": "a2s3",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "In-Between Space",
+      "text": "The child finally climbs into your car. The other parent stands a few meters away, phone in hand, pretending not to watch. You’re in the in-between space where one home ends and another begins. This in-between space has its own gravity, pulling on everyone’s breathing and voice.",
+      "tone": "fragile · transitional",
+      "choices": [
+        {
+          "id": "a2s3c1",
+          "label": "Give a simple, predictable script.",
+          "text": "“First we drive home, then snack, then you can choose: drawing or a show.”",
+          "tone": "structured · calming",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a2end",
+          "to": "a2end"
+        },
+        {
+          "id": "a2s3c2",
+          "label": "Vent about the co-parent once the door closes.",
+          "text": "“You know, these comments from your other parent are really unfair.”",
+          "tone": "offloading · misdirected",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 2
+          },
+          "next": "a2end",
+          "to": "a2end"
+        },
+        {
+          "id": "a2s3c3",
+          "label": "Drive in silence, lost in thoughts.",
+          "text": "You start the engine and say nothing, replaying the scene in your head.",
+          "tone": "dissociated · quiet",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
+          "next": "a2end",
+          "to": "a2end"
+        }
+      ]
+    },
+    {
+      "id": "a2end",
+      "act": "act2",
+      "speaker": "Narrator",
+      "title": "End of Act 2 – Child in the Middle",
+      "text": "The car pulls away from the curb. In the rear-view mirror, you see a small face — tired, watchful, trying to read which adult is “safe” to relax around.",
+      "tone": "somber · caring",
+      "choices": [
+        {
+          "id": "a2endc1",
+          "label": "Continue to Act 3 — Schedules & Blame",
+          "text": "You move into the next segment of the story.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a3s1",
+          "to": "a3s1"
+        },
+        {
+          "id": "a2endc2",
+          "label": "Return to menu.",
+          "text": "Pause the scene here.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+    {
+      "id": "a3s1",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "Message Storm",
+      "text": "Later that night, your phone lights up with a string of messages: “You were late again.” “You confused them.” “This schedule is a joke.” The words pile up, each one tugging at the old blame pattern. Part of you wants to prove every line wrong; another part is simply tired.",
+      "tone": "overwhelmed · triggered",
+      "choices": [
+        {
+          "id": "a3s1c1",
+          "label": "Pause before replying.",
+          "text": "You put the phone face down, take three slow breaths, and tell yourself you’ll answer in ten minutes.",
+          "tone": "regulated · intentional",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "next": "a3s2",
+          "to": "a3s2"
+        },
+        {
+          "id": "a3s1c2",
+          "label": "Reply immediately with your own list of complaints.",
+          "text": "You start typing fast, matching each criticism with a counter-attack.",
+          "tone": "reactive · escalating",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
+          "next": "a3s2",
+          "to": "a3s2"
+        },
+        {
+          "id": "a3s1c3",
+          "label": "Say nothing and stew in silence.",
+          "text": "You read everything twice, respond to nothing, and feel the anger simmer under your skin.",
+          "tone": "shut-down · resentful",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
+          "next": "a3s2",
+          "to": "a3s2"
+        }
+      ]
+    },
+    {
+      "id": "a3s2",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "Reframing the Topic",
+      "text": "When you finally type, the question is how to talk about schedules without turning the child into evidence. You try to remember that you’re negotiating hours on a calendar, not the worth of a parent.",
+      "tone": "careful · strategic",
+      "choices": [
+        {
+          "id": "a3s2c1",
+          "label": "Keep the focus on concrete logistics.",
+          "text": "“Let’s look at exact times and days and see what we can realistically commit to.”",
+          "tone": "practical · grounded",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a3s3",
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2c2",
+          "label": "Bring up old emotional history.",
+          "text": "“This is exactly how you used to act when we were together.”",
+          "tone": "historical · inflaming",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
+          "next": "a3s3",
+          "to": "a3s3"
+        },
+        {
+          "id": "a3s2c3",
+          "label": "Suggest a mediated discussion.",
+          "text": "“If this keeps blowing up, I’d rather talk about the schedule with a mediator present.”",
+          "tone": "structured · protective",
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
+          "next": "a3s3",
+          "to": "a3s3"
+        }
+      ]
+    },
+    {
+      "id": "a3s3",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "Overheard Fragments",
+      "text": "From the hallway, you hear a quiet shuffle. Your child can’t hear the exact words, but they see your posture, your face lit by the phone. They know it’s “about them”. Their body becomes its own radar for tension, learning what each sigh and shoulder slump means.",
+      "tone": "sad · revealing",
+      "choices": [
+        {
+          "id": "a3s3c1",
+          "label": "Close the conversation and check in with the child.",
+          "text": "You put the phone away and go to them: “Hey, everything okay?”",
+          "tone": "present · caring",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a3end",
+          "to": "a3end"
+        },
+        {
+          "id": "a3s3c2",
+          "label": "Keep typing while telling them it’s “nothing”.",
+          "text": "“Go to bed, it’s grown-up stuff,” you say, eyes still on the phone.",
+          "tone": "dismissive · tense",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a3end",
+          "to": "a3end"
+        },
+        {
+          "id": "a3s3c3",
+          "label": "Vent out loud about the co-parent in front of them.",
+          "text": "“Your other parent is impossible to reason with,” slips out before you can catch it.",
+          "tone": "unfiltered · misdirected",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2
+          },
+          "next": "a3end",
+          "to": "a3end"
+        }
+      ]
+    },
+    {
+      "id": "a3end",
+      "act": "act3",
+      "speaker": "Narrator",
+      "title": "End of Act 3 – Schedules & Blame",
+      "text": "The screen finally goes dark. The schedule might be a mess, but underneath it all is the same question: can the child feel like more than a suitcase passed back and forth?",
+      "tone": "introspective · heavy",
+      "choices": [
+        {
+          "id": "a3endc1",
+          "label": "Continue to Act 4 — Choosing De-escalation",
+          "text": "You step into the next attempt at doing this differently.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a4s1",
+          "to": "a4s1"
+        },
+        {
+          "id": "a3endc2",
+          "label": "Return to menu.",
+          "text": "Pause the scene here.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+    {
+      "id": "a4s1",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "Another Exchange, Same Story?",
+      "text": "A week later, you can feel the tension before you even see the other parent. Your shoulders tighten as you turn into the same parking lot. Today could be a repeat — or a small rewrite. You remember last week’s storm and wonder if you can shift the weather by a few degrees.",
+      "tone": "anticipatory · self-aware",
+      "choices": [
+        {
+          "id": "a4s1c1",
+          "label": "Set an intention with yourself before getting out.",
+          "text": "You put a hand on the steering wheel and think: “My priority is keeping this low-tension for the child.”",
+          "tone": "mindful · anchored",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a4s2",
+          "to": "a4s2"
+        },
+        {
+          "id": "a4s1c2",
+          "label": "Replay last week’s argument in your head.",
+          "text": "You rehearse comebacks and think of everything you “should have said”.",
+          "tone": "ruminative · agitated",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a4s2",
+          "to": "a4s2"
+        },
+        {
+          "id": "a4s1c3",
+          "label": "Numb out and go on autopilot.",
+          "text": "You barely remember the drive, just the knot in your stomach.",
+          "tone": "shut-down · detached",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0
+          },
+          "next": "a4s2",
+          "to": "a4s2"
+        }
+      ]
+    },
+    {
+      "id": "a4s2",
+      "act": "act4",
+      "speaker": "Co-Parent",
+      "title": "A New Spike",
+      "text": "At the gate, things are almost calm — until the co-parent snaps: “You didn’t send the jacket again. Do you even read the weather?”",
+      "tone": "critical · sharp",
+      "choices": [
+        {
+          "id": "a4s2c1",
+          "label": "Use a de-escalation phrase you prepared.",
+          "text": "“I hear you’re frustrated. I’ll bring the jacket this evening. Let’s keep the handoff calm for their sake.”",
+          "tone": "steady · de-escalating",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a4s3",
+          "to": "a4s3"
+        },
+        {
+          "id": "a4s2c2",
+          "label": "Match their tone and escalate.",
+          "text": "“You could have packed one yourself. You’re not helpless.”",
+          "tone": "sarcastic · inflaming",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2
+          },
+          "next": "a4s3",
+          "to": "a4s3"
+        },
+        {
+          "id": "a4s2c3",
+          "label": "Step physically back and say you’ll discuss later.",
+          "text": "“I’m not doing this in front of them. I’ll message you about jackets later.”",
+          "tone": "boundaried · firm",
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
+          "next": "a4s3",
+          "to": "a4s3"
+        }
+      ]
+    },
+    {
+      "id": "a4s3",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "Child’s Radar",
+      "text": "Your child watches every micro-expression. They may not understand jackets and legal agreements, but they understand tone perfectly. Their child’s radar is switched to maximum sensitivity on exchange days.",
+      "tone": "tender · observant",
+      "choices": [
+        {
+          "id": "a4s3c1",
+          "label": "Give the child a simple, reassuring sentence.",
+          "text": "“Grownups sometimes get prickly, but we’re sorting it out. You’re not in trouble.”",
+          "tone": "reassuring · gentle",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -2
+          },
+          "next": "a4end",
+          "to": "a4end"
+        },
+        {
+          "id": "a4s3c2",
+          "label": "Say nothing and hope they forget.",
+          "text": "You usher them along, pretending everything is fine.",
+          "tone": "avoidant · brittle",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 1
+          },
+          "next": "a4end",
+          "to": "a4end"
+        },
+        {
+          "id": "a4s3c3",
+          "label": "Make a snide comment that the child overhears.",
+          "text": "“Some people love drama,” you mutter just loud enough.",
+          "tone": "snarky · misdirected",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1
+          },
+          "next": "a4end",
+          "to": "a4end"
+        }
+      ]
+    },
+    {
+      "id": "a4end",
+      "act": "act4",
+      "speaker": "Narrator",
+      "title": "End of Act 4 – Choosing De-escalation",
+      "text": "As the exchange ends, you notice that tiny choices — a breath, a phrase, a step back — changed the weather of the whole handoff.",
+      "tone": "reflective · cautiously hopeful",
+      "choices": [
+        {
+          "id": "a4endc1",
+          "label": "Continue to Act 5 — The Ride Home",
+          "text": "You move into the last part of the scene.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a5s1",
+          "to": "a5s1"
+        },
+        {
+          "id": "a4endc2",
+          "label": "Return to menu.",
+          "text": "Pause the scene here.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    },
+    {
+      "id": "a5s1",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "Driving Away",
+      "text": "The car hums along the road. The school and the other parent slowly disappear in the rear-view mirror. The question now is what story your child tells themselves about what just happened.",
+      "tone": "quiet · reflective",
+      "choices": [
+        {
+          "id": "a5s1c1",
+          "label": "Invite a gentle check-in.",
+          "text": "“How did that feel for you just now?” you ask, keeping your voice soft.",
+          "tone": "curious · attuned",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a5s2",
+          "to": "a5s2"
+        },
+        {
+          "id": "a5s1c2",
+          "label": "Shift to light small talk.",
+          "text": "“So, tell me about the most ridiculous thing that happened at school this week.”",
+          "tone": "light · distracting",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "next": "a5s2",
+          "to": "a5s2"
+        },
+        {
+          "id": "a5s1c3",
+          "label": "Say nothing and let the radio fill the silence.",
+          "text": "You turn the volume up just enough that talking feels optional.",
+          "tone": "neutral · slightly distant",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a5s2",
+          "to": "a5s2"
+        }
+      ]
+    },
+    {
+      "id": "a5s2",
+      "act": "act5",
+      "speaker": "Child",
+      "title": "What the Child Notices",
+      "text": "“You and Mom/Dad were less shouty today,” they say from the back seat. It’s a simple observation, but you hear the relief behind it.",
+      "tone": "honest · hopeful",
+      "choices": [
+        {
+          "id": "a5s2c1",
+          "label": "Share your own reflection in a child-friendly way.",
+          "text": "“We’re trying to practice calmer handoffs. You deserve that.”",
+          "tone": "open · reassuring",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a5s3",
+          "to": "a5s3"
+        },
+        {
+          "id": "a5s2c2",
+          "label": "Just say “Yeah” and move on.",
+          "text": "“Yeah,” you say, leaving it at that.",
+          "tone": "low-energy · non-committal",
+          "effects": {
+            "trust": -1,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a5s3",
+          "to": "a5s3"
+        },
+        {
+          "id": "a5s2c3",
+          "label": "Ask if they noticed anything that still felt hard.",
+          "text": "“Was there anything today that still felt yucky or confusing?”",
+          "tone": "exploratory · supportive",
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": -1
+          },
+          "next": "a5s3",
+          "to": "a5s3"
+        }
+      ]
+    },
+    {
+      "id": "a5s3",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "Your Own Debrief",
+      "text": "Later that evening, after bedtime, you replay the day not as a trial, but as data: what helped, what hurt, and what you might try differently next time. You even make a mental note about small logistics — the jacket, the backpack — that can soften the edge of the next handoff.",
+      "tone": "self-reflective · constructive",
+      "choices": [
+        {
+          "id": "a5s3c1",
+          "label": "Notice the specific de-escalation choices you made.",
+          "text": "You mentally list the moments you chose breath over comeback, boundary over explosion.",
+          "tone": "self-compassionate · reinforcing",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
+          "next": "a5end",
+          "to": "a5end"
+        },
+        {
+          "id": "a5s3c2",
+          "label": "Focus only on what went wrong.",
+          "text": "You zoom in on every awkward pause and sharp word, ignoring the small repairs.",
+          "tone": "self-critical · heavy",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 0
+          },
+          "next": "a5end",
+          "to": "a5end"
+        },
+        {
+          "id": "a5s3c3",
+          "label": "Decide to talk to a neutral support (friend, therapist, mediator).",
+          "text": "You make a note to schedule a chat with someone who isn’t in the triangle.",
+          "tone": "resourced · proactive",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
+          "next": "a5end",
+          "to": "a5end"
+        }
+      ]
+    },
+    {
+      "id": "a5end",
+      "act": "act5",
+      "speaker": "Narrator",
+      "title": "End of Act 5 – The Long Game",
+      "text": "Handoffs will never be completely friction-free — too much history, too many moving parts. But each small, deliberate choice shifts the child’s story from “I am the problem” to “The adults are working on their stuff.” Over time, even the weather of the handoff can move from constant storm to scattered showers.",
+      "tone": "gentle · realistically hopeful",
+      "choices": [
+        {
+          "id": "a5endc1",
+          "label": "Return to menu.",
+          "text": "You close the scene and take a breath.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a5endc2",
+          "label": "Revisit the exchange from the beginning.",
+          "text": "You choose to replay the scenario to experiment with different choices.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
+          "next": "a1s1",
+          "to": "a1s1"
+        }
+      ]
+    }
+  ],
+  "acts": [
+    {
+      "id": "act1",
+      "title": "Exchange at the Gate",
+      "steps": [
+        "a1s1",
+        "a1s2",
+        "a1s3",
+        "a1end"
+      ]
+    },
+    {
+      "id": "act2",
+      "title": "Child in the Middle",
+      "steps": [
+        "a2s1",
+        "a2s2",
+        "a2s3",
+        "a2end"
+      ]
+    },
+    {
+      "id": "act3",
+      "title": "Schedules & Blame",
+      "steps": [
+        "a3s1",
+        "a3s2",
+        "a3s3",
+        "a3end"
+      ]
+    },
+    {
+      "id": "act4",
+      "title": "Choosing De-escalation",
+      "steps": [
+        "a4s1",
+        "a4s2",
+        "a4s3",
+        "a4end"
+      ]
+    },
+    {
+      "id": "act5",
+      "title": "The Ride Home",
+      "steps": [
+        "a5s1",
+        "a5s2",
+        "a5s3",
+        "a5end"
+      ]
+    }
+  ]
+}
