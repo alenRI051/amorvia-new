@@ -2,15 +2,26 @@
   "id": "scene-first-agreements",
   "title": "Scene: First Agreements",
   "version": 2,
-  "tags": ["agreements", "planning"],
+  "tags": [
+    "agreements",
+    "planning"
+  ],
   "actors": {
     "Narrator": {},
     "You": {},
     "Co-Parent": {},
     "Mediator": {}
   },
-  "meters": { "trust": 0, "tension": 0, "childStress": 0 },
-  "meterOrder": ["trust", "tension", "childStress"],
+  "meters": {
+    "trust": 0,
+    "tension": 0,
+    "childStress": 0
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
   "ui": {
     "showHud": true,
     "showActBadge": true,
@@ -26,13 +37,11 @@
       }
     }
   },
-
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-
   "nodes": [
     {
       "id": "menu",
@@ -48,13 +57,12 @@
         }
       ]
     },
-
     {
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
       "title": "Sitting Down at the Table",
-      "text": "You and your co-parent sit across from each other. The air is stiff, but you both agreed: tonight is about making some basic agreements for your child, not re-arguing the breakup.",
+      "text": "You and your co-parent sit across from each other. The air is stiff, but you both agreed: tonight is about making some basic agreements for your child, not re-arguing the breakup. Even the way you both sit carries history—old arguments, small hopes, and the quiet wish for steadier ground.",
       "tone": "tense · willing to try",
       "choices": [
         {
@@ -62,7 +70,11 @@
           "label": "Start with something positive about the co-parent.",
           "text": "You begin: “Thanks for meeting. I know this isn’t easy, but I appreciate that you’re here.”",
           "tone": "softening · respectful",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a1s2",
           "to": "a1s2"
         },
@@ -71,19 +83,22 @@
           "label": "Dive straight into the problems.",
           "text": "You skip the warm-up: “This schedule is not working. We need to fix it.”",
           "tone": "direct · impatient",
-          "effects": { "trust": -1, "tension": 1, "childStress": 0 },
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 0
+          },
           "next": "a1s2",
           "to": "a1s2"
         }
       ]
     },
-
     {
       "id": "a1s2",
       "act": "act1",
       "speaker": "Co-Parent",
       "title": "What Matters Most?",
-      "text": "Your co-parent shifts in their chair. “I just want things to be fair,” they say. “I feel like I’m carrying more than you.”",
+      "text": "Your co-parent shifts in their chair. “I just want things to be fair,” they say. “I feel like I’m carrying more than you.” Beneath the talk of fairness is the deeper hope that neither of you has to hold everything alone.",
       "tone": "defensive · hurt",
       "choices": [
         {
@@ -91,7 +106,11 @@
           "label": "Bring the focus back to the child and shared goals.",
           "text": "“I hear that,” you say. “Can we make ‘what’s best for our child’ the main thing we check everything against, including what feels fair to us?”",
           "tone": "child-focused · collaborative",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1s2_bridge",
           "to": "a1s2_bridge"
         },
@@ -100,7 +119,11 @@
           "label": "Argue about who does more.",
           "text": "“You’re not the only one carrying things,” you fire back. “I’m doing school runs, meals, bedtime… it’s not like I’m on holiday.”",
           "tone": "defensive · escalating",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "next": "a1s2_bridge",
           "to": "a1s2_bridge"
         },
@@ -109,19 +132,22 @@
           "label": "Acknowledge the feeling and suggest making one small, concrete change.",
           "text": "“It does feel lopsided sometimes,” you say. “What if we pick just one thing tonight that makes it easier on both of us?”",
           "tone": "validating · solution-focused",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1s2_bridge",
           "to": "a1s2_bridge"
         }
       ]
     },
-
     {
       "id": "a1s2_bridge",
       "act": "act1",
       "speaker": "Narrator",
       "title": "Zooming Out for a Moment",
-      "text": "For a few breaths, the two of you sit with the word “fair.” It means different things to each of you: time, money, invisible labour.\n\nUnderneath all of it is a quieter question: “What would feel steady for our child?”",
+      "text": "For a few breaths, the two of you sit with the word “fair.” It means different things to each of you: time, money, invisible labour.\n\nUnderneath all of it is a quieter question: “What would feel steady for our child?” It’s the first moment tonight where the two of you breathe in sync instead of opposition.",
       "tone": "slower · reflective",
       "choices": [
         {
@@ -129,19 +155,22 @@
           "label": "Try putting one clear agreement on the table.",
           "text": "You suggest focusing on one simple agreement you could both actually test in real life.",
           "tone": "practical · modest",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a1s3",
           "to": "a1s3"
         }
       ]
     },
-
     {
       "id": "a1s3",
       "act": "act1",
       "speaker": "Mediator",
       "title": "Drafting the First Agreement",
-      "text": "You each scribble notes on a scrap of paper.\n\nThe mediator (or the calmer part of your own mind) nudges you away from grand solutions and toward something testable. One concrete agreement you could both try for a few weeks.",
+      "text": "You each scribble notes on a scrap of paper.\n\nThe mediator (or the calmer part of your own mind) nudges you away from grand solutions and toward something testable. One concrete agreement you could both try for a few weeks. A single workable agreement can feel like a lighthouse—small, but enough to steer by.",
       "tone": "structured · hopeful",
       "choices": [
         {
@@ -149,7 +178,11 @@
           "label": "Propose one small, specific change you can both trial.",
           "text": "“What if we agree that handovers are always at 18:30 for the next month,” you suggest, “and if it’s not working, we tweak it together?”",
           "tone": "specific · realistic",
-          "effects": { "trust": 2, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1end",
           "to": "a1end"
         },
@@ -158,7 +191,11 @@
           "label": "Try to fix everything in one big agreement.",
           "text": "“Let’s just fix the whole plan tonight,” you say. “Bedtimes, holidays, money, new partners—everything.”",
           "tone": "urgent · overloaded",
-          "effects": { "trust": -1, "tension": 2, "childStress": 1 },
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1
+          },
           "next": "a1end",
           "to": "a1end"
         },
@@ -167,26 +204,33 @@
           "label": "Keep the agreement intentionally flexible and child-centered.",
           "text": "“Let’s write one line we both agree on,” you suggest. “Something like: ‘We’ll adjust the schedule if our child starts to struggle, even if it’s inconvenient for us.’”",
           "tone": "child-centered · flexible",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "a1end",
           "to": "a1end"
         }
       ]
     },
-
     {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
       "title": "End of Scene – First Agreements",
-      "text": "By the end of the conversation, you haven’t redesigned your entire co-parenting plan.\n\nBut there is a first agreement on the table—or at least a clearer sense of why it’s hard to make one. The room feels a little less sharp around the edges.",
+      "text": "By the end of the conversation, you haven’t redesigned your entire co-parenting plan.\n\nBut there is a first agreement on the table—or at least a clearer sense of why it’s hard to make one. The room feels a little less sharp around the edges. First agreements aren’t about perfection; they’re about proving that even difficult partners can share one steady line for a child.",
       "tone": "grounded · incomplete-but-progressing",
       "choices": [
         {
           "id": "a1endc1",
           "label": "Pause here and return to menu.",
           "text": "You decide that one step is enough for tonight.",
-          "effects": { "trust": 0, "tension": 0, "childStress": 0 },
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0
+          },
           "next": "menu",
           "to": "menu"
         },
@@ -194,41 +238,52 @@
           "id": "a1endc2",
           "label": "Take a moment to reflect on your own real-life agreements.",
           "text": "You notice which lines in this scene felt close to home, and which choices you wish you could try in real life.",
-          "effects": { "trust": 1, "tension": -1, "childStress": 0 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": 0
+          },
           "next": "a1reflect",
           "to": "a1reflect"
         }
       ]
     },
-
     {
       "id": "a1reflect",
       "act": "act1",
       "speaker": "You",
       "title": "Quick Reflection",
-      "text": "If you were to write one real-life sentence about agreements right now, what would it be?\n\nIt might sound like:\n“Even if we disagree, we’ll keep talking about the plan instead of using our child as the messenger.”",
+      "text": "If you were to write one real-life sentence about agreements right now, what would it be?\n\nIt might sound like:\n“Even if we disagree, we’ll keep talking about the plan instead of using our child as the messenger.” The sentence you choose becomes part of the emotional weather your child grows up in—predictability, or storm.",
       "tone": "integrating · reflective",
       "choices": [
         {
           "id": "a1reflectc1",
           "label": "Finish the scene.",
           "text": "You close the scenario and carry that one sentence with you.",
-          "effects": { "trust": 1, "tension": -1, "childStress": -1 },
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1
+          },
           "next": "menu",
           "to": "menu"
         }
       ]
     }
   ],
-
   "acts": [
     {
       "id": "act1",
       "title": "First Agreements at the Table",
       "description": "You and your co-parent try to turn vague complaints about “fairness” into one concrete, child-centered agreement.",
-      "steps": ["a1s1", "a1s2", "a1s2_bridge", "a1s3", "a1end", "a1reflect"]
+      "steps": [
+        "a1s1",
+        "a1s2",
+        "a1s2_bridge",
+        "a1s3",
+        "a1end",
+        "a1reflect"
+      ]
     }
   ]
 }
-
-
