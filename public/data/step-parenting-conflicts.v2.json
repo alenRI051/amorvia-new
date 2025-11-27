@@ -38,6 +38,13 @@
         "act2": "default",
         "act3": "cafe"
       }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
     }
   },
   "entry": "a1s1",
@@ -98,9 +105,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Reassure the child and gently clarify the rule.",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c2",
@@ -109,9 +123,16 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Stay silent and let your partner handle it.",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c3",
@@ -120,9 +141,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Correct your partner in front of the child.",
+          "next": "a1s2"
         }
       ]
     },
@@ -139,9 +167,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Offer a neutral, practical summary instead of taking sides.",
+          "next": "a1s3"
         },
         {
           "id": "a1s2_c2",
@@ -150,9 +185,16 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Make a small joke to diffuse the tension.",
+          "next": "a1s3"
         },
         {
           "id": "a1s2_c3",
@@ -161,9 +203,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Point out how often the child leaves things everywhere.",
+          "next": "a1s3"
         }
       ]
     },
@@ -180,9 +229,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1s4"
+          "to": "a1s4",
+          "text": "Acknowledge the confusion and ask for one small area to define together.",
+          "next": "a1s4"
         },
         {
           "id": "a1s3_c2",
@@ -191,9 +247,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a1s4"
+          "to": "a1s4",
+          "text": "Defend your intentions and explain why you reacted the way you did.",
+          "next": "a1s4"
         },
         {
           "id": "a1s3_c3",
@@ -202,9 +265,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 0
+            }
           },
-          "to": "a1s4"
+          "to": "a1s4",
+          "text": "Point out all the times you felt undermined as a step-parent.",
+          "next": "a1s4"
         }
       ]
     },
@@ -221,9 +291,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a2s1"
+          "to": "a2s1",
+          "text": "Move into Act 2 – focusing on the child’s loyalty tug-of-war.",
+          "next": "a2s1"
         }
       ]
     },
@@ -240,9 +317,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Validate the child’s feelings and thank them for telling you.",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c2",
@@ -251,9 +335,16 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": -1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Explain the rule differences like a teacher, focusing on structure.",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c3",
@@ -262,9 +353,16 @@
           "effects": {
             "trust": -1,
             "tension": 0,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 0,
+              "childStress": 1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Remind them that \"every house has different rules\" and change the subject.",
+          "next": "a2s2"
         }
       ]
     },
@@ -281,9 +379,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a2s3"
+          "to": "a2s3",
+          "text": "Name how that comment hits you, without attacking anyone.",
+          "next": "a2s3"
         },
         {
           "id": "a2s2_c2",
@@ -292,9 +397,16 @@
           "effects": {
             "trust": 2,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a2s3"
+          "to": "a2s3",
+          "text": "Ask your partner what *they* think, before reacting to the co-parent.",
+          "next": "a2s3"
         },
         {
           "id": "a2s2_c3",
@@ -303,9 +415,16 @@
           "effects": {
             "trust": -1,
             "tension": -1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": -1,
+              "childStress": 1
+            }
           },
-          "to": "a2s3"
+          "to": "a2s3",
+          "text": "Suggest limiting your involvement to avoid drama.",
+          "next": "a2s3"
         }
       ]
     },
@@ -322,9 +441,16 @@
           "effects": {
             "trust": 2,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": 0,
+              "childStress": -1
+            }
           },
-          "to": "a2s4"
+          "to": "a2s4",
+          "text": "Propose a three-adult conversation focused on the child’s sense of safety.",
+          "next": "a2s4"
         },
         {
           "id": "a2s3_c2",
@@ -333,9 +459,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a2s4"
+          "to": "a2s4",
+          "text": "Ask to at least define some language you and your partner will use consistently.",
+          "next": "a2s4"
         },
         {
           "id": "a2s3_c3",
@@ -344,9 +477,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a2s4"
+          "to": "a2s4",
+          "text": "Decide to wait and “see how things evolve” without any plan.",
+          "next": "a2s4"
         }
       ]
     },
@@ -363,9 +503,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a3s1"
+          "to": "a3s1",
+          "text": "Move into Act 3 – drafting a more stable “two-home” plan.",
+          "next": "a3s1"
         }
       ]
     },
@@ -382,9 +529,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Open with appreciation for what each adult is trying to do.",
+          "next": "a3s2"
         },
         {
           "id": "a3s1_c2",
@@ -393,9 +547,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Start by naming the child’s stress and your wish to reduce it.",
+          "next": "a3s2"
         },
         {
           "id": "a3s1_c3",
@@ -404,9 +565,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Lead with specific complaints about past conflicts.",
+          "next": "a3s2"
         }
       ]
     },
@@ -423,9 +591,16 @@
           "effects": {
             "trust": 2,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": 0,
+              "childStress": -1
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Suggest writing down 3 shared principles to test for a month.",
+          "next": "a3s3"
         },
         {
           "id": "a3s2_c2",
@@ -434,9 +609,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Ask for a commitment to check in again after a few weeks.",
+          "next": "a3s3"
         },
         {
           "id": "a3s2_c3",
@@ -445,9 +627,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Insist on resolving *everything* in this one conversation.",
+          "next": "a3s3"
         }
       ]
     },
@@ -464,9 +653,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "ending"
+          "to": "ending",
+          "text": "Close the scenario with a brief reflection on your preferred next step.",
+          "next": "ending"
         }
       ]
     },

@@ -34,6 +34,13 @@
       "act": {
         "act1": "/assets/backgrounds/park.svg"
       }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
     }
   },
   "entry": "a1s1",
@@ -72,7 +79,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a1s2",
           "to": "a1s2"
@@ -85,7 +97,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a1s2",
           "to": "a1s2"
@@ -98,7 +115,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
           "next": "a1s2",
           "to": "a1s2"
@@ -121,7 +143,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a1s3",
           "to": "a1s3"
@@ -134,7 +161,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
           "next": "a1s3",
           "to": "a1s3"
@@ -147,7 +179,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 2
+            "childStress": 2,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 2
+            }
           },
           "next": "a1s3",
           "to": "a1s3"
@@ -170,7 +207,12 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a1end",
           "to": "a1end"
@@ -183,7 +225,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
           "next": "a1end",
           "to": "a1end"
@@ -196,7 +243,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a1end",
           "to": "a1end"
@@ -219,7 +271,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a1reflect",
           "to": "a1reflect"
@@ -232,7 +289,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a1reflect",
           "to": "a1reflect"
@@ -255,7 +317,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "menu",
           "to": "menu"
@@ -268,7 +335,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "menu",
           "to": "menu"

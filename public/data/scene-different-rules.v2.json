@@ -38,6 +38,13 @@
         "act2": "/assets/backgrounds/room.svg",
         "act3": "/assets/backgrounds/park.svg"
       }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
     }
   },
   "entry": "a1s1",
@@ -61,9 +68,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "First, connect with the child and park the adult conflict for later.",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c2",
@@ -72,9 +86,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Answer defensively in front of everyone: “That’s not true, you have lots of freedom here.”",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c3",
@@ -83,9 +104,16 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Half-joke: “Different homes, different rules, kiddo,” and quickly change the subject.",
+          "next": "a1s2"
         }
       ]
     },
@@ -103,9 +131,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Suggest a later talk: “Let’s get them settled first, then you and I can sync on rules.”",
+          "next": "a1s3"
         },
         {
           "id": "a1s2_c2",
@@ -114,9 +149,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 2
+            "childStress": 2,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 2
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Compare households in front of the child.",
+          "next": "a1s3"
         },
         {
           "id": "a1s2_c3",
@@ -125,9 +167,16 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 1
+            }
           },
-          "to": "a1s3"
+          "to": "a1s3",
+          "text": "Say nothing and end the exchange as quickly as possible.",
+          "next": "a1s3"
         }
       ]
     },
@@ -145,9 +194,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1end"
+          "to": "a1end",
+          "text": "Decide to list the “non-negotiable” rules you want to align.",
+          "next": "a1end"
         },
         {
           "id": "a1s3_c2",
@@ -156,9 +212,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a1end"
+          "to": "a1end",
+          "text": "Tell yourself, “It’s pointless, they’ll never agree,” and drop the idea.",
+          "next": "a1end"
         }
       ]
     },
@@ -174,7 +237,9 @@
           "label": "Move into Act 2 – adult sync on rules.",
           "tone": "forward-looking",
           "effects": {},
-          "to": "a2s1"
+          "to": "a2s1",
+          "text": "Move into Act 2 – adult sync on rules.",
+          "next": "a2s1"
         }
       ]
     },
@@ -192,9 +257,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Start by validating: “I agree, they are under stress. Can we pick a few rules to match so life feels less confusing?”",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c2",
@@ -203,9 +275,16 @@
           "effects": {
             "trust": -2,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Lead with criticism: “You’re too lenient, that’s the whole problem.”",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c3",
@@ -214,9 +293,16 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Stay vague: “Yeah, it’s complicated,” and keep things fuzzy.",
+          "next": "a2s2"
         }
       ]
     },
@@ -234,9 +320,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a2s3"
+          "to": "a2s3",
+          "text": "Sort the list into two columns: “must match” vs “can differ safely.”",
+          "next": "a2s3"
         },
         {
           "id": "a2s2_c2",
@@ -245,9 +338,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a2s3"
+          "to": "a2s3",
+          "text": "Argue item by item without any shared framework.",
+          "next": "a2s3"
         }
       ]
     },
@@ -265,9 +365,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a2end"
+          "to": "a2end",
+          "text": "Propose a simple shared line: “Both homes have rules to keep you safe, even if they look a bit different.”",
+          "next": "a2end"
         },
         {
           "id": "a2s3_c2",
@@ -276,9 +383,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a2end"
+          "to": "a2end",
+          "text": "Leave that part undefined: “We’ll just improvise as we go.”",
+          "next": "a2end"
         }
       ]
     },
@@ -294,7 +408,9 @@
           "label": "Move into Act 3 – giving the child a clearer map.",
           "tone": "forward-moving",
           "effects": {},
-          "to": "a3s1"
+          "to": "a3s1",
+          "text": "Move into Act 3 – giving the child a clearer map.",
+          "next": "a3s1"
         }
       ]
     },
@@ -312,9 +428,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Thank the teacher and decide to talk with the child using the new shared language.",
+          "next": "a3s2"
         },
         {
           "id": "a3s1_c2",
@@ -323,9 +446,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Minimize it: “They’re fine, we’re just going through a phase.”",
+          "next": "a3s2"
         }
       ]
     },
@@ -343,9 +473,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -2
+            "childStress": -2,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -2
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Use the shared sentence: “Both homes have rules to keep you safe; we’ll remind you, you don’t have to remember everything alone.”",
+          "next": "a3s3"
         },
         {
           "id": "a3s2_c2",
@@ -354,9 +491,16 @@
           "effects": {
             "trust": -2,
             "tension": 2,
-            "childStress": 2
+            "childStress": 2,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 2
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Respond with pressure: “You’re old enough to remember. You have to keep track.”",
+          "next": "a3s3"
         },
         {
           "id": "a3s2_c3",
@@ -365,9 +509,16 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a3s3"
+          "to": "a3s3",
+          "text": "Half comfort, half confusion: “Just do your best; it’s complicated.”",
+          "next": "a3s3"
         }
       ]
     },
@@ -385,9 +536,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
-          "to": "ending"
+          "to": "ending",
+          "text": "Close the scene and return to the scenario menu.",
+          "next": "ending"
         }
       ]
     },

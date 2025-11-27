@@ -39,6 +39,13 @@
         "act4": "/assets/backgrounds/park.svg",
         "act5": "/assets/backgrounds/room.svg"
       }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
     }
   },
   "entry": "a1s1",
@@ -102,9 +109,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Check in gently: “Hey, what’s going on?”",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c2",
@@ -113,9 +127,16 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "Stay quiet and observe before reacting.",
+          "next": "a1s2"
         },
         {
           "id": "a1s1_c3",
@@ -124,9 +145,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 0
+            }
           },
-          "to": "a1s2"
+          "to": "a1s2",
+          "text": "React defensively: “Why are you already worked up?”",
+          "next": "a1s2"
         }
       ]
     },
@@ -144,9 +172,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a2s1"
+          "to": "a2s1",
+          "text": "Reflect back: “Sounds like you’re overwhelmed.”",
+          "next": "a2s1"
         },
         {
           "id": "a1s2_c2",
@@ -155,9 +190,16 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a2s1"
+          "to": "a2s1",
+          "text": "Offer solutions immediately.",
+          "next": "a2s1"
         },
         {
           "id": "a1s2_c3",
@@ -166,9 +208,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a2s1"
+          "to": "a2s1",
+          "text": "Take it personally: “So now it’s my fault?”",
+          "next": "a2s1"
         }
       ]
     },
@@ -186,9 +235,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Name it: “I don’t want this to turn into a fight.”",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c2",
@@ -197,9 +253,16 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Switch topics to cool things off.",
+          "next": "a2s2"
         },
         {
           "id": "a2s1_c3",
@@ -208,9 +271,16 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
-          "to": "a2s2"
+          "to": "a2s2",
+          "text": "Push back: “You’re not being fair.”",
+          "next": "a2s2"
         }
       ]
     },
@@ -228,9 +298,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a3s1"
+          "to": "a3s1",
+          "text": "Reassure them you’re on the same side.",
+          "next": "a3s1"
         },
         {
           "id": "a2s2_c2",
@@ -239,9 +316,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a3s1"
+          "to": "a3s1",
+          "text": "Ask what “team” means to them right now.",
+          "next": "a3s1"
         },
         {
           "id": "a2s2_c3",
@@ -250,9 +334,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 0
+            }
           },
-          "to": "a3s1"
+          "to": "a3s1",
+          "text": "Point out all you’ve already done today.",
+          "next": "a3s1"
         }
       ]
     },
@@ -270,9 +361,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Suggest taking a short breather.",
+          "next": "a3s2"
         },
         {
           "id": "a3s1_c2",
@@ -281,9 +379,16 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Stay present and wait for their next move.",
+          "next": "a3s2"
         },
         {
           "id": "a3s1_c3",
@@ -292,9 +397,16 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
-          "to": "a3s2"
+          "to": "a3s2",
+          "text": "Nudge the issue again.",
+          "next": "a3s2"
         }
       ]
     },
@@ -312,9 +424,16 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a4s1"
+          "to": "a4s1",
+          "text": "Invite small next steps toward repair.",
+          "next": "a4s1"
         },
         {
           "id": "a3s2_c2",
@@ -323,9 +442,16 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a4s1"
+          "to": "a4s1",
+          "text": "Wrap up the conversation for tonight.",
+          "next": "a4s1"
         }
       ]
     },
@@ -343,9 +469,16 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": 0
+            }
           },
-          "to": "a5s1"
+          "to": "a5s1",
+          "text": "Offer appreciation for something they did this week.",
+          "next": "a5s1"
         },
         {
           "id": "a4s1_c2",
@@ -354,9 +487,16 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
-          "to": "a5s1"
+          "to": "a5s1",
+          "text": "Share one thing you’ll try to do differently.",
+          "next": "a5s1"
         }
       ]
     },

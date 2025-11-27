@@ -42,6 +42,13 @@
         "act4": "/assets/backgrounds/park.svg",
         "act5": "/assets/backgrounds/room.svg"
       }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
     }
   },
   "entry": "a1s1",
@@ -81,7 +88,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": -1
+            }
           },
           "next": "a1s2",
           "to": "a1s2"
@@ -94,7 +106,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a1s2",
           "to": "a1s2"
@@ -116,7 +133,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a1s3",
           "to": "a1s3"
@@ -129,7 +151,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a1s3",
           "to": "a1s3"
@@ -151,7 +178,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a1s4",
           "to": "a1s4"
@@ -164,7 +196,12 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
           "next": "a1s4",
           "to": "a1s4"
@@ -186,7 +223,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a1end",
           "to": "a1end"
@@ -199,7 +241,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a1end",
           "to": "a1end"
@@ -266,7 +313,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a2s2",
           "to": "a2s2"
@@ -279,7 +331,12 @@
           "effects": {
             "trust": 0,
             "tension": 2,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 2,
+              "childStress": 0
+            }
           },
           "next": "a2s2",
           "to": "a2s2"
@@ -303,7 +360,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a2s3a",
           "to": "a2s3a"
@@ -316,7 +378,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a2s3b",
           "to": "a2s3b"
@@ -340,7 +407,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a2end_a",
           "to": "a2end_a"
@@ -353,7 +425,12 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a2end_pause",
           "to": "a2end_pause"
@@ -377,7 +454,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a2s3a",
           "to": "a2s3a"
@@ -390,7 +472,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a2end_pause",
           "to": "a2end_pause"
@@ -414,7 +501,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a3s1",
           "to": "a3s1"
@@ -438,7 +530,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a3s1",
           "to": "a3s1"
@@ -460,7 +557,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a3s2",
           "to": "a3s2"
@@ -473,7 +575,12 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a3s2",
           "to": "a3s2"
@@ -486,7 +593,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a3s2",
           "to": "a3s2"
@@ -508,7 +620,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a3s3",
           "to": "a3s3"
@@ -521,7 +638,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a3s3",
           "to": "a3s3"
@@ -534,7 +656,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a3s3",
           "to": "a3s3"
@@ -556,7 +683,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a3end",
           "to": "a3end"
@@ -569,7 +701,12 @@
           "effects": {
             "trust": -1,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
           },
           "next": "a3end",
           "to": "a3end"
@@ -582,7 +719,12 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a3end",
           "to": "a3end"
@@ -630,7 +772,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a4s2",
           "to": "a4s2"
@@ -643,7 +790,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 1
+            }
           },
           "next": "a4s2",
           "to": "a4s2"
@@ -656,7 +808,12 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a4end",
           "to": "a4end"
@@ -678,7 +835,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a4s3",
           "to": "a4s3"
@@ -691,7 +853,12 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
           },
           "next": "a4s3",
           "to": "a4s3"
@@ -704,7 +871,12 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 1
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
           },
           "next": "a4s3",
           "to": "a4s3"
@@ -726,7 +898,12 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a4s4",
           "to": "a4s4"
@@ -739,7 +916,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a4s4",
           "to": "a4s4"
@@ -752,7 +934,12 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 0
+            }
           },
           "next": "a4s4",
           "to": "a4s4"
@@ -774,7 +961,12 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a4end",
           "to": "a4end"
@@ -787,7 +979,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a4end",
           "to": "a4end"
@@ -800,7 +997,12 @@
           "effects": {
             "trust": -2,
             "tension": 2,
-            "childStress": 2
+            "childStress": 2,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 2
+            }
           },
           "next": "a4end",
           "to": "a4end"
@@ -846,7 +1048,12 @@
           "effects": {
             "trust": 2,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a5s2",
           "to": "a5s2"
@@ -858,7 +1065,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a5s2",
           "to": "a5s2"
@@ -878,7 +1090,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a5s3",
           "to": "a5s3"
@@ -890,7 +1107,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a5s3",
           "to": "a5s3"
@@ -910,7 +1132,12 @@
           "effects": {
             "trust": 0,
             "tension": -1,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": -1
+            }
           },
           "next": "a5s4",
           "to": "a5s4"
@@ -922,7 +1149,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": -1
+            }
           },
           "next": "a5s4",
           "to": "a5s4"
@@ -942,7 +1174,12 @@
           "effects": {
             "trust": 1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": 0
+            }
           },
           "next": "a5end",
           "to": "a5end"
@@ -954,7 +1191,12 @@
           "effects": {
             "trust": 0,
             "tension": -2,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 0,
+              "tension": -2,
+              "childStress": -1
+            }
           },
           "next": "a5end",
           "to": "a5end"
@@ -966,7 +1208,12 @@
           "effects": {
             "trust": 1,
             "tension": 0,
-            "childStress": -1
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": -1
+            }
           },
           "next": "a5end",
           "to": "a5end"
@@ -986,7 +1233,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "menu",
           "to": "menu"
@@ -998,7 +1250,12 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
           },
           "next": "a5s1",
           "to": "a5s1"

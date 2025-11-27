@@ -103,28 +103,58 @@
               "label": "Continue",
               "tone": "neutral",
               "effects": {},
-              "to": "menu"
+              "to": "menu",
+              "text": "Continue",
+              "next": "menu"
             },
             {
               "id": "a1s1c2",
               "label": "Return to menu",
               "tone": "neutral",
               "effects": {},
-              "to": "menu"
+              "to": "menu",
+              "text": "Return to menu",
+              "next": "menu"
             }
           ],
-          "text": "[a1s1]"
+          "text": "[a1s1]",
+          "speaker": "Narrator"
         }
       ],
       "start": "start"
     }
   ],
   "startAct": "act1",
-  "start": "start",
+  "start": {
+    "actId": "act1",
+    "nodeId": "start"
+  },
   "startNode": "start",
   "entryNode": "start",
   "entry": {
     "actId": "act1",
     "nodeId": "start"
+  },
+  "entryNodeId": {
+    "actId": "act1",
+    "nodeId": "start"
+  },
+  "startNodeId": {
+    "actId": "act1",
+    "nodeId": "start"
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
+  "ui": {
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
+    }
   }
 }
