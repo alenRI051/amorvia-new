@@ -11,7 +11,6 @@
     "de-escalation",
     "child-wellbeing"
   ],
-
   "actors": {
     "Narrator": {},
     "You": {},
@@ -19,14 +18,16 @@
     "Child": {},
     "Grandparent": {}
   },
-
   "meters": {
     "trust": 0,
     "tension": 0,
     "childStress": 0
   },
-  "meterOrder": ["trust", "tension", "childStress"],
-
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
   "ui": {
     "showHud": true,
     "showActBadge": true,
@@ -44,14 +45,12 @@
       }
     }
   },
-
   "entry": "a1s1",
   "entryNodeId": "a1s1",
   "entryId": "a1s1",
   "entryActId": "act1",
   "start": "a1s1",
   "startNodeId": "a1s1",
-
   "nodes": [
     {
       "id": "menu",
@@ -67,13 +66,12 @@
         }
       ]
     },
-
     {
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
       "title": "Parking Lot Weather",
-      "text": "You park a little further away than necessary. The school yard is full of kids, backpacks, and rushed goodbyes. Somewhere near the gate, your co-parent is already waiting. Your child notices them first and stiffens just slightly.",
+      "text": "You park a little further away than necessary. The school yard is full of kids, backpacks, and rushed goodbyes. Somewhere near the gate, your co-parent is already waiting. Your child notices them first and stiffens just slightly. You can already feel the weather of the handoff forming around you.",
       "tone": "anticipatory · tight",
       "choices": [
         {
@@ -117,7 +115,6 @@
         }
       ]
     },
-
     {
       "id": "a1s2",
       "act": "act1",
@@ -167,7 +164,6 @@
         }
       ]
     },
-
     {
       "id": "a1s3",
       "act": "act1",
@@ -217,13 +213,12 @@
         }
       ]
     },
-
     {
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
       "title": "End of Act 1 – Exchange at the Gate",
-      "text": "The gate closes behind them. The parking lot feels strangely louder and quieter at the same time. Exchange days always leave a trace.",
+      "text": "The gate closes behind them. The parking lot feels strangely louder and quieter at the same time. Exchange days always leave a trace. Some days the weather of the handoff is a storm, some days just a strong wind.",
       "tone": "reflective · slightly raw",
       "choices": [
         {
@@ -252,7 +247,6 @@
         }
       ]
     },
-
     {
       "id": "a2s1",
       "act": "act2",
@@ -302,13 +296,12 @@
         }
       ]
     },
-
     {
       "id": "a2s2",
       "act": "act2",
       "speaker": "Co-Parent",
       "title": "Side Comments",
-      "text": "The co-parent folds their arms. “If you don’t want to go, you can tell the judge,” they say to the child, not quite under their breath. The sentence hangs in the air like smoke.",
+      "text": "The co-parent folds their arms. “If you don’t want to go, you can tell the judge,” they say to the child, not quite under their breath. The sentence hangs in the air like smoke. It’s not the first time court has been invited into the car park like an invisible third adult.",
       "tone": "manipulative · charged",
       "choices": [
         {
@@ -344,21 +337,20 @@
           "tone": "protective · partial avoidance",
           "effects": {
             "trust": 0,
-            "tension": 0,
-            "childStress": 0
+            "tension": 1,
+            "childStress": 1
           },
           "next": "a2s3",
           "to": "a2s3"
         }
       ]
     },
-
     {
       "id": "a2s3",
       "act": "act2",
       "speaker": "Narrator",
       "title": "In-Between Space",
-      "text": "The child finally climbs into your car. The other parent stands a few meters away, phone in hand, pretending not to watch. You’re in the in-between space where one home ends and another begins.",
+      "text": "The child finally climbs into your car. The other parent stands a few meters away, phone in hand, pretending not to watch. You’re in the in-between space where one home ends and another begins. This in-between space has its own gravity, pulling on everyone’s breathing and voice.",
       "tone": "fragile · transitional",
       "choices": [
         {
@@ -402,7 +394,6 @@
         }
       ]
     },
-
     {
       "id": "a2end",
       "act": "act2",
@@ -437,13 +428,12 @@
         }
       ]
     },
-
     {
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
       "title": "Message Storm",
-      "text": "Later that night, your phone lights up with a string of messages: “You were late again.” “You confused them.” “This schedule is a joke.” The words pile up, each one tugging at the old blame pattern.",
+      "text": "Later that night, your phone lights up with a string of messages: “You were late again.” “You confused them.” “This schedule is a joke.” The words pile up, each one tugging at the old blame pattern. Part of you wants to prove every line wrong; another part is simply tired.",
       "tone": "overwhelmed · triggered",
       "choices": [
         {
@@ -487,13 +477,12 @@
         }
       ]
     },
-
     {
       "id": "a3s2",
       "act": "act3",
       "speaker": "Narrator",
       "title": "Reframing the Topic",
-      "text": "When you finally type, the question is how to talk about schedules without turning the child into evidence.",
+      "text": "When you finally type, the question is how to talk about schedules without turning the child into evidence. You try to remember that you’re negotiating hours on a calendar, not the worth of a parent.",
       "tone": "careful · strategic",
       "choices": [
         {
@@ -537,13 +526,12 @@
         }
       ]
     },
-
     {
       "id": "a3s3",
       "act": "act3",
       "speaker": "Narrator",
       "title": "Overheard Fragments",
-      "text": "From the hallway, you hear a quiet shuffle. Your child can’t hear the exact words, but they see your posture, your face lit by the phone. They know it’s “about them”.",
+      "text": "From the hallway, you hear a quiet shuffle. Your child can’t hear the exact words, but they see your posture, your face lit by the phone. They know it’s “about them”. Their body becomes its own radar for tension, learning what each sigh and shoulder slump means.",
       "tone": "sad · revealing",
       "choices": [
         {
@@ -587,7 +575,6 @@
         }
       ]
     },
-
     {
       "id": "a3end",
       "act": "act3",
@@ -622,13 +609,12 @@
         }
       ]
     },
-
     {
       "id": "a4s1",
       "act": "act4",
       "speaker": "Narrator",
       "title": "Another Exchange, Same Story?",
-      "text": "A week later, you can feel the tension before you even see the other parent. Your shoulders tighten as you turn into the same parking lot. Today could be a repeat — or a small rewrite.",
+      "text": "A week later, you can feel the tension before you even see the other parent. Your shoulders tighten as you turn into the same parking lot. Today could be a repeat — or a small rewrite. You remember last week’s storm and wonder if you can shift the weather by a few degrees.",
       "tone": "anticipatory · self-aware",
       "choices": [
         {
@@ -672,7 +658,6 @@
         }
       ]
     },
-
     {
       "id": "a4s2",
       "act": "act4",
@@ -722,13 +707,12 @@
         }
       ]
     },
-
     {
       "id": "a4s3",
       "act": "act4",
       "speaker": "Narrator",
       "title": "Child’s Radar",
-      "text": "Your child watches every micro-expression. They may not understand jackets and legal agreements, but they understand tone perfectly.",
+      "text": "Your child watches every micro-expression. They may not understand jackets and legal agreements, but they understand tone perfectly. Their child’s radar is switched to maximum sensitivity on exchange days.",
       "tone": "tender · observant",
       "choices": [
         {
@@ -752,7 +736,7 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 1
           },
           "next": "a4end",
           "to": "a4end"
@@ -772,7 +756,6 @@
         }
       ]
     },
-
     {
       "id": "a4end",
       "act": "act4",
@@ -807,7 +790,6 @@
         }
       ]
     },
-
     {
       "id": "a5s1",
       "act": "act5",
@@ -857,7 +839,6 @@
         }
       ]
     },
-
     {
       "id": "a5s2",
       "act": "act5",
@@ -885,7 +866,7 @@
           "text": "“Yeah,” you say, leaving it at that.",
           "tone": "low-energy · non-committal",
           "effects": {
-            "trust": 0,
+            "trust": -1,
             "tension": 0,
             "childStress": 0
           },
@@ -907,13 +888,12 @@
         }
       ]
     },
-
     {
       "id": "a5s3",
       "act": "act5",
       "speaker": "Narrator",
       "title": "Your Own Debrief",
-      "text": "Later that evening, after bedtime, you replay the day not as a trial, but as data: what helped, what hurt, and what you might try differently next time.",
+      "text": "Later that evening, after bedtime, you replay the day not as a trial, but as data: what helped, what hurt, and what you might try differently next time. You even make a mental note about small logistics — the jacket, the backpack — that can soften the edge of the next handoff.",
       "tone": "self-reflective · constructive",
       "choices": [
         {
@@ -957,13 +937,12 @@
         }
       ]
     },
-
     {
       "id": "a5end",
       "act": "act5",
       "speaker": "Narrator",
       "title": "End of Act 5 – The Long Game",
-      "text": "Handoffs will never be completely friction-free — too much history, too many moving parts. But each small, deliberate choice shifts the child’s story from “I am the problem” to “The adults are working on their stuff.”",
+      "text": "Handoffs will never be completely friction-free — too much history, too many moving parts. But each small, deliberate choice shifts the child’s story from “I am the problem” to “The adults are working on their stuff.” Over time, even the weather of the handoff can move from constant storm to scattered showers.",
       "tone": "gentle · realistically hopeful",
       "choices": [
         {
@@ -993,32 +972,56 @@
       ]
     }
   ],
-
   "acts": [
     {
       "id": "act1",
       "title": "Exchange at the Gate",
-      "steps": ["a1s1", "a1s2", "a1s3", "a1end"]
+      "steps": [
+        "a1s1",
+        "a1s2",
+        "a1s3",
+        "a1end"
+      ]
     },
     {
       "id": "act2",
       "title": "Child in the Middle",
-      "steps": ["a2s1", "a2s2", "a2s3", "a2end"]
+      "steps": [
+        "a2s1",
+        "a2s2",
+        "a2s3",
+        "a2end"
+      ]
     },
     {
       "id": "act3",
       "title": "Schedules & Blame",
-      "steps": ["a3s1", "a3s2", "a3s3", "a3end"]
+      "steps": [
+        "a3s1",
+        "a3s2",
+        "a3s3",
+        "a3end"
+      ]
     },
     {
       "id": "act4",
       "title": "Choosing De-escalation",
-      "steps": ["a4s1", "a4s2", "a4s3", "a4end"]
+      "steps": [
+        "a4s1",
+        "a4s2",
+        "a4s3",
+        "a4end"
+      ]
     },
     {
       "id": "act5",
       "title": "The Ride Home",
-      "steps": ["a5s1", "a5s2", "a5s3", "a5end"]
+      "steps": [
+        "a5s1",
+        "a5s2",
+        "a5s3",
+        "a5end"
+      ]
     }
   ]
 }
