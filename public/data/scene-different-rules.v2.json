@@ -51,7 +51,7 @@
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Late afternoon at the pickup point. One backpack, one tired child, and two different worlds of rules.\n\nThe child shuffles toward you and blurts out, loud enough for the co-parent to hear:\n\n“At Dad’s/Mom’s I can eat in the living room. Here I can’t do anything.”\n\nYou feel both pairs of adult eyes flick to each other for a split second.",
+      "text": "Late afternoon at the pickup point. One backpack, one tired child, and two different worlds of rules.\n\nThe child shuffles toward you and blurts out, loud enough for the co-parent to hear:\n\n“At Dad’s/Mom’s I can eat in the living room. Here I can’t do anything.”\n\nYou feel both pairs of adult eyes flick to each other for a split second. In that split second, the child isn’t comparing rules—they’re checking which home feels safer to breathe in today.",
       "tone": "tense · revealing",
       "choices": [
         {
@@ -82,7 +82,7 @@
           "tone": "light · slightly avoidant",
           "effects": {
             "trust": 0,
-            "tension": 0,
+            "tension": 1,
             "childStress": 0
           },
           "to": "a1s2"
@@ -93,7 +93,7 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "The co-parent adjusts their bag and steps a little closer.\n\n“We’ve talked about this,” they say, trying to sound neutral. “They’re allowed to relax a bit at my place. It doesn’t have to be so strict all the time.”\n\nThere’s a choice to make: do you have this conversation right here, or do you move it somewhere calmer?",
+      "text": "The co-parent adjusts their bag and steps a little closer.\n\n“We’ve talked about this,” they say, trying to sound neutral. “They’re allowed to relax a bit at my place. It doesn’t have to be so strict all the time.”\n\nThere’s a choice to make: do you have this conversation right here, or do you move it somewhere calmer? The co-parent’s tone carries its own history—old disagreements folded into one sentence about snacks and structure.",
       "tone": "charged · fork-in-the-road",
       "choices": [
         {
@@ -125,7 +125,7 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": 1
           },
           "to": "a1s3"
         }
@@ -135,7 +135,7 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Later, at home, the backpack is on the floor and the child is half-watching cartoons.\n\nYou notice little frictions everywhere: shoes, snacks, screen time.\n\nIt hits you: you and the co-parent have never really named which rules must match and which can safely differ.",
+      "text": "Later, at home, the backpack is on the floor and the child is half-watching cartoons.\n\nYou notice little frictions everywhere: shoes, snacks, screen time.\n\nIt hits you: you and the co-parent have never really named which rules must match and which can safely differ. Children notice the mismatched seams long before adults name them; invisible confusion becomes part of their bedtime weight.",
       "tone": "reflective · pattern-spotting",
       "choices": [
         {
@@ -166,7 +166,7 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Act 1 closes with a simple truth:\n\nThe child is not keeping score on who has the “better” rules.\nThey’re trying to understand how to be one kid in two different systems.\n\nThe question now is whether the adults are willing to give them a clearer map.",
+      "text": "Act 1 closes with a simple truth:\n\nThe child is not keeping score on who has the “better” rules.\nThey’re trying to understand how to be one kid in two different systems.\n\nThe question now is whether the adults are willing to give them a clearer map. For the child, the goal isn’t identical homes—it’s knowing which expectations stay steady no matter where they sleep.",
       "tone": "summarizing · gently challenging",
       "choices": [
         {
@@ -178,12 +178,11 @@
         }
       ]
     },
-
     {
       "id": "a2s1",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "A few days later, you and the co-parent are on a call. No child in earshot this time.\n\nThey sigh. “Look, they’re already under enough stress. I don’t want to fight about whether they can eat on the couch.”\n\nThis might be the moment to separate comfort rules from safety rules.",
+      "text": "A few days later, you and the co-parent are on a call. No child in earshot this time.\n\nThey sigh. “Look, they’re already under enough stress. I don’t want to fight about whether they can eat on the couch.”\n\nThis might be the moment to separate comfort rules from safety rules. You can almost feel the unspoken plea in their voice: less noise between households, more clarity for the little one caught in the middle.",
       "tone": "practical · slightly defensive",
       "choices": [
         {
@@ -225,7 +224,7 @@
       "id": "a2s2",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "You pull up a quick list on your phone or a scrap of paper.\n\nYou jot down:\n• Sleep time\n• Homework\n• Screens\n• Food / snacks\n\nThe co-parent adds: “And how we talk about each other’s houses.”",
+      "text": "You pull up a quick list on your phone or a scrap of paper.\n\nYou jot down:\n• Sleep time\n• Homework\n• Screens\n• Food / snacks\n\nThe co-parent adds: “And how we talk about each other’s houses.” Lists don’t solve everything, but they turn emotion into something holdable, visible, and less like a moving target.",
       "tone": "structured · concrete",
       "choices": [
         {
@@ -256,7 +255,7 @@
       "id": "a2s3",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Slowly, some shape appears:\n\nYou both agree that sleep and basic safety should be similar.\nYou can live with different snack rules and different “tidy up” styles.\n\nThe hardest part is how each of you talks about the other house in front of the child.",
+      "text": "Slowly, some shape appears:\n\nYou both agree that sleep and basic safety should be similar.\nYou can live with different snack rules and different “tidy up” styles.\n\nThe hardest part is how each of you talks about the other house in front of the child. This is where co-parenting often lives—not in perfection, but in the willingness to reduce the child’s guesswork.",
       "tone": "emerging-clarity · still tender",
       "choices": [
         {
@@ -287,7 +286,7 @@
       "id": "a2end",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Act 2 doesn’t end with perfect alignment, but something important has shifted:\n\nThe rules are no longer a secret power struggle.\nThey’re items on a list that both of you can see and adjust over time.",
+      "text": "Act 2 doesn’t end with perfect alignment, but something important has shifted:\n\nThe rules are no longer a secret power struggle.\nThey’re items on a list that both of you can see and adjust over time. Even partial alignment softens the child’s load; predictability is its own kind of love.",
       "tone": "realistic · cautiously hopeful",
       "choices": [
         {
@@ -299,12 +298,11 @@
         }
       ]
     },
-
     {
       "id": "a3s1",
       "act": "act3",
       "speaker": "Teacher",
-      "text": "A week later, a teacher quietly pulls you aside at school pickup.\n\n“They mentioned they’re worried about ‘getting in trouble’ for doing things differently at each house,” the teacher says. “They seem a bit on edge about making mistakes.”",
+      "text": "A week later, a teacher quietly pulls you aside at school pickup.\n\n“They mentioned they’re worried about ‘getting in trouble’ for doing things differently at each house,” the teacher says. “They seem a bit on edge about making mistakes.” When teachers notice patterns, it’s often because the child’s shoulders have been carrying too many invisible rules.",
       "tone": "concerned · observant",
       "choices": [
         {
@@ -335,7 +333,7 @@
       "id": "a3s2",
       "act": "act3",
       "speaker": "Child",
-      "text": "At home, the child hovers in the doorway.\n\n“Is it bad if I forget whose rules are whose?” they ask quietly.\n\nYou can feel how much they want a simple, steady answer.",
+      "text": "At home, the child hovers in the doorway.\n\n“Is it bad if I forget whose rules are whose?” they ask quietly.\n\nYou can feel how much they want a simple, steady answer. They don’t need matching households—they need permission to be wrong without fearing someone will be disappointed.",
       "tone": "vulnerable · small voice",
       "choices": [
         {
@@ -377,7 +375,7 @@
       "id": "a3s3",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "Later that night, as they fall asleep, you notice their shoulders soften just a little.\n\nDifferent rules still exist.\nBut the story around those rules has changed from “don’t mess up” to “the adults will guide you.”",
+      "text": "Later that night, as they fall asleep, you notice their shoulders soften just a little.\n\nDifferent rules still exist.\nBut the story around those rules has changed from “don’t mess up” to “the adults will guide you.” Safety, for a child, is often defined by tone more than rules; consistency simply gives that tone a place to land.",
       "tone": "quiet · integrating",
       "choices": [
         {
@@ -397,7 +395,7 @@
       "id": "ending",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "This scene doesn’t magically unify two households.\n\nInstead, it offers a more realistic win:\n\n• a shortlist of rules that truly need to match,\n• fewer casual comparisons of “who is stricter,”\n• and a child who hears one steady message about safety across both homes.\n\nYou can replay the scene making different choices to feel how trust, tension, and child stress shift when the rules stay hidden versus when you bring them into the open.",
+      "text": "This scene doesn’t magically unify two households.\n\nInstead, it offers a more realistic win:\n\n• a shortlist of rules that truly need to match,\n• fewer casual comparisons of “who is stricter,”\n• and a child who hears one steady message about safety across both homes.\n\nYou can replay the scene making different choices to feel how trust, tension, and child stress shift when the rules stay hidden versus when you bring them into the open. The two-home system remains, but the story around it shifts—less about comparison, more about coherence and care.",
       "tone": "summative · gently empowering",
       "choices": []
     }
