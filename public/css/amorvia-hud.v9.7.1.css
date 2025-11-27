@@ -46,3 +46,40 @@ body.amorvia-hud.hc *, body.hc * { outline-color: currentColor; outline-offset: 
 .background, .scene-background { position: absolute; inset: 0; z-index: var(--amorvia-z-background); }
 .hidden { display: none !important; }
 .hud, .hud-layer, .ui-layer { position: relative; z-index: var(--amorvia-z-hud); }
+
+/* Amorvia HUD v9.8 – smooth meter transitions */
+
+.meter .track {
+  overflow: hidden;
+}
+
+.meter .fill {
+  transition: width 260ms ease-out, background-color 180ms ease-out;
+}
+
+/* blagi hover za cijeli HUD red (nije agresivno) */
+#hud:hover .meter {
+  opacity: 0.96;
+}
+
+/* Amorvia HUD v9.8 – childStress pulse */
+
+.meter[data-key="childStress"].pulse-up .fill,
+.meter[data-key="childstress"].pulse-up .fill {
+  animation: hud-childstress-pulse 420ms ease-out;
+}
+
+@keyframes hud-childstress-pulse {
+  0% {
+    transform: scaleX(1);
+    filter: brightness(1);
+  }
+  30% {
+    transform: scaleX(1.04);
+    filter: brightness(1.15);
+  }
+  100% {
+    transform: scaleX(1);
+    filter: brightness(1);
+  }
+}
