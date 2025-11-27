@@ -70,7 +70,7 @@
       "entry": true,
       "act": "act1",
       "speaker": "Narrator",
-      "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected.",
+      "text": "The toys are still on the couch. It’s Friday evening and the silence feels heavier than expected. The quiet feels different tonight—the kind that asks whether you’re ready to grow or just tired of holding everything alone.",
       "tone": "reflective · gentle melancholy",
       "choices": [
         {
@@ -105,7 +105,7 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Your friend replies quickly: “We’re at the new bar downtown — come join us!” You hesitate.",
+      "text": "Your friend replies quickly: “We’re at the new bar downtown — come join us!” You hesitate. Even small invitations carry weight now; you're balancing loneliness, hope, and the steady rhythm of parenting.",
       "tone": "ambivalent · tentative",
       "choices": [
         {
@@ -140,7 +140,7 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Just as you settle in, your phone lights up — a message from your ex: “Did you pack the extra pajamas? She says she can’t find them.”",
+      "text": "Just as you settle in, your phone lights up — a message from your ex: “Did you pack the extra pajamas? She says she can’t find them.” Co‑parenting logistics have their own emotional gravity—mornings, bedtimes, small crises that never fully clock out.",
       "tone": "practical · co-parenting micro-stress",
       "choices": [
         {
@@ -175,7 +175,7 @@
       "id": "a1s4",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Lying in bed, you scroll through social media. Everyone seems to be in couples or on trips.",
+      "text": "Lying in bed, you scroll through social media. Everyone seems to be in couples or on trips. Scrolling feels like comparing chapters from different books—none of them yours anymore.",
       "tone": "lonely · self-comparison",
       "choices": [
         {
@@ -210,7 +210,7 @@
       "id": "a1end",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities.",
+      "text": "You lie awake for a moment, thinking about how strange this new life feels — quieter, but full of possibilities. There's a tenderness in admitting you’re not who you were before—and maybe that’s its own beginning.",
       "tone": "quiet · open-ended",
       "choices": [
         {
@@ -255,7 +255,7 @@
       "type": "dialog",
       "speaker": "Narrator",
       "title": "Back on the App",
-      "text": "The phone screen glows in the dim room. The dating app you deleted long ago is back. Picture after picture, profile after profile — but this time you're not just looking for chemistry. You're looking for someone who can understand that you share your life with your child.",
+      "text": "The phone screen glows in the dim room. The dating app you deleted long ago is back. Picture after picture, profile after profile — but this time you're not just looking for chemistry. You're looking for someone who can understand that you share your life with your child. Dating after parenting changes the algorithm: you’re not searching for a spark—you’re searching for someone who respects your orbit.",
       "tone": "reflective · cautious",
       "choices": [
         {
@@ -278,7 +278,7 @@
           "tone": "avoidant · anxious",
           "effects": {
             "trust": 0,
-            "tension": 1,
+            "tension": 2,
             "childStress": 0
           },
           "next": "a2s2",
@@ -292,7 +292,7 @@
       "type": "dialog",
       "speaker": "Date",
       "title": "First Message",
-      "text": "\"Hey, I really like how you describe yourself. I’m also juggling work and family… What does a regular week look like for you?\" The message is warm and without pressure. You feel a small spark — but also that familiar fear around discussing your child.",
+      "text": "\"Hey, I really like how you describe yourself. I’m also juggling work and family… What does a regular week look like for you?\" The message is warm and without pressure. You feel a small spark — but also that familiar fear around discussing your child. Honesty builds safety, but vulnerability carries the echo of old wounds.",
       "tone": "curious · warm",
       "choices": [
         {
@@ -329,7 +329,7 @@
       "type": "dialog",
       "speaker": "Date",
       "title": "Reaction to Your Honesty",
-      "text": "\"Thank you for telling me that. I appreciate honesty. If you’d like, we can meet at a time that works for you — I don’t want to disrupt your schedule.\" Your shoulders relax a little.",
+      "text": "\"Thank you for telling me that. I appreciate honesty. If you’d like, we can meet at a time that works for you — I don’t want to disrupt your schedule.\" Your shoulders relax a little. This kind of response feels like oxygen—respect without pressure, interest without entitlement.",
       "tone": "supportive · respectful",
       "choices": [
         {
@@ -366,7 +366,7 @@
       "type": "dialog",
       "speaker": "Narrator",
       "title": "A Small Secret",
-      "text": "The conversation continues — jokes, memes, small talk. You enjoy it. But each time you want to relax, the thought appears: \"At some point, I’ll have to explain the whole parenting part.\" You feel like you're building something on half-truths.",
+      "text": "The conversation continues — jokes, memes, small talk. You enjoy it. But each time you want to relax, the thought appears: \"At some point, I’ll have to explain the whole parenting part.\" You feel like you're building something on half-truths. Half‑truths build houses with missing walls; sooner or later, the wind gets in.",
       "tone": "uneasy · conflicted",
       "choices": [
         {
@@ -403,7 +403,7 @@
       "type": "dialog",
       "speaker": "Narrator",
       "title": "End of Act 2 — Planned First Date",
-      "text": "The plan is set: time, place, and healthy boundaries. For the first time in a long while, you feel like starting something new doesn’t mean betraying your parenting responsibilities.",
+      "text": "The plan is set: time, place, and healthy boundaries. For the first time in a long while, you feel like starting something new doesn’t mean betraying your parenting responsibilities. When dating aligns with parenting, it feels less like juggling and more like gentle integration.",
       "tone": "hopeful · grounded",
       "choices": [
         {
@@ -427,7 +427,7 @@
       "type": "dialog",
       "speaker": "Narrator",
       "title": "End of Act 2 — Pause or Halfway Point",
-      "text": "Act 2 ends with a sense of being somewhere in the middle. You want connection, but part of you isn’t fully ready. Maybe you just need a little more time — not to avoid dating, but to enter it more consciously.",
+      "text": "Act 2 ends with a sense of being somewhere in the middle. You want connection, but part of you isn’t fully ready. Maybe you just need a little more time — not to avoid dating, but to enter it more consciously. Sometimes pausing is its own kind of courage—the kind that protects your child's emotional weather.",
       "tone": "ambivalent · reflective",
       "choices": [
         {
@@ -449,7 +449,7 @@
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you.",
+      "text": "A new notification glows on your phone: “Hey, you seem interesting :)” — your first match, or maybe just the universe testing you. Even a small message can feel like a test: can something new grow without shaking what your child relies on?",
       "tone": "tentative · surprised · gentle humor",
       "choices": [
         {
@@ -497,7 +497,7 @@
       "id": "a3s2",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "The glow of the screen fades; your reflection stares back. For the first time in months, you ask yourself what you actually want.",
+      "text": "The glow of the screen fades; your reflection stares back. For the first time in months, you ask yourself what you actually want. Your reflection shows a version of you that has walked through endings and still dares to imagine beginnings.",
       "tone": "introspective · slow pacing · gentle internal monologue",
       "choices": [
         {
@@ -545,7 +545,7 @@
       "id": "a3s3",
       "act": "act3",
       "speaker": "Child",
-      "text": "“Daddy/Mommy, can we go to the park tomorrow?”",
+      "text": "“Daddy/Mommy, can we go to the park tomorrow?” The child’s question is a compass—reminding you what truly anchors your life.",
       "tone": "warm · tender · grounding",
       "choices": [
         {
@@ -593,7 +593,7 @@
       "id": "a3end",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next.",
+      "text": "Later, as the sky turns amber, you realize balance isn’t about forgetting the past — it’s about making space for what’s next. Balance doesn’t erase the past; it teaches you how to carry it without letting it steer.",
       "tone": "meditative · lightly hopeful · closure vibe",
       "choices": [
         {
@@ -619,7 +619,7 @@
       "id": "a4s1",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together.",
+      "text": "Late afternoon. You check the mirror one last time. It’s your first real date since the breakup — excitement and nerves tangle together. The mirror shows both courage and fear—dating as a parent is choosing vulnerability with guardrails.",
       "tone": "anticipatory · hopeful · slightly anxious",
       "choices": [
         {
@@ -643,7 +643,7 @@
           "effects": {
             "trust": 0,
             "tension": 1,
-            "childStress": 0
+            "childStress": 1
           },
           "next": "a4s2",
           "to": "a4s2"
@@ -667,7 +667,7 @@
       "id": "a4s2",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Phone in hand. A message field to your ex blinks: pickup tomorrow at 10:00? You can set the tone now.",
+      "text": "Phone in hand. A message field to your ex blinks: pickup tomorrow at 10:00? You can set the tone now. Clarity is kindness, especially in co‑parenting; vague messages plant anxiety in tomorrow’s soil.",
       "tone": "practical · boundary-setting opportunity",
       "choices": [
         {
@@ -715,7 +715,7 @@
       "id": "a4s3",
       "act": "act4",
       "speaker": "Date",
-      "text": "“How was your weekend?”",
+      "text": "“How was your weekend?” New connections feel lighter when they don’t compete with the part of you that is already spoken for.",
       "tone": "warm · curious · vulnerable",
       "choices": [
         {
@@ -763,7 +763,7 @@
       "id": "a4s4",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Later, the date suggests a spontaneous late movie. It would push past your usual wind-down before pickup.",
+      "text": "Later, the date suggests a spontaneous late movie. It would push past your usual wind-down before pickup. Boundaries protect not just tomorrow’s pickup—they protect your child's emotional predictability.",
       "tone": "temptation · boundary test",
       "choices": [
         {
@@ -800,7 +800,7 @@
           "effects": {
             "trust": -2,
             "tension": 2,
-            "childStress": 1
+            "childStress": 2
           },
           "next": "a4end",
           "to": "a4end"
@@ -811,7 +811,7 @@
       "id": "a4end",
       "act": "act4",
       "speaker": "Narrator",
-      "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier.",
+      "text": "Home again. Shoes by the door, quiet in the hall. You replay the night — the small risks, the small wins — and notice you’re breathing easier. Breathing easier is the first sign that you didn’t abandon yourself just to feel wanted.",
       "tone": "settled · gently optimistic",
       "choices": [
         {
@@ -837,7 +837,7 @@
       "id": "a5s1",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next?",
+      "text": "After the date, you take a quiet moment to reflect. How are you feeling about what comes next? Every emotion you feel has a ripple—through your plans, your time, your child’s sense of home.",
       "choices": [
         {
           "id": "a5s1c1",
@@ -869,7 +869,7 @@
       "id": "a5s2",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "You consider how (and whether) to tell your co-parent about the date.",
+      "text": "You consider how (and whether) to tell your co-parent about the date. Sharing or withholding both carry meaning; trust grows in small, steady disclosures.",
       "choices": [
         {
           "id": "a5s2c1",
@@ -901,7 +901,7 @@
       "id": "a5s3",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "You think about the child’s routine: what, if anything, needs to change soon?",
+      "text": "You think about the child’s routine: what, if anything, needs to change soon? Routines are architecture for a child—the sturdier they are, the easier it is to build new chapters on top of them.",
       "choices": [
         {
           "id": "a5s3c1",
@@ -933,7 +933,7 @@
       "id": "a5s4",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "You sketch a short plan for the next two weeks.",
+      "text": "You sketch a short plan for the next two weeks. A two‑week plan is more than logistics—it’s a promise to stay intentional, not impulsive.",
       "choices": [
         {
           "id": "a5s4c1",
@@ -977,7 +977,7 @@
       "id": "a5end",
       "act": "act5",
       "speaker": "Narrator",
-      "text": "You close the day with a clearer sense of pace and boundaries.",
+      "text": "You close the day with a clearer sense of pace and boundaries. You close this chapter not with certainty but with alignment—your heart, your child, your boundaries all moving in the same direction.",
       "choices": [
         {
           "id": "a5endc1",
@@ -1065,4 +1065,3 @@
     }
   ]
 }
-
