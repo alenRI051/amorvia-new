@@ -113,6 +113,7 @@
     currentNodeId: null,
     meters: { trust: 0, tension: 0, childStress: 0 },
     currentScenarioId: null,
+    lastActId: null,
   };
 
   // ------------ DOM helpers ------------
