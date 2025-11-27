@@ -25,7 +25,7 @@
     "tension",
     "childStress"
   ],
-    "ui": {
+  "ui": {
     "showHud": true,
     "showActBadge": true,
     "showActTitle": true,
@@ -89,7 +89,7 @@
       "id": "a1s1",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Friday evening. You’re in the hallway, one shoe off, one shoe on. Your partner’s child is standing by the door, backpack on, waiting for the co-parent to arrive.\n\nYou hear your partner say from the living room, “Put that back in your room, they don’t like toys in the hallway.”\n\nThe child hesitates and glances at you, like you’re the judge of what’s allowed.",
+      "text": "Friday evening. You’re in the hallway, one shoe off, one shoe on. Your partner’s child is standing by the door, backpack on, waiting for the co-parent to arrive.\n\nYou hear your partner say from the living room, “Put that back in your room, they don’t like toys in the hallway.”\n\nThe child hesitates and glances at you, like you’re the judge of what’s allowed. You can feel the child quietly reading the room, trying to work out whose rules really count and who gets to say “we” about this home.",
       "choices": [
         {
           "id": "a1s1_c1",
@@ -108,8 +108,8 @@
           "tone": "neutral · observing",
           "effects": {
             "trust": 0,
-            "tension": 0,
-            "childStress": 0
+            "tension": 1,
+            "childStress": 1
           },
           "to": "a1s2"
         },
@@ -130,7 +130,7 @@
       "id": "a1s2",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "A few minutes later, the co-parent arrives. The hallway feels tight: shoes, backpacks, and invisible history all in one place.\n\nThe co-parent hugs the child and throws a quick glance at you – polite, but distant.\n\nYour partner says, “We’re trying to keep the hallway clear now, right?” and looks at you for backup.",
+      "text": "A few minutes later, the co-parent arrives. The hallway feels tight: shoes, backpacks, and invisible history all in one place.\n\nThe co-parent hugs the child and throws a quick glance at you – polite, but distant.\n\nYour partner says, “We’re trying to keep the hallway clear now, right?” and looks at you for backup. The air is full of small signals – a raised eyebrow, a half-smile, the way everyone uses the word “we” like it belongs to different teams.",
       "choices": [
         {
           "id": "a1s2_c1",
@@ -171,7 +171,7 @@
       "id": "a1s3",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "Later that night, the house is finally quiet. The hallway is empty again, but the feeling isn’t.\n\nYour partner sits at the kitchen table and sighs.\n\n“I feel like you’re either too strict or too soft,” they say. “I never know what to expect from you with the rules.”",
+      "text": "Later that night, the house is finally quiet. The hallway is empty again, but the feeling isn’t.\n\nYour partner sits at the kitchen table and sighs.\n\n“I feel like you’re either too strict or too soft,” they say. “I never know what to expect from you with the rules.” Underneath the words about rules, you can hear a softer question: are you on the same side, or are you one more person the child has to manage?",
       "choices": [
         {
           "id": "a1s3_c1",
@@ -189,7 +189,7 @@
           "label": "Defend your intentions and explain why you reacted the way you did.",
           "tone": "self-explaining · mixed",
           "effects": {
-            "trust": 0,
+            "trust": 1,
             "tension": 0,
             "childStress": 0
           },
@@ -212,7 +212,7 @@
       "id": "a1s4",
       "act": "act1",
       "speaker": "Narrator",
-      "text": "By the end of the conversation, it’s clear: nobody has ever sat down to say out loud what your role as a step-parent is supposed to be.\n\nThe hallway incident wasn’t really about shoes. It was about who gets to say “we” when it comes to the child.\n\nAct 1 closes with a gentle realization: if the three adults don’t name the boundaries, the child will keep guessing where they are.",
+      "text": "By the end of the conversation, it’s clear: nobody has ever sat down to say out loud what your role as a step-parent is supposed to be.\n\nThe hallway incident wasn’t really about shoes. It was about who gets to say “we” when it comes to the child.\n\nAct 1 closes with a gentle realization: if the three adults don’t name the boundaries, the child will keep guessing where they are. The hallway was just the stage; the real story is about who is allowed inside the circle when someone says “we” to this child.",
       "choices": [
         {
           "id": "a1s4_c1",
@@ -231,7 +231,7 @@
       "id": "a2s1",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "A few weeks later, it’s Sunday evening. The child is back from the co-parent’s home and seems unusually quiet.\n\nThey hover near you while you cook, then blurt out:\n\n“At Mom’s house I don’t have to ask about snacks. Here I have to ask *you* and *them*.”",
+      "text": "A few weeks later, it’s Sunday evening. The child is back from the co-parent’s home and seems unusually quiet.\n\nThey hover near you while you cook, then blurt out:\n\n“At Mom’s house I don’t have to ask about snacks. Here I have to ask *you* and *them*.” You notice how carefully they compare houses, like they’re trying to solve a loyalty puzzle with no wrong answer.",
       "choices": [
         {
           "id": "a2s1_c1",
@@ -251,7 +251,7 @@
           "effects": {
             "trust": 0,
             "tension": 0,
-            "childStress": 0
+            "childStress": -1
           },
           "to": "a2s2"
         },
@@ -272,7 +272,7 @@
       "id": "a2s2",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Later, after the child goes to play, your partner comes in from a call with the co-parent.\n\nTheir voice is tight. “They said you’re confusing the kid. That you’re acting like a second parent instead of a support.”\n\nThe phrase “acting like a second parent” lands like a stone in your stomach.",
+      "text": "Later, after the child goes to play, your partner comes in from a call with the co-parent.\n\nTheir voice is tight. “They said you’re confusing the kid. That you’re acting like a second parent instead of a support.”\n\nThe phrase “acting like a second parent” lands like a stone in your stomach. The comment doesn’t just land on you; it ripples through the whole system, especially for a child who is already scanning every adult for safety.",
       "choices": [
         {
           "id": "a2s2_c1",
@@ -303,7 +303,7 @@
           "effects": {
             "trust": -1,
             "tension": -1,
-            "childStress": 0
+            "childStress": 1
           },
           "to": "a2s3"
         }
@@ -313,7 +313,7 @@
       "id": "a2s3",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "As the evening goes on, the “Who am I allowed to be?” question keeps floating between you and your partner.\n\nIs your role more like a coach, a bonus parent, a housemate, an aunt/uncle?\n\nYou both realize nobody has ever said this out loud with the co-parent present, and the child has been left to interpret the silence.",
+      "text": "As the evening goes on, the “Who am I allowed to be?” question keeps floating between you and your partner.\n\nIs your role more like a coach, a bonus parent, a housemate, an aunt/uncle?\n\nYou both realize nobody has ever said this out loud with the co-parent present, and the child has been left to interpret the silence. In the silence between sentences, you can almost hear the child’s inner voice asking, “Who am I allowed to trust without making someone else sad?”",
       "choices": [
         {
           "id": "a2s3_c1",
@@ -354,7 +354,7 @@
       "id": "a2s4",
       "act": "act2",
       "speaker": "Narrator",
-      "text": "Act 2 closes not with a “win”, but with a clearer map:\n\n• The child is being loyal to *all* of you.\n• Each home has different rules and different emotional climates.\n• Your role as step-parent is real, but unnamed roles create extra stress.\n\nYou and your partner agree: whatever happens next needs to be less about who is right, and more about what will make life predictable for the child.",
+      "text": "Act 2 closes not with a “win”, but with a clearer map:\n\n• The child is being loyal to *all* of you.\n• Each home has different rules and different emotional climates.\n• Your role as step-parent is real, but unnamed roles create extra stress.\n\nYou and your partner agree: whatever happens next needs to be less about who is right, and more about what will make life predictable for the child. Naming roles out loud is one way of telling the child they don’t have to guess the rules by reading everyone’s mood.",
       "choices": [
         {
           "id": "a2s4_c1",
@@ -373,7 +373,7 @@
       "id": "a3s1",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "You’re all at a neutral place – a café near the park. You, your partner, and the co-parent.\n\nThe child is within sight on the playground, laughing with other kids. For once, all three adults are in the same frame.\n\nYou take a breath. This could become just another round of blame. Or something else.",
+      "text": "You’re all at a neutral place – a café near the park. You, your partner, and the co-parent.\n\nThe child is within sight on the playground, laughing with other kids. For once, all three adults are in the same frame.\n\nYou take a breath. This could become just another round of blame. Or something else. From the playground, the child keeps glancing over as if to check whether the adults are one big storm or something closer to a patchy sky.",
       "choices": [
         {
           "id": "a3s1_c1",
@@ -414,7 +414,7 @@
       "id": "a3s2",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "Slowly, the conversation turns toward practical questions:\n\n• Who explains rule differences to the child?\n• How will you talk about your role when new partners enter the picture?\n• What words do you *all* feel comfortable with for “step-parent”?\n\nIt’s not perfectly smooth. There are eye rolls, pauses, and some hard swallows. But it’s happening.",
+      "text": "Slowly, the conversation turns toward practical questions:\n\n• Who explains rule differences to the child?\n• How will you talk about your role when new partners enter the picture?\n• What words do you *all* feel comfortable with for “step-parent”?\n\nIt’s not perfectly smooth. There are eye rolls, pauses, and some hard swallows. But it’s happening. It’s awkward and imperfect, but there is a shift from “Who is right?” to “How do we share this small word ‘we’ without squeezing the child?”",
       "choices": [
         {
           "id": "a3s2_c1",
@@ -445,7 +445,7 @@
           "effects": {
             "trust": -1,
             "tension": 2,
-            "childStress": 0
+            "childStress": 1
           },
           "to": "a3s3"
         }
@@ -455,7 +455,7 @@
       "id": "a3s3",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "By the end of the meeting, you haven’t redesigned the whole family system. But something is different:\n\nThere are a few written agreements. A plan to talk again. And a shared sentence you all agree to use when the child asks about rules or loyalty.\n\nIt sounds something like:\n“You don’t have to choose between us. All of us are trying to keep you safe, even if our houses work a little differently.”",
+      "text": "By the end of the meeting, you haven’t redesigned the whole family system. But something is different:\n\nThere are a few written agreements. A plan to talk again. And a shared sentence you all agree to use when the child asks about rules or loyalty.\n\nIt sounds something like:\n“You don’t have to choose between us. All of us are trying to keep you safe, even if our houses work a little differently.” For the child, these agreements aren’t theory; they are the difference between feeling like a problem and feeling like they belong to more than one safe “we.”",
       "choices": [
         {
           "id": "a3s3_c1",
@@ -474,7 +474,7 @@
       "id": "ending",
       "act": "act3",
       "speaker": "Narrator",
-      "text": "This scenario doesn’t end with a perfect blend of families.\n\nInstead, it ends with something more realistic and more powerful:\n\n• clearer language for your role,\n• a few shared principles between the adults,\n• and a slightly lighter load on the child’s shoulders.\n\nYou can replay the scenario making different choices to explore how trust, tension, and child stress shift over time.",
+      "text": "This scenario doesn’t end with a perfect blend of families.\n\nInstead, it ends with something more realistic and more powerful:\n\n• clearer language for your role,\n• a few shared principles between the adults,\n• and a slightly lighter load on the child’s shoulders.\n\nYou can replay the scenario making different choices to explore how trust, tension, and child stress shift over time. In a blended family, the child’s nervous system is often the first place conflict shows up and the last place it leaves; every small, clear “we” you build together lightens that load a little.",
       "choices": []
     }
   ]
