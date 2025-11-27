@@ -87,37 +87,8 @@
       "file": "visitor.v2.json",
       "category": "bonus",
       "order": 10,
-      "tags": ["boundaries", "home", "safety"],
-      "description": "A ‘visitor at the door’ moment: setting boundaries about who comes in while keeping the child’s sense of safety intact."
-    },
-
-    {
-      "id": "brzi-kontakti",
-      "title": "Brzi kontakti",
-      "file": "brzi-kontakti.v2.json",
-      "category": "system",
-      "order": 90,
-      "tags": ["support", "resources"],
-      "description": "Quick access to crisis and support contacts."
-    },
-    {
-      "id": "direction",
-      "title": "Direction",
-      "file": "direction.v2.json",
-      "category": "system",
-      "order": 91,
-      "tags": ["meta"],
-      "description": "Meta / direction helper scene."
-    },
-    {
-      "id": "to-do",
-      "title": "To-Do",
-      "file": "to-do.v2.json",
-      "category": "system",
-      "order": 92,
-      "tags": ["meta"],
-      "description": "Internal to-do or notes scene."
+      "tags": ["boundaries", "home", "safe"],
+      "description": "Setting a boundary at the door while keeping the child's sense of safety intact."
     }
   ]
 }
-
