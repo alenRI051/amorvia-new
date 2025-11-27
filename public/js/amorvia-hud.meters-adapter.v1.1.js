@@ -70,11 +70,33 @@
         childStress: hud.querySelector('.meter[data-key="childStress"] .value, .meter[data-key="childstress"] .value')
       };
       for (const k of Object.keys(map)) {
-        const v = meters[k];
-        if (v==null) continue;
-        if (map[k]) map[k].style.width = v + "%";
-        if (mapVal[k]) mapVal[k].textContent = v + "%";
+  const v = meters[k];
+  if (v == null) continue;
+
+  const fillEl = map[k];
+  const valEl = mapVal[k];
+
+  if (fillEl) {
+    // pulse logika za childStress
+    const meterEl = fillEl.closest('.meter');
+    if (meterEl && (k === 'childStress' || k === 'childstress')) {
+      const prev = Number(meterEl.dataset.prevValue || 0);
+      meterEl.dataset.prevValue = v;
+      meterEl.classList.remove('pulse-up');
+
+      if (v > prev) {
+        meterEl.classList.add('pulse-up');
+        setTimeout(() => meterEl.classList.remove('pulse-up'), 450);
       }
+    }
+
+    fillEl.style.width = v + "%";
+  }
+
+  if (valEl) {
+    valEl.textContent = v + "%";
+  }
+}
       return;
     }
 
