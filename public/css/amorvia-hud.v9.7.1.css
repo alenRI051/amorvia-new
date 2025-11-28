@@ -83,7 +83,12 @@ body.amorvia-hud.hc *, body.hc * { outline-color: currentColor; outline-offset: 
     filter: brightness(1);
   }
 }
-/* HUD 9.8.1 – improve text visibility on bright backgrounds */
+
+/* HUD 9.8.1 – improve text visibility on bright backgrounds (strong, class+id) */
+.hud,
+.hud *,
+.hud-layer,
+.hud-layer *,
 #hud,
 #hud * {
   color: #f5f5f5 !important;
