@@ -395,11 +395,13 @@ if (actBadge) {
 
     // Scene title
     if (sceneTitle) {
-      sceneTitle.textContent =
-        state.scenario && state.scenario.title
-          ? state.scenario.title
-          : "Scenario";
-    }
+  const label = node.title || (scenario && scenario.title) || "";
+
+  sceneTitle.classList.remove("scene-change");
+  void sceneTitle.offsetWidth;
+  sceneTitle.textContent = label;
+  sceneTitle.classList.add("scene-change");
+}
 
     // Dialog text (v2 uses string; if array sneaks in, join safely)
     const rawText = node.text;
