@@ -31,14 +31,16 @@
     var mode = getMode();
     var sig = String(Date.now());
     try {
-      if (mode === "v2"){
-        await import(`/js/app.v2.js?sig=${sig}`);
-        try {
-          await import(`/js/addons/extras-tabs.js?sig=${sig}`);
-        } catch (e_inner) {}
-      } else {
-        await import(`/js/app.js?sig=${sig}`);
-      }
+     if (mode === "v2"){
+  await import(`/js/app.v2.js?sig=${sig}`);
+  // Extras tabs addon je privremeno isključen u BETA 0.9.x
+  // ako ga vratimo, ovdje se može ponovno dodati dynamic import.
+  // try {
+  //   await import(`/js/addons/extras-tabs.js?sig=${sig}`);
+  // } catch (e_inner) {}
+} else {
+  await import(`/js/app.js?sig=${sig}`);
+}
     } catch (err) {
       console.error("[Amorvia] Failed to start app:", err);
     }
