@@ -395,7 +395,8 @@ if (actBadge) {
 
     // Scene title
     if (sceneTitle) {
-  const label = node.title || (scenario && scenario.title) || "";
+  const scn = state.scenario || {};
+  const label = node.title || scn.title || "";
 
   sceneTitle.classList.remove("scene-change");
   void sceneTitle.offsetWidth;
