@@ -120,6 +120,30 @@
   height: auto !important;
 }
 
+/* Amorvia UI v9.8.1 – card & layout polish */
+
+.card {
+  border-radius: 14px;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  background: #111827; /* tamna, ali ne precrna */
+}
+
+/* glavna scena / stage kartica */
+.card.stage {
+  padding: 16px 18px 18px;
+}
+
+/* HUD karta (ako koristi .card.hud ili #hud unutar card) */
+.card.hud,
+#hudCard {
+  border-radius: 12px;
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
 /* Small screens: stack safely */
 @media (max-width: 640px){
   #hud { margin-bottom: .5rem; }
