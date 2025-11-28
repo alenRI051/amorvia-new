@@ -11,3 +11,59 @@ body.ui-compact .select,  body.ui-compact select,
 body.ui-compact .input,   body.ui-compact input { padding: 6px 10px; min-height: 30px; }
 body.ui-compact h2.no-margin { margin: 0; line-height: 1.2; }
 body.ui-compact label, body.ui-compact .badge { line-height: 1.2; }
+/* Amorvia Compact UI v1.1 – mobile polish */
+
+/* 1) Manji topbar u compact modu */
+body.compact-ui .topbar,
+body.compact-ui #topbar {
+  padding: 4px 10px;
+  gap: 6px;
+  font-size: 12px;
+}
+
+/* Scenario / mode / buttons se ljepše prelamaju na uskom ekranu */
+@media (max-width: 768px) {
+  body.compact-ui .topbar,
+  body.compact-ui #topbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* Drop-downovi i gumbi – cijeli red, lakše za klik prstom */
+  body.compact-ui .topbar select,
+  body.compact-ui #topbar select,
+  body.compact-ui .topbar button,
+  body.compact-ui #topbar button {
+    margin-top: 2px;
+    min-height: 28px;
+  }
+}
+
+/* 2) Više mjesta za scenu + HUD u compact modu */
+body.compact-ui .card.stage {
+  margin-top: 6px;
+}
+
+/* 3) Siguran prostor za choices na dnu – da ne sjednu na sam rub ekrana */
+@media (max-width: 768px) {
+  body.compact-ui #dialog {
+    padding-bottom: 18px;
+  }
+}
+
+/* 4) Choices malo širi i viši na mobitelu za lakši tap */
+@media (max-width: 768px) {
+  body.compact-ui #dialog button,
+  body.compact-ui #dialog [role="button"] {
+    padding: 6px 10px;
+    min-height: 34px;
+    width: 100%;
+    text-align: left;
+  }
+
+  /* mali razmak između gumbi */
+  body.compact-ui #dialog button + button,
+  body.compact-ui #dialog [role="button"] + [role="button"] {
+    margin-top: 4px;
+  }
+}
