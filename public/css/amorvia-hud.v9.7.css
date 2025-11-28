@@ -140,3 +140,53 @@
   color: #f5f5f5 !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
+/* Amorvia HUD v9.8.3 – micro-polish for readability & spacing */
+
+/* Malo više “air-a” oko HUD-a i ugodniji font-size */
+.amor-hud-root {
+  font-size: 12px;
+  padding: 6px 10px;
+  gap: 0.5rem;
+}
+
+/* Čipovi imaju sitno više paddinga i nježniji, čitljiviji oblik */
+.amor-hud-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+}
+
+/* Label – malo jači font i spacing da se lakše skenira */
+.amor-hud-chip-label {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* Value – mrvicu veći i jasniji postotak */
+.amor-hud-chip-value {
+  font-weight: 500;
+  font-size: 11px;
+}
+
+/* Mali razmak iznad HUD-a da ne “lijepi” za donji rub scene */
+.amor-hud-root-wrap,
+#hud {
+  margin-top: 6px;
+}
+
+/* Bolje slaganje na uskim ekranima (mobitel/tablet) */
+@media (max-width: 768px) {
+  .amor-hud-root {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.35rem;
+  }
+
+  .amor-hud-chip {
+    min-width: 120px;
+    justify-content: center;
+  }
+}
