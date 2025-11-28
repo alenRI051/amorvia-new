@@ -82,6 +82,7 @@ body.amorvia-hud.hc *, body.hc * { outline-color: currentColor; outline-offset: 
     transform: scaleX(1);
     filter: brightness(1);
   }
+}
 /* HUD 9.8.1 – improve text visibility on bright backgrounds */
 .hud-label,
 .meter .label,
