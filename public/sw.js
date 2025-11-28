@@ -1,3 +1,5 @@
+// SW refresh 2025-11-28
+
 const CACHE_NAME = 'amorvia-cache-v1';
 const SHELL = [
   '/',
