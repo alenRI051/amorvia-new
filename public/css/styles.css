@@ -229,3 +229,28 @@ body {
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
   overflow: hidden;
 }
+/* Amorvia UI v9.8.2 – choice affordance */
+
+/* Glatke tranzicije za sve gumbe u dijalogu */
+#dialog button,
+#dialog [role="button"] {
+  transition:
+    background-color 140ms ease-out,
+    transform 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+/* Lagani hover efekt – gumb “ispliva” iz stranice */
+#dialog button:hover,
+#dialog [role="button"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Jasniji focus za tipkovnicu (a11y) */
+#dialog button:focus-visible,
+#dialog [role="button"]:focus-visible {
+  outline: 2px solid #ffbf00;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
