@@ -170,6 +170,27 @@
   opacity: 0.75;
 }
 
+/* Amorvia UI v9.8.1 – sceneTitle subtle animation */
+
+#sceneTitle {
+  transition: opacity 140ms ease-out, transform 140ms ease-out;
+}
+
+#sceneTitle.scene-change {
+  animation: scene-title-pop 200ms ease-out;
+}
+
+@keyframes scene-title-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Small screens: stack safely */
 @media (max-width: 640px){
   #hud { margin-bottom: .5rem; }
