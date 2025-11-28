@@ -1,7 +1,0 @@
-
-
-/* Stack utility to replace inline styles */
-.stack{display:grid;gap:8px}
-
-/* Ensure <img class="bg"> covers stage */
-.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
