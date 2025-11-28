@@ -128,7 +128,7 @@
     0 12px 30px rgba(0, 0, 0, 0.18),
     0 1px 0 rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.02);
-  background: #111827; /* tamna, ali ne precrna */
+  background: transparent; /* umjesto #111827 */
 }
 
 /* glavna scena / stage kartica */
@@ -146,12 +146,18 @@
 
 /* Amorvia UI v9.8.1 – dialog readability */
 
-.panel.dialog,
-#dialog {
+.panel.dialog {
   line-height: 1.55;
   font-size: 0.97rem;
   max-width: 46rem;
   margin: 0 auto;
+}
+
+/* vanjski #dialog nek ostane full-width unutar kartice */
+#dialog {
+  line-height: 1.55;
+  font-size: 0.97rem;
+  max-width: none;
 }
 
 /* razmak između pojedinih “balona” teksta */
