@@ -201,3 +201,31 @@
 @media (max-width: 640px){
   #hud { margin-bottom: .5rem; }
 }
+/* Amorvia UI v9.8.2 – reading comfort & layout polish */
+
+/* Blago zatamni pozadinu stranice da se stage odvoji od ruba */
+body {
+  background: #f4f5f8;
+}
+
+/* Ograniči širinu teksta i centriraj dialog na širokim ekranima */
+@media (min-width: 1024px) {
+  .card.stage .panel.dialog,
+  #dialog {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Malo ugodniji line-height za dugačke tekstove */
+#dialog p {
+  line-height: 1.55;
+}
+
+/* Stage dobiva suptilan “card” efekt umjesto da pliva u praznom bijelom */
+.card.stage {
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
