@@ -1,331 +1,1257 @@
 {
   "id": "co-parenting-with-bipolar-partner",
-  "title": "Co-Parenting With Bipolar Partner",
-  "version": "0.9.3-polished",
+  "title": "Co-Parenting with Bipolar Partner",
+  "version": 2,
+  "tags": [
+    "co-parenting",
+    "mental-health",
+    "conflict",
+    "bipolar-disorder",
+    "communication"
+  ],
+  "actors": {
+    "Narrator": {
+      "id": "Narrator",
+      "label": "Narrator"
+    },
+    "You": {
+      "id": "You",
+      "label": "You"
+    },
+    "Ex-Partner": {
+      "id": "Ex-Partner",
+      "label": "Ex-Partner"
+    },
+    "Mediator": {
+      "id": "Mediator",
+      "label": "Mediator"
+    },
+    "Child": {
+      "id": "Child",
+      "label": "Child"
+    }
+  },
+  "meters": {
+    "trust": {
+      "id": "trust",
+      "label": "Trust",
+      "min": -10,
+      "max": 10,
+      "start": 0
+    },
+    "tension": {
+      "id": "tension",
+      "label": "Tension",
+      "min": -10,
+      "max": 10,
+      "start": 0
+    },
+    "childStress": {
+      "id": "childStress",
+      "label": "Child Stress",
+      "min": -10,
+      "max": 10,
+      "start": 0
+    }
+  },
+  "meterOrder": [
+    "trust",
+    "tension",
+    "childStress"
+  ],
+  "ui": {
+    "theme": "default",
+    "showMeters": true,
+    "showActTitle": true,
+    "backgrounds": {
+      "default": "/assets/backgrounds/room.svg",
+      "act": {
+        "act1": "/assets/backgrounds/bedroom.svg",
+        "act2": "/assets/backgrounds/livingroom.svg",
+        "act3": "/assets/backgrounds/mediationroom.svg",
+        "act4": "/assets/backgrounds/hallway.svg",
+        "act5": "/assets/backgrounds/park.svg"
+      }
+    },
+    "hud": {
+      "animate": true,
+      "animated": true
+    },
+    "dialog": {
+      "defaultSpeaker": "Narrator"
+    }
+  },
+  "entry": "a1s1",
+  "entryNodeId": "a1s1",
+  "entryId": "a1s1",
+  "entryActId": "act1",
+  "start": "a1s1",
+  "startNodeId": "a1s1",
+  "nodes": [
+    {
+      "id": "menu",
+      "act": null,
+      "speaker": "Narrator",
+      "text": "Welcome to the scenario “Co-Parenting with Bipolar Partner”.\n\nYou can jump into Act 1 and follow the story from the beginning, or return to the main Amorvia menu.",
+      "choices": [
+        {
+          "id": "menu_c1",
+          "label": "Start Act 1 – The first difficult morning.",
+          "text": "You choose to step into the story from the very beginning.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "a1s1",
+          "to": "a1s1"
+        },
+        {
+          "id": "menu_c2",
+          "label": "Return to Amorvia main menu.",
+          "text": "You exit this scenario and go back to the main Amorvia selection screen.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "end",
+          "to": "end"
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "act": null,
+      "speaker": "Narrator",
+      "text": "You leave the scenario. You can return anytime if you want to explore different paths or try other acts.",
+      "choices": []
+    },
+    {
+      "id": "a1s1",
+      "act": "act1",
+      "speaker": "Narrator",
+      "text": "It’s early morning. Your phone buzzes with a long message from your ex-partner.\n\nYou see only the first line on the lock screen:\n\n“I can’t do this anymore, everything is too much…” You already know that a single line like this can set the emotional weather for the whole day before anyone has even finished breakfast.",
+      "choices": [
+        {
+          "id": "a1s1c1",
+          "label": "Open the message immediately and read everything.",
+          "text": "You swipe and open the message, heart rate spiking before you’ve even had coffee.",
+          "effects": {
+            "trust": 0,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": 0,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a1s2",
+          "to": "a1s2",
+          "tone": "reactive"
+        },
+        {
+          "id": "a1s1c2",
+          "label": "Take 2 minutes to breathe before reading.",
+          "text": "You put the phone down, set a short timer, and take a few slow breaths. The problem is still there, but your nervous system is a little steadier.",
+          "effects": {
+            "trust": 0,
+            "tension": -1,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": -1,
+              "childStress": 0
+            }
+          },
+          "next": "a1s2",
+          "to": "a1s2",
+          "tone": "self-regulation"
+        }
+      ]
+    },
+    {
+      "id": "a1s2",
+      "act": "act1",
+      "speaker": "Narrator",
+      "text": "When you finally read the full message, it’s a familiar mix: desperation, blame, and sudden ideas.\n\nYour ex writes about changing the schedule, seeing the child more, then less, then maybe not at all. There are hints of suicidal thinking, and also of anger:\n\n“You never understood what it’s like in my head.” You recognise the pattern by now—like a familiar storm front made of big feelings, sudden plans, and the fear of everything changing overnight.",
+      "choices": [
+        {
+          "id": "a1s2c1",
+          "label": "Reply quickly with practical solutions.",
+          "text": "You skip over the emotional content and jump straight to logistics.",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
+          },
+          "next": "a1s3",
+          "to": "a1s3",
+          "tone": "problem-focused"
+        },
+        {
+          "id": "a1s2c2",
+          "label": "Acknowledge their feelings but hold a boundary.",
+          "text": "You start by naming the distress in their message, then make clear that decisions about the child need to be stable.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a1s3",
+          "to": "a1s3",
+          "tone": "validating-boundary"
+        }
+      ]
+    },
+    {
+      "id": "a1s3",
+      "act": "act1",
+      "speaker": "Ex-Partner",
+      "text": "“I’m so tired of being treated like I’m unstable,” your ex replies.\n\nA few messages later, they write:\n\n“Actually maybe you should just take full custody. I’m obviously the problem.”",
+      "choices": [
+        {
+          "id": "a1s3c1",
+          "label": "Take the offer literally and say “Maybe that’s for the best.”",
+          "text": "You respond from a place of exhaustion, not strategy.",
+          "effects": {
+            "trust": -3,
+            "tension": 2,
+            "childStress": 2,
+            "meters": {
+              "trust": -3,
+              "tension": 2,
+              "childStress": 2
+            }
+          },
+          "next": "a1s4",
+          "to": "a1s4",
+          "tone": "burned-out"
+        },
+        {
+          "id": "a1s3c2",
+          "label": "Name the crisis language and slow things down.",
+          "text": "You write that you hear how overwhelmed they are, but decisions about custody can’t be made by text in a crisis moment.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a1s4",
+          "to": "a1s4",
+          "tone": "de-escalating"
+        }
+      ]
+    },
+    {
+      "id": "a1s4",
+      "act": "act1",
+      "speaker": "Narrator",
+      "text": "You glance at the clock. In less than an hour, your child will wake up and you’ll both have to navigate the handover today.\n\nThis isn’t just about texts—it’s about what kind of morning your child walks into. In families touched by bipolar disorder, mornings are not just about routines; they are about choosing what emotional weather your child wakes up into.",
+      "choices": [
+        {
+          "id": "a1s4c1",
+          "label": "Reach out to a trusted friend or family member for a quick reality check.",
+          "text": "You send a short voice message, not to gossip, but to ground yourself.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a1s5",
+          "to": "a1s5",
+          "tone": "seeking-support"
+        },
+        {
+          "id": "a1s4c2",
+          "label": "Keep everything in your head and try to push through alone.",
+          "text": "You decide there’s no time to involve anyone else and push all the feelings down.",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a1s5",
+          "to": "a1s5",
+          "tone": "isolated"
+        }
+      ]
+    },
+    {
+      "id": "a1s5",
+      "act": "act1",
+      "speaker": "Narrator",
+      "text": "Your child’s footsteps pad down the hallway. A small voice asks:\n\n“Is mom/dad coming today?”\n\nYour answer will shape not just this morning, but how safe they feel in the middle of all this.",
+      "choices": [
+        {
+          "id": "a1s5c1",
+          "label": "Give a simple, honest answer focused on safety.",
+          "text": "You say what you know for sure, and what you will do to keep them safe and cared for.",
+          "effects": {
+            "trust": 3,
+            "tension": -1,
+            "childStress": -2,
+            "meters": {
+              "trust": 3,
+              "tension": -1,
+              "childStress": -2
+            }
+          },
+          "next": "a1end",
+          "to": "a1end",
+          "tone": "secure-base"
+        },
+        {
+          "id": "a1s5c2",
+          "label": "Over-share about the crisis and your ex’s mental state.",
+          "text": "You let your frustration spill into details that are too heavy for a child to hold.",
+          "effects": {
+            "trust": -2,
+            "tension": 1,
+            "childStress": 3,
+            "meters": {
+              "trust": -2,
+              "tension": 1,
+              "childStress": 3
+            }
+          },
+          "next": "a1end",
+          "to": "a1end",
+          "tone": "oversharing"
+        }
+      ]
+    },
+    {
+      "id": "a1end",
+      "act": "act1",
+      "speaker": "Narrator",
+      "text": "Act 1 closes with a simple scene: a child waiting by the door, and two adults trying — in very different ways — to manage a storm.\n\nFrom here, you can reflect, or continue to Act 2 and explore how you prepare for a deeper conversation about bipolar disorder and co-parenting. For your child, this isn’t just about custody or diagnoses; it’s about which emotional storm they have to walk through just to get to the door.",
+      "choices": [
+        {
+          "id": "a1endc1",
+          "label": "Return to main menu.",
+          "text": "You pause the story here, taking with you whatever landed most strongly.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a1endc2",
+          "label": "Continue to Act 2 – Preparing for a harder conversation.",
+          "text": "You move on, ready to think about how to talk more intentionally about bipolar disorder and co-parenting.",
+          "effects": {
+            "trust": 1,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "a2s1",
+          "to": "a2s1"
+        }
+      ]
+    },
+    {
+      "id": "a2s1",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "Later that week, you know you’ll need to talk with your ex in more depth.\n\nTexts and last-minute changes aren’t enough. You’re considering suggesting a more structured conversation—maybe even involving a mediator or therapist. This time, instead of bracing for the next mood swing, you’re trying to bring a small, handwritten map into a territory that often feels chaotic.",
+      "choices": [
+        {
+          "id": "a2s1c1",
+          "label": "Write down your main goals before talking.",
+          "text": "You grab a notebook and list what matters most: safety, stability, and your child’s sense of being loved by both parents.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a2s2",
+          "to": "a2s2",
+          "tone": "intentional"
+        },
+        {
+          "id": "a2s1c2",
+          "label": "Go in with no plan and “see what happens.”",
+          "text": "You tell yourself you’ll just react in the moment, even though that hasn’t worked well before.",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
+          },
+          "next": "a2s2",
+          "to": "a2s2",
+          "tone": "improvised"
+        }
+      ]
+    },
+    {
+      "id": "a2s2",
+      "act": "act2",
+      "speaker": "You",
+      "text": "You think about the word “bipolar.”\n\nThere’s history there: episodes, hospital visits, moments when your ex was stable and kind, and others when they were frightening or absent.\n\nYou know you can’t change the diagnosis. But you might be able to change how you respond. You remind yourself that a diagnosis is not a personality, but it does change the kind of scaffolding that keeps everyone safer.",
+      "choices": [
+        {
+          "id": "a2s2c1",
+          "label": "Read a short, reliable resource on bipolar disorder and parenting.",
+          "text": "You spend 15 minutes learning about mood episodes, early warning signs, and what realistic support can look like.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a2s3",
+          "to": "a2s3",
+          "tone": "psychoeducation"
+        },
+        {
+          "id": "a2s2c2",
+          "label": "Scroll social media for horror stories instead.",
+          "text": "You end up doom-scrolling posts that confirm your worst fears.",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a2s3",
+          "to": "a2s3",
+          "tone": "catastrophic"
+        }
+      ]
+    },
+    {
+      "id": "a2s3",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "A trusted professional (therapist, social worker, or doctor) comes to mind.\n\nYou wonder whether to loop them in more actively, or keep everything informal between you and your ex. Inviting a professional into the picture can feel exposing, but it also means you’re not the only adult trying to hold back the tide.",
+      "choices": [
+        {
+          "id": "a2s3c1",
+          "label": "Ask for a brief consultation with a professional.",
+          "text": "You reach out with specific questions about co-parenting with a partner who has bipolar disorder.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a2s4",
+          "to": "a2s4",
+          "tone": "seeking-guidance"
+        },
+        {
+          "id": "a2s3c2",
+          "label": "Decide not to involve professionals to avoid “making a big deal.”",
+          "text": "You talk yourself out of asking for help, even though the situation already feels like a big deal.",
+          "effects": {
+            "trust": -1,
+            "tension": 1,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 1,
+              "childStress": 1
+            }
+          },
+          "next": "a2s4",
+          "to": "a2s4",
+          "tone": "minimizing"
+        }
+      ]
+    },
+    {
+      "id": "a2s4",
+      "act": "act2",
+      "speaker": "You",
+      "text": "You draft a message to your ex suggesting a more structured conversation about schedules and support.\n\nYour cursor blinks over the send button.",
+      "choices": [
+        {
+          "id": "a2s4c1",
+          "label": "Use “I” statements and focus on the child.",
+          "text": "You write about what you’re noticing and what you hope for your child, not what’s “wrong” with them.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a2end",
+          "to": "a2end",
+          "tone": "non-blaming"
+        },
+        {
+          "id": "a2s4c2",
+          "label": "Lead with labels (“Because of your bipolar…”).",
+          "text": "You put the diagnosis in the very first sentence. It may be accurate, but it lands like an accusation.",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a2end",
+          "to": "a2end",
+          "tone": "diagnosis-focused"
+        }
+      ]
+    },
+    {
+      "id": "a2end",
+      "act": "act2",
+      "speaker": "Narrator",
+      "text": "Act 2 ends with a message sent and a plan forming in your mind.\n\nYou haven’t had the big conversation yet, but you’ve thought more carefully about what you want it to do for you, your ex, and your child. Nothing outside has visibly changed yet, but inside you’re shifting from pure reaction to a more deliberate stance.",
+      "choices": [
+        {
+          "id": "a2endc1",
+          "label": "Return to main menu.",
+          "text": "You pause the scenario here and step back for now.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a2endc2",
+          "label": "Continue to Act 3: First mediation meeting.",
+          "text": "You decide to keep going and see how a structured conversation with a neutral mediator might help.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a3s1",
+          "to": "a3s1"
+        }
+      ]
+    },
+    {
+      "id": "a3s1",
+      "act": "act3",
+      "speaker": "Narrator",
+      "text": "A few weeks later you and your ex-partner sit in a small mediation room. The mediator has a calm voice and an overfull notepad. Your ex looks tired but alert — somewhere between stable and fragile.\n\nThe mediator asks you both to name one thing you want for your child from today’s meeting. The mediation room becomes a kind of buffer zone between intense private history and the small person who still wants both parents to be okay.",
+      "choices": [
+        {
+          "id": "a3s1c1",
+          "label": "Name a child-focused goal (“I want our child to feel safe with both of us”).",
+          "text": "You take a breath and keep the focus on your child, not the diagnosis.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a3s2",
+          "to": "a3s2",
+          "tone": "grounded"
+        },
+        {
+          "id": "a3s1c2",
+          "label": "Lead with frustration (“I’m tired of the chaos and broken promises”).",
+          "text": "Your words are honest, but they land like a punch. The room tightens.",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a3s2",
+          "to": "a3s2",
+          "tone": "frustrated"
+        }
+      ]
+    },
+    {
+      "id": "a3s2",
+      "act": "act3",
+      "speaker": "Mediator",
+      "text": "“Thank you,” the mediator says. “I’m hearing that stability and safety are big priorities. Let’s talk about what a ‘stable week’ actually looks like in your home.” Talking about concrete weeks and routines gives everyone something to stand on that isn’t just mood, fear, or guilt.",
+      "choices": [
+        {
+          "id": "a3s2c1",
+          "label": "Describe concrete routines (bedtime, homework, handover times).",
+          "text": "You talk in specifics: hours, days, who does what. The mediator nods and writes.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a3s3",
+          "to": "a3s3",
+          "tone": "practical"
+        },
+        {
+          "id": "a3s2c2",
+          "label": "Slide into old arguments about the past.",
+          "text": "Before you know it, you’re listing old hurts from years ago. The mediator gently redirects you.",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a3s3",
+          "to": "a3s3",
+          "tone": "stuck-in-the-past"
+        }
+      ]
+    },
+    {
+      "id": "a3s3",
+      "act": "act3",
+      "speaker": "Ex-Partner",
+      "text": "Your ex shifts in the chair. “I am trying,” they say. “The medication helps, but when I’m sliding down, I need more structure, not threats.”\n\nYou feel a mix of empathy and exhaustion. In their words you can hear both the weight of managing a chronic condition and the plea not to be treated only as a risk factor.",
+      "choices": [
+        {
+          "id": "a3s3c1",
+          "label": "Acknowledge their effort, but keep a firm boundary.",
+          "text": "You say you can see they’re trying, and you still need reliable routines for your child.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a3s4",
+          "to": "a3s4",
+          "tone": "validating"
+        },
+        {
+          "id": "a3s3c2",
+          "label": "Minimize their effort and focus on failures.",
+          "text": "You list the times they didn’t show up, the nights your child cried. The air gets colder.",
+          "effects": {
+            "trust": -2,
+            "tension": 2,
+            "childStress": 2,
+            "meters": {
+              "trust": -2,
+              "tension": 2,
+              "childStress": 2
+            }
+          },
+          "next": "a3s4",
+          "to": "a3s4",
+          "tone": "critical"
+        }
+      ]
+    },
+    {
+      "id": "a3s4",
+      "act": "act3",
+      "speaker": "Narrator",
+      "text": "With the mediator’s help, you sketch out a trial plan: clear pickup times, backup options if your ex is unwell, and a rule that the child does not become the messenger.\n\nIt’s not perfect. But it is written down. Written plans can’t stop episodes from coming, but they can stop the child from becoming the emergency plan.",
+      "choices": [
+        {
+          "id": "a3s4c1",
+          "label": "Agree to try the plan for four weeks.",
+          "text": "You commit to testing the plan, knowing you can review it later.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a3end",
+          "to": "a3end",
+          "tone": "hopeful"
+        },
+        {
+          "id": "a3s4c2",
+          "label": "Ask for more safety clauses and crisis steps.",
+          "text": "You insist on adding what happens if calls go unanswered or meds are skipped.",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": -1,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": -1
+            }
+          },
+          "next": "a3end",
+          "to": "a3end",
+          "tone": "cautious"
+        }
+      ]
+    },
+    {
+      "id": "a3end",
+      "act": "act3",
+      "speaker": "Narrator",
+      "text": "Act 3 ends with a signed piece of paper on the table. It doesn’t magically fix bipolar disorder, but it gives you a shared map — at least for now. For now, the paper on the table is less about trust in the illness and more about trust in the structure around it.",
+      "choices": [
+        {
+          "id": "a3endc1",
+          "label": "Return to main menu.",
+          "text": "You stop the scenario here, taking the idea of a written plan with you.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a3endc2",
+          "label": "Continue to Act 4: When the plan is tested in real life.",
+          "text": "You move forward to see how the plan holds under stress.",
+          "effects": {
+            "trust": 1,
+            "tension": 1,
+            "childStress": 1,
+            "meters": {
+              "trust": 1,
+              "tension": 1,
+              "childStress": 1
+            }
+          },
+          "next": "a4s1",
+          "to": "a4s1"
+        }
+      ]
+    },
+    {
+      "id": "a4s1",
+      "act": "act4",
+      "speaker": "Narrator",
+      "text": "Two weeks into the new plan, your ex is late for pickup again. Your child waits with a small backpack and big eyes.\n\nYour phone shows no new messages. Your child feels the lateness not as a time issue, but as a question about whether they were worth showing up for.",
+      "choices": [
+        {
+          "id": "a4s1c1",
+          "label": "Follow the backup plan (call agreed backup, then mediator if needed).",
+          "text": "You stick to the written steps, even though your heart is racing.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a4s2",
+          "to": "a4s2"
+        },
+        {
+          "id": "a4s1c2",
+          "label": "Send a series of angry messages to your ex.",
+          "text": "You type fast, fueled by fear and anger. The backup plan stays unused.",
+          "effects": {
+            "trust": -2,
+            "tension": 3,
+            "childStress": 2,
+            "meters": {
+              "trust": -2,
+              "tension": 3,
+              "childStress": 2
+            }
+          },
+          "next": "a4s2",
+          "to": "a4s2"
+        }
+      ]
+    },
+    {
+      "id": "a4s2",
+      "act": "act4",
+      "speaker": "Ex-Partner",
+      "text": "An hour later, your ex finally calls. Their voice is shaky. They say they’ve been sliding into a depressive episode and couldn’t get out of bed.\n\nYou feel a wave of anger and, underneath it, concern.",
+      "choices": [
+        {
+          "id": "a4s2c1",
+          "label": "Hold the boundary and reschedule the visit for another day.",
+          "text": "You explain firmly that pickup is missed and will be rescheduled when they’re stable.",
+          "effects": {
+            "trust": 1,
+            "tension": 1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": 1,
+              "childStress": -1
+            }
+          },
+          "next": "a4s3",
+          "to": "a4s3"
+        },
+        {
+          "id": "a4s2c2",
+          "label": "Let them come immediately, even though they still sound unstable.",
+          "text": "You say yes, mostly to avoid a fight, even as your stomach knots.",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 2,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 2
+            }
+          },
+          "next": "a4s3",
+          "to": "a4s3"
+        }
+      ]
+    },
+    {
+      "id": "a4s3",
+      "act": "act4",
+      "speaker": "Child",
+      "text": "Later, your child asks: “Is mom/dad sick again? Is it my fault they didn’t come?” The question hits you harder than any missed pickup.",
+      "choices": [
+        {
+          "id": "a4s3c1",
+          "label": "Give a simple, age-appropriate explanation about bipolar disorder.",
+          "text": "You explain that grown-up brains can get sick, and it’s not your child’s fault.",
+          "effects": {
+            "trust": 2,
+            "tension": -1,
+            "childStress": -2,
+            "meters": {
+              "trust": 2,
+              "tension": -1,
+              "childStress": -2
+            }
+          },
+          "next": "a4s4",
+          "to": "a4s4"
+        },
+        {
+          "id": "a4s3c2",
+          "label": "Change the subject and avoid talking about it.",
+          "text": "You try to distract them with a cartoon. The question remains, unanswered.",
+          "effects": {
+            "trust": -1,
+            "tension": 0,
+            "childStress": 2,
+            "meters": {
+              "trust": -1,
+              "tension": 0,
+              "childStress": 2
+            }
+          },
+          "next": "a4s4",
+          "to": "a4s4"
+        }
+      ]
+    },
+    {
+      "id": "a4s4",
+      "act": "act4",
+      "speaker": "Narrator",
+      "text": "That night, you jot down notes about what worked and what didn’t. You wonder if the plan needs adjusting — or if this is simply the reality of co-parenting with bipolar disorder. You’re slowly collecting these moments like data points, not to build a case against your ex, but to build a clearer picture of what is realistically possible.",
+      "choices": [
+        {
+          "id": "a4s4c1",
+          "label": "Plan to raise these examples in the next mediation session.",
+          "text": "You decide to bring data, not just feelings, to the table.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a4end",
+          "to": "a4end"
+        },
+        {
+          "id": "a4s4c2",
+          "label": "Vent to a friend but keep everything off the record.",
+          "text": "You get some relief, but nothing in the formal plan changes.",
+          "effects": {
+            "trust": 0,
+            "tension": 1,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 1,
+              "childStress": 0
+            }
+          },
+          "next": "a4end",
+          "to": "a4end"
+        }
+      ]
+    },
+    {
+      "id": "a4end",
+      "act": "act4",
+      "speaker": "Narrator",
+      "text": "Act 4 closes on a mixed note: your boundaries are clearer, but so is the emotional cost. You can see how much your child is watching both of you. Your child’s nervous system is learning from every missed pickup and every calm response; both leave traces.",
+      "choices": [
+        {
+          "id": "a4endc1",
+          "label": "Return to main menu.",
+          "text": "You choose to pause here and digest what you’ve seen.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "menu",
+          "to": "menu"
+        },
+        {
+          "id": "a4endc2",
+          "label": "Continue to Act 5: Long-term co-parenting patterns.",
+          "text": "You move ahead to explore the longer arc of this co-parenting relationship.",
+          "effects": {
+            "trust": 1,
+            "tension": 1,
+            "childStress": 0,
+            "meters": {
+              "trust": 1,
+              "tension": 1,
+              "childStress": 0
+            }
+          },
+          "next": "a5s1",
+          "to": "a5s1"
+        }
+      ]
+    },
+    {
+      "id": "a5s1",
+      "act": "act5",
+      "speaker": "Narrator",
+      "text": "Months pass. Some weeks are calm; others are a storm of missed messages, medication changes, and court paperwork.\n\nYou notice patterns: what escalates things, and what quietly helps. Over time, patterns like these become your personal weather report, letting you predict when a storm is likely and how to shelter your child from the worst of it.",
+      "choices": [
+        {
+          "id": "a5s1c1",
+          "label": "Keep using structured communication (apps, shared calendar, written agreements).",
+          "text": "You limit emotional texting and rely more on neutral tools.",
+          "effects": {
+            "trust": 2,
+            "tension": -2,
+            "childStress": -1,
+            "meters": {
+              "trust": 2,
+              "tension": -2,
+              "childStress": -1
+            }
+          },
+          "next": "a5s2",
+          "to": "a5s2"
+        },
+        {
+          "id": "a5s1c2",
+          "label": "Slide back into unstructured, late-night texting.",
+          "text": "The line between co-parent and ex-partner blurs again.",
+          "effects": {
+            "trust": -2,
+            "tension": 3,
+            "childStress": 2,
+            "meters": {
+              "trust": -2,
+              "tension": 3,
+              "childStress": 2
+            }
+          },
+          "next": "a5s2",
+          "to": "a5s2"
+        }
+      ]
+    },
+    {
+      "id": "a5s2",
+      "act": "act5",
+      "speaker": "Narrator",
+      "text": "You also decide how much of your ex’s mental health journey is yours to manage.\n\nTheir bipolar disorder is real — and so are your limits. Stepping out of the role of unpaid therapist is not abandonment; it is making sure there is at least one adult whose main job is to stay steady for the child.",
+      "choices": [
+        {
+          "id": "a5s2c1",
+          "label": "Clarify what is your responsibility and what is theirs.",
+          "text": "You stop trying to be their therapist and focus on being a stable parent.",
+          "effects": {
+            "trust": 1,
+            "tension": -1,
+            "childStress": -1,
+            "meters": {
+              "trust": 1,
+              "tension": -1,
+              "childStress": -1
+            }
+          },
+          "next": "a5s3",
+          "to": "a5s3"
+        },
+        {
+          "id": "a5s2c2",
+          "label": "Keep over-functioning for them (reminding meds, tracking moods, etc.).",
+          "text": "You carry both your emotional load and theirs, and burnout creeps in.",
+          "effects": {
+            "trust": -1,
+            "tension": 2,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 2,
+              "childStress": 1
+            }
+          },
+          "next": "a5s3",
+          "to": "a5s3"
+        }
+      ]
+    },
+    {
+      "id": "a5s3",
+      "act": "act5",
+      "speaker": "Narrator",
+      "text": "On a quiet evening, your child draws a picture of “two homes” and proudly shows you.\n\n“This is my house,” they say, “and this is mom’s/dad’s. I have two beds!” The drawing is its own quiet proof that a child can hold more than one home in their heart without having to choose sides.",
+      "choices": [
+        {
+          "id": "a5s3c1",
+          "label": "Notice the resilience and name it out loud.",
+          "text": "You tell them they are brave and loved in both houses, even when grown-ups struggle.",
+          "effects": {
+            "trust": 3,
+            "tension": -1,
+            "childStress": -2,
+            "meters": {
+              "trust": 3,
+              "tension": -1,
+              "childStress": -2
+            }
+          },
+          "next": "a5end",
+          "to": "a5end"
+        },
+        {
+          "id": "a5s3c2",
+          "label": "Brush it off and move on with your evening.",
+          "text": "You smile but say little, missing a chance to reinforce their sense of safety.",
+          "effects": {
+            "trust": -1,
+            "tension": 0,
+            "childStress": 1,
+            "meters": {
+              "trust": -1,
+              "tension": 0,
+              "childStress": 1
+            }
+          },
+          "next": "a5end",
+          "to": "a5end"
+        }
+      ]
+    },
+    {
+      "id": "a5end",
+      "act": "act5",
+      "speaker": "Narrator",
+      "text": "Act 5, and the scenario, end here. The bipolar diagnosis hasn’t vanished. But you’ve experimented with boundaries, plans, and ways of talking that might make life a little steadier for you and your child.\n\nThere is no perfect path — only more informed next steps. The diagnosis stays, but the story around it can slowly shift—from ‘everything is chaos’ to ‘the adults are working on their stuff so I can be a kid.’",
+      "choices": [
+        {
+          "id": "a5endc1",
+          "label": "Return to main menu.",
+          "text": "You leave the scenario and carry any useful ideas back to your real life.",
+          "effects": {
+            "trust": 0,
+            "tension": 0,
+            "childStress": 0,
+            "meters": {
+              "trust": 0,
+              "tension": 0,
+              "childStress": 0
+            }
+          },
+          "next": "menu",
+          "to": "menu"
+        }
+      ]
+    }
+  ],
   "acts": [
     {
-      "id": "act-1",
-      "title": "The Morning Spiral",
+      "id": "act1",
+      "title": "Act 1 – The First Difficult Morning",
       "steps": [
-        {
-          "id": "a1s1",
-          "text": "It’s early morning. Your phone buzzes with a long message from your ex-partner.\n\nOnly the first line shows on the lock screen:\n“ I can’t do this anymore. Everything is too much…”\n\nYou already know how a single line like that can set the emotional weather for the whole day — before anyone has even finished breakfast."
-        },
-        {
-          "id": "a1s2",
-          "text": "When you read the full message, it's the familiar blend: desperation, blame, sudden ideas.\n\nYour ex jumps between wanting more contact, then less, then none. Hints of suicidal thinking mix with flashes of anger: “You never understood what it's like in my head.”\n\nYou've seen this pattern before — a storm front made of big feelings, fast plans, and the fear that everything might change overnight."
-        },
-        {
-          "id": "a1s3",
-          "text": "“I'm tired of being treated like I'm unstable,” your ex writes.\n\nA few messages later:\n“Maybe you should just take full custody. I'm obviously the problem.”\n\nThe swing from anger to surrender is sharp enough to make you pause."
-        },
-        {
-          "id": "a1s4",
-          "text": "You glance at the clock. In less than an hour your child will wake up, and both of you will have to navigate today's handover.\n\nThis isn't just about texts — it's about the kind of morning your child walks into. With bipolar disorder in the mix, mornings aren’t only routines; they shape how safe the day feels."
-        },
-        {
-          "id": "a1s5",
-          "text": "Your child's footsteps pad down the hallway.\n“Is mom/dad coming today?”\n\nTheir question isn't just about plans — it's about safety. Your answer sets the tone for the whole morning."
-        },
-        {
-          "id": "a1end",
-          "endOfAct": true,
-          "text": "Act 1 closes on a simple scene: a child waiting by the door, and two adults trying — in very different ways — to manage a storm.\n\nUp next is Act 2, where you prepare your response."
-        }
+        "a1s1",
+        "a1s2",
+        "a1s3",
+        "a1s4",
+        "a1s5",
+        "a1end"
       ]
     },
-
     {
-      "id": "act-2",
-      "title": "Composing the Response",
+      "id": "act2",
+      "title": "Act 2 – Preparing for a Harder Conversation",
       "steps": [
-        {
-          "id": "a2s1",
-          "text": "Before you reply, you take a moment to breathe.\nYou've learned that with bipolar disorder, timing matters just as much as wording.\n\nA fast reaction can inflame things.\nA calm, grounded one can stabilize the whole day — especially for your child."
-        },
-        {
-          "id": "a2s2",
-          "text": "You remind yourself of one important truth: your ex isn't choosing these emotional swings.\n\nMania and depression change pace, intensity, and logic.\nThis morning's messages came from pain, not strategy."
-        },
-        {
-          "id": "a2s3",
-          "text": "None of this excuses hurtful words — but it helps explain why conversations shift so quickly.\n\nA calm message from you can slow the spiral.\nA sharp one can accelerate it."
-        },
-        {
-          "id": "a2s4",
-          "text": "You watch your child getting ready.\nTheir morning, their energy, their sense of stability — it all depends on how the next hour unfolds.\n\nYou decide to reply with intention, not reaction."
-        },
-        {
-          "id": "a2s5",
-          "choices": [
-            {
-              "id": "a2cA",
-              "text": "“Hey… I hear you. I know mornings can be overwhelming. Let’s slow down and take this one step at a time.”",
-              "goto": "a2s6A",
-              "effects": { "trust": 1, "tension": -1 }
-            },
-            {
-              "id": "a2cB",
-              "text": "“I want to talk, but I need the conversation to stay calm. Can you tell me what you're feeling right now?”",
-              "goto": "a2s6B",
-              "effects": { "trust": 0, "tension": -1 }
-            },
-            {
-              "id": "a2cC",
-              "text": "“I see your message. Before anything else — are we still on for the handover today?”",
-              "goto": "a2s6C",
-              "effects": { "childStress": -1 }
-            },
-            {
-              "id": "a2cD",
-              "text": "“I'll write when I can focus properly. Give me a moment.”",
-              "goto": "a2s6D",
-              "effects": {}
-            }
-          ]
-        },
-        {
-          "id": "a2s6A",
-          "text": "Your message seems to land softly.\n\n“I… I don’t know. I'm just tired,” they reply.\n\nThe tone is still shaky, but lower, quieter — a small sign of stabilization."
-        },
-        {
-          "id": "a2s6B",
-          "text": "“I *am* calm,” they snap — then immediately add: “Sorry. I didn't mean it like that.”\n\nThere's volatility, but also a crack in the tension."
-        },
-        {
-          "id": "a2s6C",
-          "text": "“Yes. I'm coming. I just… needed to say something.”\n\nThe conversation shifts, even if the emotions still swirl underneath."
-        },
-        {
-          "id": "a2s6D",
-          "text": "A few minutes pass.\n\nThen: “Okay. Take your time.”\n\nSpace often helps — especially before a handover."
-        },
-        {
-          "id": "a2end",
-          "endOfAct": true,
-          "text": "Act 2 closes with your chosen tone — steady, intentional, and aware.\n\nNext comes Act 3, where you prepare for the handover."
-        }
+        "a2s1",
+        "a2s2",
+        "a2s3",
+        "a2s4",
+        "a2end"
       ]
     },
-
     {
-      "id": "act-3",
-      "title": "Preparing for the Handover",
+      "id": "act3",
+      "title": "Act 3 – First Mediation Meeting",
       "steps": [
-        {
-          "id": "a3s1",
-          "text": "You start getting ready for the handover.\nShoes by the door. Backpack checked. Snack box packed.\n\nYour child watches you closely — not the routine, but the mood.\nKids feel tension before anyone says a word."
-        },
-        {
-          "id": "a3s2",
-          "text": "“Is everything okay today?” your child asks.\n\nYou smile gently. “Yes. We're doing our best today.”\n\nIt's not about pretending everything is perfect — it's about giving them enough calm to feel safe."
-        },
-        {
-          "id": "a3s3",
-          "text": "As you zip the backpack, you remind yourself:\nYour child doesn’t need the details.\n\nThey need predictability.\nA handover that feels normal, even when the adults are still finding their footing."
-        },
-        {
-          "id": "a3s4",
-          "text": "You check your phone again. No new messages.\n\nSilence can mean calm — or it can mean the next wave is building.\nEither way, you stay grounded for your child."
-        },
-        {
-          "id": "a3s5",
-          "choices": [
-            {
-              "id": "a3cA",
-              "text": "“Before we leave, I want to set a calm tone. I’ll send one clear message.”",
-              "goto": "a3s6A",
-              "effects": { "tension": -1 }
-            },
-            {
-              "id": "a3cB",
-              "text": "“I’ll wait and see. Maybe less contact right now is better.”",
-              "goto": "a3s6B",
-              "effects": {}
-            },
-            {
-              "id": "a3cC",
-              "text": "“I’ll call briefly. Texts leave too much room for misunderstandings.”",
-              "goto": "a3s6C",
-              "effects": { "trust": 1 }
-            },
-            {
-              "id": "a3cD",
-              "text": "Focus fully on getting your child ready.",
-              "goto": "a3s6D",
-              "effects": { "childStress": -1 }
-            }
-          ]
-        },
-        {
-          "id": "a3s6A",
-          "text": "You send a short, steady message:\n“We're getting ready. Let's keep today calm.”\n\nA reply comes quickly: “Okay.”\nShort, but promising."
-        },
-        {
-          "id": "a3s6B",
-          "text": "You put the phone down.\n\nSometimes quiet is a gift — space for everyone to breathe."
-        },
-        {
-          "id": "a3s6C",
-          "text": "You call.\n\nThey pick up with a shaky “Hello?”\nThe call is brief and uneven, but hearing tone helps."
-        },
-        {
-          "id": "a3s6D",
-          "text": "You focus on tying shoelaces and smoothing hair instead of smoothing conflict.\n\nSometimes the best choice is centering the child."
-        },
-        {
-          "id": "a3end",
-          "endOfAct": true,
-          "text": "Act 3 ends with a quiet win: you've set the tone.\n\nNext comes Act 4 — the face-to-face moment."
-        }
+        "a3s1",
+        "a3s2",
+        "a3s3",
+        "a3s4",
+        "a3end"
       ]
     },
-
     {
-      "id": "act-4",
-      "title": "The Handover Moment",
+      "id": "act4",
+      "title": "Act 4 – When the Plan Is Tested",
       "steps": [
-        {
-          "id": "a4s1",
-          "text": "You arrive a few minutes early.\nYour child holds your hand tightly — the kind of grip that says more than words.\n\nYou steady your breathing. Handover days always carry tension, even on the better ones."
-        },
-        {
-          "id": "a4s2",
-          "text": "Your ex approaches.\nTheir posture says everything: tired, guarded, trying.\n\nBipolar disorder doesn’t disappear during handovers — it just becomes something both of you silently manage."
-        },
-        {
-          "id": "a4s3",
-          "text": "Your child lets go of your hand and steps forward.\n\nThis first moment — the first glance, the first 'hi' — often sets the tone."
-        },
-        {
-          "id": "a4s4",
-          "text": "Your ex gives a soft smile.\nIt's small, but real.\n\n“Hey, buddy/sweetheart,” they say.\n\nThe warmth in their voice is genuine, even if the morning wasn't easy."
-        },
-        {
-          "id": "a4s5",
-          "choices": [
-            {
-              "id": "a4cA",
-              "text": "“I'm glad you made it. Let's keep things calm today.”",
-              "goto": "a4s6A",
-              "effects": { "tension": -1 }
-            },
-            {
-              "id": "a4cB",
-              "text": "“Before you go, can we quickly sync about the rest of the day?”",
-              "goto": "a4s6B",
-              "effects": {}
-            },
-            {
-              "id": "a4cC",
-              "text": "“If anything becomes too much, just text me. No pressure.”",
-              "goto": "a4s6C",
-              "effects": { "trust": 1 }
-            },
-            {
-              "id": "a4cD",
-              "text": "Say nothing — keep the focus on your child.",
-              "goto": "a4s6D",
-              "effects": {}
-            }
-          ]
-        },
-        {
-          "id": "a4s6A",
-          "text": "Your ex nods.\n“Yeah… I want that too.”\n\nA small pause — human, not tense."
-        },
-        {
-          "id": "a4s6B",
-          "text": "“Sure. What do you need to know?” they ask, shifting their weight.\n\nThey're trying — and that effort matters."
-        },
-        {
-          "id": "a4s6C",
-          "text": "They take a breath.\n“Thanks. I don't always know how to say when I'm struggling.”\n\nTheir honesty softens the moment."
-        },
-        {
-          "id": "a4s6D",
-          "text": "You keep the focus on your child, who’s already chatting happily.\n\nSometimes silence is the safest choice."
-        },
-        {
-          "id": "a4end",
-          "endOfAct": true,
-          "text": "Act 4 ends with meaningful stability.\n\nNext comes Act 5 — the quiet after the handover."
-        }
+        "a4s1",
+        "a4s2",
+        "a4s3",
+        "a4s4",
+        "a4end"
       ]
     },
-
     {
-      "id": "act-5",
-      "title": "After the Handover",
+      "id": "act5",
+      "title": "Act 5 – Long-Term Co-Parenting Patterns",
       "steps": [
-        {
-          "id": "a5s1",
-          "text": "The door closes.\n\nThe silence that follows is always sharper than you expect — like the house exhales at once.\n\nEvery handover leaves a small emotional echo. Today is no different."
-        },
-        {
-          "id": "a5s2",
-          "text": "You move through the rooms picking up small traces of the morning — a toy, a cup, a sock.\n\nThe quiet gives you space to feel everything you held back earlier."
-        },
-        {
-          "id": "a5s3",
-          "text": "You replay moments: the message, the tension, the meeting, your child's smile.\n\nNone of it is simple.\nBut you did the best you could with today's emotional weather."
-        },
-        {
-          "id": "a5s4",
-          "text": "You remind yourself: co-parenting with bipolar disorder isn't about perfection — it's about consistency.\n\nYou showed up.\nYou stayed calm.\nYour child felt safe.\n\nThat matters more than anything else."
-        },
-        {
-          "id": "a5s5",
-          "choices": [
-            {
-              "id": "a5cA",
-              "text": "Sit with the feelings for a moment — let yourself decompress.",
-              "goto": "a5s6A",
-              "effects": {}
-            },
-            {
-              "id": "a5cB",
-              "text": "Check your phone to see if your ex wrote anything.",
-              "goto": "a5s6B",
-              "effects": {}
-            },
-            {
-              "id": "a5cC",
-              "text": "Clean the space a little. Physical order helps settle emotional noise.",
-              "goto": "a5s6C",
-              "effects": { "tension": -1 }
-            },
-            {
-              "id": "a5cD",
-              "text": "Call a trusted friend or family member.",
-              "goto": "a5s6D",
-              "effects": { "trust": 1 }
-            }
-          ]
-        },
-        {
-          "id": "a5s6A",
-          "text": "You sit quietly, letting your body unwind.\nHands unclench. Shoulders drop.\n\nThe day isn’t over, but this moment belongs to you."
-        },
-        {
-          "id": "a5s6B",
-          "text": "You check your phone.\nNothing new.\n\nStrange how silence can feel both peaceful and unsettling."
-        },
-        {
-          "id": "a5s6C",
-          "text": "You tidy up slowly.\nWith every small action, the morning softens and the house becomes yours again."
-        },
-        {
-          "id": "a5s6D",
-          "text": "“Rough morning?” your friend asks gently.\n\nYou don’t have to explain everything.\nJust being heard helps."
-        },
-        {
-          "id": "a5end",
-          "endOfAct": true,
-          "text": "Act 5 ends with a quiet truth: co-parenting in these circumstances is hard — and still, you're doing it.\n\nYou protected your child's emotional world today. You kept things steady. You stayed grounded through someone else’s turbulence.\n\nAnd tomorrow, you'll try again.\n\n**End of Scenario.**"
-        }
+        "a5s1",
+        "a5s2",
+        "a5s3",
+        "a5end"
       ]
     }
   ]
 }
-
