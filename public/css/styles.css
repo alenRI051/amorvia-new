@@ -105,6 +105,36 @@
   margin-bottom: 8px;
   transition: opacity 160ms ease-out, transform 160ms ease-out;
 }
+/* HUD 9.8.6 – Act badge micro-polish */
+.act-badge,
+.scenario-act-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.92),
+    rgba(30, 64, 175, 0.9)
+  );
+  color: #e5e7eb;
+  box-shadow:
+    0 0 0 1px rgba(148, 163, 184, 0.28),
+    0 8px 16px rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(10px);
+}
+.act-badge .act-index,
+.scenario-act-label .act-index {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  font-weight: 700;
+}
 
 /* Ensure HUD renders above any overlapping siblings */
 #hud {
@@ -328,4 +358,84 @@ button,
     border-color 140ms ease-out,
     box-shadow 140ms ease-out,
     transform 120ms ease-out;
+}
+/* HUD container glass + spacing */
+.hud-bar,
+.hud,
+.hud-meters {
+  backdrop-filter: blur(14px);
+  background: radial-gradient(
+      circle at top left,
+      rgba(148, 163, 184, 0.20),
+      transparent 55%
+    ),
+    rgba(15, 23, 42, 0.88);
+  border-radius: 0.9rem;
+  padding: 0.45rem 0.75rem;
+  box-shadow:
+    0 0 0 1px rgba(148, 163, 184, 0.35),
+    0 18px 38px rgba(15, 23, 42, 0.7);
+}
+
+/* Meter chip – unified look */
+.hud-meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.45);
+}
+
+/* Boje po tipu metra – prilagodi ako već imaš varijante */
+.hud-meter--trust {
+  border-color: rgba(52, 211, 153, 0.9);
+}
+.hud-meter--tension {
+  border-color: rgba(248, 113, 113, 0.95);
+}
+.hud-meter--child {
+  border-color: rgba(56, 189, 248, 0.95);
+}
+/* Choice buttons micro-interactions */
+.choices-list button,
+.choice-button,
+.choice {
+  transition:
+    background-color 140ms ease-out,
+    transform 120ms ease-out,
+    box-shadow 120ms ease-out;
+  border-radius: 0.9rem;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.45);
+}
+
+/* Hover/focus – blagi lift */
+.choices-list button:hover,
+.choices-list button:focus-visible,
+.choice-button:hover,
+.choice-button:focus-visible,
+.choice:hover,
+.choice:focus-visible {
+  background-color: rgba(15, 23, 42, 0.96);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(191, 219, 254, 0.9),
+    0 14px 28px rgba(15, 23, 42, 0.75);
+  outline: none;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .choices-list button,
+  .choice-button,
+  .choice {
+    transition: none;
+    transform: none !important;
+  }
 }
