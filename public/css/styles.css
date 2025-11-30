@@ -434,6 +434,21 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .choices-list button,
   .choice-button,
+
+ .hud-meters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
   .choice {
     transition: none;
     transform: none !important;
