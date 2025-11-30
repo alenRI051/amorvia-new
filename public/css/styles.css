@@ -124,8 +124,8 @@
   );
   color: #e5e7eb;
   box-shadow:
-    0 0 0 1px rgba(148, 163, 184, 0.28),
-    0 8px 16px rgba(15, 23, 42, 0.45);
+    0 0 0 1px rgba(148, 163, 184, 0.35),
+    0 12px 26px rgba(15, 23, 42, 0.35);
   backdrop-filter: blur(10px);
 }
 .act-badge .act-index,
