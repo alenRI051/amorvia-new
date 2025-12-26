@@ -33,6 +33,13 @@ export default async function handler(
         error: "Invalid payload (sessionId or events missing)",
       });
     }
+    if (!sessionId) {
+  return res.status(400).json({ ok: false, error: "Invalid payload (sessionId missing)" });
+}
+
+if (!Array.isArray(events) || events.length === 0) {
+  return res.status(200).json({ ok: true, stored: "noop", added: 0 });
+}
 
     const now = new Date();
     const dateKey = now.toISOString().slice(0, 10); // YYYY-MM-DD
