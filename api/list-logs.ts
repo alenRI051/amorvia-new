@@ -4,31 +4,33 @@ function json(res: any, status: number, data: any) {
   res.status(status).json(data);
 }
 
-function hasKV() {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+function hasBlob() {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
 
 export default async function handler(req: any, res: any) {
   try {
-    if (!hasKV()) {
-      return json(res, 200, { ok: true, items: [] });
-    }
+    if (!hasBlob()) return json(res, 200, { ok: true, items: [] });
 
-    const { kv } = await import("@vercel/kv");
-    const index =
-      (await kv.get<Record<string, any>>("amorvia:logs:index")) || {};
+    const { list } = await import("@vercel/blob");
 
-    const items = Object.values(index).map((m: any) => ({
-      uploaded: new Date(m.updatedAt || m.startedAt).toISOString(),
-      path: `amorvia-logs/${m.id}.json`,
-      size: m.count || 0, // not bytes, but admin only displays it
+    // list only our folder
+    const out = await list({ prefix: "amorvia-logs/" });
+
+    // Map into /admin's expected shape: Uploaded / Path / Size (+ optional url)
+    const items = (out?.blobs || []).map((b: any) => ({
+      uploaded: (b.uploadedAt ? new Date(b.uploadedAt).toISOString() : new Date().toISOString()),
+      path: b.pathname || b.path || "",
+      size: b.size ?? 0,
+      url: b.url, // admin can ignore if not used, but useful if you add "Open"
     }));
+
+    // newest first
+    items.sort((a: any, b: any) => (b.uploaded || "").localeCompare(a.uploaded || ""));
 
     return json(res, 200, { ok: true, items });
   } catch (err: any) {
-    return json(res, 500, {
-      ok: false,
-      error: String(err?.message || err),
-    });
+    return json(res, 500, { ok: false, error: String(err?.message || err) });
   }
 }
+
