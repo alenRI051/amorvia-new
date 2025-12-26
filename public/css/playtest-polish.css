@@ -33,22 +33,4 @@ html:not([data-advanced="1"]) .advanced {
   text-align: left;
   max-width: 100%;
 }
-/* -----------------------------------------
-   Playtest: hide in-scene authoring controls
------------------------------------------- */
 
-/* Generic authoring / director panels */
-html:not([data-advanced="1"]) .director-controls,
-html:not([data-advanced="1"]) .scene-controls,
-html:not([data-advanced="1"]) .authoring-controls,
-html:not([data-advanced="1"]) .debug-controls {
-  display: none !important;
-}
-
-/* Specific: background / character / mode row */
-html:not([data-advanced="1"]) select,
-html:not([data-advanced="1"]) label:has(select),
-html:not([data-advanced="1"]) .scene-toolbar,
-html:not([data-advanced="1"]) .controls-row {
-  display: none !important;
-}
