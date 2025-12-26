@@ -73,7 +73,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? body.scenarioId.trim()
         : null;
 
-    const events: TrackEvent[] = Array.isArray(body.events) ? body.events : [];
+    const events: TrackEvent[] = Array.isArray(body.events)
+  ? body.events
+  : Array.isArray((body as any).event)
+    ? (body as any).event
+    : Array.isArray((body as any).items)
+      ? (body as any).items
+      : [];
 
     // sessionId je obavezan
     if (!sessionId) {
