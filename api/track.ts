@@ -1,3 +1,4 @@
+// api/track.ts
 export const config = { api: { bodyParser: { sizeLimit: "1mb" } } };
 
 type TrackPayload = {
@@ -16,15 +17,13 @@ function hasKV() {
   return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 }
 
-function hasBlob() {
-  return !!process.env.BLOB_READ_WRITE_TOKEN;
-}
-
 function safeId(x: any) {
-  return String(x || "")
+  const s = String(x || "");
+  // keep it URL/key safe and bounded
+  return s
     .toLowerCase()
     .replace(/[^a-z0-9-_:.]/g, "")
-    .slice(0, 120);
+    .slice(0, 120) || "unknown";
 }
 
 export default async function handler(req: any, res: any) {
@@ -32,95 +31,72 @@ export default async function handler(req: any, res: any) {
 
   const payload: TrackPayload = req.body || {};
   const events = Array.isArray(payload.events) ? payload.events : [];
+
   if (!events.length) return json(res, 400, { ok: false, error: "No events" });
 
-  const sid = safeId(payload.sessionId || payload.events?.[0]?.sid || "unknown");
+  const sid = safeId(payload.sessionId || events?.[0]?.sid || "unknown");
   const startedAt = Number(payload.startedAt || Date.now());
-  const key = `amorvia:log:${sid}`;
+  const scenarioId = payload.scenarioId || null;
 
-  const item = {
+  const sessionKey = `amorvia:log:${sid}`;
+  const indexKey = "amorvia:logs:index";
+
+  const now = Date.now();
+  const meta = {
     id: sid,
     startedAt,
-    updatedAt: Date.now(),
-    scenarioId: payload.scenarioId || null,
-    events,
+    updatedAt: now,
+    scenarioId,
+    count: events.length,
   };
 
   try {
-    // 1) KV path
+    // KV path (recommended)
     if (hasKV()) {
       const { kv } = await import("@vercel/kv");
 
-      // store metadata list
-      const metaKey = "amorvia:logs:index";
-      const meta = {
-        id: item.id,
-        startedAt: item.startedAt,
-        updatedAt: item.updatedAt,
-        scenarioId: item.scenarioId,
-        count: item.events.length,
-      };
+      // Merge into existing session log (if any)
+      const existing = (await kv.get<any>(sessionKey)) || null;
 
-      // append to existing session or create new
-      const existing = (await kv.get<any>(key)) || null;
       if (existing && Array.isArray(existing.events)) {
-        existing.events = existing.events.concat(item.events).slice(-2000);
-        existing.updatedAt = item.updatedAt;
-        existing.scenarioId = existing.scenarioId || item.scenarioId;
-        await kv.set(key, existing);
+        const mergedEvents = existing.events.concat(events).slice(-2000);
+
+        const merged = {
+          id: sid,
+          startedAt: existing.startedAt || startedAt,
+          updatedAt: now,
+          scenarioId: existing.scenarioId || scenarioId,
+          events: mergedEvents,
+        };
+
+        await kv.set(sessionKey, merged);
       } else {
-        await kv.set(key, { ...item, events: item.events.slice(-2000) });
+        await kv.set(sessionKey, {
+          id: sid,
+          startedAt,
+          updatedAt: now,
+          scenarioId,
+          events: events.slice(-2000),
+        });
       }
 
-      // upsert meta into index (store as map)
-      const index = (await kv.get<Record<string, any>>(metaKey)) || {};
-      index[item.id] = meta;
-      await kv.set(metaKey, index);
+      // Update index (map keyed by session id)
+      const index = (await kv.get<Record<string, any>>(indexKey)) || {};
+      index[sid] = meta;
+      await kv.set(indexKey, index);
 
-      return json(res, 200, { ok: true, stored: "kv", id: item.id, added: events.length });
+      return json(res, 200, { ok: true, stored: "kv", id: sid, added: events.length });
     }
 
-    // 2) Blob path (simple JSON object per session)
-    if (hasBlob()) {
-      const { put, head } = await import("@vercel/blob");
-
-      const path = `amorvia-logs/${item.id}.json`;
-
-      // try to read previous by fetching URL from head() then fetch JSON
-      let merged = { ...item, events: item.events.slice(-2000) } as any;
-      try {
-        const h = await head(path);
-        if (h?.url) {
-          const prevRes = await fetch(h.url, { cache: "no-store" });
-          if (prevRes.ok) {
-            const prev = await prevRes.json();
-            if (prev && Array.isArray(prev.events)) {
-              merged.events = prev.events.concat(item.events).slice(-2000);
-              merged.startedAt = prev.startedAt || merged.startedAt;
-              merged.scenarioId = prev.scenarioId || merged.scenarioId;
-            }
-          }
-        }
-      } catch {}
-
-      await put(path, JSON.stringify(merged), {
-        access: "private",
-        contentType: "application/json",
-      });
-
-      return json(res, 200, { ok: true, stored: "blob", id: item.id, added: events.length });
-    }
-
-    // 3) No storage configured
+    // No storage configured: still return OK so client doesn't fail playtest
     return json(res, 200, {
       ok: true,
       stored: "none",
-      id: item.id,
+      id: sid,
       added: events.length,
-      note: "No KV/Blob configured on Vercel. Add Vercel KV or Blob to persist logs.",
+      note: "Vercel KV not configured (KV_REST_API_URL/TOKEN missing). Add Vercel KV to persist logs.",
     });
   } catch (err: any) {
     return json(res, 500, { ok: false, error: String(err?.message || err) });
   }
 }
-
