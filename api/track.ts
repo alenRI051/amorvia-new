@@ -13,90 +13,86 @@ function json(res: any, status: number, data: any) {
   res.status(status).json(data);
 }
 
-function hasKV() {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+function hasBlob() {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
 
 function safeId(x: any) {
   const s = String(x || "");
-  // keep it URL/key safe and bounded
-  return s
-    .toLowerCase()
-    .replace(/[^a-z0-9-_:.]/g, "")
-    .slice(0, 120) || "unknown";
+  return (
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9-_:.]/g, "")
+      .slice(0, 120) || "unknown"
+  );
 }
 
+const MAX_EVENTS_PER_SESSION = 2000;
+
 export default async function handler(req: any, res: any) {
+  if (req.method === "GET") {
+    return json(res, 200, { ok: true, hint: "Use POST to submit events" });
+  }
   if (req.method !== "POST") return json(res, 405, { ok: false, error: "Use POST" });
 
   const payload: TrackPayload = req.body || {};
   const events = Array.isArray(payload.events) ? payload.events : [];
-
   if (!events.length) return json(res, 400, { ok: false, error: "No events" });
+
+  if (!hasBlob()) {
+    return json(res, 200, {
+      ok: true,
+      stored: "none",
+      added: events.length,
+      note: "BLOB_READ_WRITE_TOKEN missing. Connect Vercel Blob to the project.",
+    });
+  }
 
   const sid = safeId(payload.sessionId || events?.[0]?.sid || "unknown");
   const startedAt = Number(payload.startedAt || Date.now());
   const scenarioId = payload.scenarioId || null;
 
-  const sessionKey = `amorvia:log:${sid}`;
-  const indexKey = "amorvia:logs:index";
-
-  const now = Date.now();
-  const meta = {
-    id: sid,
-    startedAt,
-    updatedAt: now,
-    scenarioId,
-    count: events.length,
-  };
+  const path = `amorvia-logs/${sid}.json`;
 
   try {
-    // KV path (recommended)
-    if (hasKV()) {
-      const { kv } = await import("@vercel/kv");
+    const { put, head } = await import("@vercel/blob");
 
-      // Merge into existing session log (if any)
-      const existing = (await kv.get<any>(sessionKey)) || null;
+    // Try to merge with existing blob
+    let merged: any = {
+      id: sid,
+      startedAt,
+      updatedAt: Date.now(),
+      scenarioId,
+      events: events.slice(-MAX_EVENTS_PER_SESSION),
+    };
 
-      if (existing && Array.isArray(existing.events)) {
-        const mergedEvents = existing.events.concat(events).slice(-2000);
-
-        const merged = {
-          id: sid,
-          startedAt: existing.startedAt || startedAt,
-          updatedAt: now,
-          scenarioId: existing.scenarioId || scenarioId,
-          events: mergedEvents,
-        };
-
-        await kv.set(sessionKey, merged);
-      } else {
-        await kv.set(sessionKey, {
-          id: sid,
-          startedAt,
-          updatedAt: now,
-          scenarioId,
-          events: events.slice(-2000),
-        });
+    try {
+      const h = await head(path);
+      if (h?.url) {
+        const prevRes = await fetch(h.url, { cache: "no-store" });
+        if (prevRes.ok) {
+          const prev = await prevRes.json();
+          if (prev && Array.isArray(prev.events)) {
+            merged.startedAt = prev.startedAt || merged.startedAt;
+            merged.scenarioId = prev.scenarioId || merged.scenarioId;
+            merged.events = prev.events.concat(events).slice(-MAX_EVENTS_PER_SESSION);
+          }
+        }
       }
-
-      // Update index (map keyed by session id)
-      const index = (await kv.get<Record<string, any>>(indexKey)) || {};
-      index[sid] = meta;
-      await kv.set(indexKey, index);
-
-      return json(res, 200, { ok: true, stored: "kv", id: sid, added: events.length });
+    } catch {
+      // if head fails (not found) it's fine — first write
     }
 
-    // No storage configured: still return OK so client doesn't fail playtest
-    return json(res, 200, {
-      ok: true,
-      stored: "none",
-      id: sid,
-      added: events.length,
-      note: "Vercel KV not configured (KV_REST_API_URL/TOKEN missing). Add Vercel KV to persist logs.",
+    merged.updatedAt = Date.now();
+
+    await put(path, JSON.stringify(merged), {
+      access: "private",
+      contentType: "application/json",
     });
+
+    return json(res, 200, { ok: true, stored: "blob", id: sid, added: events.length, path });
   } catch (err: any) {
     return json(res, 500, { ok: false, error: String(err?.message || err) });
   }
 }
+
