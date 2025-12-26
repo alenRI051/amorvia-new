@@ -67,74 +67,46 @@
 #choices button {
   white-space: nowrap;
 }
-/* === FORCE choices to stay on one line === */
-#choices {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  align-items: center;
-  gap: .5rem;
+/* ===============================
+   Choices layout (desktop + mobile)
+   =============================== */
 
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  max-width: 100%;
-  padding-bottom: .25rem;
-}
-
-/* Each choice pill */
-#choices > * {
-  flex: 0 0 auto !important;
-  max-width: none !important;
-  white-space: nowrap;
-}
-
-/* Safety: buttons inside */
-#choices button {
-  white-space: nowrap;
-}
-/* === Choices: one line, NO horizontal scroll === */
+/* Desktop: one line, no horizontal scroll, truncate with ellipsis */
 #choices {
   display: flex !important;
   flex-wrap: nowrap !important;
   gap: .5rem;
-  overflow: hidden !important;   /* nema skrola */
+  overflow: hidden !important;
   width: 100%;
 }
 
-/* each pill shares space */
 #choices > * {
-  flex: 1 1 0 !important;        /* ravnomjerno dijele širinu */
-  min-width: 0 !important;       /* KLJUČ: omogućuje ellipsis */
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
 }
 
-/* button text truncation */
 #choices button.choice {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* optional: malo kompaktnije da lakše stane */
+  /* compact */
   padding: .35rem .55rem;
   font-size: .9rem;
 }
-/* ===============================
-   Mobile UX: readable choices
-   =============================== */
+
+/* Mobile: readable, stacked choices (no hover needed) */
 @media (max-width: 640px) {
-  /* allow wrapping on mobile */
   #choices {
     flex-wrap: wrap !important;
-    gap: .5rem;
   }
 
-  /* each choice takes full row */
   #choices > * {
     flex: 1 1 100% !important;
-    min-width: 0;
+    min-width: 0 !important;
   }
 
-  /* show full text */
   #choices button.choice {
     white-space: normal;
     overflow: visible;
