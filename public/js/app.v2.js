@@ -7,17 +7,21 @@
   const params = new URLSearchParams(window.location.search);
   const urlAdvanced = params.get("advanced"); // "1" enables
 
-  // Persisted user choice (power users)
-  const saved = localStorage.getItem("amorvia:advanced"); // "1" | "0" | null
+  // If URL forces advanced=1, always honor it
+  if (urlAdvanced === "1") {
+    document.documentElement.setAttribute("data-advanced", "1");
+    try { localStorage.setItem("amorvia:advanced", "1"); } catch (e) {}
+    return;
+  }
 
-  // Default for playtest: OFF (0), unless URL explicitly enables it
-  const advanced = (urlAdvanced === "1")
-    ? "1"
-    : (saved === "1" ? "1" : "0");
+  // Otherwise: DO NOT auto-enable from localStorage during playtest.
+  // Respect whatever bootstrap already set (usually "0").
+  const existing = document.documentElement.getAttribute("data-advanced");
+  if (existing === "0" || existing === "1") return;
 
-  document.documentElement.setAttribute("data-advanced", advanced);
+  // Fallback if attribute is missing for some reason:
+  document.documentElement.setAttribute("data-advanced", "0");
 })();
-// It manages a tiny in-memory engine: current node + meters.
 
 (function () {
   "use strict";
