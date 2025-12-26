@@ -67,11 +67,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // sessionId je obavezan
     if (!sessionId) {
-      return json(res, 400, {
-        ok: false,
-        error: "Invalid payload (sessionId missing)",
-      });
-    }
+  return json(res, 200, {
+    ok: true,
+    stored: "noop",
+    added: 0,
+    note: "missing_sessionId",
+  });
+}
 
     // events može biti prazno → noop (da ne spama konzolu 400-icama)
     if (events.length === 0) {
