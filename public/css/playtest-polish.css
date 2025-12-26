@@ -72,3 +72,29 @@
 #choices button {
   white-space: nowrap;
 }
+/* === Choices: one line, NO horizontal scroll === */
+#choices {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: .5rem;
+  overflow: hidden !important;   /* nema skrola */
+  width: 100%;
+}
+
+/* each pill shares space */
+#choices > * {
+  flex: 1 1 0 !important;        /* ravnomjerno dijele širinu */
+  min-width: 0 !important;       /* KLJUČ: omogućuje ellipsis */
+}
+
+/* button text truncation */
+#choices button.choice {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* optional: malo kompaktnije da lakše stane */
+  padding: .35rem .55rem;
+  font-size: .9rem;
+}
