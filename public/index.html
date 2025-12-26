@@ -203,6 +203,23 @@
       window.amorviaTrack(type, payload);
     }
   }
+  // 0) scenario_loaded — kad se promijeni scenarij
+  const picker = document.getElementById("scenarioPicker");
+  if (picker) {
+    picker.addEventListener("change", function () {
+      track("scenario_loaded", {
+        scenarioId: picker.value
+      });
+    });
+
+    // fire once on initial load (ako je već odabran)
+    if (picker.value) {
+      track("scenario_loaded", {
+        scenarioId: picker.value,
+        initial: true
+      });
+    }
+  }
 
   // 1) choice_click — hvata klik na gumbe unutar "choices"
   document.addEventListener("click", function (e) {
