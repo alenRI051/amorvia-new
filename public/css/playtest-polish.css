@@ -1,0 +1,35 @@
+/* Playtest polish overlay
+   - Hide advanced UI by default unless data-advanced="1"
+   - Make choices wrap nicely (mobile) and avoid single-line truncation
+*/
+
+/* Always default to "non-advanced" if attribute missing */
+html:not([data-advanced="1"]) #topBar,
+html:not([data-advanced="1"]) #extrasTabs,
+html:not([data-advanced="1"]) #labsTabs,
+html:not([data-advanced="1"]) .extras,
+html:not([data-advanced="1"]) .labs,
+html:not([data-advanced="1"]) .advanced {
+  display: none !important;
+}
+
+/* Give story container more room so choices don’t force scroll */
+#story, .story, .scenarioText, .scenario-text, .content, main {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Choices: wrap and allow multiline (important for mobile; no hover there) */
+#choices, .choices, .choiceRow, .choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#choices button, .choices button, button.choice, .choiceBtn, .choice-btn, .choice {
+  white-space: normal;
+  text-align: left;
+  max-width: 100%;
+}
