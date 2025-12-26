@@ -1,0 +1,20 @@
+/* === Playtest UX: hide advanced UI by default === */
+html[data-advanced="0"] .js-advanced,
+html[data-advanced="0"] [data-ui="advanced"],
+html[data-advanced="0"] [data-tab="advanced"],
+html[data-advanced="0"] [data-extras],
+html[data-advanced="0"] .extras,
+html[data-advanced="0"] .labs,
+html[data-advanced="0"] .qa-tools {
+  display: none !important;
+}
+
+/* Optional: hide any “tabs bar” container if it's purely advanced */
+html[data-advanced="0"] .js-advanced-tabs {
+  display: none !important;
+}
+
+/* Optional: keep one small Settings button visible */
+html[data-advanced="0"] .js-settings-button {
+  display: inline-flex !important;
+}
