@@ -129,6 +129,28 @@
 
   <!-- Telemetry -->
   <script>window.AMORVIA_TRACK_ENDPOINT = ''; console.info('[Amorvia] Telemetry disabled for Codespaces.');</script>
+
+  <!-- ✅ SESSION INIT IDE OVDJE -->
+<script>
+  (function () {
+    const SID_KEY = "amorvia:sid";
+    const START_KEY = "amorvia:startedAt";
+    let sid = localStorage.getItem(SID_KEY);
+    if (!sid) {
+      sid = "sid-" + Math.random().toString(16).slice(2) + "-" + Date.now();
+      localStorage.setItem(SID_KEY, sid);
+    }
+    let startedAt = Number(localStorage.getItem(START_KEY));
+    if (!startedAt || !Number.isFinite(startedAt)) {
+      startedAt = Date.now();
+      localStorage.setItem(START_KEY, String(startedAt));
+    }
+    window.__amorviaSid = sid;
+    window.__amorviaStartedAt = startedAt;
+    window.__amorviaScenarioId = null;
+  })();
+</script>
+  
   <script src="/js/track-client.v9.5.1.js" defer></script>
   <script src="/js/telemetry.v9.5.3.js" defer></script>
 
