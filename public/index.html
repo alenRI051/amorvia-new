@@ -180,6 +180,63 @@
   <div id="loomCategories"></div>
   <div id="loomContent"></div>
 </div>
+<script>
+(function () {
+  // helper: scenario id iz URL-a ili iz selecta
+  function getScenarioId() {
+    try {
+      const u = new URL(location.href);
+      const qs = u.searchParams.get("scenario");
+      if (qs) return qs;
+    } catch {}
+    const sel = document.querySelector('select');
+    if (sel && sel.value) return String(sel.value);
+    return null;
+  }
+
+  function normalizeText(s) {
+    return String(s || "").trim().replace(/\s+/g, " ").slice(0, 240);
+  }
+
+  function track(type, payload) {
+    if (typeof window.amorviaTrack === "function") {
+      window.amorviaTrack(type, payload);
+    }
+  }
+
+  // 1) choice_click — hvata klik na gumbe unutar "choices"
+  document.addEventListener("click", function (e) {
+    const btn = e.target && e.target.closest ? e.target.closest("button") : null;
+    if (!btn) return;
+
+    // pokušaj prepoznati choices container (sigurnije: tražimo da je unutar story/choices zone)
+    const choicesWrap =
+      btn.closest(".choices") ||
+      btn.closest("[data-choices]") ||
+      btn.closest(".choices-wrap") ||
+      btn.closest("#choices");
+
+    // ako nije u choices, preskoči
+    if (!choicesWrap) {
+      // ali hvataj restart
+      const label = normalizeText(btn.textContent);
+      if (/^restart/i.test(label)) {
+        track("restart", { action: "restart_act", scenarioId: getScenarioId(), label });
+      }
+      return;
+    }
+
+    const choiceButtons = Array.from(choicesWrap.querySelectorAll("button"));
+    const idx = choiceButtons.indexOf(btn);
+
+    track("choice_click", {
+      scenarioId: getScenarioId(),
+      idx: idx >= 0 ? idx : null,
+      text: normalizeText(btn.textContent),
+    });
+  }, true);
+})();
+</script>
 
 </body>
 </html>
