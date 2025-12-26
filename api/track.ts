@@ -52,7 +52,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const body = (req.body ?? {}) as TrackPayload;
 
-    const sessionId = safeId(body.sessionId, "");
+    const sessionId = safeId(
+  body.sessionId ??
+    (body as any).sid ??
+    (body as any).session ??
+    (body as any).session_id ??
+    (body as any).sessionID ??
+    (body as any).AMORVIA_SESSION_ID ??
+    (body as any).amorviaSid ??
+    (body as any).__amorviaSid,
+  ""
+);
     const startedAt =
       typeof body.startedAt === "number" && Number.isFinite(body.startedAt)
         ? body.startedAt
