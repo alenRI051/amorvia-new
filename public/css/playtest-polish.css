@@ -1,0 +1,49 @@
+/* ===============================
+   Playtest polish: Choices + HUD
+   =============================== */
+
+/* --- Choices: keep text readable on hover --- */
+#choices button,
+#choices .button,
+#choices [role="button"] {
+  /* keep pills readable */
+  color: #0f172a;
+  background: #ffffff;
+}
+
+#choices button:hover,
+#choices .button:hover,
+#choices [role="button"]:hover {
+  /* slightly darker but not “blackout” */
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+#choices button:active,
+#choices .button:active,
+#choices [role="button"]:active {
+  background: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+
+/* Accessible focus (keeps text visible too) */
+#choices button:focus-visible,
+#choices .button:focus-visible,
+#choices [role="button"]:focus-visible {
+  outline: 2px solid rgba(15, 23, 42, 0.35);
+  outline-offset: 2px;
+}
+
+/* --- HUD: center the meter group --- */
+#hud {
+  width: 100%;
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  gap: .75rem;
+}
+
+/* If any child is pushing to the right (common culprit) */
+#hud > * {
+  margin-left: 0 !important;
+}
