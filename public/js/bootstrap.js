@@ -4,6 +4,16 @@
  * - Avoids bare `catch {}` (older parsers error)
  * - Adds cache-bust ?sig= timestamp on dynamic imports
  */
+// Playtest UX mode: advanced UI OFF by default
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const isAdvanced = params.get("advanced") === "1";
+
+  document.documentElement.setAttribute(
+    "data-advanced",
+    isAdvanced ? "1" : "0"
+  );
+})();
 
 (function(){
   var KEY_MODE = "amorvia:mode";
