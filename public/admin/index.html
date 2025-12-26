@@ -75,5 +75,168 @@
   </footer>
 
   <script src="./admin.js"></script>
+  <script>
+(async function () {
+  // --- Helpers
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const el = (tag, attrs={}, children=[]) => {
+    const n = document.createElement(tag);
+    for (const [k,v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v;
+      else if (k === "html") n.innerHTML = v;
+      else n.setAttribute(k, v);
+    }
+    for (const c of children) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    return n;
+  };
+
+  const todayISO = () => new Date().toISOString().slice(0,10);
+
+  function normalizeChoiceText(t) {
+    return String(t || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 200);
+  }
+
+  async function fetchJSON(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return await r.json();
+  }
+
+  // --- UI mount
+  const mount =
+    $("#topChoicesMount") ||
+    el("div", { id: "topChoicesMount", style: "margin:16px 0; padding:12px; border:1px solid #ddd; border-radius:10px;" });
+
+  // pokušaj ga staviti na vrh admina
+  const body = document.body;
+  body.insertBefore(mount, body.firstChild);
+
+  mount.appendChild(el("h3", { style: "margin:0 0 10px 0;" }, ["Top choices (danas)"]));
+
+  const row = el("div", { style: "display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;" });
+
+  const dateInput = el("input", { type:"date", value: todayISO(), style:"padding:6px 8px;" });
+  const limitInput = el("input", { type:"number", value:"200", min:"1", max:"2000", style:"width:110px; padding:6px 8px;" });
+  const runBtn = el("button", { type:"button", style:"padding:6px 10px; cursor:pointer;" }, ["Build Top choices"]);
+  const status = el("div", { style:"font-size:12px; opacity:.8;" }, [""]);
+  row.appendChild(el("label", {}, ["Date: ", dateInput]));
+  row.appendChild(el("label", {}, ["Max logs: ", limitInput]));
+  row.appendChild(runBtn);
+  row.appendChild(status);
+  mount.appendChild(row);
+
+  const tableWrap = el("div", { style:"overflow:auto; max-height:60vh;" });
+  mount.appendChild(tableWrap);
+
+  async function buildTopChoices() {
+    tableWrap.innerHTML = "";
+    status.textContent = "Loading log list…";
+
+    const date = dateInput.value || todayISO();
+    const maxLogs = Math.max(1, Math.min(2000, Number(limitInput.value || 200)));
+
+    // 1) list logs
+    const list = await fetchJSON(`/api/list-logs?date=${encodeURIComponent(date)}`);
+    const items = Array.isArray(list.items) ? list.items.slice(0, maxLogs) : [];
+    if (!items.length) {
+      status.textContent = `No logs for ${date}.`;
+      return;
+    }
+
+    // 2) fetch each blob json (sequential to be gentle; can parallelize later)
+    status.textContent = `Fetching ${items.length} logs…`;
+
+    const counts = new Map();         // text -> count
+    const countsByScenario = new Map(); // scenarioId -> Map(text -> count)
+
+    let ok = 0, failed = 0;
+    for (let i=0; i<items.length; i++) {
+      const it = items[i];
+      try {
+        const j = await fetchJSON(it.url);
+
+        const scenarioId = j.scenarioId || null;
+        const events = Array.isArray(j.events) ? j.events : [];
+
+        for (const ev of events) {
+          if (!ev || ev.type !== "choice_click") continue;
+
+          // podržavamo nekoliko formata payloada
+          const text =
+            normalizeChoiceText(ev.text) ||
+            normalizeChoiceText(ev.payload && ev.payload.text) ||
+            normalizeChoiceText(ev.payload && ev.payload.label);
+
+          if (!text) continue;
+
+          counts.set(text, (counts.get(text) || 0) + 1);
+
+          if (scenarioId) {
+            if (!countsByScenario.has(scenarioId)) countsByScenario.set(scenarioId, new Map());
+            const m = countsByScenario.get(scenarioId);
+            m.set(text, (m.get(text) || 0) + 1);
+          }
+        }
+
+        ok++;
+      } catch (e) {
+        failed++;
+      }
+
+      if ((i+1) % 10 === 0 || i === items.length-1) {
+        status.textContent = `Processed ${i+1}/${items.length} (ok ${ok}, failed ${failed})…`;
+      }
+    }
+
+    // 3) render
+    status.textContent = `Done. ${counts.size} unique choice texts.`;
+
+    const sorted = [...counts.entries()].sort((a,b) => b[1]-a[1]).slice(0, 50);
+
+    const table = el("table", { style:"width:100%; border-collapse:collapse; font-size:14px;" });
+    const thead = el("thead", {}, [
+      el("tr", {}, [
+        el("th", { style:"text-align:left; border-bottom:1px solid #ddd; padding:8px;" }, ["#"]),
+        el("th", { style:"text-align:left; border-bottom:1px solid #ddd; padding:8px;" }, ["Choice text"]),
+        el("th", { style:"text-align:right; border-bottom:1px solid #ddd; padding:8px;" }, ["Clicks"])
+      ])
+    ]);
+
+    const tbody = el("tbody");
+    sorted.forEach(([text, n], idx) => {
+      tbody.appendChild(el("tr", {}, [
+        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px; width:44px;" }, [String(idx+1)]),
+        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px;" }, [text]),
+        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px; text-align:right; width:90px;" }, [String(n)])
+      ]));
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+
+    // optional: scenario breakdown summary (top 5 scenarios by choice volume)
+    const scenarioTotals = [...countsByScenario.entries()]
+      .map(([sid, m]) => [sid, [...m.values()].reduce((a,b)=>a+b,0)])
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0, 5);
+
+    if (scenarioTotals.length) {
+      tableWrap.appendChild(el("h4", { style:"margin:14px 0 8px;" }, ["Top scenarios by choice clicks (today)"]));
+      const ul = el("ul", { style:"margin:0; padding-left:18px;" });
+      for (const [sid, total] of scenarioTotals) {
+        ul.appendChild(el("li", {}, [`${sid} — ${total}`]));
+      }
+      tableWrap.appendChild(ul);
+    }
+  }
+
+  runBtn.addEventListener("click", () => buildTopChoices());
+})();
+</script>
+
 </body>
 </html>
