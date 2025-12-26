@@ -67,3 +67,28 @@
 #choices button {
   white-space: nowrap;
 }
+/* === FORCE choices to stay on one line === */
+#choices {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: .5rem;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  max-width: 100%;
+  padding-bottom: .25rem;
+}
+
+/* Each choice pill */
+#choices > * {
+  flex: 0 0 auto !important;
+  max-width: none !important;
+  white-space: nowrap;
+}
+
+/* Safety: buttons inside */
+#choices button {
+  white-space: nowrap;
+}
