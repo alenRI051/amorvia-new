@@ -47,3 +47,23 @@
 #hud > * {
   margin-left: 0 !important;
 }
+/* --- Keep choices on one line --- */
+#choices {
+  display: flex;
+  flex-wrap: nowrap !important;
+  gap: .5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: .25rem; /* malo mjesta za scrollbar ako se pojavi */
+}
+
+#choices > * {
+  flex: 0 0 auto;        /* ne dozvoli da se "stisnu" u novu liniju */
+  white-space: nowrap;   /* tekst u pillu ostaje u jednoj liniji */
+}
+
+/* Ako su choices baš <button> elementi */
+#choices button {
+  white-space: nowrap;
+}
