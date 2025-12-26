@@ -1,0 +1,22 @@
+/* ===============================
+   PLAYTEST UX MODE (default)
+   =============================== */
+
+html[data-advanced="0"] #topBar {
+  display: none !important;
+}
+
+/* Toolbar: background, characters, mode */
+html[data-advanced="0"] .panel.toolbar {
+  display: none !important;
+}
+
+/* Aeonic Loom button */
+html[data-advanced="0"] #openLoom {
+  display: none !important;
+}
+
+/* Aeonic Loom panel (safety) */
+html[data-advanced="0"] #aeonicLoom {
+  display: none !important;
+}
