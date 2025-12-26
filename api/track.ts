@@ -109,7 +109,7 @@ export default async function handler(req: any, res: any) {
       } catch {}
 
       await put(path, JSON.stringify(merged), {
-        access: "private",
+        access: "public",
         contentType: "application/json",
       });
 
