@@ -599,6 +599,20 @@ if (actBadge) {
     setStatus(STATUS.LOADING, "loading");
     return fetchJsonNoStore("/data/v2-index.json")
       .then((idx) => {
+        /* === PLAYTEST FILTER (hide internal scenarios) === */
+      const PLAYTEST_HIDE = ["brzi-kontakti"];
+
+      if (idx && Array.isArray(idx.scenarios)) {
+        idx.scenarios = idx.scenarios.filter(s => {
+          const id = (s.id || s.slug || "").toLowerCase();
+          const title = (s.title || "").toLowerCase();
+          return (
+            !PLAYTEST_HIDE.includes(id) &&
+            !title.includes("brzi kontakti")
+          );
+        });
+      }
+      /* === END PLAYTEST FILTER === */
         state.index = idx;
         buildPickerUI();
         populatePicker();
