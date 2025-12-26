@@ -25,6 +25,35 @@
   <link rel="stylesheet" href="/css/playtest-polish.css">
   <link rel="stylesheet" href="/css/playtest-ux.css"/>
 
+  <!-- Telemetry + Session MUST be ready before any patches run -->
+<script>
+  window.AMORVIA_TRACK_ENDPOINT = "/api/track";
+
+  (function () {
+    const SID_KEY_1 = "amorvia:sid";
+    const SID_KEY_2 = "amorvia:sessionId";   // alias (za stare/tuđe skripte)
+    const START_KEY = "amorvia:startedAt";
+
+    let sid = localStorage.getItem(SID_KEY_1) || localStorage.getItem(SID_KEY_2);
+    if (!sid) {
+      sid = "sid-" + Math.random().toString(16).slice(2) + "-" + Date.now();
+    }
+    localStorage.setItem(SID_KEY_1, sid);
+    localStorage.setItem(SID_KEY_2, sid);
+
+    let startedAt = Number(localStorage.getItem(START_KEY));
+    if (!startedAt || !Number.isFinite(startedAt)) {
+      startedAt = Date.now();
+      localStorage.setItem(START_KEY, String(startedAt));
+    }
+
+    // expose multiple aliases so any client tracker can find it
+    window.__amorviaSid = sid;
+    window.__amorviaStartedAt = startedAt;
+    window.AMORVIA_SESSION_ID = sid;
+  })();
+</script>
+
   <!-- MUST run before bootstrap: ensures entry fields + nodes[] are present -->
   <script src="/js/patches/fetch-normalize-entry.v2.patch.js?v=2"></script>
 
