@@ -4,6 +4,20 @@
 //  - fetch-normalize-entry.v2.patch.js to ensure acts[*].nodes[] + start/entry.
 // Does NOT use a global ScenarioEngine.
 // It manages a tiny in-memory engine: current node + meters.
+(function bootAdvancedMode() {
+  const params = new URLSearchParams(window.location.search);
+  const urlAdvanced = params.get("advanced"); // "1" enables
+
+  // Persisted user choice (power users)
+  const saved = localStorage.getItem("amorvia:advanced"); // "1" | "0" | null
+
+  // Default for playtest: OFF (0), unless URL explicitly enables it
+  const advanced = (urlAdvanced === "1")
+    ? "1"
+    : (saved === "1" ? "1" : "0");
+
+  document.documentElement.setAttribute("data-advanced", advanced);
+})();
 
 (function () {
   "use strict";
