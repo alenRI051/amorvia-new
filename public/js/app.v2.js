@@ -435,14 +435,18 @@ if (actBadge) {
     // Choices
     while (choicesEl.firstChild) choicesEl.removeChild(choicesEl.firstChild);
     (node.choices || []).forEach((c) => {
-      const btn = document.createElement("button");
-      btn.className = "choice";
-      btn.textContent = c.label || c.text || "Continue";
-      if (c.id) btn.dataset.choiceId = c.id;
-      const nextId = c.to || c.next || "";
-      if (nextId) btn.dataset.next = nextId;
-      choicesEl.appendChild(btn);
-    });
+  const btn = document.createElement("button");
+  btn.className = "choice";
+
+  const label = c.label || c.text || "Continue";
+  btn.textContent = label;
+  btn.title = label;
+
+  if (c.id) btn.dataset.choiceId = c.id;
+  const nextId = c.to || c.next || "";
+  if (nextId) btn.dataset.next = nextId;
+  choicesEl.appendChild(btn);
+});
 
     // Node-level effects on enter
     if (node.effects) {
