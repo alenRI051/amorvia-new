@@ -112,4 +112,10 @@
     }
   ]
 }
+const PLAYTEST_HIDE = ["brzi-kontakti"];
+
+scenarios = scenarios.filter(s => {
+  const id = (s.id || "").toLowerCase();
+  return !PLAYTEST_HIDE.includes(id);
+});
 
