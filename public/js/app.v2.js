@@ -22,6 +22,10 @@
 (function () {
   "use strict";
 
+  // HUD mode: "feedback" (Impulse HUD)
+  try { document.documentElement.dataset.hudmode = "feedback"; } catch (e) {}
+
+
   const STORAGE_KEYS = {
     LAST_SCENARIO: "amorvia:v2mini:lastScenarioId",
   };
@@ -247,6 +251,100 @@
       }
     });
   }
+
+
+
+// ------------ HUD Impulse (feedback-only) ------------
+
+let hudImpulseTimer = null;
+
+function ensureHudImpulseMount() {
+  if (document.getElementById("hudImpulse")) return;
+
+  const mount = document.createElement("div");
+  mount.id = "hudImpulse";
+  mount.className = "hud-impulse";
+  mount.setAttribute("aria-live", "polite");
+
+  mount.innerHTML = `
+    <div class="hud-impulse__left">Impact</div>
+    <div class="hud-impulse__chips" id="hudImpulseChips"></div>
+  `;
+
+  const host =
+    document.querySelector("#app") ||
+    document.querySelector("main") ||
+    document.body;
+
+  host.prepend(mount);
+}
+
+function showHudImpulse(deltas) {
+  if (!deltas) return;
+
+  // Only show if something actually changed
+  const hasAny =
+    !!(deltas.trust || deltas.tension || deltas.childStress);
+  if (!hasAny) return;
+
+  ensureHudImpulseMount();
+
+  const box = document.getElementById("hudImpulse");
+  const chips = document.getElementById("hudImpulseChips");
+  if (!box || !chips) return;
+
+  const items = [
+    { key: "trust", label: "Trust", val: Number(deltas.trust) || 0, goodUp: true },
+    { key: "tension", label: "Tension", val: Number(deltas.tension) || 0, goodUp: false },
+    { key: "childStress", label: "Child", val: Number(deltas.childStress) || 0, goodUp: false },
+  ];
+
+  chips.innerHTML = "";
+
+  for (const it of items) {
+    const v = it.val;
+
+    let cls = "neu", arr = "~", txt = "unchanged";
+    if (v !== 0) {
+      // For tension/childStress: lower is better
+      const improved = it.goodUp ? (v > 0) : (v < 0);
+      cls = improved ? "pos" : "neg";
+      arr = improved ? "↑" : "↓";
+      txt = improved ? "improved" : "worsened";
+    }
+
+    const chip = document.createElement("div");
+    chip.className = `hud-chip ${cls}`;
+    chip.innerHTML = `<span class="arr">${arr}</span> <b>${it.label}</b> <span style="opacity:.75">${txt}</span>`;
+    chips.appendChild(chip);
+  }
+
+  box.classList.remove("is-off");
+  box.classList.add("is-on");
+
+  if (hudImpulseTimer) clearTimeout(hudImpulseTimer);
+  hudImpulseTimer = setTimeout(() => {
+    box.classList.add("is-off");
+    setTimeout(() => box.classList.remove("is-on", "is-off"), 220);
+  }, 1400);
+}
+
+function snapshotMeters() {
+  return {
+    trust: Number(state.meters.trust) || 0,
+    tension: Number(state.meters.tension) || 0,
+    childStress: Number(state.meters.childStress) || 0,
+  };
+}
+
+function diffMeters(before, after) {
+  return {
+    trust: (after.trust - before.trust),
+    tension: (after.tension - before.tension),
+    childStress: (after.childStress - before.childStress),
+  };
+}
+
 
   // ------------ Rendering helpers ------------
 
@@ -486,7 +584,11 @@ if (actBadge) {
       if (!btn) return;
       const nextId = btn.dataset.next || "";
       const choiceId = btn.dataset.choiceId || null;
+        const beforeMeters = snapshotMeters();
       gotoNode(nextId, choiceId);
+      const afterMeters = snapshotMeters();
+      const deltas = diffMeters(beforeMeters, afterMeters);
+      showHudImpulse(deltas);
     });
     choicesEl.dataset.amorviaMiniBound = "1";
   }
