@@ -207,10 +207,10 @@ html[data-hudmode="feedback"] .amor-hud-chip{
 
 /* Feedback-only HUD impulse */
 .hud-impulse{
-  position: sticky;
-  top: 10px;
+  position: relative;
+  top: auto;
   z-index: 60;
-  margin: 10px auto;
+  margin: 10px 0 12px;
   width: min(920px, calc(100% - 20px));
   padding: 10px 12px;
   border: 1px solid rgba(148,163,184,.28);
