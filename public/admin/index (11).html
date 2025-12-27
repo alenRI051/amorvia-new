@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Amorvia Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    :root{
+      --bg:#050b18;
+      --panel:rgba(2,6,23,.35);
+      --border:#1e293b;
+      --muted:rgba(226,232,240,.72);
+      --text:#e2e8f0;
+      --row:rgba(30,41,59,.5);
+      --badge:#94a3b8;
+      --good:#22c55e;
+      --mid:#eab308;
+      --bad:#94a3b8;
+      --link:#93c5fd;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
+    }
+    main{ max-width:1200px; margin:0 auto; padding:18px 14px 28px; }
+    h1{ margin:0 0 10px 0; font-size:20px; font-weight:700; }
+    h2{ margin:0 0 10px 0; font-size:18px; font-weight:700; }
+    h3{ margin:0 0 8px 0; font-size:16px; font-weight:700; }
+    h4{ margin:12px 0 8px 0; font-size:14px; font-weight:700; }
+    p{ margin:0 0 12px 0; color:var(--muted); font-size:13px; line-height:1.35; }
+    a{ color:var(--link); text-decoration:underline; }
+    .panel{
+      margin:16px 0;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:var(--panel);
+    }
+    .controls{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+      margin-bottom:10px;
+    }
+    label{ font-size:12px; color:var(--muted); display:inline-flex; gap:8px; align-items:center; }
+    input[type="date"], input[type="number"], select{
+      padding:6px 8px;
+      background:rgba(2,6,23,.55);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:10px;
+      outline:none;
+    }
+    button{
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:rgba(148,163,184,.10);
+      color:var(--text);
+      cursor:pointer;
+    }
+    button:hover{ background:rgba(148,163,184,.16); }
+    .status{ font-size:12px; color:var(--muted); }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .9fr;
+      gap:14px;
+      align-items:start;
+    }
+    .box{
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:auto;
+      background:rgba(2,6,23,.18);
+    }
+    table{ width:100%; border-collapse:collapse; font-size:13px; }
+    th{
+      text-align:left;
+      padding:8px;
+      border-bottom:1px solid var(--border);
+      color:rgba(226,232,240,.9);
+      font-size:12px;
+      font-weight:700;
+    }
+    td{
+      padding:8px;
+      border-bottom:1px solid var(--row);
+      vertical-align:top;
+    }
+    .num{ text-align:right; font-variant-numeric: tabular-nums; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .badge{
+      display:inline-block;
+      margin-left:8px;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:11px;
+      border:1px solid rgba(148,163,184,.35);
+      opacity:.95;
+      white-space:nowrap;
+    }
+    .badge.good{ border-color: rgba(34,197,94,.6); color: rgba(34,197,94,.95); }
+    .badge.mid{ border-color: rgba(234,179,8,.6); color: rgba(234,179,8,.95); }
+    .badge.bad{ border-color: rgba(148,163,184,.35); color: rgba(148,163,184,.95); }
+    .kind{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:11px;
+      border:1px solid rgba(148,163,184,.35);
+      opacity:.95;
+      margin-right:8px;
+      white-space:nowrap;
+    }
+    .kind.choice{ border-color: rgba(34,197,94,.6); color: rgba(34,197,94,.95); }
+    .kind.scene{ border-color: rgba(234,179,8,.6); color: rgba(234,179,8,.95); }
+    .kind.other{ border-color: rgba(148,163,184,.35); color: rgba(148,163,184,.95); }
+    .rowlink{
+      border:none; background:none; color:inherit; padding:0; margin:0;
+      cursor:pointer; text-align:left;
+    }
+    .hint{
+      font-size:12px; color:var(--muted);
+      margin-top:8px;
+    }
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(148,163,184,.06);
+      font-size:12px;
+      color:rgba(226,232,240,.86);
+    }
+  </style>
+</head>
+
+<body>
+<main>
+  <h1>Amorvia Admin</h1>
+  <p>Playtest analytics (no backend changes): Top choices, session drill-down, and drop-off analysis.</p>
+
+  <section id="insights" class="panel">
+    <h2>Playtest Insights</h2>
+    <p>Builds insights from <span class="mono">/api/list-logs</span> and blob JSON. Click a SID for drill-down.</p>
+
+    <div class="controls">
+      <label>Date: <input id="dateInput" type="date"></label>
+      <label>Max logs: <input id="maxLogs" type="number" min="1" max="2000" value="200"></label>
+      <label><input id="onlyHumans" type="checkbox"> Only humans</label>
+      <label>Scenario:
+        <select id="scenarioFilter">
+          <option value="">All scenarios</option>
+        </select>
+      </label>
+      <button id="buildBtn" type="button">Build</button>
+      <span id="status" class="status"></span>
+    </div>
+
+    <div class="grid">
+      <div>
+        <h3>Top choices (date)</h3>
+        <div id="topChoicesWrap" class="box" style="max-height:64vh;"></div>
+      </div>
+
+      <div>
+        <h3>Sessions</h3>
+        <div id="activeFilters" style="margin:0 0 10px 0;"></div>
+        <div id="sessionsWrap" class="box" style="max-height:28vh;"></div>
+
+        <h3 style="margin-top:12px;">Session drill-down</h3>
+        <div id="drill" class="box" style="max-height:34vh; padding:10px;">
+          <div style="opacity:.75; font-size:13px;">Click a SID to inspect.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dropoff" class="panel">
+    <h2>Drop-off</h2>
+    <p>Aggregates the last meaningful point per session: <b>choice_click</b> → <b>scenario_loaded</b> → last event.</p>
+    <div class="controls">
+      <span class="pill">Tip: Click any drop-off row to filter the Sessions list.</span>
+      <button id="clearDropFilter" type="button" style="display:none;">Clear drop-off filter</button>
+    </div>
+    <div id="dropoffWrap" class="box" style="max-height:58vh;"></div>
+    <div class="hint">
+      Visual labels: <span class="kind choice">CHOICE</span> <span class="kind scene">SCENE</span> <span class="kind other">OTHER</span>
+    </div>
+  </section>
+</main>
+
+<script>
+(async function () {
+  // -------- Bulletproof DOM helper ----------
+  const $ = (sel, root=document) => root.querySelector(sel);
+
+  const el = (tag, attrs = {}, children = []) => {
+    const n = document.createElement(tag);
+
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null) continue;
+      if (k === "class") n.className = String(v);
+      else if (k === "html") n.innerHTML = String(v);
+      else n.setAttribute(k, String(v));
+    }
+
+    const add = (c) => {
+      if (c == null || c === false) return;
+      if (Array.isArray(c)) return c.forEach(add);
+      if (c instanceof Node) n.appendChild(c);
+      else n.appendChild(document.createTextNode(String(c)));
+    };
+
+    (children || []).forEach(add);
+    return n;
+  };
+
+  // -------- Helpers ----------
+  const todayISO = () => new Date().toISOString().slice(0,10);
+  const fmtMs = (ms) => {
+    const s = Math.max(0, Math.round(ms/1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s/60);
+    const r = s % 60;
+    return `${m}m ${r}s`;
+  };
+
+  const norm = (t) => String(t || "").replace(/\s+/g," ").trim().slice(0,220);
+
+  async function fetchJSON(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return await r.json();
+  }
+
+  function humanScore(session) {
+    const types = new Set(session.events.map(e => e?.type).filter(Boolean));
+    const choiceClicks = session.events.filter(e => e?.type === "choice_click").length;
+
+    let score = 0;
+    if (choiceClicks >= 1) score += 6;
+    if (types.size >= 2) score += 2;
+    if (session.logs >= 2) score += 1;
+
+    const onlyLifecycle = (types.size === 1 && types.has("page_visibility"));
+    if (onlyLifecycle) score -= 4;
+
+    return score;
+  }
+
+  function bucket(score) {
+    if (score >= 5) return { label: "Human", cls: "good" };
+    if (score >= 2) return { label: "Maybe", cls: "mid" };
+    return { label: "Noise", cls: "bad" };
+  }
+
+  function dominantScenarioId(session) {
+    const counts = new Map();
+    if (session.scenarioId) counts.set(session.scenarioId, (counts.get(session.scenarioId)||0)+1);
+
+    for (const ev of session.events) {
+      if (!ev) continue;
+      if (ev.type === "scenario_loaded") {
+        const sid = ev.payload?.value || ev.payload?.scenarioId || ev.value || null;
+        if (sid) counts.set(sid, (counts.get(sid)||0)+1);
+      }
+      if (ev.scenarioId) counts.set(ev.scenarioId, (counts.get(ev.scenarioId)||0)+1);
+    }
+
+    let best=null, bestN=0;
+    for (const [k,n] of counts.entries()) {
+      if (n > bestN) { bestN=n; best=k; }
+    }
+    return best || null;
+  }
+
+  function lastMeaningful(session) {
+    const evs = session.events
+      .filter(Boolean)
+      .slice()
+      .sort((a,b)=> (a.ts||0) - (b.ts||0));
+
+    const lastChoice = evs.slice().reverse().find(e => e.type === "choice_click");
+    if (lastChoice) {
+      const text =
+        norm(lastChoice.text) ||
+        norm(lastChoice.payload?.text) ||
+        norm(lastChoice.payload?.label) ||
+        "(choice_click)";
+      return { kind:"choice_click", text, ts:lastChoice.ts||0 };
+    }
+
+    const lastLoaded = evs.slice().reverse().find(e => e.type === "scenario_loaded");
+    if (lastLoaded) {
+      const sid = lastLoaded.payload?.value || lastLoaded.payload?.scenarioId || lastLoaded.value || "";
+      return { kind:"scenario_loaded", text: sid ? `scenario_loaded → ${sid}` : "scenario_loaded", ts:lastLoaded.ts||0 };
+    }
+
+    const lastAny = evs[evs.length-1];
+    if (lastAny) return { kind:(lastAny.type || "unknown"), text:(lastAny.type || "unknown"), ts:(lastAny.ts||0) };
+
+    return { kind:"none", text:"(no events)", ts:0 };
+  }
+
+  function kindBadge(kind) {
+    if (kind === "choice_click") return { label:"CHOICE", cls:"choice" };
+    if (kind === "scenario_loaded") return { label:"SCENE", cls:"scene" };
+    return { label:"OTHER", cls:"other" };
+  }
+
+  // -------- State ----------
+  const state = {
+    date: todayISO(),
+    maxLogs: 200,
+    onlyHumans: false,
+    scenarioFilter: "",
+    // computed
+    sessions: [],         // scored sessions array (full)
+    sessionsFiltered: [], // for sessions list panel
+    counts: new Map(),    // top choices
+    scenarioSeen: new Set(),
+    drop: {
+      activeKey: null, // { scenario, kind, dropText } stored as string key
+      totalSessionsInDropScope: 0,
+    }
+  };
+
+  // -------- Elements ----------
+  const dateInput = $("#dateInput");
+  const maxLogs = $("#maxLogs");
+  const onlyHumans = $("#onlyHumans");
+  const scenarioFilter = $("#scenarioFilter");
+  const buildBtn = $("#buildBtn");
+  const status = $("#status");
+  const topChoicesWrap = $("#topChoicesWrap");
+  const sessionsWrap = $("#sessionsWrap");
+  const drill = $("#drill");
+  const dropoffWrap = $("#dropoffWrap");
+  const activeFilters = $("#activeFilters");
+  const clearDropFilter = $("#clearDropFilter");
+
+  dateInput.value = state.date;
+
+  // -------- Renderers ----------
+  function renderTopChoices() {
+    topChoicesWrap.innerHTML = "";
+    const sorted = [...state.counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0, 60);
+
+    const table = el("table", {}, [
+      el("thead", {}, [
+        el("tr", {}, [
+          el("th", { style:"width:44px;" }, ["#"]),
+          el("th", {}, ["Choice text"]),
+          el("th", { class:"num", style:"width:90px;" }, ["Clicks"])
+        ])
+      ])
+    ]);
+
+    const tbody = el("tbody");
+    sorted.forEach(([text, n], idx) => {
+      tbody.appendChild(el("tr", {}, [
+        el("td", {}, [idx+1]),
+        el("td", {}, [text]),
+        el("td", { class:"num" }, [n])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    topChoicesWrap.appendChild(table);
+  }
+
+  function setActiveFiltersPills() {
+    activeFilters.innerHTML = "";
+
+    const pills = [];
+    if (state.onlyHumans) pills.push(el("span", { class:"pill" }, ["Humans only"]));
+    if (state.scenarioFilter) pills.push(el("span", { class:"pill" }, [`Scenario: ${state.scenarioFilter}`]));
+
+    if (state.drop.activeKey) {
+      const [scenario, kind, dropText] = state.drop.activeKey.split("||");
+      const kb = kindBadge(kind);
+      pills.push(el("span", { class:"pill" }, [
+        "Drop-off: ",
+        el("span", { class:`kind ${kb.cls}` }, [kb.label]),
+        `${scenario} · ${dropText}`
+      ]));
+      clearDropFilter.style.display = "inline-block";
+    } else {
+      clearDropFilter.style.display = "none";
+    }
+
+    pills.forEach(p => activeFilters.appendChild(p));
+  }
+
+  function renderSessionsList() {
+    sessionsWrap.innerHTML = "";
+
+    const rows = state.sessionsFiltered.slice(0, 200);
+
+    const table = el("table", {}, [
+      el("thead", {}, [
+        el("tr", {}, [
+          el("th", {}, ["SID"]),
+          el("th", { class:"num", style:"width:70px;" }, ["Score"]),
+          el("th", { class:"num", style:"width:70px;" }, ["Clicks"]),
+          el("th", { class:"num", style:"width:85px;" }, ["Dur."])
+        ])
+      ])
+    ]);
+
+    const tbody = el("tbody");
+    rows.forEach(s => {
+      const b = bucket(s.score);
+
+      const sidBtn = el("button", {
+        type:"button",
+        class:"rowlink mono",
+        title:"Open session drill-down"
+      }, [s.sid]);
+
+      sidBtn.addEventListener("click", () => showSession(s));
+
+      const sidCell = el("td", {}, [
+        sidBtn,
+        el("span", { class:`badge ${b.cls}` }, [b.label])
+      ]);
+
+      tbody.appendChild(el("tr", {}, [
+        sidCell,
+        el("td", { class:"num" }, [s.score]),
+        el("td", { class:"num" }, [s.choiceClicks]),
+        el("td", { class:"num" }, [fmtMs(s.durationMs)])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    sessionsWrap.appendChild(table);
+
+    // default drilldown
+    if (rows.length) showSession(rows[0]);
+    else drill.innerHTML = `<div style="opacity:.75;font-size:13px;">No sessions under current filters.</div>`;
+  }
+
+  function showSession(s) {
+    drill.innerHTML = "";
+    const b = bucket(s.score);
+
+    const copyBtn = el("button", { type:"button" }, ["Copy SID"]);
+    copyBtn.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(s.sid); } catch {}
+    });
+
+    drill.appendChild(el("div", { style:"display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:baseline;" }, [
+      el("div", {}, [
+        el("div", { class:"mono", style:"font-size:13px;" }, [`SID: ${s.sid}`]),
+        el("div", { style:"opacity:.85; font-size:12px; margin-top:4px;" }, [
+          `Score ${s.score} (${b.label}) · clicks ${s.choiceClicks} · duration ${fmtMs(s.durationMs)} · logs ${s.blobs.length}`
+        ]),
+        el("div", { style:"opacity:.75; font-size:12px; margin-top:4px;" }, [
+          `Types: ${s.types.join(", ")}`
+        ]),
+        s.scenarioId ? el("div", { style:"opacity:.75; font-size:12px; margin-top:4px;" }, [
+          `Scenario: ${s.scenarioId}`
+        ]) : null
+      ]),
+      el("div", {}, [copyBtn])
+    ]));
+
+    // Raw blob links
+    const links = el("div", { style:"margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;" });
+    const MAX_LINKS = 6;
+
+    s.blobs.slice(0, MAX_LINKS).forEach((url, i) => {
+      const a = el("a", {
+        href: url,
+        target: "_blank",
+        rel: "noopener",
+        style: "font-size:12px; opacity:.9; text-decoration:underline;"
+      }, [`Open blob ${i+1}`]);
+      links.appendChild(a);
+    });
+
+    if (s.blobs.length > MAX_LINKS) {
+      links.appendChild(el("span", { style:"font-size:12px; opacity:.65;" }, [`+${s.blobs.length - MAX_LINKS} more…`]));
+    }
+
+    drill.appendChild(links);
+
+    // Session choices
+    const sessionChoiceCounts = new Map();
+    for (const ev of s.events) {
+      if (ev?.type !== "choice_click") continue;
+      const text =
+        norm(ev.text) ||
+        norm(ev.payload?.text) ||
+        norm(ev.payload?.label);
+      if (!text) continue;
+      sessionChoiceCounts.set(text, (sessionChoiceCounts.get(text)||0)+1);
+    }
+
+    drill.appendChild(el("h4", {}, ["Session choices"]));
+    if (!sessionChoiceCounts.size) {
+      drill.appendChild(el("div", { style:"opacity:.75; font-size:12px;" }, ["No choice_click events in this session."]));
+    } else {
+      const top = [...sessionChoiceCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0, 20);
+      const ul = el("ul", { style:"margin:0; padding-left:18px; font-size:12px;" });
+      top.forEach(([t,n]) => ul.appendChild(el("li", {}, [`${t} (${n})`])));
+      drill.appendChild(ul);
+    }
+
+    // Timeline
+    drill.appendChild(el("h4", {}, ["Timeline"]));
+    const evs = s.events.slice().sort((a,b)=> (a.ts||0)-(b.ts||0)).slice(0, 220);
+
+    const tl = el("div", { style:"display:flex; flex-direction:column; gap:8px; font-size:12px;" });
+    for (const ev of evs) {
+      const ts = typeof ev.ts === "number" ? new Date(ev.ts).toLocaleTimeString() : "";
+      const type = ev.type || "unknown";
+
+      let desc = "";
+      if (type === "scenario_loaded") {
+        const sid = ev.payload?.value || ev.payload?.scenarioId || ev.value || "";
+        desc = sid ? `→ ${sid}` : "";
+      }
+      if (type === "scenario_select") {
+        const v = ev.payload?.value || "";
+        const t = ev.payload?.text || "";
+        desc = `→ ${v}${t ? ` (${t})` : ""}`;
+      }
+      if (type === "choice_click") {
+        const t = norm(ev.text) || norm(ev.payload?.text) || norm(ev.payload?.label);
+        desc = t ? `→ ${t}` : "";
+      }
+      if (type === "page_visibility") {
+        desc = `→ hidden=${String(ev.payload?.hidden)}`;
+      }
+
+      tl.appendChild(el("div", { style:"border:1px solid rgba(30,41,59,.6); border-radius:10px; padding:8px 10px;" }, [
+        el("div", { style:"opacity:.9;" }, [`${ts}  ${type}`]),
+        desc ? el("div", { style:"opacity:.75; margin-top:4px;" }, [desc]) : null
+      ]));
+    }
+
+    drill.appendChild(tl);
+  }
+
+  function renderDropoff() {
+    dropoffWrap.innerHTML = "";
+
+    // Build drop-off buckets from currently "in scope" sessions (after humans/scenario filter, BEFORE drop filter)
+    const sessionsScope = state.sessions.filter(s => {
+      if (state.onlyHumans && s.score < 5) return false;
+      if (state.scenarioFilter && s.scenarioId !== state.scenarioFilter) return false;
+      return true;
+    });
+
+    state.drop.totalSessionsInDropScope = sessionsScope.length;
+
+    const buckets = new Map(); // key -> {scenario, kind, dropText, count, durSum}
+    const byKeySessions = new Map(); // key -> Set(sid)
+
+    for (const s of sessionsScope) {
+      const last = lastMeaningful(s);
+      const scenario = s.scenarioId || "(unknown)";
+      const dropText = last.text || "(unknown)";
+      const kind = last.kind || "other";
+
+      const key = `${scenario}||${kind}||${dropText}`;
+      if (!buckets.has(key)) buckets.set(key, { scenario, kind, dropText, count:0, durSum:0 });
+      const b = buckets.get(key);
+
+      b.count++;
+      b.durSum += Math.max(0, s.durationMs);
+
+      if (!byKeySessions.has(key)) byKeySessions.set(key, new Set());
+      byKeySessions.get(key).add(s.sid);
+    }
+
+    const rows = [...buckets.entries()]
+      .map(([key, b]) => {
+        const pct = state.drop.totalSessionsInDropScope ? (b.count / state.drop.totalSessionsInDropScope) * 100 : 0;
+        return {
+          key,
+          scenario: b.scenario,
+          kind: b.kind,
+          dropText: b.dropText,
+          count: b.count,
+          pct,
+          avgDur: b.count ? fmtMs(b.durSum / b.count) : "0s",
+          sids: byKeySessions.get(key) ? [...byKeySessions.get(key)] : []
+        };
+      })
+      .sort((a,b)=> b.count - a.count)
+      .slice(0, 120);
+
+    const table = el("table", {}, [
+      el("thead", {}, [
+        el("tr", {}, [
+          el("th", { style:"width:44px;" }, ["#"]),
+          el("th", { style:"width:220px;" }, ["Scenario"]),
+          el("th", {}, ["Drop-off at"]),
+          el("th", { class:"num", style:"width:90px;" }, ["Sessions"]),
+          el("th", { class:"num", style:"width:90px;" }, ["%"]),
+          el("th", { class:"num", style:"width:110px;" }, ["Avg dur."])
+        ])
+      ])
+    ]);
+
+    const tbody = el("tbody");
+
+    rows.forEach((r, idx) => {
+      const kb = kindBadge(r.kind);
+
+      const dropBtn = el("button", {
+        type:"button",
+        class:"rowlink",
+        title:"Click to filter Sessions list to those that dropped here"
+      }, [
+        el("span", { class:`kind ${kb.cls}` }, [kb.label]),
+        r.dropText
+      ]);
+
+      dropBtn.addEventListener("click", () => {
+        state.drop.activeKey = r.key;
+        applyFiltersAndRender(); // re-render sessions list filtered by drop-off
+      });
+
+      tbody.appendChild(el("tr", {}, [
+        el("td", {}, [idx+1]),
+        el("td", {}, [r.scenario]),
+        el("td", {}, [dropBtn]),
+        el("td", { class:"num" }, [r.count]),
+        el("td", { class:"num" }, [`${r.pct.toFixed(1)}%`]),
+        el("td", { class:"num" }, [r.avgDur])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    dropoffWrap.appendChild(table);
+
+    // show/hide clear filter
+    clearDropFilter.style.display = state.drop.activeKey ? "inline-block" : "none";
+  }
+
+  function applyFiltersAndRender() {
+    // Build filtered sessions list (includes drop-off filter if active)
+    const filtered = state.sessions.filter(s => {
+      if (state.onlyHumans && s.score < 5) return false;
+      if (state.scenarioFilter && s.scenarioId !== state.scenarioFilter) return false;
+
+      if (state.drop.activeKey) {
+        const [scenario, kind, dropText] = state.drop.activeKey.split("||");
+        if ((s.scenarioId || "(unknown)") !== scenario) return false;
+        const last = lastMeaningful(s);
+        const thisKind = last.kind || "other";
+        const thisText = last.text || "(unknown)";
+        if (thisKind !== kind) return false;
+        if (thisText !== dropText) return false;
+      }
+
+      return true;
+    });
+
+    state.sessionsFiltered = filtered;
+
+    setActiveFiltersPills();
+    renderTopChoices();       // top choices for the whole day (already computed)
+    renderDropoff();          // drop-off for current scope (humans/scenario, before drop filter)
+    renderSessionsList();     // sessions panel (after drop filter)
+  }
+
+  function populateScenarioDropdown() {
+    const current = scenarioFilter.value || "";
+    scenarioFilter.innerHTML = "";
+    scenarioFilter.appendChild(el("option", { value:"" }, ["All scenarios"]));
+    [...state.scenarioSeen].sort().forEach(sid => {
+      scenarioFilter.appendChild(el("option", { value:sid }, [sid]));
+    });
+    scenarioFilter.value = current;
+  }
+
+  // -------- Build pipeline ----------
+  async function buildAll() {
+    status.textContent = "Loading log list…";
+    topChoicesWrap.innerHTML = "";
+    sessionsWrap.innerHTML = "";
+    dropoffWrap.innerHTML = "";
+    drill.innerHTML = `<div style="opacity:.75;font-size:13px;">Loading…</div>`;
+
+    state.drop.activeKey = null;
+
+    state.date = dateInput.value || todayISO();
+    state.maxLogs = Math.max(1, Math.min(2000, Number(maxLogs.value || 200)));
+    state.onlyHumans = !!onlyHumans.checked;
+    state.scenarioFilter = scenarioFilter.value || "";
+
+    const list = await fetchJSON(`/api/list-logs?date=${encodeURIComponent(state.date)}`);
+    const items = (Array.isArray(list.items) ? list.items : []).slice(0, state.maxLogs);
+
+    if (!items.length) {
+      status.textContent = `No logs for ${state.date}.`;
+      state.sessions = [];
+      state.sessionsFiltered = [];
+      state.counts = new Map();
+      state.scenarioSeen = new Set();
+      applyFiltersAndRender();
+      return;
+    }
+
+    status.textContent = `Fetching ${items.length} logs…`;
+
+    // Aggregate per sessionId
+    const sessionsMap = new Map(); // sid -> {sid, logs, blobs[], events[], firstTs, lastTs, scenarioId, types:Set, choiceClicks, scenarioCounts:Map}
+    const scenarioSeen = new Set();
+    const counts = new Map();
+
+    let ok=0, failed=0;
+
+    for (let i=0; i<items.length; i++) {
+      const it = items[i];
+      try {
+        const j = await fetchJSON(it.url);
+
+        const sid = j.sessionId || "unknown";
+        if (!sessionsMap.has(sid)) {
+          sessionsMap.set(sid, {
+            sid,
+            logs: 0,
+            blobs: [],
+            events: [],
+            firstTs: Infinity,
+            lastTs: 0,
+            scenarioId: j.scenarioId || null,
+            types: new Set(),
+            choiceClicks: 0,
+            scenarioCounts: new Map()
+          });
+        }
+
+        const S = sessionsMap.get(sid);
+        S.logs++;
+        S.blobs.push(it.url);
+
+        if (!S.scenarioId && j.scenarioId) S.scenarioId = j.scenarioId;
+
+        if (j.scenarioId) {
+          scenarioSeen.add(j.scenarioId);
+          S.scenarioCounts.set(j.scenarioId, (S.scenarioCounts.get(j.scenarioId)||0)+1);
+        }
+
+        const evs = Array.isArray(j.events) ? j.events : [];
+        for (const ev of evs) {
+          if (!ev) continue;
+          const ts = typeof ev.ts === "number" ? ev.ts : Date.now();
+          S.firstTs = Math.min(S.firstTs, ts);
+          S.lastTs = Math.max(S.lastTs, ts);
+
+          if (ev.type) S.types.add(ev.type);
+          S.events.push(ev);
+
+          if (ev.type === "choice_click") {
+            S.choiceClicks++;
+            const text =
+              norm(ev.text) ||
+              norm(ev.payload?.text) ||
+              norm(ev.payload?.label);
+            if (text) counts.set(text, (counts.get(text)||0)+1);
+          }
+
+          // harvest scenario ids from scenario_loaded/select too (for dropdown richness)
+          if (ev.type === "scenario_loaded") {
+            const sid2 = ev.payload?.value || ev.payload?.scenarioId || ev.value || null;
+            if (sid2) scenarioSeen.add(sid2);
+            if (sid2) S.scenarioCounts.set(sid2, (S.scenarioCounts.get(sid2)||0)+1);
+          }
+          if (ev.type === "scenario_select") {
+            const sid3 = ev.payload?.value || null;
+            if (sid3) scenarioSeen.add(sid3);
+            if (sid3) S.scenarioCounts.set(sid3, (S.scenarioCounts.get(sid3)||0)+1);
+          }
+        }
+
+        ok++;
+      } catch (e) {
+        failed++;
+      }
+
+      if ((i+1) % 10 === 0 || i === items.length-1) {
+        status.textContent = `Processed ${i+1}/${items.length} (ok ${ok}, failed ${failed})…`;
+      }
+    }
+
+    // Score + normalize sessions array
+    const scored = [...sessionsMap.values()].map(S => {
+      const domScenario = dominantScenarioId(S) || S.scenarioId || null;
+
+      const first = Number.isFinite(S.firstTs) ? S.firstTs : 0;
+      const last = S.lastTs || first;
+
+      const score = humanScore(S);
+
+      return {
+        sid: S.sid,
+        score,
+        choiceClicks: S.choiceClicks,
+        durationMs: Math.max(0, (last - first)),
+        types: [...S.types],
+        scenarioId: domScenario,
+        events: S.events,
+        blobs: S.blobs
+      };
+    }).sort((a,b)=> b.score - a.score);
+
+    state.sessions = scored;
+    state.counts = counts;
+    state.scenarioSeen = scenarioSeen;
+
+    populateScenarioDropdown();
+
+    // Keep current scenario selection if possible
+    state.scenarioFilter = scenarioFilter.value || "";
+
+    status.textContent = `Done. sessions=${state.sessions.length} · choices=${state.counts.size}`;
+    applyFiltersAndRender();
+  }
+
+  // -------- Wire controls ----------
+  buildBtn.addEventListener("click", () => buildAll().catch(err => {
+    status.textContent = `Error: ${err.message || err}`;
+  }));
+
+  scenarioFilter.addEventListener("change", () => {
+    state.scenarioFilter = scenarioFilter.value || "";
+    state.drop.activeKey = null; // scenario change resets drop filter
+    applyFiltersAndRender();
+  });
+
+  onlyHumans.addEventListener("change", () => {
+    state.onlyHumans = !!onlyHumans.checked;
+    state.drop.activeKey = null; // humans filter change resets drop filter
+    applyFiltersAndRender();
+  });
+
+  clearDropFilter.addEventListener("click", () => {
+    state.drop.activeKey = null;
+    applyFiltersAndRender();
+  });
+
+  // init
+  dateInput.value = todayISO();
+  buildAll().catch(err => {
+    status.textContent = `Error: ${err.message || err}`;
+  });
+})();
+</script>
+
+</body>
+</html>
+
