@@ -304,12 +304,32 @@
     ]));
 
     // Raw blob links
-    const links = el("div", { style:"margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;" });
-    for (const url of s.blobs.slice(0, 6)) {
-      links.appendChild(el("a", { href:url, target:"_blank", style:"font-size:12px; opacity:.9;" }, ["Open blob"]));
-    }
-    if (s.blobs.length > 6) links.appendChild(el("span", { style:"font-size:12px; opacity:.7;" }, [`+${s.blobs.length-6} more…`]));
-    drill.appendChild(links);
+const links = el("div", {
+  style: "margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;"
+});
+
+const MAX_LINKS = 6;
+
+s.blobs.slice(0, MAX_LINKS).forEach((url, i) => {
+  const a = el("a", {
+    href: url,
+    target: "_blank",
+    rel: "noopener",
+    style: "font-size:12px; opacity:.9; text-decoration:underline;"
+  }, [`Open blob ${i + 1}`]);
+
+  links.appendChild(a);
+});
+
+if (s.blobs.length > MAX_LINKS) {
+  links.appendChild(
+    el("span", {
+      style: "font-size:12px; opacity:.65;"
+    }, [`+${s.blobs.length - MAX_LINKS} more…`])
+  );
+}
+
+drill.appendChild(links);
 
     // Top choices inside this session
     const sessionChoiceCounts = new Map();
