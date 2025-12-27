@@ -211,7 +211,7 @@ html[data-hudmode="feedback"] .amor-hud-chip{
   top: auto;
   z-index: 60;
   margin: 10px 0 12px;
-  width: min(920px, calc(100% - 20px));
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid rgba(148,163,184,.28);
   border-radius: 14px;
