@@ -75,7 +75,7 @@
   </footer>
 
   <script src="./admin.js"></script>
-  <script>
+ <script>
 (async function () {
   // --- Helpers
   const $ = (sel, root=document) => root.querySelector(sel);
@@ -92,11 +92,19 @@
 
   const todayISO = () => new Date().toISOString().slice(0,10);
 
+  const fmtMs = (ms) => {
+    const s = Math.max(0, Math.round(ms/1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s/60);
+    const r = s % 60;
+    return `${m}m ${r}s`;
+  };
+
   function normalizeChoiceText(t) {
     return String(t || "")
       .replace(/\s+/g, " ")
       .trim()
-      .slice(0, 200);
+      .slice(0, 220);
   }
 
   async function fetchJSON(url) {
@@ -105,79 +113,338 @@
     return await r.json();
   }
 
-  // --- UI mount
-  const mount =
-    $("#topChoicesMount") ||
-    el("div", { id: "topChoicesMount", style: "margin:16px 0; padding:12px; border:1px solid #ddd; border-radius:10px;" });
+  function asArray(x) { return Array.isArray(x) ? x : []; }
 
-  // pokušaj ga staviti na vrh admina
-  const body = document.body;
-  body.insertBefore(mount, body.firstChild);
+  function humanScore(session) {
+    // session: {events[], logs, types:Set, firstTs, lastTs, choiceClicks}
+    const evs = session.events.slice().sort((a,b)=> (a.ts||0)-(b.ts||0));
+    let maxGap = 0;
+    for (let i=1; i<evs.length; i++) {
+      const a = (evs[i-1]?.ts||0);
+      const b = (evs[i]?.ts||0);
+      const gap = b - a;
+      if (gap > maxGap) maxGap = gap;
+    }
 
-  mount.appendChild(el("h3", { style: "margin:0 0 10px 0;" }, ["Top choices (danas)"]));
+    let score = 0;
+    if (session.choiceClicks >= 1) score += 6;       // strongest signal
+    if (session.types.size >= 2) score += 2;         // multiple event types
+    if (session.logs >= 2) score += 1;               // multiple blobs → longer activity
+    if (maxGap >= 800) score += 1;                   // human-like pause
+    if (maxGap >= 2000) score += 1;
 
-  const row = el("div", { style: "display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;" });
+    // Penalize pure lifecycle noise
+    const onlyLifecycle = (session.types.size === 1 && session.types.has("page_visibility"));
+    if (onlyLifecycle) score -= 4;
+
+    return { score, maxGap };
+  }
+
+  function bucket(score) {
+    if (score >= 5) return { label: "Human", tone: "good" };
+    if (score >= 2) return { label: "Maybe", tone: "mid" };
+    return { label: "Noise", tone: "bad" };
+  }
+
+  // --- Mount UI near the top of <main>
+  const main = document.querySelector("main") || document.body;
+
+  const mount = el("section", {
+    id: "topChoicesMount",
+    style: "margin:16px 0; padding:14px; border:1px solid #1e293b; border-radius:14px; background:rgba(2,6,23,.35);"
+  });
+
+  // Insert before existing controls/results if possible
+  const firstSection = main.querySelector("section");
+  if (firstSection) main.insertBefore(mount, firstSection);
+  else main.appendChild(mount);
+
+  mount.appendChild(el("h2", { style:"margin:0 0 10px 0;" }, ["Playtest Insights"]));
+  mount.appendChild(el("p", { style:"margin:0 0 14px 0; opacity:.8; font-size:13px;" }, [
+    "Top choices + session drill-down (no backend). "
+  ]));
+
+  // Controls row
+  const controls = el("div", { style:"display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:10px;" });
 
   const dateInput = el("input", { type:"date", value: todayISO(), style:"padding:6px 8px;" });
   const limitInput = el("input", { type:"number", value:"200", min:"1", max:"2000", style:"width:110px; padding:6px 8px;" });
-  const runBtn = el("button", { type:"button", style:"padding:6px 10px; cursor:pointer;" }, ["Build Top choices"]);
-  const status = el("div", { style:"font-size:12px; opacity:.8;" }, [""]);
-  row.appendChild(el("label", {}, ["Date: ", dateInput]));
-  row.appendChild(el("label", {}, ["Max logs: ", limitInput]));
-  row.appendChild(runBtn);
-  row.appendChild(status);
-  mount.appendChild(row);
+  const onlyHumans = el("input", { type:"checkbox" });
+  const runBtn = el("button", { type:"button", style:"padding:6px 10px; cursor:pointer;" }, ["Build"]);
+  const status = el("div", { style:"font-size:12px; opacity:.85;" }, [""]);
 
-  const tableWrap = el("div", { style:"overflow:auto; max-height:60vh;" });
-  mount.appendChild(tableWrap);
+  controls.appendChild(el("label", {}, ["Date: ", dateInput]));
+  controls.appendChild(el("label", {}, ["Max logs: ", limitInput]));
+  controls.appendChild(el("label", { style:"display:flex; gap:6px; align-items:center;" }, [onlyHumans, "Only humans"]));
+  controls.appendChild(runBtn);
+  controls.appendChild(status);
+  mount.appendChild(controls);
 
-  async function buildTopChoices() {
-    tableWrap.innerHTML = "";
+  // Layout: left (top choices), right (sessions list + drilldown)
+  const layout = el("div", { style:"display:grid; grid-template-columns: 1.2fr .9fr; gap:14px; align-items:start;" });
+  mount.appendChild(layout);
+
+  const left = el("div", { style:"min-width:0;" });
+  const right = el("div", { style:"min-width:0;" });
+  layout.appendChild(left);
+  layout.appendChild(right);
+
+  // Left: top choices
+  left.appendChild(el("h3", { style:"margin:0 0 8px 0;" }, ["Top choices (date)"]));
+  const topChoicesWrap = el("div", { style:"overflow:auto; max-height:64vh; border:1px solid #1e293b; border-radius:12px;" });
+  left.appendChild(topChoicesWrap);
+
+  // Right: sessions
+  right.appendChild(el("h3", { style:"margin:0 0 8px 0;" }, ["Sessions"]));
+
+  const sessionMetaBar = el("div", { style:"display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;" });
+  const scenarioFilter = el("select", { style:"padding:6px 8px; max-width:260px;" }, [
+    el("option", { value:"" }, ["All scenarios"])
+  ]);
+  sessionMetaBar.appendChild(el("label", {}, ["Scenario: ", scenarioFilter]));
+  right.appendChild(sessionMetaBar);
+
+  const sessionsWrap = el("div", { style:"border:1px solid #1e293b; border-radius:12px; overflow:auto; max-height:28vh;" });
+  right.appendChild(sessionsWrap);
+
+  right.appendChild(el("h3", { style:"margin:12px 0 8px 0;" }, ["Session drill-down"]));
+  const drill = el("div", { style:"border:1px solid #1e293b; border-radius:12px; padding:10px; overflow:auto; max-height:34vh;" }, [
+    el("div", { style:"opacity:.75; font-size:13px;" }, ["Click a SID to inspect."])
+  ]);
+  right.appendChild(drill);
+
+  function renderTopChoices(countsMap) {
+    topChoicesWrap.innerHTML = "";
+
+    const sorted = [...countsMap.entries()].sort((a,b) => b[1]-a[1]).slice(0, 60);
+
+    const table = el("table", { style:"width:100%; border-collapse:collapse; font-size:13px;" });
+    table.appendChild(el("thead", {}, [el("tr", {}, [
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px; width:44px;" }, ["#"]),
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px;" }, ["Choice text"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:90px;" }, ["Clicks"])
+    ])]));
+
+    const tbody = el("tbody");
+    sorted.forEach(([text, n], idx) => {
+      tbody.appendChild(el("tr", {}, [
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; opacity:.9;" }, [String(idx+1)]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px;" }, [text]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [String(n)])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    topChoicesWrap.appendChild(table);
+  }
+
+  function renderSessionsList(scoredSessions) {
+    sessionsWrap.innerHTML = "";
+
+    const table = el("table", { style:"width:100%; border-collapse:collapse; font-size:12px;" });
+    table.appendChild(el("thead", {}, [el("tr", {}, [
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px;" }, ["SID"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:70px;" }, ["Score"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:70px;" }, ["Clicks"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:85px;" }, ["Dur."])
+    ])]));
+
+    const tbody = el("tbody");
+    scoredSessions.slice(0, 200).forEach(s => {
+      const b = bucket(s.score);
+      const sidBtn = el("button", {
+        type:"button",
+        style:"border:none; background:none; color:inherit; padding:0; margin:0; cursor:pointer; text-align:left; font-family:monospace;"
+      }, [s.sid]);
+
+      sidBtn.addEventListener("click", () => showSession(s));
+
+      const badge = el("span", {
+        style: `display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:11px; border:1px solid rgba(148,163,184,.35); opacity:.95;`
+      }, [b.label]);
+
+      const sidCell = el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px;" }, [sidBtn, badge]);
+
+      tbody.appendChild(el("tr", {}, [
+        sidCell,
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [String(s.score)]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [String(s.choiceClicks)]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [fmtMs(s.durationMs)])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    sessionsWrap.appendChild(table);
+  }
+
+  function showSession(s) {
+    // s has: sid, score, scenarioId (dominant), firstTs, lastTs, durationMs, choiceClicks, types, events, blobs[]
+    drill.innerHTML = "";
+
+    const b = bucket(s.score);
+
+    drill.appendChild(el("div", { style:"display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:baseline;" }, [
+      el("div", {}, [
+        el("div", { style:"font-family:monospace; font-size:13px;" }, [`SID: ${s.sid}`]),
+        el("div", { style:"opacity:.85; font-size:12px; margin-top:4px;" }, [
+          `Score ${s.score} (${b.label}) · clicks ${s.choiceClicks} · duration ${fmtMs(s.durationMs)} · logs ${s.blobs.length}`
+        ]),
+        el("div", { style:"opacity:.75; font-size:12px; margin-top:4px;" }, [
+          `Types: ${s.types.join(", ")}`
+        ]),
+        s.scenarioId ? el("div", { style:"opacity:.75; font-size:12px; margin-top:4px;" }, [
+          `Scenario: ${s.scenarioId}`
+        ]) : el("div")
+      ]),
+      el("div", {}, [
+        el("button", { type:"button", style:"padding:6px 10px; cursor:pointer;" }, ["Copy SID"]).addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(s.sid); } catch {}
+        })
+      ])
+    ]));
+
+    // Raw blob links
+    const links = el("div", { style:"margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;" });
+    for (const url of s.blobs.slice(0, 6)) {
+      links.appendChild(el("a", { href:url, target:"_blank", style:"font-size:12px; opacity:.9;" }, ["Open blob"]));
+    }
+    if (s.blobs.length > 6) links.appendChild(el("span", { style:"font-size:12px; opacity:.7;" }, [`+${s.blobs.length-6} more…`]));
+    drill.appendChild(links);
+
+    // Top choices inside this session
+    const sessionChoiceCounts = new Map();
+    for (const ev of s.events) {
+      if (ev?.type !== "choice_click") continue;
+      const text =
+        normalizeChoiceText(ev.text) ||
+        normalizeChoiceText(ev.payload && ev.payload.text) ||
+        normalizeChoiceText(ev.payload && ev.payload.label);
+      if (!text) continue;
+      sessionChoiceCounts.set(text, (sessionChoiceCounts.get(text)||0)+1);
+    }
+
+    drill.appendChild(el("h4", { style:"margin:12px 0 8px;" }, ["Session choices"]));
+    if (sessionChoiceCounts.size === 0) {
+      drill.appendChild(el("div", { style:"opacity:.75; font-size:12px;" }, ["No choice_click events in this session."]));
+    } else {
+      const top = [...sessionChoiceCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0, 20);
+      const ul = el("ul", { style:"margin:0; padding-left:18px; font-size:12px;" });
+      for (const [t,n] of top) ul.appendChild(el("li", {}, [`${t} (${n})`]));
+      drill.appendChild(ul);
+    }
+
+    // Timeline
+    drill.appendChild(el("h4", { style:"margin:12px 0 8px;" }, ["Timeline"]));
+    const evs = s.events.slice().sort((a,b)=> (a.ts||0)-(b.ts||0)).slice(0, 200);
+
+    const tl = el("div", { style:"display:flex; flex-direction:column; gap:8px; font-size:12px;" });
+    for (const ev of evs) {
+      const ts = typeof ev.ts === "number" ? new Date(ev.ts).toLocaleTimeString() : "";
+      const type = ev.type || "unknown";
+      let desc = "";
+      if (type === "scenario_loaded") {
+        const sid = ev.payload?.value || ev.payload?.scenarioId || ev.value || "";
+        desc = sid ? `→ ${sid}` : "";
+      }
+      if (type === "scenario_select") {
+        const v = ev.payload?.value || "";
+        const t = ev.payload?.text || "";
+        desc = `→ ${v}${t ? ` (${t})` : ""}`;
+      }
+      if (type === "choice_click") {
+        const t =
+          normalizeChoiceText(ev.text) ||
+          normalizeChoiceText(ev.payload && ev.payload.text) ||
+          normalizeChoiceText(ev.payload && ev.payload.label);
+        desc = t ? `→ ${t}` : "";
+      }
+      if (type === "page_visibility") {
+        desc = `→ hidden=${String(ev.payload?.hidden)}`;
+      }
+
+      const row = el("div", { style:"border:1px solid rgba(30,41,59,.6); border-radius:10px; padding:8px 10px;" }, [
+        el("div", { style:"opacity:.9;" }, [`${ts}  ${type}`]),
+        desc ? el("div", { style:"opacity:.75; margin-top:4px;" }, [desc]) : el("div")
+      ]);
+      tl.appendChild(row);
+    }
+    drill.appendChild(tl);
+  }
+
+  async function build() {
+    topChoicesWrap.innerHTML = "";
+    sessionsWrap.innerHTML = "";
+    drill.innerHTML = "";
     status.textContent = "Loading log list…";
 
     const date = dateInput.value || todayISO();
     const maxLogs = Math.max(1, Math.min(2000, Number(limitInput.value || 200)));
 
-    // 1) list logs
     const list = await fetchJSON(`/api/list-logs?date=${encodeURIComponent(date)}`);
-    const items = Array.isArray(list.items) ? list.items.slice(0, maxLogs) : [];
+    const items = asArray(list.items).slice(0, maxLogs);
     if (!items.length) {
       status.textContent = `No logs for ${date}.`;
+      scenarioFilter.innerHTML = "";
+      scenarioFilter.appendChild(el("option", { value:"" }, ["All scenarios"]));
       return;
     }
 
-    // 2) fetch each blob json (sequential to be gentle; can parallelize later)
     status.textContent = `Fetching ${items.length} logs…`;
 
-    const counts = new Map();         // text -> count
-    const countsByScenario = new Map(); // scenarioId -> Map(text -> count)
+    // Top choices counts
+    const counts = new Map();
 
-    let ok = 0, failed = 0;
+    // Session aggregation
+    const sessions = new Map(); // sid -> {sid, logs, blobs[], events[], types:Set, firstTs, lastTs, choiceClicks, scenarioCounts:Map }
+    const scenarioSeen = new Set();
+
+    let ok=0, failed=0;
+
     for (let i=0; i<items.length; i++) {
       const it = items[i];
       try {
         const j = await fetchJSON(it.url);
 
+        const sid = j.sessionId || "unknown";
+        if (!sessions.has(sid)) {
+          sessions.set(sid, {
+            sid,
+            logs: 0,
+            blobs: [],
+            events: [],
+            types: new Set(),
+            firstTs: Infinity,
+            lastTs: 0,
+            choiceClicks: 0,
+            scenarioCounts: new Map()
+          });
+        }
+        const S = sessions.get(sid);
+        S.logs++;
+        S.blobs.push(it.url);
+
         const scenarioId = j.scenarioId || null;
-        const events = Array.isArray(j.events) ? j.events : [];
+        if (scenarioId) {
+          scenarioSeen.add(scenarioId);
+          S.scenarioCounts.set(scenarioId, (S.scenarioCounts.get(scenarioId)||0)+1);
+        }
 
+        const events = asArray(j.events);
         for (const ev of events) {
-          if (!ev || ev.type !== "choice_click") continue;
+          if (!ev) continue;
+          const ts = typeof ev.ts === "number" ? ev.ts : Date.now();
+          S.firstTs = Math.min(S.firstTs, ts);
+          S.lastTs = Math.max(S.lastTs, ts);
+          if (ev.type) S.types.add(ev.type);
+          S.events.push(ev);
 
-          // podržavamo nekoliko formata payloada
-          const text =
-            normalizeChoiceText(ev.text) ||
-            normalizeChoiceText(ev.payload && ev.payload.text) ||
-            normalizeChoiceText(ev.payload && ev.payload.label);
-
-          if (!text) continue;
-
-          counts.set(text, (counts.get(text) || 0) + 1);
-
-          if (scenarioId) {
-            if (!countsByScenario.has(scenarioId)) countsByScenario.set(scenarioId, new Map());
-            const m = countsByScenario.get(scenarioId);
-            m.set(text, (m.get(text) || 0) + 1);
+          if (ev.type === "choice_click") {
+            S.choiceClicks++;
+            const text =
+              normalizeChoiceText(ev.text) ||
+              normalizeChoiceText(ev.payload && ev.payload.text) ||
+              normalizeChoiceText(ev.payload && ev.payload.label);
+            if (text) counts.set(text, (counts.get(text)||0)+1);
           }
         }
 
@@ -191,50 +458,62 @@
       }
     }
 
-    // 3) render
-    status.textContent = `Done. ${counts.size} unique choice texts.`;
+    // Populate scenario dropdown
+    const currentScenario = scenarioFilter.value || "";
+    scenarioFilter.innerHTML = "";
+    scenarioFilter.appendChild(el("option", { value:"" }, ["All scenarios"]));
+    [...scenarioSeen].sort().forEach(sid => scenarioFilter.appendChild(el("option", { value:sid }, [sid])));
+    scenarioFilter.value = currentScenario;
 
-    const sorted = [...counts.entries()].sort((a,b) => b[1]-a[1]).slice(0, 50);
-
-    const table = el("table", { style:"width:100%; border-collapse:collapse; font-size:14px;" });
-    const thead = el("thead", {}, [
-      el("tr", {}, [
-        el("th", { style:"text-align:left; border-bottom:1px solid #ddd; padding:8px;" }, ["#"]),
-        el("th", { style:"text-align:left; border-bottom:1px solid #ddd; padding:8px;" }, ["Choice text"]),
-        el("th", { style:"text-align:right; border-bottom:1px solid #ddd; padding:8px;" }, ["Clicks"])
-      ])
-    ]);
-
-    const tbody = el("tbody");
-    sorted.forEach(([text, n], idx) => {
-      tbody.appendChild(el("tr", {}, [
-        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px; width:44px;" }, [String(idx+1)]),
-        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px;" }, [text]),
-        el("td", { style:"border-bottom:1px solid #f0f0f0; padding:8px; text-align:right; width:90px;" }, [String(n)])
-      ]));
-    });
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    tableWrap.appendChild(table);
-
-    // optional: scenario breakdown summary (top 5 scenarios by choice volume)
-    const scenarioTotals = [...countsByScenario.entries()]
-      .map(([sid, m]) => [sid, [...m.values()].reduce((a,b)=>a+b,0)])
-      .sort((a,b)=>b[1]-a[1])
-      .slice(0, 5);
-
-    if (scenarioTotals.length) {
-      tableWrap.appendChild(el("h4", { style:"margin:14px 0 8px;" }, ["Top scenarios by choice clicks (today)"]));
-      const ul = el("ul", { style:"margin:0; padding-left:18px;" });
-      for (const [sid, total] of scenarioTotals) {
-        ul.appendChild(el("li", {}, [`${sid} — ${total}`]));
+    // Score sessions
+    const scored = [...sessions.values()].map(S => {
+      const { score } = humanScore(S);
+      // dominant scenario for display
+      let domScenario = null;
+      let domN = 0;
+      for (const [sid, n] of S.scenarioCounts.entries()) {
+        if (n > domN) { domN = n; domScenario = sid; }
       }
-      tableWrap.appendChild(ul);
-    }
+      const first = Number.isFinite(S.firstTs) ? S.firstTs : 0;
+      const last = S.lastTs || first;
+      return {
+        sid: S.sid,
+        score,
+        choiceClicks: S.choiceClicks,
+        durationMs: Math.max(0, (last - first)),
+        types: [...S.types],
+        scenarioId: domScenario,
+        events: S.events,
+        blobs: S.blobs
+      };
+    }).sort((a,b)=> b.score - a.score);
+
+    // Apply filters
+    const scen = scenarioFilter.value || "";
+    let filtered = scored;
+    if (scen) filtered = filtered.filter(x => x.scenarioId === scen);
+    if (onlyHumans.checked) filtered = filtered.filter(x => x.score >= 5);
+
+    // Render
+    status.textContent = `Done. choices=${counts.size} · sessions=${scored.length} (showing ${filtered.length})`;
+
+    renderTopChoices(counts);
+    renderSessionsList(filtered);
+
+    // default drilldown: first human if exists
+    const firstHuman = filtered.find(x => x.score >= 5) || filtered[0];
+    if (firstHuman) showSession(firstHuman);
+    else drill.innerHTML = `<div style="opacity:.75;font-size:13px;">No sessions to inspect under current filters.</div>`;
   }
 
-  runBtn.addEventListener("click", () => buildTopChoices());
+  runBtn.addEventListener("click", () => build());
+  scenarioFilter.addEventListener("change", () => build());
+  onlyHumans.addEventListener("change", () => build());
+
+  // auto-run once
+  build().catch(err => {
+    status.textContent = `Error: ${err.message || err}`;
+  });
 })();
 </script>
 
