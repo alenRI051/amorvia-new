@@ -86,9 +86,26 @@
       else if (k === "html") n.innerHTML = v;
       else n.setAttribute(k, v);
     }
-    for (const c of children) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-    return n;
+    const el = (tag, attrs = {}, children = []) => {
+  const n = document.createElement(tag);
+
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null) continue;
+    if (k === "class") n.className = String(v);
+    else if (k === "html") n.innerHTML = String(v);
+    else n.setAttribute(k, String(v));
+  }
+
+  const add = (c) => {
+    if (c == null || c === false) return;          // ignore null/undefined/false
+    if (Array.isArray(c)) { c.forEach(add); return; } // allow nested arrays
+    if (c instanceof Node) n.appendChild(c);       // Node OK
+    else n.appendChild(document.createTextNode(String(c))); // numbers/booleans -> text
   };
+
+  children.forEach(add);
+  return n;
+};
 
   const todayISO = () => new Date().toISOString().slice(0,10);
 
