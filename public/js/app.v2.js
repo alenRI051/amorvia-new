@@ -271,13 +271,38 @@ function ensureHudImpulseMount() {
     <div class="hud-impulse__chips" id="hudImpulseChips"></div>
   `;
 
+  // Prefer: insert directly under the dialog (above choices)
+  const dialog =
+    document.querySelector("#dialog") ||
+    document.querySelector("[data-role='dialog']") ||
+    document.querySelector(".dialog") ||
+    document.querySelector("#story") ||
+    document.querySelector(".story");
+
+  const choices =
+    document.querySelector("#choices") ||
+    document.querySelector("[data-role='choices']") ||
+    document.querySelector(".choices");
+
+  if (dialog && dialog.isConnected) {
+    dialog.insertAdjacentElement("afterend", mount);
+    return;
+  }
+
+  if (choices && choices.isConnected) {
+    choices.insertAdjacentElement("beforebegin", mount);
+    return;
+  }
+
+  // Fallback
   const host =
     document.querySelector("#app") ||
     document.querySelector("main") ||
     document.body;
 
-  host.prepend(mount);
+  host.appendChild(mount);
 }
+
 
 function showHudImpulse(deltas) {
   if (!deltas) return;
