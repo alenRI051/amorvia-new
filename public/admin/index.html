@@ -517,5 +517,285 @@
 })();
 </script>
 
+ <script>
+(async function () {
+  // Drop-off view — no backend. Uses /api/list-logs + blob JSON.
+
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const $ = (sel, root=document) => root.querySelector(sel);
+
+  const el = (tag, attrs={}, children=[]) => {
+    const n = document.createElement(tag);
+    for (const [k,v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v;
+      else if (k === "html") n.innerHTML = v;
+      else n.setAttribute(k, v);
+    }
+    for (const c of children) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    return n;
+  };
+
+  const todayISO = () => new Date().toISOString().slice(0,10);
+
+  const norm = (t) => String(t || "").replace(/\s+/g," ").trim().slice(0,220);
+
+  async function fetchJSON(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return await r.json();
+  }
+
+  // Try to reuse existing controls if present (from Playtest Insights block)
+  function findSharedControls() {
+    const mount = $("#topChoicesMount");
+    if (!mount) return null;
+
+    // first <input type="date"> and first <input type="number"> in that mount
+    const dateInput = mount.querySelector('input[type="date"]');
+    const maxInput  = mount.querySelector('input[type="number"]');
+    const onlyHumans = mount.querySelector('input[type="checkbox"]'); // may exist
+    const scenarioSelect = mount.querySelector('select'); // may exist
+    return { mount, dateInput, maxInput, onlyHumans, scenarioSelect };
+  }
+
+  const shared = findSharedControls();
+
+  // Mount UI
+  const main = document.querySelector("main") || document.body;
+  const host = shared?.mount || main;
+
+  const wrap = el("section", {
+    id: "dropoffMount",
+    style: "margin:16px 0; padding:14px; border:1px solid #1e293b; border-radius:14px; background:rgba(2,6,23,.35);"
+  });
+
+  // Place it right under Playtest Insights if possible
+  if (shared?.mount && shared.mount.parentElement) {
+    shared.mount.parentElement.insertBefore(wrap, shared.mount.nextSibling);
+  } else {
+    main.appendChild(wrap);
+  }
+
+  wrap.appendChild(el("h3", { style:"margin:0 0 8px 0;" }, ["Drop-off (where people stop)"]));
+  wrap.appendChild(el("p", { style:"margin:0 0 12px 0; opacity:.75; font-size:13px;" }, [
+    "Aggregates last meaningful action per session (choice_click → scenario_loaded → last event)."
+  ]));
+
+  const controls = el("div", { style:"display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:10px;" });
+
+  const dateInput = shared?.dateInput || el("input", { type:"date", value: todayISO(), style:"padding:6px 8px;" });
+  const maxInput  = shared?.maxInput  || el("input", { type:"number", value:"200", min:"1", max:"2000", style:"width:110px; padding:6px 8px;" });
+
+  const humansOnly = el("input", { type:"checkbox" });
+  if (shared?.onlyHumans) humansOnly.checked = shared.onlyHumans.checked;
+
+  const runBtn = el("button", { type:"button", style:"padding:6px 10px; cursor:pointer;" }, ["Build drop-off"]);
+  const status = el("div", { style:"font-size:12px; opacity:.85;" }, [""]);
+
+  controls.appendChild(el("label", {}, ["Date: ", dateInput]));
+  controls.appendChild(el("label", {}, ["Max logs: ", maxInput]));
+  controls.appendChild(el("label", { style:"display:flex; gap:6px; align-items:center;" }, [humansOnly, "Only humans"]));
+  controls.appendChild(runBtn);
+  controls.appendChild(status);
+
+  wrap.appendChild(controls);
+
+  const tableWrap = el("div", { style:"border:1px solid #1e293b; border-radius:12px; overflow:auto; max-height:58vh;" });
+  wrap.appendChild(tableWrap);
+
+  // Minimal “human score” (same philosophy as before, but simplified)
+  function humanScoreFromSession(S) {
+    const types = new Set(S.events.map(e => e?.type).filter(Boolean));
+    const choiceClicks = S.events.filter(e => e?.type === "choice_click").length;
+
+    let score = 0;
+    if (choiceClicks >= 1) score += 6;
+    if (types.size >= 2) score += 2;
+    if (S.logs >= 2) score += 1;
+
+    const onlyLifecycle = (types.size === 1 && types.has("page_visibility"));
+    if (onlyLifecycle) score -= 4;
+
+    return score;
+  }
+
+  function getDominantScenarioId(S) {
+    const counts = new Map();
+    if (S.scenarioId) counts.set(S.scenarioId, (counts.get(S.scenarioId)||0)+1);
+
+    for (const ev of S.events) {
+      if (ev?.type === "scenario_loaded") {
+        const sid = ev.payload?.value || ev.payload?.scenarioId || ev.value || null;
+        if (sid) counts.set(sid, (counts.get(sid)||0)+1);
+      }
+      if (ev?.scenarioId) counts.set(ev.scenarioId, (counts.get(ev.scenarioId)||0)+1);
+    }
+
+    let best = null, bestN = 0;
+    for (const [k,n] of counts.entries()) {
+      if (n > bestN) { bestN = n; best = k; }
+    }
+    return best;
+  }
+
+  function lastMeaningful(S) {
+    const evs = [...S.events].filter(Boolean).sort((a,b)=> (a.ts||0)-(b.ts||0));
+    const lastChoice = [...evs].reverse().find(e => e.type === "choice_click");
+    if (lastChoice) {
+      const text = norm(lastChoice.text) || norm(lastChoice.payload?.text) || norm(lastChoice.payload?.label);
+      return { kind:"choice_click", text: text || "(choice_click)", ts:lastChoice.ts||0 };
+    }
+
+    const lastLoaded = [...evs].reverse().find(e => e.type === "scenario_loaded");
+    if (lastLoaded) {
+      const sid = lastLoaded.payload?.value || lastLoaded.payload?.scenarioId || lastLoaded.value || "";
+      return { kind:"scenario_loaded", text: sid ? `scenario_loaded → ${sid}` : "scenario_loaded", ts:lastLoaded.ts||0 };
+    }
+
+    const lastAny = evs[evs.length-1];
+    if (lastAny) return { kind:lastAny.type || "unknown", text:lastAny.type || "unknown", ts:lastAny.ts||0 };
+
+    return { kind:"none", text:"(no events)", ts:0 };
+  }
+
+  function render(rows) {
+    tableWrap.innerHTML = "";
+
+    const table = el("table", { style:"width:100%; border-collapse:collapse; font-size:13px;" });
+    table.appendChild(el("thead", {}, [el("tr", {}, [
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px; width:44px;" }, ["#"]),
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px; width:220px;" }, ["Scenario"]),
+      el("th", { style:"text-align:left; border-bottom:1px solid #1e293b; padding:8px;" }, ["Drop-off at"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:90px;" }, ["Sessions"]),
+      el("th", { style:"text-align:right; border-bottom:1px solid #1e293b; padding:8px; width:110px;" }, ["Avg dur."])
+    ])]));
+
+    const tbody = el("tbody");
+    rows.forEach((r, idx) => {
+      tbody.appendChild(el("tr", {}, [
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; opacity:.9;" }, [String(idx+1)]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; opacity:.95;" }, [r.scenario || "(unknown)"]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px;" }, [r.dropText]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [String(r.count)]),
+        el("td", { style:"border-bottom:1px solid rgba(30,41,59,.5); padding:8px; text-align:right; font-variant-numeric:tabular-nums;" }, [r.avgDur])
+      ]));
+    });
+
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+  }
+
+  function fmtDur(ms) {
+    const s = Math.max(0, Math.round(ms/1000));
+    const m = Math.floor(s/60);
+    const r = s % 60;
+    return m ? `${m}m ${r}s` : `${r}s`;
+  }
+
+  async function build() {
+    status.textContent = "Loading…";
+    tableWrap.innerHTML = "";
+
+    const date = (dateInput.value || todayISO());
+    const maxLogs = Math.max(1, Math.min(2000, Number(maxInput.value || 200)));
+
+    const list = await fetchJSON(`/api/list-logs?date=${encodeURIComponent(date)}`);
+    const items = (Array.isArray(list.items) ? list.items : []).slice(0, maxLogs);
+
+    if (!items.length) {
+      status.textContent = `No logs for ${date}.`;
+      render([]);
+      return;
+    }
+
+    status.textContent = `Fetching ${items.length} logs…`;
+
+    // Aggregate per sessionId
+    const sessions = new Map(); // sid -> {sid, logs, events[], firstTs, lastTs, scenarioId}
+    let ok=0, failed=0;
+
+    for (let i=0; i<items.length; i++) {
+      const it = items[i];
+      try {
+        const j = await fetchJSON(it.url);
+        const sid = j.sessionId || "unknown";
+        if (!sessions.has(sid)) {
+          sessions.set(sid, { sid, logs:0, events:[], firstTs:Infinity, lastTs:0, scenarioId:j.scenarioId||null });
+        }
+        const S = sessions.get(sid);
+        S.logs++;
+        if (!S.scenarioId && j.scenarioId) S.scenarioId = j.scenarioId;
+
+        const evs = Array.isArray(j.events) ? j.events : [];
+        for (const ev of evs) {
+          if (!ev) continue;
+          const ts = typeof ev.ts === "number" ? ev.ts : Date.now();
+          S.firstTs = Math.min(S.firstTs, ts);
+          S.lastTs = Math.max(S.lastTs, ts);
+          S.events.push(ev);
+        }
+
+        ok++;
+      } catch (e) {
+        failed++;
+      }
+
+      if ((i+1) % 10 === 0 || i === items.length-1) {
+        status.textContent = `Processed ${i+1}/${items.length} (ok ${ok}, failed ${failed})…`;
+      }
+    }
+
+    // Build drop-off buckets
+    const buckets = new Map(); // key -> {scenario, dropText, count, durSum}
+    let sessionCount = 0;
+
+    // optional scenario filter: reuse existing scenario dropdown from Playtest Insights if present
+    const scenFilter = shared?.scenarioSelect?.value || "";
+
+    for (const S of sessions.values()) {
+      const score = humanScoreFromSession(S);
+      if (humansOnly.checked && score < 5) continue;
+
+      const scenario = getDominantScenarioId(S) || S.scenarioId || "(unknown)";
+      if (scenFilter && scenario !== scenFilter) continue;
+
+      const dur = (Number.isFinite(S.firstTs) ? (S.lastTs - S.firstTs) : 0);
+      const last = lastMeaningful(S);
+
+      const dropText = last.text || "(unknown)";
+      const key = `${scenario}||${dropText}`;
+
+      if (!buckets.has(key)) buckets.set(key, { scenario, dropText, count:0, durSum:0 });
+      const B = buckets.get(key);
+      B.count++;
+      B.durSum += Math.max(0, dur);
+      sessionCount++;
+    }
+
+    const rows = [...buckets.values()]
+      .map(b => ({
+        scenario: b.scenario,
+        dropText: b.dropText,
+        count: b.count,
+        avgDur: fmtDur(b.durSum / Math.max(1, b.count))
+      }))
+      .sort((a,b) => b.count - a.count)
+      .slice(0, 80);
+
+    status.textContent = `Done. Sessions=${sessionCount}, unique drop-off points=${rows.length}.`;
+    render(rows);
+  }
+
+  runBtn.addEventListener("click", () => build().catch(err => {
+    status.textContent = `Error: ${err.message || err}`;
+  }));
+
+  // Auto-run once
+  build().catch(err => {
+    status.textContent = `Error: ${err.message || err}`;
+  });
+})();
+</script>
+ 
 </body>
 </html>
