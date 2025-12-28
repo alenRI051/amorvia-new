@@ -164,3 +164,48 @@
   margin-left: auto;
   margin-right: auto;
 }
+/* ===============================
+   Playtest: widen dialog + 2-line choices (no tooltips)
+   =============================== */
+
+/* 1) Widen dialog panel/container */
+.stage .panel.dialog{
+  width: min(1480px, calc(100% - 16px)); /* bilo 1240px / 24px */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Choices: keep in one row, but show more text (2 lines) */
+#choices{
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: .5rem;
+  width: 100%;
+  overflow: hidden !important; /* bez horizontal scrolla */
+}
+
+/* svaki pill dobije “svoj” prostor */
+#choices > *{
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+}
+
+/* 2-line clamp umjesto ellipsis u jednom redu */
+#choices button.choice{
+  width: 100%;
+  white-space: normal !important;      /* dopusti prelamanje */
+  overflow: hidden !important;
+  text-overflow: clip !important;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;               /* pokaži 2 linije */
+  line-clamp: 2;
+
+  line-height: 1.2;
+  padding: .45rem .6rem;
+  font-size: .92rem;
+
+  /* da pills ne postanu predebeli, ali stanu 2 reda */
+  min-height: calc(1.2em * 2 + .9rem); /* 2 linije + padding */
+}
