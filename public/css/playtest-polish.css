@@ -1,6 +1,14 @@
 /* ===============================
-   Playtest FINAL: layout + choices + HUD (consolidated)
+   Playtest FINAL (v2): layout + choices + HUD
+   - Conflict-free consolidated rules
+   - Viewport tuning (vh by height breakpoints)
+   - HUD spacing via CSS variable --hud-gap (can be adjusted by JS)
    =============================== */
+
+:root{
+  --canvas-vh: 46vh;
+  --hud-gap: 6px;
+}
 
 /* --- HUD: centered meter group --- */
 #hud{
@@ -21,8 +29,8 @@
 /* Canvas wrapper (desktop) */
 .stage .canvas{
   flex: 0 0 auto;
-  height: 46vh;
-  max-height: 46vh;
+  height: var(--canvas-vh);
+  max-height: var(--canvas-vh);
   overflow: hidden;
 }
 
@@ -95,12 +103,31 @@
   outline-offset: 2px;
 }
 
+/* --- HUD impulse spacing (below choices) --- */
+.hud-impulse{
+  margin-top: var(--hud-gap);
+  margin-bottom: 0;
+}
+
+/* --- Viewport tuning: reduce canvas a bit on shorter screens --- */
+@media (max-height: 860px){
+  :root{ --canvas-vh: 42vh; }
+}
+@media (max-height: 780px){
+  :root{ --canvas-vh: 38vh; --hud-gap: 4px; }
+  #choices button.choice,
+  #choices .choice{
+    font-size: 0.92rem;
+    padding: .44rem .6rem;
+  }
+}
+@media (max-height: 720px){
+  :root{ --canvas-vh: 34vh; --hud-gap: 2px; }
+}
+
 /* --- Mobile: stacked, full text --- */
 @media (max-width: 640px){
-  .stage .canvas{
-    height: 38vh;
-    max-height: 38vh;
-  }
+  :root{ --canvas-vh: 38vh; --hud-gap: 6px; }
 
   #choices{
     flex-wrap: wrap !important;
