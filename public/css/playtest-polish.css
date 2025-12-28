@@ -141,3 +141,20 @@
   max-height: none;    /* ako je negdje limitirano */
   min-height: 180px;   /* probaj 160–260px */
 }
+/* ===============================
+   HUD vertical compacting (avoid scroll)
+   =============================== */
+
+/* Pull HUD slightly closer to choices */
+.hud-impulse{
+  margin-top: 4px;      /* bilo je veće ili default */
+  margin-bottom: 0;
+  min-height: 32px;     /* manja rezervirana visina */
+}
+
+/* Make sure HUD itself doesn’t add extra spacing */
+#hud{
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
