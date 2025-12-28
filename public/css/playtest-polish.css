@@ -209,3 +209,49 @@
   /* da pills ne postanu predebeli, ali stanu 2 reda */
   min-height: calc(1.2em * 2 + .9rem); /* 2 linije + padding */
 }
+/* ===============================
+   1920x1080 tuning: wider dialog + readable 2-line choices
+   =============================== */
+
+@media (min-width: 1600px) {
+
+  /* Proširi kontejner dijaloga/choices */
+  .stage .panel.dialog{
+    width: min(1560px, calc(100% - 24px));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Choices ostaju u jednom redu */
+  #choices{
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: .55rem;
+    width: 100%;
+    overflow: hidden !important;
+  }
+
+  /* Svaki pill ravnomjerno dijeli prostor */
+  #choices > *{
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+  }
+
+  /* Pokaži do 2 linije teksta bez tooltipa */
+  #choices button.choice{
+    width: 100%;
+    white-space: normal !important;
+    overflow: hidden !important;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+
+    line-height: 1.22;
+    font-size: 0.96rem;
+    padding: .48rem .64rem;
+
+    min-height: calc(1.22em * 2 + .96rem); /* taman za 2 reda */
+  }
+}
