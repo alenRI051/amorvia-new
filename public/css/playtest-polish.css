@@ -190,3 +190,23 @@ body[data-playtest="1"] #hud {
   visibility: visible !important;
   opacity: 1 !important;
 }
+/* ===============================
+   PLAYTEST HUD OVERRIDES
+   =============================== */
+
+/* 1) Uvijek pokaži V2 HUD (novi) */
+body[data-playtest="1"] #hud.v2-only {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* 2) Ako postoji bilo kakav stari HUD – ugasi ga */
+body[data-playtest="1"] .hud:not(.v2-only) {
+  display: none !important;
+}
+
+/* 3) Sigurnosna mreža: ako netko gasi #hud generički */
+body[data-playtest="1"] #hud {
+  display: flex !important;
+}
