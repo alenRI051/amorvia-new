@@ -255,3 +255,24 @@
     min-height: calc(1.22em * 2 + .96rem); /* taman za 2 reda */
   }
 }
+/* ===============================
+   Slightly smaller background canvas (1920x1080)
+   =============================== */
+
+@media (min-width: 1600px) {
+
+  /* Glavni scene/canvas wrapper */
+  .stage .scene,
+  .stage .canvas,
+  .stage .scene-wrap {
+    max-height: 52vh;     /* prije je bilo ~56–58vh */
+    height: 52vh;
+  }
+
+  /* Ako postoji unutarnji <canvas> ili <img> */
+  .stage canvas,
+  .stage .scene img {
+    height: 100%;
+    object-fit: cover;
+  }
+}
