@@ -133,7 +133,7 @@
 /* Dialog panel: let it grow */
 .stage .panel.dialog{
   flex: 1 1 auto;
-  min-height: 280px;  /* probaj 260–360px */
+  min-height: 0px;  /* probaj 260–360px */
 }
 
 /* Dialogue text area: make it taller before it scrolls */
