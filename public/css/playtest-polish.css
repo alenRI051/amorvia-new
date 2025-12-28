@@ -184,3 +184,9 @@ body[data-playtest="1"] .hud-pills {
 body[data-playtest="1"] .hud-pill {
   transform-origin: center;
 }
+/* Playtest: ensure HUD container is not hidden */
+body[data-playtest="1"] #hud {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
