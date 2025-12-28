@@ -220,7 +220,7 @@ html[data-hudmode="feedback"] .amor-hud-chip{
   box-shadow: 0 10px 30px rgba(0,0,0,.22);
   display: none;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
 }
 .hud-impulse.is-on{ display:flex; animation: hudPop .14s ease-out; }
@@ -233,12 +233,17 @@ html[data-hudmode="feedback"] .amor-hud-chip{
   opacity: .78;
   white-space: nowrap;
 }
+
+/* Centered pills mode: hide the left label so pills sit perfectly centered */
+.hud-impulse__left{ display:none; }
+
 .hud-impulse__chips{
-  display:flex;
+    width: 100%;
+display:flex;
   gap:8px;
   flex-wrap:wrap;
-  justify-content:flex-end;
-}
+  justify-content: center;
+  }
 .hud-chip{
   display:inline-flex;
   align-items:center;
