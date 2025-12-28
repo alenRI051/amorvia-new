@@ -153,3 +153,19 @@
     min-height: 0;
   }
 }
+/* === Playtest HUD override (final lock) === */
+body[data-playtest="1"] .hud {
+  position: static !important;
+  margin-top: 12px !important;
+  margin-bottom: 0 !important;
+}
+
+body[data-playtest="1"] .hud-pills {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+
+body[data-playtest="1"] .hud-pill {
+  transform-origin: center;
+}
