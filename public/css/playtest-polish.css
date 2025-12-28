@@ -4,6 +4,21 @@
    - Viewport tuning (vh by height breakpoints)
    - HUD spacing via CSS variable --hud-gap (can be adjusted by JS)
    =============================== */
+/* === PLAYTEST MODE: disable legacy HUD === */
+body[data-playtest="1"] .hud,
+body[data-playtest="1"] .hud-wrap,
+body[data-playtest="1"] .hud-container,
+body[data-playtest="1"] .meters,
+body[data-playtest="1"] .meter-bar {
+  display: none !important;
+}
+/* === PLAYTEST MODE: feedback HUD === */
+body[data-playtest="1"] .hud-feedback {
+  display: flex !important;
+  position: relative;
+  margin-top: 12px;
+  opacity: 1;
+}
 
 :root{
   --canvas-vh: 46vh;
