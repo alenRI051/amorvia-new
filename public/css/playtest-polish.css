@@ -147,7 +147,7 @@
 
 /* Pull HUD slightly closer to choices */
 .hud-impulse{
-  margin-top: 4px;      /* bilo je veće ili default */
+  margin-top: -2px;      /* bilo je veće ili default */
   margin-bottom: 0;
   min-height: 32px;     /* manja rezervirana visina */
 }
