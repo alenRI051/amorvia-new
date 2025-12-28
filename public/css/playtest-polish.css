@@ -139,7 +139,7 @@
 /* Dialogue text area: make it taller before it scrolls */
 #dialog{
   max-height: none;    /* ako je negdje limitirano */
-  min-height: 180px;   /* probaj 160–260px */
+  min-height: 0px;   /* probaj 160–260px */
 }
 /* ===============================
    HUD vertical compacting (avoid scroll)
