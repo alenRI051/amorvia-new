@@ -1,278 +1,128 @@
 /* ===============================
-   Playtest polish: Choices + HUD
+   Playtest FINAL: layout + choices + HUD (consolidated)
    =============================== */
 
-/* --- Choices: keep text readable on hover --- */
-#choices button,
-#choices .button,
-#choices [role="button"] {
-  /* keep pills readable */
-  color: #0f172a;
-  background: #ffffff;
-}
-
-#choices button:hover,
-#choices .button:hover,
-#choices [role="button"]:hover {
-  /* slightly darker but not “blackout” */
-  background: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-}
-
-#choices button:active,
-#choices .button:active,
-#choices [role="button"]:active {
-  background: rgba(15, 23, 42, 0.14);
-  color: #0f172a;
-}
-
-/* Accessible focus (keeps text visible too) */
-#choices button:focus-visible,
-#choices .button:focus-visible,
-#choices [role="button"]:focus-visible {
-  outline: 2px solid rgba(15, 23, 42, 0.35);
-  outline-offset: 2px;
-}
-
-/* --- HUD: center the meter group --- */
-#hud {
+/* --- HUD: centered meter group --- */
+#hud{
   width: 100%;
   display: flex;
   justify-content: center !important;
   align-items: center;
   gap: .75rem;
 }
+#hud > *{ margin-left: 0 !important; }
 
-/* If any child is pushing to the right (common culprit) */
-#hud > * {
-  margin-left: 0 !important;
-}
-/* --- Keep choices on one line --- */
-#choices {
-  display: flex;
-  flex-wrap: nowrap !important;
-  gap: .5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: .25rem; /* malo mjesta za scrollbar ako se pojavi */
-}
-
-#choices > * {
-  flex: 0 0 auto;        /* ne dozvoli da se "stisnu" u novu liniju */
-  white-space: nowrap;   /* tekst u pillu ostaje u jednoj liniji */
-}
-
-/* Ako su choices baš <button> elementi */
-#choices button {
-  white-space: nowrap;
-}
-/* ===============================
-   Choices layout (desktop + mobile)
-   =============================== */
-
-/* Desktop: one line, no horizontal scroll, truncate with ellipsis */
-#choices {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  gap: .5rem;
-  overflow: hidden !important;
-  width: 100%;
-}
-
-#choices > * {
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-}
-
-#choices button.choice {
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  /* compact */
-  padding: .35rem .55rem;
-  font-size: .9rem;
-}
-
-/* Mobile: readable, stacked choices (no hover needed) */
-@media (max-width: 640px) {
-  #choices {
-    flex-wrap: wrap !important;
-  }
-
-  #choices > * {
-    flex: 1 1 100% !important;
-    min-width: 0 !important;
-  }
-
-  #choices button.choice {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-
-    padding: .6rem .75rem;
-    font-size: .95rem;
-    line-height: 1.3;
-  }
-}
-/* Stage layout: give more space to dialog area */
+/* --- Stage layout: give dialog space, keep canvas smaller --- */
 .stage{
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Canvas: cap height so it doesn't steal vertical space */
+/* Canvas wrapper (desktop) */
 .stage .canvas{
   flex: 0 0 auto;
-  max-height: 38vh;   /* probaj 34–42vh po ukusu */
+  height: 46vh;
+  max-height: 46vh;
   overflow: hidden;
 }
 
-/* Dialog panel: let it grow */
+/* Dialog panel: wide */
 .stage .panel.dialog{
   flex: 1 1 auto;
-  min-height: 0px;  /* probaj 260–360px */
+  width: min(1560px, calc(100% - 24px));
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 0;
 }
 
-/* Dialogue text area: make it taller before it scrolls */
+/* Dialogue container should not be artificially capped */
 #dialog{
-  max-height: none;    /* ako je negdje limitirano */
-  min-height: 0px;   /* probaj 160–260px */
-}
-/* ===============================
-   HUD vertical compacting (avoid scroll)
-   =============================== */
-
-/* Pull HUD slightly closer to choices */
-.hud-impulse{
-  margin-top: -2px;      /* bilo je veće ili default */
-  margin-bottom: 0;
-  min-height: 32px;     /* manja rezervirana visina */
+  max-height: none;
+  min-height: 0;
 }
 
-/* Make sure HUD itself doesn’t add extra spacing */
-#hud{
-  margin-top: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-/* Widen the dialog area so text wraps less (fewer lines) */
-.stage .panel.dialog{
-  width: min(1240px, calc(100% - 24px));
-  margin-left: auto;
-  margin-right: auto;
-}
-/* ===============================
-   Playtest: widen dialog + 2-line choices (no tooltips)
-   =============================== */
-
-/* 1) Widen dialog panel/container */
-.stage .panel.dialog{
-  width: min(1480px, calc(100% - 16px)); /* bilo 1240px / 24px */
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* 2) Choices: keep in one row, but show more text (2 lines) */
+/* --- Choices (desktop): single row + 2-line clamp, no scroll --- */
 #choices{
   display: flex !important;
   flex-wrap: nowrap !important;
-  gap: .5rem;
+  gap: .55rem;
   width: 100%;
-  overflow: hidden !important; /* bez horizontal scrolla */
+  overflow: hidden !important;
 }
 
-/* svaki pill dobije “svoj” prostor */
+/* distribute evenly */
 #choices > *{
   flex: 1 1 0 !important;
   min-width: 0 !important;
 }
 
-/* 2-line clamp umjesto ellipsis u jednom redu */
-#choices button.choice{
+/* readable pill style + 2 lines */
+#choices button.choice,
+#choices .choice{
   width: 100%;
-  white-space: normal !important;      /* dopusti prelamanje */
+  color: #0f172a;
+  background: #ffffff;
+
+  white-space: normal !important;
   overflow: hidden !important;
   text-overflow: clip !important;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;               /* pokaži 2 linije */
+  -webkit-line-clamp: 2;
   line-clamp: 2;
 
-  line-height: 1.2;
-  padding: .45rem .6rem;
-  font-size: .92rem;
-
-  /* da pills ne postanu predebeli, ali stanu 2 reda */
-  min-height: calc(1.2em * 2 + .9rem); /* 2 linije + padding */
+  line-height: 1.22;
+  font-size: 0.96rem;
+  padding: .48rem .64rem;
+  min-height: calc(1.22em * 2 + .96rem);
 }
-/* ===============================
-   1920x1080 tuning: wider dialog + readable 2-line choices
-   =============================== */
 
-@media (min-width: 1600px) {
+/* hover/active should not blackout text */
+#choices button.choice:hover,
+#choices .choice:hover{
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+#choices button.choice:active,
+#choices .choice:active{
+  background: rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+#choices button.choice:focus-visible,
+#choices .choice:focus-visible{
+  outline: 2px solid rgba(15, 23, 42, 0.35);
+  outline-offset: 2px;
+}
 
-  /* Proširi kontejner dijaloga/choices */
-  .stage .panel.dialog{
-    width: min(1560px, calc(100% - 24px));
-    margin-left: auto;
-    margin-right: auto;
+/* --- Mobile: stacked, full text --- */
+@media (max-width: 640px){
+  .stage .canvas{
+    height: 38vh;
+    max-height: 38vh;
   }
 
-  /* Choices ostaju u jednom redu */
   #choices{
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: .55rem;
-    width: 100%;
-    overflow: hidden !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
   }
 
-  /* Svaki pill ravnomjerno dijeli prostor */
   #choices > *{
-    flex: 1 1 0 !important;
-    min-width: 0 !important;
+    flex: 1 1 100% !important;
   }
 
-  /* Pokaži do 2 linije teksta bez tooltipa */
-  #choices button.choice{
-    width: 100%;
+  #choices button.choice,
+  #choices .choice{
+    -webkit-line-clamp: initial;
+    line-clamp: initial;
+    display: block;
+
     white-space: normal !important;
-    overflow: hidden !important;
+    overflow: visible !important;
 
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-
-    line-height: 1.22;
-    font-size: 0.96rem;
-    padding: .48rem .64rem;
-
-    min-height: calc(1.22em * 2 + .96rem); /* taman za 2 reda */
-  }
-}
-/* ===============================
-   Slightly smaller background canvas (1920x1080)
-   =============================== */
-
-@media (min-width: 1600px) {
-
-  /* Glavni scene/canvas wrapper */
-  .stage .scene,
-  .stage .canvas,
-  .stage .scene-wrap {
-    max-height: 51vh;     /* prije je bilo ~56–58vh */
-    height: 51vh;
-  }
-
-  /* Ako postoji unutarnji <canvas> ili <img> */
-  .stage canvas,
-  .stage .scene img {
-    height: 100%;
-    object-fit: cover;
+    padding: .65rem .8rem;
+    font-size: .98rem;
+    line-height: 1.32;
+    min-height: 0;
   }
 }
