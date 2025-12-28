@@ -265,8 +265,8 @@
   .stage .scene,
   .stage .canvas,
   .stage .scene-wrap {
-    max-height: 52vh;     /* prije je bilo ~56–58vh */
-    height: 52vh;
+    max-height: 51vh;     /* prije je bilo ~56–58vh */
+    height: 51vh;
   }
 
   /* Ako postoji unutarnji <canvas> ili <img> */
