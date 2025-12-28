@@ -339,7 +339,7 @@ function showHudImpulse(deltas) {
   if (hudImpulseTimer) clearTimeout(hudImpulseTimer);
   hudImpulseTimer = setTimeout(() => {
     box.classList.add("is-off");
-    setTimeout(() => box.classList.remove("is-on", "is-off"), 220);
+    setTimeout(() => box.classList.remove("is-on", "is-off"), 400);
   }, 2500);
 }
 
