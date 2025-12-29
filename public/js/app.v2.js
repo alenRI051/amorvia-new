@@ -226,7 +226,15 @@
 
   // ------------ HUD ------------
 
-  function syncHUD() {
+  function forcePlaytestHudVisible() {
+  try {
+    if (!(document && document.body && document.body.getAttribute("data-playtest") === "1")) return;
+    const hud = document.querySelector("#hud.hud.row.v2-only");
+    if (hud) hud.style.display = "flex";
+  } catch (_) {}
+}
+
+function syncHUD() {
     try {
       if (typeof AmorviaHUD === "undefined") return;
       AmorviaHUD.update({
@@ -237,7 +245,9 @@
     } catch (e) {
       console.warn("[AmorviaMini] HUD sync failed:", e);
     }
-  }
+  
+  forcePlaytestHudVisible();
+}
 
   function applyEffects(effects) {
     if (!effects) return;
