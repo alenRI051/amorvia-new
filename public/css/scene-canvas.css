@@ -1,9 +1,12 @@
-/* scene-canvas.css — Canvas background layer for Amorvia (v1)
+/* scene-canvas.css — Canvas background layer for Amorvia (FINAL)
    Enabled when <body data-scene-canvas="on"> is present.
 */
 
 html, body { height: 100%; }
 
+/* =========================
+   Canvas layer (background)
+   ========================= */
 #sceneCanvas{
   position: fixed;
   inset: 0;
@@ -13,30 +16,19 @@ html, body { height: 100%; }
   pointer-events: none;
 }
 
-/* Ensure UI layers render above the canvas */
-#app, .hud, .modal, .toast, .dialog, #topBar, #titleAndList, main {
-  position: relative;
-  z-index: 2;
-}
-
-/* Hide legacy IMG stage only when scene canvas is enabled */
+/* =========================
+   Hide legacy IMG background
+   ========================= */
 body[data-scene-canvas="on"] .stage .canvas,
 body[data-scene-canvas="on"] #bgImg,
 body[data-scene-canvas="on"] #leftImg,
 body[data-scene-canvas="on"] #rightImg {
   display: none !important;
 }
-/* --- Scene Canvas: always behind UI --- */
-#sceneCanvas{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0 !important;
-  pointer-events: none;
-}
 
-/* Ensure everything interactive is above */
+/* =========================
+   UI layers above canvas
+   ========================= */
 #topBar,
 #titleAndList,
 main,
@@ -51,109 +43,36 @@ main,
   z-index: 10;
 }
 
-/* Make stage/dialog panels transparent so background shows */
-.stage,
-.stage .panel,
-.stage .dialog,
-.stage .toolbar {
-  background: transparent !important;
-}
-
-/* Optional: keep text readable with a soft glass panel */
-.stage .dialog {
-  background: rgba(10, 12, 16, 0.55) !important;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-/* panel dialog držimo pri dnu stage-a */
-.stage .dialog {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 18px;          /* fino podešavanje */
-  width: min(980px, calc(100% - 32px));
-  margin: 0 !important;
-}
-
-/* ostavi malo prostora da ne “udari” u rub na manjim ekranima */
-@media (max-width: 768px) {
-  .stage .dialog {
-    bottom: 12px;
-    width: calc(100% - 20px);
-  }
-}
-/* --- Readability: white text + better contrast --- */
-.stage .dialog,
-.stage .dialog * {
-  color: rgba(255,255,255,0.92) !important;
-}
-
-/* naslov može biti pun bijeli */
-.stage .dialog h2,
-.stage .dialog #sceneTitle {
-  color: #fff !important;
-}
-
-/* jači “glass” panel (povećaj opacity) */
-.stage .dialog {
-  background: rgba(8, 10, 14, 0.72) !important;  /* bilo 0.55 */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
-}
-
-/* čitljivost teksta na jakim pozadinama */
-#dialog {
-  text-shadow: 0 2px 10px rgba(0,0,0,0.65);
-}
-/* ensure stage doesn't add extra haze */
-.stage { background: transparent !important; }
 /* =========================
-   Bottom Dock (robust)
+   Bottom-centered dialog dock
    ========================= */
-
-/* Stage mora pokriti viewport ispod top bara */
 body[data-scene-canvas="on"] .stage{
   position: relative;
-  min-height: calc(100vh - 64px); /* 64px = visina topBar; ako ti je drugačije, promijeni */
+  min-height: calc(100vh - 64px); /* adjust if top bar height differs */
   display: grid;
-  grid-template-rows: 1fr auto;  /* gore: prostor, dolje: dialog */
+  grid-template-rows: 1fr auto;
   align-items: end;
-  padding: 0 0 18px 0;
+  padding-bottom: 18px;
 }
 
-/* Dialog ide u donji red */
 body[data-scene-canvas="on"] .stage .dialog{
   grid-row: 2;
-  align-self: end;
   justify-self: center;
+  align-self: end;
 
   width: min(980px, calc(100% - 32px));
   margin: 0 !important;
 
-  /* Glass + readability (default) */
-  background: rgba(8, 10, 14, 0.72) !important;
+  background: rgba(8, 10, 14, 0.72);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.10);
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
 }
 
-/* Mobile */
-@media (max-width: 768px){
-  body[data-scene-canvas="on"] .stage{
-    min-height: calc(100vh - 56px);
-    padding-bottom: 12px;
-  }
-  body[data-scene-canvas="on"] .stage .dialog{
-    width: calc(100% - 20px);
-  }
-}
-
-/* White text in dialog */
+/* =========================
+   Readability (dialog text)
+   ========================= */
 body[data-scene-canvas="on"] .stage .dialog,
 body[data-scene-canvas="on"] .stage .dialog *{
   color: rgba(255,255,255,0.92) !important;
@@ -162,15 +81,36 @@ body[data-scene-canvas="on"] .stage .dialog *{
 body[data-scene-canvas="on"] #dialog{
   text-shadow: 0 2px 10px rgba(0,0,0,0.65);
 }
+
+/* =========================
+   Choice buttons text fix
+   ========================= */
+body[data-scene-canvas="on"] #choices button,
+body[data-scene-canvas="on"] #choices .choice,
+body[data-scene-canvas="on"] .stage .dialog button{
+  color: rgba(12, 14, 18, 0.95) !important;
+}
+
 /* =========================
    Auto-contrast modes
-   body.bg-bright / body.bg-dark set by JS
    ========================= */
-
 body.bg-bright[data-scene-canvas="on"] .stage .dialog{
-  background: rgba(8, 10, 14, 0.82) !important;   /* jače zatamnjenje na svijetloj pozadini */
+  background: rgba(8, 10, 14, 0.82) !important;
 }
 
 body.bg-dark[data-scene-canvas="on"] .stage .dialog{
-  background: rgba(10, 12, 16, 0.62) !important;  /* malo prozirnije na tamnoj pozadini */
+  background: rgba(10, 12, 16, 0.62) !important;
+}
+
+/* =========================
+   Mobile tweaks
+   ========================= */
+@media (max-width: 768px){
+  body[data-scene-canvas="on"] .stage{
+    min-height: calc(100vh - 56px);
+    padding-bottom: 12px;
+  }
+  body[data-scene-canvas="on"] .stage .dialog{
+    width: calc(100% - 20px);
+  }
 }
