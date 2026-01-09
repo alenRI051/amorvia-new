@@ -225,15 +225,22 @@
     }
 
     drawBlend(t) {
-      this.clear();
-      if (this.fromScene) this.drawScene(this.fromScene, 1 - t);
-      if (this.toScene) this.drawScene(this.toScene, t);
-    }
-// 👉 AUTO-CONTRAST tek kad je fade završen
+  this.clear();
+
+  if (this.fromScene) {
+    this.drawScene(this.fromScene, 1 - t);
+  }
+
+  if (this.toScene) {
+    this.drawScene(this.toScene, t);
+  }
+
+  // ✅ AUTO-CONTRAST TEK KAD JE FADE GOTOV
   if (t >= 1) {
     this.updateAutoContrastClass();
   }
 }
+
     drawScene(scene, alpha) {
       if (!scene) return;
       const ctx = this.ctx;
