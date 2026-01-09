@@ -115,17 +115,30 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
   }
 }
 
-/* Prevent scroll without breaking top bar dropdowns */
+/* =========================
+   Canvas mode: show background + prevent page scroll
+   ========================= */
 body[data-scene-canvas="on"]{
-  overflow-x: hidden;
-  overflow-y: auto;
+  background: transparent !important;
+  overflow: hidden;
+}
+
+body[data-scene-canvas="on"] main{
+  background: transparent !important;
+  overflow: hidden;
 }
 
 body[data-scene-canvas="on"] .stage{
+  background: transparent !important;
   overflow: hidden;
 }
 
 #topBar{
   position: relative;
   z-index: 50;
+}
+
+/* Ensure canvas is never hidden */
+#sceneCanvas{
+  display: block !important;
 }
