@@ -66,3 +66,25 @@ main,
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.08);
 }
+/* --- Bottom Dock for dialog + choices + HUD --- */
+.stage {
+  position: relative;
+}
+
+/* panel dialog držimo pri dnu stage-a */
+.stage .dialog {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;          /* fino podešavanje */
+  width: min(980px, calc(100% - 32px));
+  margin: 0 !important;
+}
+
+/* ostavi malo prostora da ne “udari” u rub na manjim ekranima */
+@media (max-width: 768px) {
+  .stage .dialog {
+    bottom: 12px;
+    width: calc(100% - 20px);
+  }
+}
