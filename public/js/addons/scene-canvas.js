@@ -30,7 +30,10 @@
       this.canvas = document.getElementById(CANVAS_ID);
       if (!this.canvas) return;
 
-      this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true });
+      this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true,
+  willReadFrequently: true
+
+});
       this.dpr = Math.max(1, window.devicePixelRatio || 1);
       this.w = 0;
       this.h = 0;
