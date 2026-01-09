@@ -88,3 +88,28 @@ main,
     width: calc(100% - 20px);
   }
 }
+/* --- Readability: white text + better contrast --- */
+.stage .dialog,
+.stage .dialog * {
+  color: rgba(255,255,255,0.92) !important;
+}
+
+/* naslov može biti pun bijeli */
+.stage .dialog h2,
+.stage .dialog #sceneTitle {
+  color: #fff !important;
+}
+
+/* jači “glass” panel (povećaj opacity) */
+.stage .dialog {
+  background: rgba(8, 10, 14, 0.72) !important;  /* bilo 0.55 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+}
+
+/* čitljivost teksta na jakim pozadinama */
+#dialog {
+  text-shadow: 0 2px 10px rgba(0,0,0,0.65);
+}
