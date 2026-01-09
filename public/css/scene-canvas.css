@@ -20,7 +20,6 @@ html, body { height: 100%; }
 }
 
 /* Hide legacy IMG stage only when scene canvas is enabled */
-body[data-scene-canvas="on"] .stage,
 body[data-scene-canvas="on"] .stage .canvas,
 body[data-scene-canvas="on"] #bgImg,
 body[data-scene-canvas="on"] #leftImg,
