@@ -212,17 +212,19 @@
     }
 
     drawImmediate() {
-      this.clear();
-      if (this.toScene) this.drawScene(this.toScene, 1);
-      else {
-        // subtle fallback
-        this.ctx.fillStyle = "rgba(10,12,16,1)";
-        this.ctx.fillRect(0,0,this.w,this.h);
-      }
-   // 👉 AUTO-CONTRAST (nakon što je scena nacrtana)
+  this.clear();
+
+  if (this.toScene) {
+    this.drawScene(this.toScene, 1);
+  } else {
+    // fallback
+    this.ctx.fillStyle = "rgba(10,12,16,1)";
+    this.ctx.fillRect(0, 0, this.w, this.h);
+  }
+
+  // ✅ AUTO-CONTRAST (nakon punog rendera)
   this.updateAutoContrastClass();
 }
-    }
 
     drawBlend(t) {
   this.clear();
