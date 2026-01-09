@@ -373,7 +373,7 @@ function syncHUD() {
     }
   }
 
-  function renderCurrentNode() {
+  function renderCurrentNode() { // applyBackgroundForNode(node);
     const node = state.nodeById[state.currentNodeId];
     const dialogEl = $(SELECTORS.dialog);
     const choicesEl = $(SELECTORS.choices);
