@@ -66,10 +66,6 @@ main,
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.08);
 }
-/* --- Bottom Dock for dialog + choices + HUD --- */
-.stage {
-  position: relative;
-}
 
 /* panel dialog držimo pri dnu stage-a */
 .stage .dialog {
@@ -115,3 +111,54 @@ main,
 }
 /* ensure stage doesn't add extra haze */
 .stage { background: transparent !important; }
+/* =========================
+   Bottom Dock (robust)
+   ========================= */
+
+/* Stage mora pokriti viewport ispod top bara */
+body[data-scene-canvas="on"] .stage{
+  position: relative;
+  min-height: calc(100vh - 64px); /* 64px = visina topBar; ako ti je drugačije, promijeni */
+  display: grid;
+  grid-template-rows: 1fr auto;  /* gore: prostor, dolje: dialog */
+  align-items: end;
+  padding: 0 0 18px 0;
+}
+
+/* Dialog ide u donji red */
+body[data-scene-canvas="on"] .stage .dialog{
+  grid-row: 2;
+  align-self: end;
+  justify-self: center;
+
+  width: min(980px, calc(100% - 32px));
+  margin: 0 !important;
+
+  /* Glass + readability (default) */
+  background: rgba(8, 10, 14, 0.72) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+}
+
+/* Mobile */
+@media (max-width: 768px){
+  body[data-scene-canvas="on"] .stage{
+    min-height: calc(100vh - 56px);
+    padding-bottom: 12px;
+  }
+  body[data-scene-canvas="on"] .stage .dialog{
+    width: calc(100% - 20px);
+  }
+}
+
+/* White text in dialog */
+body[data-scene-canvas="on"] .stage .dialog,
+body[data-scene-canvas="on"] .stage .dialog *{
+  color: rgba(255,255,255,0.92) !important;
+}
+
+body[data-scene-canvas="on"] #dialog{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.65);
+}
