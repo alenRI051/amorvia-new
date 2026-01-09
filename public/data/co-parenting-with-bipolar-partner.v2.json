@@ -1201,6 +1201,10 @@
     {
       "id": "act1",
       "title": "Act 1 – The First Difficult Morning",
+      "defaultScene": {
+    "bg": "bg-apartment-morning",
+    "vignette": true
+  },
       "steps": [
         "a1s1",
         "a1s2",
@@ -1213,6 +1217,7 @@
     {
       "id": "act2",
       "title": "Act 2 – Preparing for a Harder Conversation",
+      "defaultScene": { "bg": "bg-home-evening", "vignette": true },
       "steps": [
         "a2s1",
         "a2s2",
@@ -1224,6 +1229,7 @@
     {
       "id": "act3",
       "title": "Act 3 – First Mediation Meeting",
+      "defaultScene": { "bg": "bg-mediation-room", "vignette": false },
       "steps": [
         "a3s1",
         "a3s2",
@@ -1235,6 +1241,7 @@
     {
       "id": "act4",
       "title": "Act 4 – When the Plan Is Tested",
+      "defaultScene": { "bg": "bg-hallway-waiting", "vignette": true },
       "steps": [
         "a4s1",
         "a4s2",
@@ -1246,6 +1253,7 @@
     {
       "id": "act5",
       "title": "Act 5 – Long-Term Co-Parenting Patterns",
+      "defaultScene": { "bg": "bg-park-soft", "vignette": false },
       "steps": [
         "a5s1",
         "a5s2",
