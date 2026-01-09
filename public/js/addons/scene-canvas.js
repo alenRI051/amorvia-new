@@ -30,9 +30,7 @@
       this.canvas = document.getElementById(CANVAS_ID);
       if (!this.canvas) return;
 
-      this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true,
-        willReadFrequently: true,
-      });
+      this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true });
       this.dpr = Math.max(1, window.devicePixelRatio || 1);
       this.w = 0;
       this.h = 0;
@@ -165,20 +163,6 @@
 
       // Normalize
       const target = scene ? { ...scene } : null;
-
-      // Normalize background source (legacy ui.background support)
-      const bgCandidate =
-        (target && (target.bg || target.bgKey)) ||
-        (target && target.ui && (target.ui.bg || target.ui.background)) ||
-        (target && (target.background || target.backgroundKey)) ||
-        null;
-
-      if (bgCandidate) {
-        // Accept either manifest key or URL/path like /art/bg/<key>.png
-        const s = String(bgCandidate);
-        const m = s.match(/\/art\/bg\/([^\/?#]+?)(?:\.[a-z0-9]+)?(?:[?#].*)?$/i);
-        target.bgKey = m ? m[1] : s;
-      }
       if (target?.left?.id) target.left = { ...target.left, key: parseKey(target.left.id, target.left.pose) };
       if (target?.right?.id) target.right = { ...target.right, key: parseKey(target.right.id, target.right.pose) };
       if (target?.bg) target.bgKey = target.bg;
@@ -195,14 +179,6 @@
       if (target?.left?.key) jobs.push(this.loadImage(target.left.key));
       if (target?.right?.key) jobs.push(this.loadImage(target.right.key));
       await Promise.all(jobs);
-
-      // Mark ready once a background has been loaded at least once
-      try {
-        if (target?.bgKey && this.cache && this.cache.has(target.bgKey)) {
-          document.body.dataset.sceneCanvasReady = "1";
-        }
-      } catch (e) {}
-
 
       // Transition
       if (!this.toScene || this.fadeMs <= 0) {
@@ -236,36 +212,20 @@
     }
 
     drawImmediate() {
-  this.clear();
-
-  if (this.toScene) {
-    this.drawScene(this.toScene, 1);
-  } else {
-    // fallback
-    this.ctx.fillStyle = "rgba(10,12,16,1)";
-    this.ctx.fillRect(0, 0, this.w, this.h);
-  }
-
-  // ✅ AUTO-CONTRAST (nakon punog rendera)
-  this.updateAutoContrastClass();
-}
+      this.clear();
+      if (this.toScene) this.drawScene(this.toScene, 1);
+      else {
+        // subtle fallback
+        this.ctx.fillStyle = "rgba(10,12,16,1)";
+        this.ctx.fillRect(0,0,this.w,this.h);
+      }
+    }
 
     drawBlend(t) {
-  this.clear();
-
-  if (this.fromScene) {
-    this.drawScene(this.fromScene, 1 - t);
-  }
-
-  if (this.toScene) {
-    this.drawScene(this.toScene, t);
-  }
-
-  // ✅ AUTO-CONTRAST TEK KAD JE FADE GOTOV
-  if (t >= 1) {
-    this.updateAutoContrastClass();
-  }
-}
+      this.clear();
+      if (this.fromScene) this.drawScene(this.fromScene, 1 - t);
+      if (this.toScene) this.drawScene(this.toScene, t);
+    }
 
     drawScene(scene, alpha) {
       if (!scene) return;
