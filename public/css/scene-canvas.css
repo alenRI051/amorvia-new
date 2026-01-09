@@ -12,3 +12,11 @@ body[data-playtest="1"] .stage .canvas { visibility: hidden; }
   position: relative;
   z-index: 2;
 }
+/* TEMP: hide legacy image stage when using canvas */
+.stage,
+.stage .canvas,
+#bgImg,
+#leftImg,
+#rightImg {
+  display: none !important;
+}
