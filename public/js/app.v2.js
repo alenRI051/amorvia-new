@@ -394,6 +394,22 @@ function syncHUD() {
 
     // Background for this node (scenario + act aware)
     applyBackgroundForNode(node);
+    // --- SceneCanvas hook (rooms + characters) ---
+try {
+  const act = (node && node.act && state.actsById[node.act]) ? state.actsById[node.act] : null;
+  const actDefaultScene = act && act.defaultScene ? act.defaultScene : null;
+
+  // node.scene overrides act defaultScene
+  const scene = node && node.scene
+    ? Object.assign({}, actDefaultScene || {}, node.scene)
+    : actDefaultScene;
+
+  if (scene && window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
+    window.SceneCanvas.apply(scene, { fadeMs: 220 });
+  }
+} catch (e) {
+  console.warn("[AmorviaMini] SceneCanvas apply failed:", e);
+}
 
     // Act badge
 if (actBadge) {
