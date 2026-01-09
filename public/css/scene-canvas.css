@@ -52,7 +52,7 @@ body[data-scene-canvas="on"] .stage{
   display: grid;
   grid-template-rows: 1fr auto;
   align-items: end;
-  padding-bottom: 18px;
+  padding-bottom: 34px;
 }
 
 body[data-scene-canvas="on"] .stage .dialog{
@@ -113,4 +113,8 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
   body[data-scene-canvas="on"] .stage .dialog{
     width: calc(100% - 20px);
   }
+}
+/* Prevent tiny page scroll in canvas mode */
+body[data-scene-canvas="on"]{
+  overflow: hidden;
 }
