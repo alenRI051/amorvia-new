@@ -114,7 +114,18 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
     width: calc(100% - 20px);
   }
 }
-/* Prevent tiny page scroll in canvas mode */
+
+/* Prevent scroll without breaking top bar dropdowns */
 body[data-scene-canvas="on"]{
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body[data-scene-canvas="on"] .stage{
   overflow: hidden;
+}
+
+#topBar{
+  position: relative;
+  z-index: 50;
 }
