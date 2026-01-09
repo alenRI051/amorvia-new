@@ -403,7 +403,7 @@ try {
   const scene = node && node.scene
     ? Object.assign({}, actDefaultScene || {}, node.scene)
     : actDefaultScene;
-
+console.log("[SceneCanvas DEBUG]", scene);
   if (scene && window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
     window.SceneCanvas.apply(scene, { fadeMs: 220 });
   }
