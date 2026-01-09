@@ -31,9 +31,8 @@
       if (!this.canvas) return;
 
       this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true,
-      willReadFrequently: true
-
-    });
+        willReadFrequently: true,
+      });
       this.dpr = Math.max(1, window.devicePixelRatio || 1);
       this.w = 0;
       this.h = 0;
@@ -167,17 +166,18 @@
       // Normalize
       const target = scene ? { ...scene } : null;
 
-      // Background key fallback (compat with legacy scenario UI fields)
-      if (target && !target.bg) {
-        const legacyBg =
-          target?.ui?.bg ||
-          target?.ui?.background ||
-          target?.ui?.backgroundKey ||
-          target?.ui?.bgKey ||
-          target?.background ||
-          target?.backgroundKey ||
-          null;
-        if (legacyBg) target.bg = legacyBg;
+      // Normalize background source (legacy ui.background support)
+      const bgCandidate =
+        (target && (target.bg || target.bgKey)) ||
+        (target && target.ui && (target.ui.bg || target.ui.background)) ||
+        (target && (target.background || target.backgroundKey)) ||
+        null;
+
+      if (bgCandidate) {
+        // Accept either manifest key or URL/path like /art/bg/<key>.png
+        const s = String(bgCandidate);
+        const m = s.match(/\/art\/bg\/([^\/?#]+?)(?:\.[a-z0-9]+)?(?:[?#].*)?$/i);
+        target.bgKey = m ? m[1] : s;
       }
       if (target?.left?.id) target.left = { ...target.left, key: parseKey(target.left.id, target.left.pose) };
       if (target?.right?.id) target.right = { ...target.right, key: parseKey(target.right.id, target.right.pose) };
@@ -195,6 +195,14 @@
       if (target?.left?.key) jobs.push(this.loadImage(target.left.key));
       if (target?.right?.key) jobs.push(this.loadImage(target.right.key));
       await Promise.all(jobs);
+
+      // Mark ready once a background has been loaded at least once
+      try {
+        if (target?.bgKey && this.cache && this.cache.has(target.bgKey)) {
+          document.body.dataset.sceneCanvasReady = "1";
+        }
+      } catch (e) {}
+
 
       // Transition
       if (!this.toScene || this.fadeMs <= 0) {
