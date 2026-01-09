@@ -50,6 +50,31 @@
 
       this.resize(true);
     }
+   updateAutoContrastClass() {
+  try {
+    const ctx = this.ctx;
+    if (!ctx || this.w < 10 || this.h < 10) return;
+
+    // Uzmi mali uzorak iz sredine ekrana (gdje je najbitnije za čitljivost)
+    const sw = 64, sh = 36;
+    const sx = Math.floor(this.w * 0.5 - sw/2);
+    const sy = Math.floor(this.h * 0.45 - sh/2);
+
+    const img = ctx.getImageData(sx, sy, sw, sh).data;
+
+    let sum = 0;
+    for (let i = 0; i < img.length; i += 4) {
+      // luminance approx
+      const r = img[i], g = img[i+1], b = img[i+2];
+      sum += (0.2126*r + 0.7152*g + 0.0722*b);
+    }
+    const avg = sum / (img.length / 4); // 0..255
+
+    const body = document.body;
+    body.classList.toggle("bg-bright", avg > 110);
+    body.classList.toggle("bg-dark", avg <= 110);
+  } catch (e) {}
+}
 
     async init() {
       if (this.manifest) return;
