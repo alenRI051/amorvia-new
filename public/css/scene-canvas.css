@@ -130,17 +130,31 @@ body[data-scene-canvas="on"]{
 body[data-scene-canvas="on"] .stage{
   overflow: hidden;
 }
-/* Choice buttons: keep readable on hover (light hover) */
+/* =========================================================
+   Choice buttons – LIGHT hover (canvas mode)
+   ========================================================= */
+
 body[data-scene-canvas="on"] #choices button,
-body[data-scene-canvas="on"] #choices .choice{
-  color: rgba(12, 14, 18, 0.95) !important;
+body[data-scene-canvas="on"] #choices .choice {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: rgba(12, 14, 18, 0.96) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+/* Hover / focus: stay light + readable */
 body[data-scene-canvas="on"] #choices button:hover,
 body[data-scene-canvas="on"] #choices .choice:hover,
 body[data-scene-canvas="on"] #choices button:focus-visible,
-body[data-scene-canvas="on"] #choices .choice:focus-visible{
-  background: rgba(255, 255, 255, 0.95) !important;
+body[data-scene-canvas="on"] #choices .choice:focus-visible {
+  background: rgba(255, 255, 255, 0.98) !important;
   color: rgba(12, 14, 18, 0.98) !important;
   filter: none !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
+
+/* Kill any global darken/brightness hover rules */
+body[data-scene-canvas="on"] #choices button:hover *,
+body[data-scene-canvas="on"] #choices .choice:hover * {
+  color: inherit !important;
+}
+
