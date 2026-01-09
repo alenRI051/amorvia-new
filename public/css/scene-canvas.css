@@ -1,6 +1,10 @@
-body[data-playtest="1"] .stage .canvas { visibility: hidden; }
+/* scene-canvas.css — Canvas background layer for Amorvia (v1)
+   Enabled when <body data-scene-canvas="on"> is present.
+*/
+
+html, body { height: 100%; }
+
 #sceneCanvas{
-  outline: 2px solid red;
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -9,15 +13,17 @@ body[data-playtest="1"] .stage .canvas { visibility: hidden; }
   pointer-events: none;
 }
 
+/* Ensure UI layers render above the canvas */
 #app, .hud, .modal, .toast, .dialog, #topBar, #titleAndList, main {
   position: relative;
   z-index: 2;
 }
-/* TEMP: hide legacy image stage when using canvas */
-.stage,
-.stage .canvas,
-#bgImg,
-#leftImg,
-#rightImg {
+
+/* Hide legacy IMG stage only when scene canvas is enabled */
+body[data-scene-canvas="on"] .stage,
+body[data-scene-canvas="on"] .stage .canvas,
+body[data-scene-canvas="on"] #bgImg,
+body[data-scene-canvas="on"] #leftImg,
+body[data-scene-canvas="on"] #rightImg {
   display: none !important;
 }

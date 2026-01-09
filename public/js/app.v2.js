@@ -308,7 +308,40 @@ function syncHUD() {
     }
   }
 
-  // Apply background, using scenario.ui.backgrounds first, then overrides
+  
+  // ------------ Scene Canvas helpers ------------
+
+  function isSceneCanvasEnabled() {
+    try { return document.body && document.body.getAttribute("data-scene-canvas") === "on"; } catch (_) { return false; }
+  }
+
+  // Convert existing scenario.ui.backgrounds (which may be paths) into a scene-canvas bg key/path.
+  // If a value looks like "/art/..." or "/assets/...", we pass it directly as bg (SceneCanvas can load direct URLs too).
+  function computeSceneCanvasBgForNode(node) {
+    if (!node) return null;
+
+    const scn = state.scenario || {};
+    const ui = scn.ui || {};
+    const cfg = ui.backgrounds || null;
+
+    // Prefer new-style act.defaultScene if present
+    const act = (node.act && state.actsById[node.act]) ? state.actsById[node.act] : null;
+    if (act && act.defaultScene && act.defaultScene.bg) return act.defaultScene.bg;
+
+    // Otherwise reuse existing backgrounds config
+    if (cfg) {
+      if (typeof cfg.default === "string" && cfg.default) return cfg.default;
+      const actId = node.act || null;
+      if (actId && cfg.act && typeof cfg.act === "object" && Object.prototype.hasOwnProperty.call(cfg.act, actId)) {
+        const v = cfg.act[actId];
+        if (typeof v === "string" && v) return v;
+      }
+    }
+
+    return null;
+  }
+
+// Apply background, using scenario.ui.backgrounds first, then overrides
   function applyBackgroundForNode(node) {
     if (!node) return;
 
@@ -392,25 +425,38 @@ function syncHUD() {
       return;
     }
 
-    // Background for this node (scenario + act aware)
-    applyBackgroundForNode(node);
-    // --- SceneCanvas hook (rooms + characters) ---
-try {
-  const act = (node && node.act && state.actsById[node.act]) ? state.actsById[node.act] : null;
-  const actDefaultScene = act && act.defaultScene ? act.defaultScene : null;
+    
+    // Background + SceneCanvas
+    if (!isSceneCanvasEnabled()) {
+      // Legacy IMG stage background
+      applyBackgroundForNode(node);
+    } else {
+      // SceneCanvas background (rooms + characters)
+      try {
+        const act = (node && node.act && state.actsById[node.act]) ? state.actsById[node.act] : null;
+        const actDefaultScene = act && act.defaultScene ? act.defaultScene : null;
 
-  // node.scene overrides act defaultScene
-  const scene = node && node.scene
-    ? Object.assign({}, actDefaultScene || {}, node.scene)
-    : actDefaultScene;
-console.log("[SceneCanvas DEBUG]", scene);
-  if (scene && window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
-    window.SceneCanvas.apply(scene, { fadeMs: 220 });
-  }
-} catch (e) {
-  console.warn("[AmorviaMini] SceneCanvas apply failed:", e);
-}
+        // node.scene overrides act defaultScene
+        const merged = node && node.scene
+          ? Object.assign({}, actDefaultScene || {}, node.scene)
+          : (actDefaultScene || {});
 
+        // If no bg provided yet, derive from existing scenario.ui.backgrounds (paths are allowed)
+        if (!merged.bg) {
+          const bg = computeSceneCanvasBgForNode(node);
+          if (bg) merged.bg = bg;
+        }
+
+        // Sensible default vignette for readability
+        if (typeof merged.vignette === "undefined") merged.vignette = true;
+
+        if (window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
+          window.SceneCanvas.apply(merged, { fadeMs: 220 });
+        }
+      } catch (e) {
+        console.warn("[AmorviaMini] SceneCanvas apply failed:", e);
+      }
+    }
     // Act badge
 if (actBadge) {
   let actLabel = "Act -";

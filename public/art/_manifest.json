@@ -1,18 +1,7 @@
 {
   "bg-apartment-morning": "/art/bg/bg-apartment-morning.png",
-  "bg-home-evening": "/art/bg/bg-home-evening.webp",
-  "bg-mediation-room": "/art/bg/bg-mediation-room.webp",
-  "bg-hallway-waiting": "/art/bg/bg-hallway-waiting.webp",
-  "bg-park-soft": "/art/bg/bg-park-soft.webp",
-
-  "char-you-tired": "/art/char/char-you-tired.webp",
-  "char-you-calm": "/art/char/char-you-calm.webp",
-
-  "char-ex-partner-neutral": "/art/char/char-ex-partner-neutral.webp",
-  "char-ex-partner-tense": "/art/char/char-ex-partner-tense.webp",
-
-  "char-child-neutral": "/art/char/char-child-neutral.webp",
-  "char-child-worried": "/art/char/char-child-worried.webp",
-
-  "char-mediator-neutral": "/art/char/char-mediator-neutral.webp"
+  "bg-home-evening": "/assets/backgrounds/kitchen.svg",
+  "bg-mediation-room": "/assets/backgrounds/room.svg",
+  "bg-hallway-waiting": "/assets/backgrounds/hallway.svg",
+  "bg-park-soft": "/assets/backgrounds/park.svg"
 }

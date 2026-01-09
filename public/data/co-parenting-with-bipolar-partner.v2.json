@@ -1201,10 +1201,6 @@
     {
       "id": "act1",
       "title": "Act 1 – The First Difficult Morning",
-      "defaultScene": {
-    "bg": "bg-apartment-morning",
-    "vignette": true
-  },
       "steps": [
         "a1s1",
         "a1s2",
@@ -1212,54 +1208,70 @@
         "a1s4",
         "a1s5",
         "a1end"
-      ]
+      ],
+      "defaultScene": {
+        "bg": "bg-apartment-morning",
+        "vignette": true
+      }
     },
     {
       "id": "act2",
       "title": "Act 2 – Preparing for a Harder Conversation",
-      "defaultScene": { "bg": "bg-home-evening", "vignette": true },
       "steps": [
         "a2s1",
         "a2s2",
         "a2s3",
         "a2s4",
         "a2end"
-      ]
+      ],
+      "defaultScene": {
+        "bg": "bg-home-evening",
+        "vignette": true
+      }
     },
     {
       "id": "act3",
       "title": "Act 3 – First Mediation Meeting",
-      "defaultScene": { "bg": "bg-mediation-room", "vignette": false },
       "steps": [
         "a3s1",
         "a3s2",
         "a3s3",
         "a3s4",
         "a3end"
-      ]
+      ],
+      "defaultScene": {
+        "bg": "bg-mediation-room",
+        "vignette": false
+      }
     },
     {
       "id": "act4",
       "title": "Act 4 – When the Plan Is Tested",
-      "defaultScene": { "bg": "bg-hallway-waiting", "vignette": true },
       "steps": [
         "a4s1",
         "a4s2",
         "a4s3",
         "a4s4",
         "a4end"
-      ]
+      ],
+      "defaultScene": {
+        "bg": "bg-hallway-waiting",
+        "vignette": true
+      }
     },
     {
       "id": "act5",
       "title": "Act 5 – Long-Term Co-Parenting Patterns",
-      "defaultScene": { "bg": "bg-park-soft", "vignette": false },
       "steps": [
         "a5s1",
         "a5s2",
         "a5s3",
         "a5end"
-      ]
+      ],
+      "defaultScene": {
+        "bg": "bg-park-soft",
+        "vignette": false
+      }
     }
   ]
 }
