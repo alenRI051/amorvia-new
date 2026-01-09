@@ -19,13 +19,17 @@ html, body { height: 100%; }
 /* =========================
    Hide legacy IMG background
    ========================= */
-body[data-scene-canvas="on"] .stage .canvas,
-body[data-scene-canvas="on"] #bgImg,
-body[data-scene-canvas="on"] #leftImg,
-body[data-scene-canvas="on"] #rightImg {
+
+body[data-scene-canvas="on"] .stage .canvas{
   display: none !important;
 }
 
+/* Hide legacy images only after canvas has successfully rendered at least once */
+body[data-scene-canvas-ready="1"] #bgImg,
+body[data-scene-canvas-ready="1"] #leftImg,
+body[data-scene-canvas-ready="1"] #rightImg{
+  display: none !important;
+}
 /* =========================
    UI layers above canvas
    ========================= */
@@ -119,39 +123,10 @@ body[data-scene-canvas="on"]{
   overflow: hidden;
 }
 
-/* =========================
-   Canvas mode overrides (compat)
-   ========================= */
-
-/* Prevent page scroll in canvas mode */
+/* Canvas mode: prevent scroll without clipping dropdown */
 body[data-scene-canvas="on"]{
-  height: 100vh;
+  overflow-x: hidden;
+}
+body[data-scene-canvas="on"] .stage{
   overflow: hidden;
-  background: transparent !important;
 }
-
-/* Make the main shell transparent so the canvas is visible */
-body[data-scene-canvas="on"] main.wrap,
-body[data-scene-canvas="on"] .wrap{
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-/* Avoid any white wash layer from common panels */
-body[data-scene-canvas="on"] main.wrap > .card.panel,
-body[data-scene-canvas="on"] aside.card.panel{
-  background: transparent !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-
-/* Keep top UI above and visible */
-#topBar,
-#titleAndList{
-  position: relative;
-  z-index: 50;
-}
-
-/* Ensure canvas is visible */
-#sceneCanvas{ display: block !important; }
