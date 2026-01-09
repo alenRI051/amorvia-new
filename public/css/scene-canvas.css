@@ -114,31 +114,44 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
     width: calc(100% - 20px);
   }
 }
+/* Prevent tiny page scroll in canvas mode */
+body[data-scene-canvas="on"]{
+  overflow: hidden;
+}
 
 /* =========================
-   Canvas mode: show background + prevent page scroll
+   Canvas mode overrides (compat)
    ========================= */
+
+/* Prevent page scroll in canvas mode */
 body[data-scene-canvas="on"]{
-  background: transparent !important;
+  height: 100vh;
   overflow: hidden;
+  background: transparent !important;
 }
 
-body[data-scene-canvas="on"] main{
+/* Make the main shell transparent so the canvas is visible */
+body[data-scene-canvas="on"] main.wrap,
+body[data-scene-canvas="on"] .wrap{
   background: transparent !important;
-  overflow: hidden;
+  box-shadow: none !important;
+  border: none !important;
 }
 
-body[data-scene-canvas="on"] .stage{
+/* Avoid any white wash layer from common panels */
+body[data-scene-canvas="on"] main.wrap > .card.panel,
+body[data-scene-canvas="on"] aside.card.panel{
   background: transparent !important;
-  overflow: hidden;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
 
-#topBar{
+/* Keep top UI above and visible */
+#topBar,
+#titleAndList{
   position: relative;
   z-index: 50;
 }
 
-/* Ensure canvas is never hidden */
-#sceneCanvas{
-  display: block !important;
-}
+/* Ensure canvas is visible */
+#sceneCanvas{ display: block !important; }
