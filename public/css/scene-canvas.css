@@ -1,5 +1,6 @@
 body[data-playtest="1"] .stage .canvas { visibility: hidden; }
 #sceneCanvas{
+  outline: 2px solid red;
   position: fixed;
   inset: 0;
   width: 100vw;
