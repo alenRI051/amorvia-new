@@ -108,7 +108,7 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
 @media (max-width: 768px){
   body[data-scene-canvas="on"] .stage{
     min-height: calc(100vh - 56px);
-    padding-bottom: 12px;
+    padding-bottom: 22px;
   }
   body[data-scene-canvas="on"] .stage .dialog{
     width: calc(100% - 20px);
