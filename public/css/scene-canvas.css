@@ -1,0 +1,13 @@
+#sceneCanvas{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#app, .hud, .modal, .toast, .dialog, #topBar, #titleAndList, main {
+  position: relative;
+  z-index: 2;
+}
