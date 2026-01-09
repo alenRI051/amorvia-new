@@ -61,7 +61,8 @@
   <script src="/js/patches/fetch-data-redirect.js"></script>
   <script src="/js/patches/art-wire.js" defer></script>
 </head>
-<body data-playtest="1"> data-hud="v3">
+<body data-playtest="1" data-hud="v3">
+  <canvas id="sceneCanvas" aria-hidden="true"></canvas>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div id="topBar">
@@ -152,6 +153,7 @@
   <script src="/js/sw-register.js" defer></script>
 
   <!-- Addons -->
+  <script src="/js/addons/scene-canvas.js" defer></script>
   <script src="/js/addons/reset-ui.js"></script>
   <script src="/js/addons/shortcuts-a11y.js"></script>
   <script src="/js/addons/ui-fallbacks.js"></script>
