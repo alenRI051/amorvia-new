@@ -229,7 +229,11 @@
       if (this.fromScene) this.drawScene(this.fromScene, 1 - t);
       if (this.toScene) this.drawScene(this.toScene, t);
     }
-
+// 👉 AUTO-CONTRAST tek kad je fade završen
+  if (t >= 1) {
+    this.updateAutoContrastClass();
+  }
+}
     drawScene(scene, alpha) {
       if (!scene) return;
       const ctx = this.ctx;
