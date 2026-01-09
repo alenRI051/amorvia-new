@@ -31,9 +31,9 @@
       if (!this.canvas) return;
 
       this.ctx = this.canvas.getContext("2d", { alpha: true, desynchronized: true,
-  willReadFrequently: true
+      willReadFrequently: true
 
-});
+    });
       this.dpr = Math.max(1, window.devicePixelRatio || 1);
       this.w = 0;
       this.h = 0;
@@ -166,6 +166,19 @@
 
       // Normalize
       const target = scene ? { ...scene } : null;
+
+      // Background key fallback (compat with legacy scenario UI fields)
+      if (target && !target.bg) {
+        const legacyBg =
+          target?.ui?.bg ||
+          target?.ui?.background ||
+          target?.ui?.backgroundKey ||
+          target?.ui?.bgKey ||
+          target?.background ||
+          target?.backgroundKey ||
+          null;
+        if (legacyBg) target.bg = legacyBg;
+      }
       if (target?.left?.id) target.left = { ...target.left, key: parseKey(target.left.id, target.left.pose) };
       if (target?.right?.id) target.right = { ...target.right, key: parseKey(target.right.id, target.right.pose) };
       if (target?.bg) target.bgKey = target.bg;
