@@ -130,3 +130,17 @@ body[data-scene-canvas="on"]{
 body[data-scene-canvas="on"] .stage{
   overflow: hidden;
 }
+/* Choice buttons: keep readable on hover (light hover) */
+body[data-scene-canvas="on"] #choices button,
+body[data-scene-canvas="on"] #choices .choice{
+  color: rgba(12, 14, 18, 0.95) !important;
+}
+
+body[data-scene-canvas="on"] #choices button:hover,
+body[data-scene-canvas="on"] #choices .choice:hover,
+body[data-scene-canvas="on"] #choices button:focus-visible,
+body[data-scene-canvas="on"] #choices .choice:focus-visible{
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: rgba(12, 14, 18, 0.98) !important;
+  filter: none !important;
+}
