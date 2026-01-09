@@ -27,3 +27,43 @@ body[data-scene-canvas="on"] #leftImg,
 body[data-scene-canvas="on"] #rightImg {
   display: none !important;
 }
+/* --- Scene Canvas: always behind UI --- */
+#sceneCanvas{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0 !important;
+  pointer-events: none;
+}
+
+/* Ensure everything interactive is above */
+#topBar,
+#titleAndList,
+main,
+.stage,
+.stage .toolbar,
+.stage .dialog,
+#dialog,
+#choices,
+#hud,
+.hud {
+  position: relative;
+  z-index: 10;
+}
+
+/* Make stage/dialog panels transparent so background shows */
+.stage,
+.stage .panel,
+.stage .dialog,
+.stage .toolbar {
+  background: transparent !important;
+}
+
+/* Optional: keep text readable with a soft glass panel */
+.stage .dialog {
+  background: rgba(10, 12, 16, 0.55) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
