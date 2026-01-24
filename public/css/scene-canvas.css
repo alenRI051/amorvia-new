@@ -52,11 +52,12 @@ main,
    ========================= */
 body[data-scene-canvas="on"] .stage{
   position: relative;
-  min-height: calc(100vh - 64px); /* adjust if top bar height differs */
+  box-sizing: border-box;
+  min-height: calc(100vh - 128px); /* room for top bar + title row */
   display: grid;
   grid-template-rows: 1fr auto;
   align-items: end;
-  padding-bottom: 34px;
+  padding-bottom: 24px;
 }
 
 body[data-scene-canvas="on"] .stage .dialog{
@@ -111,8 +112,8 @@ body.bg-dark[data-scene-canvas="on"] .stage .dialog{
    ========================= */
 @media (max-width: 768px){
   body[data-scene-canvas="on"] .stage{
-    min-height: calc(100vh - 56px);
-    padding-bottom: 22px;
+    min-height: calc(100vh - 112px);
+    padding-bottom: 18px;
   }
   body[data-scene-canvas="on"] .stage .dialog{
     width: calc(100% - 20px);
