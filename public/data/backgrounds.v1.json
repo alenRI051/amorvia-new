@@ -5,43 +5,43 @@
     {
       "id": "bedroom",
       "label": "Bedroom",
-      "src": "/assets/backgrounds/bedroom.svg",
+      "src": "/art/bg/adult_bedroom_night.png",
       "used": true
     },
     {
       "id": "cafe",
       "label": "Cafe",
-      "src": "/assets/backgrounds/cafe.svg",
+      "src": "/art/bg/cafe_afternoon.png",
       "used": true
     },
     {
       "id": "hallway",
       "label": "Hallway",
-      "src": "/assets/backgrounds/hallway.svg",
+      "src": "/art/bg/hallway_evening.png",
       "used": true
     },
     {
       "id": "kitchen",
       "label": "Kitchen",
-      "src": "/assets/backgrounds/kitchen.svg",
-      "used": false
+      "src": "/art/bg/kitchen_night.png",
+      "used": true
     },
     {
       "id": "livingroom",
       "label": "Livingroom",
-      "src": "/assets/backgrounds/livingroom.svg",
+      "src": "/art/bg/living_room_evening.png",
       "used": true
     },
     {
       "id": "mediationroom",
       "label": "Mediationroom",
-      "src": "/assets/backgrounds/mediationroom.svg",
+      "src": "/art/bg/therapy_office_evening.png",
       "used": true
     },
     {
       "id": "park",
       "label": "Park",
-      "src": "/assets/backgrounds/park.svg",
+      "src": "/art/bg/park_bench_evening.png",
       "used": true
     },
     {
@@ -53,7 +53,7 @@
     {
       "id": "room",
       "label": "Room",
-      "src": "/assets/backgrounds/room.svg",
+      "src": "/art/bg/living_room_evening.png",
       "used": true
     }
   ]
