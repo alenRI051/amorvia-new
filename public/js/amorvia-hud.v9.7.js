@@ -3,12 +3,6 @@
 // ------------------------------------------------------------------
 // Oslanja se na engine.state.meters = { trust, tension, childStress } (0-100)
 // Prikazuje 3 "chip" metra unutar postojeceg <div id="hud"> u dialog panelu.
-// Disable v9.7 HUD in SceneCanvas mode (v10 feedback HUD owns it there)
-if (document.body?.getAttribute("data-scene-canvas") === "on") {
-  console.info("[HUD] v9.7 disabled in SceneCanvas mode");
-  // eslint-disable-next-line no-useless-return
-  return;
-}
 
 window.AmorviaHUD = (() => {
   let rootEl = null;
