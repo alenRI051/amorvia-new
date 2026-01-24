@@ -1,6 +1,6 @@
 // SW refresh 2025-11-28
 
-const CACHE_NAME = 'amorvia-cache-v1';
+const CACHE_NAME = 'amorvia-cache-v2'; // bump whenever HUD/layout changes
 const SHELL = [
   '/',
   '/index.html',
