@@ -489,8 +489,7 @@ if (actBadge) {
     // Node-level effects on enter
     if (node.effects) {
       applyEffects(node.effects);
-      // syncHUD(); // persistent HUD disabled in SceneCanvas
-
+      syncHUD();
     }
   }
 
@@ -505,14 +504,14 @@ if (actBadge) {
       });
       if (choice && choice.effects) // Capture meter deltas for feedback HUD (v10)
         const deltas = {
-          trust: (choice.effects.meters && choice.effects.meters.trust) || 0,
-          tension: (choice.effects.meters && choice.effects.meters.tension) || 0,
-          childStress: (choice.effects.meters && choice.effects.meters.childStress) || 0,
+          trust: (choice.effects.meters && choice.effects.meters.trust) || choice.effects.trust || 0,
+          tension: (choice.effects.meters && choice.effects.meters.tension) || choice.effects.tension || 0,
+          childStress: (choice.effects.meters && choice.effects.meters.childStress) || choice.effects.childStress || 0,
         };
 
         applyEffects(choice.effects);
 
-        // Show feedback-only HUD after choice
+        // Show feedback-only HUD after choice (appears briefly, then fades)
         if (window.AmorviaHUD10Feedback) {
           window.AmorviaHUD10Feedback.show(deltas, { label: "Impact" });
         }
