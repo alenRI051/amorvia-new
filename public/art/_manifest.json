@@ -1,7 +1,16 @@
 {
   "bg-apartment-morning": "/art/bg/bg-apartment-morning.png",
-  "bg-home-evening": "/assets/backgrounds/kitchen.svg",
-  "bg-mediation-room": "/assets/backgrounds/room.svg",
-  "bg-hallway-waiting": "/assets/backgrounds/hallway.svg",
-  "bg-park-soft": "/assets/backgrounds/park.svg"
+  "bg-home-evening": "/art/bg/kitchen_night.png",
+  "bg-mediation-room": "/art/bg/therapy_office_evening.png",
+  "bg-hallway-waiting": "/art/bg/hallway_evening.png",
+  "bg-park-soft": "/art/bg/park_bench_evening.png",
+  "bg-living-room-evening": "/art/bg/living_room_evening.png",
+  "bg-kitchen-night": "/art/bg/kitchen_night.png",
+  "bg-adult-bedroom-night": "/art/bg/adult_bedroom_night.png",
+  "bg-child-bedroom-evening": "/art/bg/child_bedroom_evening.png",
+  "bg-rain-window-night": "/art/bg/rain_window_night.png",
+  "bg-therapy-office-evening": "/art/bg/therapy_office_evening.png",
+  "bg-cafe-afternoon": "/art/bg/cafe_afternoon.png",
+  "bg-car-interior-night": "/art/bg/car_interior_night.png",
+  "bg-park-bench-evening": "/art/bg/park_bench_evening.png"
 }
