@@ -502,19 +502,21 @@ if (actBadge) {
       const choice = (current.choices || []).find(function (c) {
         return c && c.id === choiceId;
       });
-      if (choice && choice.effects) // Capture meter deltas for feedback HUD (v10)
+      if (choice && choice.effects) {
+        // Capture meter deltas for feedback HUD (v10)
         const deltas = {
-          trust: (choice.effects.meters && choice.effects.meters.trust) || choice.effects.trust || 0,
-          tension: (choice.effects.meters && choice.effects.meters.tension) || choice.effects.tension || 0,
-          childStress: (choice.effects.meters && choice.effects.meters.childStress) || choice.effects.childStress || 0,
+          trust: (choice.effects.meters && choice.effects.meters.trust) || 0,
+          tension: (choice.effects.meters && choice.effects.meters.tension) || 0,
+          childStress: (choice.effects.meters && choice.effects.meters.childStress) || 0,
         };
 
         applyEffects(choice.effects);
 
-        // Show feedback-only HUD after choice (appears briefly, then fades)
+        // Show feedback-only HUD after choice
         if (window.AmorviaHUD10Feedback) {
           window.AmorviaHUD10Feedback.show(deltas, { label: "Impact" });
         }
+      }
     }
 
     let targetId = nextId;
