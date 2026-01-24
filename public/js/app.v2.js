@@ -3,28 +3,28 @@
 // Works directly with *.v2.json v2 scenarios. Relies on:
 //  - fetch-normalize-entry.v2.patch.js to ensure acts[*].nodes[] + start/entry.
 // Does NOT use a global ScenarioEngine.
+// It manages a tiny in-memory engine: current node + meters.
 (function bootAdvancedMode() {
   const params = new URLSearchParams(window.location.search);
   const urlAdvanced = params.get("advanced"); // "1" enables
 
-  // If URL forces advanced=1, always honor it
-  if (urlAdvanced === "1") {
-    document.documentElement.setAttribute("data-advanced", "1");
-    try { localStorage.setItem("amorvia:advanced", "1"); } catch (e) {}
-    return;
-  }
+  // Persisted user choice (power users)
+  const saved = localStorage.getItem("amorvia:advanced"); // "1" | "0" | null
 
-  // Otherwise: DO NOT auto-enable from localStorage during playtest.
-  // Respect whatever bootstrap already set (usually "0").
-  const existing = document.documentElement.getAttribute("data-advanced");
-  if (existing === "0" || existing === "1") return;
+  // Default for playtest: OFF (0), unless URL explicitly enables it
+  const advanced = (urlAdvanced === "1")
+    ? "1"
+    : (saved === "1" ? "1" : "0");
 
-  // Fallback if attribute is missing for some reason:
-  document.documentElement.setAttribute("data-advanced", "0");
+  document.documentElement.setAttribute("data-advanced", advanced);
 })();
 
 (function () {
   "use strict";
+
+  // HUD mode: "feedback" (Impulse HUD)
+  try { document.documentElement.dataset.hudmode = "feedback"; } catch (e) {}
+
 
   const STORAGE_KEYS = {
     LAST_SCENARIO: "amorvia:v2mini:lastScenarioId",
@@ -226,15 +226,7 @@
 
   // ------------ HUD ------------
 
-  function forcePlaytestHudVisible() {
-  try {
-    if (!(document && document.body && document.body.getAttribute("data-playtest") === "1")) return;
-    const hud = document.querySelector("#hud.hud.row.v2-only");
-    if (hud) hud.style.display = "flex";
-  } catch (_) {}
-}
-
-function syncHUD() {
+  function syncHUD() {
     try {
       if (typeof AmorviaHUD === "undefined") return;
       AmorviaHUD.update({
@@ -245,9 +237,7 @@ function syncHUD() {
     } catch (e) {
       console.warn("[AmorviaMini] HUD sync failed:", e);
     }
-  
-  forcePlaytestHudVisible();
-}
+  }
 
   function applyEffects(effects) {
     if (!effects) return;
@@ -261,6 +251,114 @@ function syncHUD() {
       }
     });
   }
+
+
+
+// ------------ HUD Impulse (feedback-only) ------------
+
+let hudImpulseTimer = null;
+
+function ensureHudImpulseMount() {
+  if (document.getElementById("hudImpulse")) return;
+
+  const mount = document.createElement("div");
+  mount.id = "hudImpulse";
+  mount.className = "hud-impulse";
+  mount.setAttribute("aria-live", "polite");
+
+  mount.innerHTML = `
+    <div class="hud-impulse__left">Impact</div>
+    <div class="hud-impulse__chips" id="hudImpulseChips"></div>
+  `;
+
+  // Prefer: insert directly under the choices (below choices)
+  const choices =
+    document.querySelector("#choices") ||
+    document.querySelector("[data-role='choices']") ||
+    document.querySelector(".choices");
+
+  if (choices && choices.isConnected) {
+    choices.insertAdjacentElement("afterend", mount);
+    return;
+  }
+
+  // Fallback
+  const host =
+    document.querySelector("#app") ||
+    document.querySelector("main") ||
+    document.body;
+
+  host.appendChild(mount);
+}
+
+
+
+function showHudImpulse(deltas) {
+  if (!deltas) return;
+
+  // Only show if something actually changed
+  const hasAny =
+    !!(deltas.trust || deltas.tension || deltas.childStress);
+  if (!hasAny) return;
+
+  ensureHudImpulseMount();
+
+  const box = document.getElementById("hudImpulse");
+  const chips = document.getElementById("hudImpulseChips");
+  if (!box || !chips) return;
+
+  const items = [
+    { key: "trust", label: "Trust", val: Number(deltas.trust) || 0, goodUp: true },
+    { key: "tension", label: "Tension", val: Number(deltas.tension) || 0, goodUp: false },
+    { key: "childStress", label: "Child", val: Number(deltas.childStress) || 0, goodUp: false },
+  ];
+
+  chips.innerHTML = "";
+
+  for (const it of items) {
+    const v = it.val;
+
+    let cls = "neu", arr = "~", txt = "unchanged";
+    if (v !== 0) {
+      // For tension/childStress: lower is better
+      const improved = it.goodUp ? (v > 0) : (v < 0);
+      cls = improved ? "pos" : "neg";
+      arr = improved ? "↑" : "↓";
+      txt = improved ? "improved" : "worsened";
+    }
+
+    const chip = document.createElement("div");
+    chip.className = `hud-chip ${cls}`;
+    chip.innerHTML = `<span class="arr">${arr}</span> <b>${it.label}</b> <span style="opacity:.75">${txt}</span>`;
+    chips.appendChild(chip);
+  }
+
+  box.classList.remove("is-off");
+  box.classList.add("is-on");
+
+  if (hudImpulseTimer) clearTimeout(hudImpulseTimer);
+  hudImpulseTimer = setTimeout(() => {
+    box.classList.add("is-off");
+    setTimeout(() => box.classList.remove("is-on", "is-off"), 220);
+  }, 5000);
+}
+
+function snapshotMeters() {
+  return {
+    trust: Number(state.meters.trust) || 0,
+    tension: Number(state.meters.tension) || 0,
+    childStress: Number(state.meters.childStress) || 0,
+  };
+}
+
+function diffMeters(before, after) {
+  return {
+    trust: (after.trust - before.trust),
+    tension: (after.tension - before.tension),
+    childStress: (after.childStress - before.childStress),
+  };
+}
+
 
   // ------------ Rendering helpers ------------
 
@@ -371,25 +469,9 @@ function syncHUD() {
         bgSelect.value = src;
       }
     }
-  
-    // Canvas mirror (legacy backgrounds -> SceneCanvas)
-    try {
-      if (document.body && document.body.dataset && document.body.dataset.sceneCanvas === "on" &&
-          window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
-        const url = String(src || "");
-        // /art/bg/<key>.(png|webp|jpg) -> <key>
-        const m = url.match(/\/art\/bg\/([^\/?#]+?)(?:\.[a-z0-9]+)?(?:[?#].*)?$/i);
-        const key = m ? m[1] : null;
-        if (key) {
-          window.SceneCanvas.apply({ bg: key, vignette: true }, { fadeMs: 0 });
-        }
-      }
-    } catch (e) {
-      console.warn("[SceneCanvas] mirror failed:", e);
-    }
-}
+  }
 
-  function renderCurrentNode() { // applyBackgroundForNode(node);
+  function renderCurrentNode() {
     const node = state.nodeById[state.currentNodeId];
     const dialogEl = $(SELECTORS.dialog);
     const choicesEl = $(SELECTORS.choices);
@@ -410,22 +492,6 @@ function syncHUD() {
 
     // Background for this node (scenario + act aware)
     applyBackgroundForNode(node);
-    // --- SceneCanvas hook (rooms + characters) ---
-try {
-  const act = (node && node.act && state.actsById[node.act]) ? state.actsById[node.act] : null;
-  const actDefaultScene = act && act.defaultScene ? act.defaultScene : null;
-
-  // node.scene overrides act defaultScene
-  const scene = node && node.scene
-    ? Object.assign({}, actDefaultScene || {}, node.scene)
-    : actDefaultScene;
-console.log("[SceneCanvas DEBUG]", scene);
-  if (scene && window.SceneCanvas && typeof window.SceneCanvas.apply === "function") {
-    window.SceneCanvas.apply(scene, { fadeMs: 220 });
-  }
-} catch (e) {
-  console.warn("[AmorviaMini] SceneCanvas apply failed:", e);
-}
 
     // Act badge
 if (actBadge) {
@@ -477,14 +543,18 @@ if (actBadge) {
     // Choices
     while (choicesEl.firstChild) choicesEl.removeChild(choicesEl.firstChild);
     (node.choices || []).forEach((c) => {
-      const btn = document.createElement("button");
-      btn.className = "choice";
-      btn.textContent = c.label || c.text || "Continue";
-      if (c.id) btn.dataset.choiceId = c.id;
-      const nextId = c.to || c.next || "";
-      if (nextId) btn.dataset.next = nextId;
-      choicesEl.appendChild(btn);
-    });
+  const btn = document.createElement("button");
+  btn.className = "choice";
+
+  const label = c.label || c.text || "Continue";
+  btn.textContent = label;
+  btn.title = label;
+
+  if (c.id) btn.dataset.choiceId = c.id;
+  const nextId = c.to || c.next || "";
+  if (nextId) btn.dataset.next = nextId;
+  choicesEl.appendChild(btn);
+});
 
     // Node-level effects on enter
     if (node.effects) {
@@ -502,15 +572,8 @@ if (actBadge) {
       const choice = (current.choices || []).find(function (c) {
         return c && c.id === choiceId;
       });
-      if (choice && choice.effects) {
-        // Capture meter deltas for feedback HUD (v10)
-        const deltas = {
-          trust: (choice.effects.meters && choice.effects.meters.trust) || 0,
-          tension: (choice.effects.meters && choice.effects.meters.tension) || 0,
-          childStress: (choice.effects.meters && choice.effects.meters.childStress) || 0,
-        };
-
-        applyEffects(choice.effects);
+      if (choice && choice.effects) applyEffects(choice.effects);
+    }
 
     let targetId = nextId;
     if (!targetId) {
@@ -535,7 +598,11 @@ if (actBadge) {
       if (!btn) return;
       const nextId = btn.dataset.next || "";
       const choiceId = btn.dataset.choiceId || null;
+        const beforeMeters = snapshotMeters();
       gotoNode(nextId, choiceId);
+      const afterMeters = snapshotMeters();
+      const deltas = diffMeters(beforeMeters, afterMeters);
+      showHudImpulse(deltas);
     });
     choicesEl.dataset.amorviaMiniBound = "1";
   }
@@ -648,6 +715,20 @@ if (actBadge) {
     setStatus(STATUS.LOADING, "loading");
     return fetchJsonNoStore("/data/v2-index.json")
       .then((idx) => {
+        /* === PLAYTEST FILTER (hide internal scenarios) === */
+      const PLAYTEST_HIDE = ["brzi-kontakti"];
+
+      if (idx && Array.isArray(idx.scenarios)) {
+        idx.scenarios = idx.scenarios.filter(s => {
+          const id = (s.id || s.slug || "").toLowerCase();
+          const title = (s.title || "").toLowerCase();
+          return (
+            !PLAYTEST_HIDE.includes(id) &&
+            !title.includes("brzi kontakti")
+          );
+        });
+      }
+      /* === END PLAYTEST FILTER === */
         state.index = idx;
         buildPickerUI();
         populatePicker();
@@ -702,57 +783,5 @@ if (actBadge) {
       }
     });
   }
-})();
-
-
-
-
-/* HUD: dynamic gap tuning (Nova) */
-(function() {
-  function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
-
-  function setHudGap(px) {
-    try {
-      document.documentElement.style.setProperty('--hud-gap', px + 'px');
-    } catch (_) {}
-  }
-
-  // Heuristic: keep page from scrolling by tightening the gap when space is tight.
-  // Called after HUD mounts and after each HUD render.
-  window.__amorviaTuneHudGap = function __amorviaTuneHudGap() {
-    const choices =
-      document.querySelector('#choices') ||
-      document.querySelector('[data-role="choices"]') ||
-      document.querySelector('.choices');
-
-    const hud = document.getElementById('hudImpulse');
-    if (!choices || !hud) return;
-
-    const c = choices.getBoundingClientRect();
-    const h = hud.getBoundingClientRect();
-
-    // available space from choices bottom to viewport bottom
-    const avail = window.innerHeight - c.bottom;
-
-    // target: keep HUD fully visible without forcing body scroll
-    // If avail is small, pull HUD up slightly (negative gap) but keep it subtle.
-    let gap = 6;
-    if (window.innerHeight <= 780) gap = 4;
-    if (window.innerHeight <= 720) gap = 2;
-
-    // If the HUD would overflow the viewport, reduce gap (even negative).
-    const needed = h.height + 8; // a tiny breathing room
-    if (avail < needed) {
-      gap = clamp(avail - needed, -10, 6);  // can go negative a bit
-    }
-
-    setHudGap(Math.round(gap));
-  };
-
-  window.addEventListener('resize', () => {
-    // small debounce
-    clearTimeout(window.__amorviaHudGapT);
-    window.__amorviaHudGapT = setTimeout(() => window.__amorviaTuneHudGap && window.__amorviaTuneHudGap(), 80);
-  });
 })();
 
