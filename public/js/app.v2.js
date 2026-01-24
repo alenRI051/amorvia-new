@@ -512,13 +512,6 @@ if (actBadge) {
 
         applyEffects(choice.effects);
 
-        // Show feedback-only HUD after choice
-        if (window.AmorviaHUD10Feedback) {
-          window.AmorviaHUD10Feedback.show(deltas, { label: "Impact" });
-        }
-      }
-    }
-
     let targetId = nextId;
     if (!targetId) {
       const first = (current.choices || [])[0] || null;
