@@ -815,9 +815,9 @@ try {
   window.__amorHudImpulseTimer = setTimeout(() => {
     const el = document.querySelector(".hud-impulse");
     if (!el) return;
-    el.classList.remove("is-on");
-    el.classList.add("is-off");
-  }, 5000);
+    el.classList.remove("is-off");
+    el.classList.add("is-on");
+  }, 3000);
 } catch (e) {}
 
   // Only show if something actually changed
