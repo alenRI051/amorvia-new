@@ -1,3 +1,5 @@
+let hudImpulseTimer = null;
+
 try { document.documentElement.dataset.hudmode = "feedback"; } catch (e) {}
 // app.v2.js – Amorvia V2 Mini-Engine + Scenario Picker + HUD hook
 // ---------------------------------------------------------------
@@ -808,16 +810,54 @@ function diffMeters(before, after) {
 
 function showHudImpulse(deltas) {
   if (!deltas) return;
-  
-// Always auto-hide (guaranteed)
-try {
-  if (window.__amorHudImpulseTimer) clearTimeout(window.__amorHudImpulseTimer);
-  window.__amorHudImpulseTimer = setTimeout(() => {
-    const el = document.querySelector(".hud-impulse");
-    if (!el) return;
-    el.classList.remove("is-off");
-    el.classList.add("is-on");
-  }, 3000);
+
+  // Only show if something actually changed
+  const hasAny = !!(deltas.trust || deltas.tension || deltas.childStress);
+  if (!hasAny) return;
+
+  ensureHudImpulseMount();
+
+  const box = document.getElementById("hudImpulse");
+  const chips = document.getElementById("hudImpulseChips");
+  if (!box || !chips) return;
+
+  const items = [
+    { key: "trust", label: "Trust", val: Number(deltas.trust) || 0, goodUp: true },
+    { key: "tension", label: "Tension", val: Number(deltas.tension) || 0, goodUp: false },
+    { key: "childStress", label: "Child", val: Number(deltas.childStress) || 0, goodUp: false },
+  ];
+
+  chips.innerHTML = "";
+
+  for (const it of items) {
+    const v = it.val;
+
+    let cls = "neu", arr = "~", txt = "unchanged";
+    if (v !== 0) {
+      const improved = it.goodUp ? (v > 0) : (v < 0);
+      cls = improved ? "pos" : "neg";
+      arr = improved ? "↑" : "↓";
+      txt = improved ? "improved" : "worsened";
+    }
+
+    const chip = document.createElement("div");
+    chip.className = `hud-chip ${cls}`;
+    chip.innerHTML = `<span class="arr">${arr}</span> <b>${it.label}</b> <span style="opacity:.75">${txt}</span>`;
+    chips.appendChild(chip);
+  }
+
+  // SHOW now
+  box.classList.remove("is-off");
+  box.classList.add("is-on");
+
+  // Reset timer
+  if (hudImpulseTimer) clearTimeout(hudImpulseTimer);
+
+  // HIDE after 5s
+  hudImpulseTimer = setTimeout(() => {
+    box.classList.add("is-off");
+    setTimeout(() => box.classList.remove("is-on", "is-off"), 220);
+  }, 5000);
 } catch (e) {}
 
   // Only show if something actually changed
