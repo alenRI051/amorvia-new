@@ -225,8 +225,8 @@ html[data-hudmode="feedback"] .amor-hud-chip{
 }
 .hud-impulse.is-on{ display:flex; animation: hudPop .14s ease-out; }
 @keyframes hudPop{ from{ transform:translateY(-4px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
-.hud-impulse.is-off{ animation: hudFade .35s ease-in forwards; }
-@keyframes hudFade{ to{ opacity:0; transform:translateY(2px); } }
+.hud-impulse.is-off{ animation: hudFade .20s ease-in forwards; }
+@keyframes hudFade{ to{ opacity:0; transform:translateY(-3px); } }
 
 .hud-impulse__left{
   font-size: 12px;
