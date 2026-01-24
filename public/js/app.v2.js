@@ -808,6 +808,17 @@ function diffMeters(before, after) {
 
 function showHudImpulse(deltas) {
   if (!deltas) return;
+  
+// Always auto-hide (guaranteed)
+try {
+  if (window.__amorHudImpulseTimer) clearTimeout(window.__amorHudImpulseTimer);
+  window.__amorHudImpulseTimer = setTimeout(() => {
+    const el = document.querySelector(".hud-impulse");
+    if (!el) return;
+    el.classList.remove("is-on");
+    el.classList.add("is-off");
+  }, 5000);
+} catch (e) {}
 
   // Only show if something actually changed
   const hasAny =
